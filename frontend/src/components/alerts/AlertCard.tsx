@@ -15,8 +15,8 @@ export function AlertCard({ alert, compact = false }: AlertCardProps) {
   return (
     <div
       className={cn(
-        'rounded-lg border border-dash-border bg-dash-surface border-l-[3px] flex items-start gap-4',
-        compact ? 'px-3 py-2.5' : 'px-4 py-3.5',
+        'flex items-start gap-4 rounded-[14px] border border-dash-border border-l-[3px] bg-dash-surface',
+        compact ? 'px-4 py-3' : 'px-5 py-4',
         borderClass
       )}
     >
@@ -37,7 +37,7 @@ export function AlertCard({ alert, compact = false }: AlertCardProps) {
       <div className="flex items-center gap-1 shrink-0">
         <span className="text-sm font-mono text-dash-muted">{alert.spsBefore}</span>
         <span className="text-xs text-dash-muted mx-0.5">→</span>
-        <span className={cn('text-sm font-bold font-mono', tierColor(alert.tier, 'text'))}>
+        <span className={cn('text-sm font-medium font-mono', tierColor(alert.tier, 'text'))}>
           {alert.spsAfter}
         </span>
       </div>

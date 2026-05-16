@@ -130,4 +130,70 @@ body {
   .label-overline {
     @apply text-[11px] font-medium uppercase tracking-[0.08em] text-dl-muted;
   }
+
+  /* App shell — shared typography (landing-aligned) */
+  .page-heading {
+    @apply text-xl font-medium tracking-tight text-dash-text md:text-2xl;
+  }
+  .page-description {
+    @apply mt-1.5 text-sm leading-relaxed text-dash-muted;
+  }
+  .card-heading {
+    @apply text-lg font-medium tracking-tight text-dash-text;
+  }
+  .marketing-title {
+    @apply text-[28px] font-medium tracking-tight text-dl-forest md:text-[32px];
+  }
+  .marketing-subtitle {
+    @apply text-sm leading-relaxed text-dl-m-muted;
+  }
+
+  .app-page {
+    @apply mx-auto w-full max-w-7xl px-6 py-8 md:px-8 md:py-10;
+  }
+  .app-page-narrow {
+    @apply mx-auto w-full max-w-4xl px-6 py-8 md:px-8 md:py-10;
+  }
+
+  .dash-card {
+    @apply overflow-hidden rounded-[14px] border border-dash-border bg-dash-surface;
+  }
+
+  .btn-dash-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-dl-teal px-4 py-2.5 text-sm font-medium text-white transition-all duration-150 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .btn-dash-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-dash-border bg-white/5 px-4 py-2.5 text-sm font-medium text-dash-text transition-colors hover:bg-white/10;
+  }
+
+  .form-label {
+    @apply mb-1.5 block text-xs font-medium text-dl-m-muted;
+  }
+  .form-input {
+    @apply w-full rounded-lg border border-dl-m-border bg-white px-3 py-2.5 text-sm text-dl-forest placeholder:text-dl-hint transition-colors focus:border-dl-teal focus:outline-none focus:ring-2 focus:ring-dl-teal/20;
+  }
+  .dash-input {
+    @apply w-full rounded-lg border border-dash-border bg-white/5 px-3 py-2.5 text-sm text-dash-text placeholder:text-dash-muted transition-colors focus:border-dl-teal/50 focus:outline-none focus:ring-2 focus:ring-dl-teal/20;
+  }
+
+  .filter-tab {
+    @apply rounded-lg px-3 py-1.5 text-xs font-medium text-dash-muted transition-colors hover:text-dash-text;
+  }
+  .filter-tab-active {
+    @apply bg-white/10 text-dash-text;
+  }
+
+  .progress-track {
+    @apply h-1.5 overflow-hidden rounded-full bg-white/10;
+  }
+  .progress-fill {
+    @apply h-full rounded-full bg-dl-teal transition-[width] duration-150 ease-out;
+  }
+
+  .dash-section-label {
+    @apply text-xs font-medium uppercase tracking-wide text-dash-muted;
+  }
+  .stat-value {
+    @apply text-2xl font-medium font-mono tabular-nums text-dash-text;
+  }
 }

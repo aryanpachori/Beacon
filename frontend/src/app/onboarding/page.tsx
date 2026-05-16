@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ShieldCheck, CheckCircle2 } from 'lucide-react'
+import { ShieldCheck, CheckCircle2, Check } from 'lucide-react'
 import * as Checkbox from '@radix-ui/react-checkbox'
-import { Check } from 'lucide-react'
+import { SiteLogo } from '@/components/layout/SiteLogo'
+import { Spinner } from '@/components/ui/Spinner'
 
 const MOCK_REPOS = [
   'acme-corp/frontend',
@@ -27,25 +28,29 @@ export default function OnboardingPage() {
   const [progress, setProgress] = useState(0)
   const [count, setCount] = useState(0)
 
-  // Step 3 auto-advance after 4s — only fires on step 3 (D8 fix)
   useEffect(() => {
     if (step !== 3) return
     const t = setTimeout(() => setStep(4), 4000)
     return () => clearTimeout(t)
   }, [step])
 
-  // Progress bar and counter animation for step 3
   useEffect(() => {
     if (step !== 3) return
     setProgress(0)
     setCount(0)
     const interval = setInterval(() => {
-      setProgress(p => {
-        if (p >= 100) { clearInterval(interval); return 100 }
+      setProgress((p) => {
+        if (p >= 100) {
+          clearInterval(interval)
+          return 100
+        }
         return p + 2.5
       })
-      setCount(c => {
-        if (c >= 340) { clearInterval(interval); return 340 }
+      setCount((c) => {
+        if (c >= 340) {
+          clearInterval(interval)
+          return 340
+        }
         return c + 9
       })
     }, 100)
@@ -53,178 +58,171 @@ export default function OnboardingPage() {
   }, [step])
 
   const toggleRepo = (repo: string) => {
-    setSelected(prev =>
-      prev.includes(repo) ? prev.filter(r => r !== repo) : [...prev, repo]
+    setSelected((prev) =>
+      prev.includes(repo) ? prev.filter((r) => r !== repo) : [...prev, repo]
     )
   }
 
   return (
-    <div className="min-h-screen bg-dash-bg flex items-center justify-center p-6">
+    <div className="site-shell flex min-h-screen flex-col items-center justify-center px-6 py-12">
+      <div className="mb-8">
+        <SiteLogo />
+      </div>
+
       <div className="w-full max-w-md">
-        <AnimatePresence mode="wait">
-          {step === 1 && (
-            <motion.div
-              key="step1"
-              variants={stepVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.25 }}
-              className="flex flex-col items-center text-center gap-5"
-            >
-              <div className="w-14 h-14 rounded-xl bg-dash-surface border border-dash-border flex items-center justify-center">
-                <ShieldCheck className="w-7 h-7 text-dl-healthy" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-dash-text mb-2">Know before they die.</h1>
-                <p className="text-sm text-dash-muted leading-relaxed">
-                  DriftLogg watches your dependencies and predicts abandonment 60-90 days before it happens.
-                  Connect your GitHub repos to get started.
-                </p>
-              </div>
-              <button
-                onClick={() => setStep(2)}
-                className="w-full py-2.5 rounded-lg bg-dl-healthy text-black font-semibold text-sm hover:opacity-90 transition-opacity"
-              >
-                Connect GitHub
-              </button>
-            </motion.div>
-          )}
-
-          {step === 2 && (
-            <motion.div
-              key="step2"
-              variants={stepVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.25 }}
-              className="flex flex-col gap-5"
-            >
-              <div>
-                <h2 className="text-lg font-bold text-dash-text mb-1">Select repos to scan</h2>
-                <p className="text-sm text-dash-muted">Choose which repositories to monitor.</p>
-              </div>
-              <div className="flex flex-col gap-2">
-                {MOCK_REPOS.map(repo => (
-                  <label
-                    key={repo}
-                    className="flex items-center gap-3 p-3 rounded-lg border border-dash-border bg-dash-surface cursor-pointer hover:border-white/20 transition-colors"
-                  >
-                    <Checkbox.Root
-                      checked={selected.includes(repo)}
-                      onCheckedChange={() => toggleRepo(repo)}
-                      className="w-4 h-4 rounded border border-dash-border bg-white/5 flex items-center justify-center data-[state=checked]:bg-dl-healthy data-[state=checked]:border-dl-healthy"
-                    >
-                      <Checkbox.Indicator>
-                        <Check className="w-3 h-3 text-black" />
-                      </Checkbox.Indicator>
-                    </Checkbox.Root>
-                    <span className="text-sm text-dash-text font-mono">{repo}</span>
-                  </label>
-                ))}
-              </div>
-              <button
-                disabled={selected.length === 0}
-                onClick={() => setStep(3)}
-                className="w-full py-2.5 rounded-lg bg-dl-healthy text-black font-semibold text-sm disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
-              >
-                Scan selected →
-              </button>
-            </motion.div>
-          )}
-
-          {step === 3 && (
-            <motion.div
-              key="step3"
-              variants={stepVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.25 }}
-              className="flex flex-col items-center text-center gap-6"
-            >
-              {/* Pulse animation */}
+        <div className="dl-card p-8">
+          <AnimatePresence mode="wait">
+            {step === 1 && (
               <motion.div
-                animate={{ scale: [1, 1.08, 1] }}
-                transition={{ repeat: Infinity, duration: 1.2 }}
-                className="w-14 h-14 rounded-xl bg-dash-surface border border-dl-healthy/30 flex items-center justify-center"
+                key="step1"
+                variants={stepVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.25 }}
+                className="flex flex-col items-center gap-6 text-center"
               >
-                <ShieldCheck className="w-7 h-7 text-dl-healthy" />
-              </motion.div>
-
-              <div>
-                <h2 className="text-lg font-bold text-dash-text mb-1">Scanning your stack…</h2>
-                <p className="text-2xl font-bold font-mono text-dash-text">{count}</p>
-                <p className="text-xs text-dash-muted mt-0.5">packages discovered</p>
-              </div>
-
-              <div className="w-full">
-                <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
-                  <motion.div
-                    className="h-full rounded-full bg-dl-healthy"
-                    style={{ width: `${progress}%` }}
-                  />
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-dl-border bg-white">
+                  <ShieldCheck className="h-7 w-7 text-dl-teal" />
                 </div>
-              </div>
-            </motion.div>
-          )}
+                <div>
+                  <p className="label-overline text-dl-sage">Get started</p>
+                  <h1 className="marketing-title mt-3">Know before they die.</h1>
+                  <p className="marketing-subtitle mt-3">
+                    DriftLogg watches your dependencies and predicts abandonment 60–90 days
+                    before it happens. Connect your GitHub repos to get started.
+                  </p>
+                </div>
+                <button type="button" onClick={() => setStep(2)} className="btn-primary w-full py-2.5">
+                  Connect GitHub
+                </button>
+              </motion.div>
+            )}
 
-          {step === 4 && (
-            <motion.div
-              key="step4"
-              variants={stepVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.25 }}
-              className="flex flex-col items-center text-center gap-5"
-            >
-              <div className="w-14 h-14 rounded-xl bg-dash-surface border border-dl-healthy/30 flex items-center justify-center">
-                <CheckCircle2 className="w-7 h-7 text-dl-healthy" />
-              </div>
+            {step === 2 && (
+              <motion.div
+                key="step2"
+                variants={stepVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.25 }}
+                className="flex flex-col gap-6"
+              >
+                <div>
+                  <p className="label-overline text-dl-sage">Step 2 of 4</p>
+                  <h2 className="card-heading mt-2 text-dl-forest">Select repos to scan</h2>
+                  <p className="marketing-subtitle mt-1.5">Choose which repositories to monitor.</p>
+                </div>
+                <div className="flex flex-col gap-2">
+                  {MOCK_REPOS.map((repo) => (
+                    <label
+                      key={repo}
+                      className="flex cursor-pointer items-center gap-3 rounded-lg border border-dl-m-border bg-white p-3 transition-colors hover:border-dl-teal/40"
+                    >
+                      <Checkbox.Root
+                        checked={selected.includes(repo)}
+                        onCheckedChange={() => toggleRepo(repo)}
+                        className="flex h-4 w-4 items-center justify-center rounded border border-dl-m-border bg-white data-[state=checked]:border-dl-teal data-[state=checked]:bg-dl-teal"
+                      >
+                        <Checkbox.Indicator>
+                          <Check className="h-3 w-3 text-white" />
+                        </Checkbox.Indicator>
+                      </Checkbox.Root>
+                      <span className="font-mono text-sm text-dl-forest">{repo}</span>
+                    </label>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  disabled={selected.length === 0}
+                  onClick={() => setStep(3)}
+                  className="btn-primary w-full py-2.5 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  Scan selected →
+                </button>
+              </motion.div>
+            )}
 
-              <div>
-                <h2 className="text-xl font-bold text-dash-text mb-2">Your stack is ready.</h2>
-                <div className="rounded-lg border border-dash-border bg-dash-surface p-4 text-left">
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div>
-                      <p className="text-dash-muted text-xs">Packages scanned</p>
-                      <p className="text-dash-text font-bold font-mono text-lg">340</p>
-                    </div>
-                    <div>
-                      <p className="text-dash-muted text-xs">Repos connected</p>
-                      <p className="text-dash-text font-bold font-mono text-lg">{selected.length}</p>
-                    </div>
-                    <div>
-                      <p className="text-dash-muted text-xs">Critical</p>
-                      <p className="text-dl-critical font-bold font-mono text-lg">3</p>
-                    </div>
-                    <div>
-                      <p className="text-dash-muted text-xs">At risk</p>
-                      <p className="text-dl-risk font-bold font-mono text-lg">8</p>
+
+            {step === 3 && (
+              <motion.div
+                key="step3"
+                variants={stepVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.25 }}
+                className="flex flex-col items-center gap-6 py-4 text-center"
+              >
+                <Spinner size="lg" label="Scanning your stack…" className="[&_p]:text-dl-m-muted" />
+                <div>
+                  <p className="text-3xl font-medium font-mono tabular-nums text-dl-forest">{count}</p>
+                  <p className="mt-1 text-xs text-dl-m-muted">packages discovered</p>
+                </div>
+                <div className="progress-track w-full">
+                  <div className="progress-fill" style={{ width: `${progress}%` }} />
+                </div>
+              </motion.div>
+            )}
+
+            {step === 4 && (
+              <motion.div
+                key="step4"
+                variants={stepVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.25 }}
+                className="flex flex-col items-center gap-6 text-center"
+              >
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-dl-teal/30 bg-dl-teal/10">
+                  <CheckCircle2 className="h-7 w-7 text-dl-teal" />
+                </div>
+                <div className="w-full">
+                  <p className="label-overline text-dl-sage">Complete</p>
+                  <h2 className="marketing-title mt-3 text-[24px] md:text-[28px]">Your stack is ready.</h2>
+                  <div className="mt-5 rounded-lg border border-dl-m-border bg-white p-5 text-left">
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-xs text-dl-m-muted">Packages scanned</p>
+                        <p className="mt-1 font-mono text-lg font-medium tabular-nums text-dl-forest">340</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-dl-m-muted">Repos connected</p>
+                        <p className="mt-1 font-mono text-lg font-medium tabular-nums text-dl-forest">
+                          {selected.length}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-dl-m-muted">Critical</p>
+                        <p className="mt-1 font-mono text-lg font-medium tabular-nums text-dl-m-critical">3</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-dl-m-muted">At risk</p>
+                        <p className="mt-1 font-mono text-lg font-medium tabular-nums text-dl-m-risk">8</p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+                <button
+                  type="button"
+                  onClick={() => router.push('/dashboard')}
+                  className="btn-primary w-full py-2.5"
+                >
+                  Go to dashboard →
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
 
-              <button
-                onClick={() => router.push('/dashboard')}
-                className="w-full py-2.5 rounded-lg bg-dl-healthy text-black font-semibold text-sm hover:opacity-90 transition-opacity"
-              >
-                Go to dashboard →
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Step dots */}
-        <div className="flex justify-center gap-1.5 mt-8">
-          {[1, 2, 3, 4].map(s => (
+        <div className="mt-6 flex justify-center gap-2">
+          {[1, 2, 3, 4].map((s) => (
             <div
               key={s}
-              className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                s === step ? 'bg-dl-healthy' : 'bg-white/20'
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                s === step ? 'w-6 bg-dl-teal' : 'w-1.5 bg-dl-m-border'
               }`}
             />
           ))}

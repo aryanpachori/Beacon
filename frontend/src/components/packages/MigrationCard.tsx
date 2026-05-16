@@ -9,8 +9,8 @@ interface MigrationCardProps {
 
 export function MigrationCard({ pkg }: MigrationCardProps) {
   return (
-    <div className="rounded-lg border border-dash-border bg-dash-surface p-4">
-      <h3 className="text-sm font-semibold text-dash-text mb-3">Migration options</h3>
+    <div className="dash-card p-5">
+      <h3 className="card-heading mb-4 text-base">Migration options</h3>
 
       {pkg.recommendations.length === 0 ? (
         <p className="text-xs text-dash-muted">No alternatives available for this package.</p>

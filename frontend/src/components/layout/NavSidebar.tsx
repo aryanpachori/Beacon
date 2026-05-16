@@ -29,7 +29,7 @@ export function NavSidebar() {
           height={28}
           className="h-7 w-7 shrink-0 rounded-md"
         />
-        <span className="text-sm font-bold tracking-tight text-dash-text">DriftLogg</span>
+        <span className="text-sm font-medium tracking-tight text-dash-text">DriftLogg</span>
       </Link>
 
       {/* Nav items */}

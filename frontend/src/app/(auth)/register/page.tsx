@@ -7,7 +7,6 @@ import { motion } from 'framer-motion'
 
 export default function RegisterPage() {
   const router = useRouter()
-  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -21,53 +20,51 @@ export default function RegisterPage() {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="flex flex-1 items-center justify-center p-4"
+      className="flex flex-1 items-center justify-center px-4 py-10"
     >
       <div className="w-full max-w-sm">
-        <div className="rounded-xl border border-dl-m-border bg-dl-card p-6 shadow-sm">
-          <h1 className="mb-1 text-base font-bold text-dl-forest">Create your account</h1>
-          <p className="mb-5 text-xs text-dl-m-muted">Start monitoring your dependency health.</p>
+        <div className="dl-card p-6 shadow-sm md:p-8">
+          <h1 className="marketing-title mb-1 text-[22px] md:text-[24px]">Create account</h1>
+          <p className="marketing-subtitle mb-6">
+            Start monitoring your package health in minutes.
+          </p>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div>
-              <label className="mb-1 block text-xs text-dl-m-muted">Name</label>
+              <label className="form-label" htmlFor="email">
+                Email
+              </label>
               <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Your name"
-                className="w-full rounded-lg border border-dl-m-border bg-white px-3 py-2 text-sm text-dl-forest placeholder:text-dl-hint focus:border-dl-teal focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-xs text-dl-m-muted">Work email</label>
-              <input
+                id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@company.com"
-                className="w-full rounded-lg border border-dl-m-border bg-white px-3 py-2 text-sm text-dl-forest placeholder:text-dl-hint focus:border-dl-teal focus:outline-none"
+                className="form-input"
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs text-dl-m-muted">Password</label>
+              <label className="form-label" htmlFor="password">
+                Password
+              </label>
               <input
+                id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full rounded-lg border border-dl-m-border bg-white px-3 py-2 text-sm text-dl-forest placeholder:text-dl-hint focus:border-dl-teal focus:outline-none"
+                className="form-input"
               />
             </div>
-            <button type="submit" className="btn-primary mt-1 w-full py-2.5 text-sm">
+            <button type="submit" className="btn-primary mt-1 w-full justify-center py-2.5">
               Create account
             </button>
           </form>
         </div>
 
-        <p className="mt-4 text-center text-xs text-dl-m-muted">
+        <p className="mt-5 text-center text-xs text-dl-m-muted">
           Already have an account?{' '}
-          <Link href="/login" className="text-dl-teal hover:underline">
+          <Link href="/login" className="font-medium text-dl-teal hover:underline">
             Sign in
           </Link>
         </p>

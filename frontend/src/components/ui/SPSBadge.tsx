@@ -15,7 +15,7 @@ export function SPSBadge({ sps, size = 'sm', className }: SPSBadgeProps) {
   return (
     <span
       className={cn(
-        'font-mono font-bold tabular-nums',
+        'font-mono font-medium tabular-nums',
         size === 'lg' ? 'text-3xl' : 'text-sm',
         textClass,
         className

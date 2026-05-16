@@ -34,7 +34,7 @@ export function SignalCard({ signalKey, signal }: SignalCardProps) {
   const barColor = signal.value >= 70 ? 'bg-dl-healthy' : signal.value >= 40 ? 'bg-dl-watch' : 'bg-dl-critical'
 
   return (
-    <div className="rounded-lg border border-dash-border bg-dash-surface p-3">
+    <div className="rounded-[14px] border border-dash-border bg-dash-surface p-4">
       <div className="flex items-center justify-between mb-2">
         <span className="text-xs text-dash-muted">{SIGNAL_LABELS[signalKey] ?? signalKey}</span>
         <div className="flex items-center gap-1">

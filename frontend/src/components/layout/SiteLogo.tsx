@@ -29,7 +29,7 @@ export function SiteLogo({
         priority
       />
       {showWordmark && (
-        <span className={`text-[17px] font-semibold ${wordmarkClass}`}>
+        <span className={`text-[17px] font-medium tracking-tight ${wordmarkClass}`}>
           DriftLogg
         </span>
       )}

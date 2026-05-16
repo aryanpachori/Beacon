@@ -9,18 +9,17 @@ interface RepoCardProps {
 
 export function RepoCard({ repo }: RepoCardProps) {
   return (
-    <div className="rounded-lg border border-dash-border bg-dash-surface p-4 flex flex-col gap-4">
-      {/* Org/name */}
+    <div className="flex flex-col gap-4 rounded-[14px] border border-dash-border bg-dash-surface p-5">
       <div>
-        <p className="text-xs text-dash-muted font-mono">{repo.org}/</p>
-        <p className="text-sm font-bold text-dash-text font-mono">{repo.name}</p>
+        <p className="text-xs font-mono text-dash-muted">{repo.org}/</p>
+        <p className="text-sm font-medium font-mono text-dash-text">{repo.name}</p>
       </div>
 
       {/* Stats 2×2 */}
       <div className="grid grid-cols-2 gap-3">
         <div>
           <p className="text-xs text-dash-muted mb-0.5">Packages</p>
-          <p className="text-lg font-bold font-mono text-dash-text">{repo.packageCount}</p>
+          <p className="stat-value text-lg">{repo.packageCount}</p>
         </div>
         <div>
           <p className="text-xs text-dash-muted mb-0.5">Avg SPS</p>
@@ -32,7 +31,7 @@ export function RepoCard({ repo }: RepoCardProps) {
         </div>
         <div>
           <p className="text-xs text-dash-muted mb-0.5">Critical</p>
-          <p className="text-lg font-bold font-mono text-dl-critical">
+          <p className="stat-value text-lg text-dl-critical">
             {repo.worstPackage.tier === 'critical' ? '1+' : '0'}
           </p>
         </div>

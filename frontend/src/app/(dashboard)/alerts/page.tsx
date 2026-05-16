@@ -6,14 +6,15 @@ import { Bell } from 'lucide-react'
 import type { Tier } from '@/types'
 import { alerts } from '@/lib/mockData'
 import { AlertCard } from '@/components/alerts/AlertCard'
-import { cn } from '@/lib/utils'
+import { PageHeader } from '@/components/ui/PageHeader'
+import { FilterTabs } from '@/components/ui/FilterTabs'
 
 type FilterTab = 'all' | Tier | 'resolved'
 
 const TABS: { label: string; value: FilterTab }[] = [
-  { label: 'All',      value: 'all' },
+  { label: 'All', value: 'all' },
   { label: 'Critical', value: 'critical' },
-  { label: 'At risk',  value: 'at-risk' },
+  { label: 'At risk', value: 'at-risk' },
   { label: 'Resolved', value: 'resolved' },
 ]
 
@@ -27,29 +28,13 @@ export default function AlertsPage() {
   })
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-xl font-bold text-dash-text">Alerts</h1>
-        <p className="text-sm text-dash-muted mt-0.5">{alerts.length} alerts in the last 30 days</p>
-      </div>
+    <div className="app-page-narrow">
+      <PageHeader
+        title="Alerts"
+        description={`${alerts.length} alerts in the last 30 days`}
+      />
 
-      {/* Filter tabs */}
-      <div className="flex items-center gap-1 mb-5">
-        {TABS.map(tab => (
-          <button
-            key={tab.value}
-            onClick={() => setFilter(tab.value)}
-            className={cn(
-              'px-3 py-1.5 rounded text-xs font-medium transition-colors',
-              filter === tab.value
-                ? 'bg-white/10 text-dash-text'
-                : 'text-dash-muted hover:text-dash-text'
-            )}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
+      <FilterTabs tabs={TABS} value={filter} onChange={setFilter} className="mb-6" />
 
       <AnimatePresence mode="wait">
         <motion.div
@@ -61,8 +46,8 @@ export default function AlertsPage() {
           className="flex flex-col gap-3"
         >
           {visible.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 gap-3">
-              <Bell className="w-8 h-8 text-dash-muted" />
+            <div className="flex flex-col items-center justify-center gap-3 rounded-[14px] border border-dash-border bg-dash-surface py-16">
+              <Bell className="h-8 w-8 text-dash-muted" />
               <p className="text-sm text-dash-muted">No alerts — your stack looks healthy</p>
             </div>
           ) : (

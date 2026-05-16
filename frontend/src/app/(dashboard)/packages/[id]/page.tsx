@@ -42,7 +42,7 @@ export default function PackageDetailPage({ params }: PageProps) {
   ][]
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="app-page">
       {/* Back */}
       <Link
         href="/packages"
@@ -60,7 +60,7 @@ export default function PackageDetailPage({ params }: PageProps) {
             <EcosystemIcon ecosystem={pkg.ecosystem} />
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold text-dash-text">{pkg.name}</h1>
+                <h1 className="page-heading">{pkg.name}</h1>
                 <TierChip tier={pkg.tier} />
               </div>
               <p className="text-sm text-dash-muted font-mono">v{pkg.version} · {pkg.repoName}</p>
@@ -71,8 +71,8 @@ export default function PackageDetailPage({ params }: PageProps) {
           </div>
 
           {/* SPS History Chart */}
-          <div className="rounded-lg border border-dash-border bg-dash-surface p-4">
-            <p className="text-xs text-dash-muted mb-3 uppercase tracking-wide">90-day SPS history</p>
+          <div className="dash-card p-5">
+            <p className="dash-section-label mb-4">90-day SPS history</p>
             <ResponsiveContainer width="100%" height={200}>
               <LineChart data={chartData} margin={{ top: 4, right: 8, bottom: 4, left: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
@@ -116,7 +116,7 @@ export default function PackageDetailPage({ params }: PageProps) {
 
           {/* Signals grid */}
           <div>
-            <p className="text-xs text-dash-muted mb-3 uppercase tracking-wide">Signals</p>
+            <p className="dash-section-label mb-4">Signals</p>
             <div className="grid grid-cols-2 gap-3">
               {signalEntries.map(([key, signal]) => (
                 <SignalCard key={key} signalKey={key} signal={signal} />
@@ -132,7 +132,7 @@ export default function PackageDetailPage({ params }: PageProps) {
           {/* Recent alerts */}
           {pkgAlerts.length > 0 && (
             <div>
-              <p className="text-xs text-dash-muted mb-3 uppercase tracking-wide">Recent alerts</p>
+              <p className="dash-section-label mb-4">Recent alerts</p>
               <div className="flex flex-col gap-2">
                 {pkgAlerts.map(alert => (
                   <AlertCard key={alert.id} alert={alert} compact />
@@ -142,8 +142,8 @@ export default function PackageDetailPage({ params }: PageProps) {
           )}
 
           {/* Meta */}
-          <div className="rounded-lg border border-dash-border bg-dash-surface p-4">
-            <p className="text-xs text-dash-muted mb-2 uppercase tracking-wide">Details</p>
+          <div className="dash-card p-5">
+            <p className="dash-section-label mb-4">Details</p>
             <dl className="text-xs space-y-1.5">
               <div className="flex justify-between">
                 <dt className="text-dash-muted">Ecosystem</dt>
