@@ -40,7 +40,7 @@ const FEATURES = [
     icon: BarChart2,
     name: 'Signal breakdown',
     description:
-      'Six weighted signal categories — commit velocity, maintainer activity, funding, issues, community, security — visualised per package.',
+      'Six weighted signal categories — commit velocity, maintainer activity, funding, issues, community, security — visualized per package.',
   },
   {
     icon: Shield,

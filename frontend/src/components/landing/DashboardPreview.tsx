@@ -46,7 +46,7 @@ export function DashboardPreview() {
         viewport={inViewOptions}
         variants={sectionReveal}
       >
-        <p className="label-overline text-dl-sage">Your command centre</p>
+        <p className="label-overline text-dl-sage">Your command center</p>
         <h2 className="mt-4 text-section-mobile font-medium text-dl-cream lg:text-section">
           See every risk, ranked and ready to act on.
         </h2>

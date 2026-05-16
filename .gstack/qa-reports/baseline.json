@@ -1,0 +1,22 @@
+{
+  "date": "2026-05-17",
+  "url": "http://localhost:3004",
+  "healthScore": 84,
+  "issues": [
+    { "id": "ISSUE-001", "title": "Unreadable text on light marketing backgrounds", "severity": "critical", "category": "accessibility", "status": "fixed-uncommitted" },
+    { "id": "ISSUE-002", "title": "Footer legal links pointed to homepage", "severity": "medium", "category": "functional", "status": "fixed-uncommitted" },
+    { "id": "ISSUE-003", "title": "Nav Docs duplicated How it works", "severity": "medium", "category": "ux", "status": "fixed-uncommitted" },
+    { "id": "ISSUE-004", "title": "Stale comparison footnote date", "severity": "medium", "category": "content", "status": "fixed-uncommitted" },
+    { "id": "ISSUE-005", "title": "US spelling consistency", "severity": "low", "category": "content", "status": "fixed-uncommitted" },
+    { "id": "ISSUE-006", "title": "Abrupt light-to-dark jump at onboarding", "severity": "low", "category": "ux", "status": "deferred" }
+  ],
+  "categoryScores": {
+    "console": 70,
+    "links": 100,
+    "visual": 85,
+    "functional": 90,
+    "ux": 80,
+    "performance": 85,
+    "accessibility": 82
+  }
+}

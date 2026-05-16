@@ -25,7 +25,7 @@ function Cell({ value }: { value: CellValue }) {
 
 export function ComparisonTable() {
   return (
-    <section className="section-light px-6 py-[100px]">
+    <section id="compare" className="section-light px-6 py-[100px]">
       <motion.div
         className="mx-auto max-w-[900px]"
         initial="hidden"
@@ -83,7 +83,7 @@ export function ComparisonTable() {
         </motion.div>
 
         <p className="mt-4 text-center text-[11px] text-dl-hint">
-          Comparison based on publicly available feature documentation as of May 2025.
+          Comparison based on publicly available feature documentation as of March 2026.
         </p>
       </motion.div>
     </section>

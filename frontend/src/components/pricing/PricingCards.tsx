@@ -84,7 +84,7 @@ const PLANS = [
     name: 'Enterprise',
     monthlyPrice: null,
     priceLabel: 'Custom',
-    tagline: 'For organisations with security and compliance requirements.',
+    tagline: 'For organizations with security and compliance requirements.',
     cta: 'Talk to sales',
     ctaClass: 'btn-ghost w-full justify-center',
     href: 'mailto:hello@driftlogg.com?subject=Enterprise%20plan',
