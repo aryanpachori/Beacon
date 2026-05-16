@@ -5,7 +5,7 @@ import { Check } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { inViewOptions, staggerContainer, sectionReveal } from '@/components/marketing/motion'
 
-type BillingPeriod = 'monthly' | 'annual'
+export type BillingPeriod = 'monthly' | 'annual'
 
 type PricingCardsProps = {
   billingPeriod: BillingPeriod
@@ -101,7 +101,7 @@ const PLANS = [
       'Dedicated CSM',
     ],
   },
-] as const
+]
 
 export function PricingCards({ billingPeriod }: PricingCardsProps) {
   return (
@@ -153,7 +153,11 @@ export function PricingCards({ billingPeriod }: PricingCardsProps) {
                       plan.dark ? 'text-dl-cream' : 'text-dl-text'
                     }`}
                   >
-                    {price ? `$${price.amount}` : plan.priceLabel}
+                    {price
+                      ? `$${price.amount}`
+                      : 'priceLabel' in plan
+                        ? plan.priceLabel
+                        : 'Custom'}
                   </motion.span>
                 </AnimatePresence>
                 {price && (

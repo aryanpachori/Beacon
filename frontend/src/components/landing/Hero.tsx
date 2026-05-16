@@ -5,7 +5,7 @@ import { Lock, Shield } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { SparklineBars } from '@/components/marketing/SparklineBars'
 import { MarketingTierChip } from '@/components/marketing/MarketingTierChip'
-import { inViewOptions, staggerContainer } from '@/components/marketing/motion'
+import { inViewOptions } from '@/components/marketing/motion'
 
 const textStagger = {
   hidden: {},
@@ -132,7 +132,7 @@ export function Hero() {
           {MOCK_PACKAGES.map((pkg) => (
             <PackageRow key={pkg.name} {...pkg} />
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   )

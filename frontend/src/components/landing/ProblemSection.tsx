@@ -67,7 +67,7 @@ export function ProblemSection() {
                 className="mb-5 flex h-14 w-14 items-center justify-center rounded-lg bg-dl-danger/20"
               >
                 <Icon className="h-6 w-6 text-dl-danger" />
-              </div>
+              </motion.div>
               <h3 className="text-[17px] font-medium text-dl-text">{title}</h3>
               <p className="mt-2 text-sm text-dl-muted">{copy}</p>
             </motion.div>

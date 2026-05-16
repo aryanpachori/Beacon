@@ -8,8 +8,6 @@ interface RepoCardProps {
 }
 
 export function RepoCard({ repo }: RepoCardProps) {
-  const criticalCount = 0  // computed from packages in a real app
-
   return (
     <div className="rounded-lg border border-dl-border bg-dl-surface p-4 flex flex-col gap-4">
       {/* Org/name */}
