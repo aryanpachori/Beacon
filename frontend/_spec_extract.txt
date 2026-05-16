@@ -1,0 +1,328 @@
+<user_query>
+in @frontend/  some of this is already implemented implement therest Project — DriftLogg marketing site
+You are building the public-facing marketing website for DriftLogg, a predictive open source dependency health monitoring platform. This is a separate Next.js project from the app dashboard — it is the site a visitor lands on before they sign up. It includes a landing page, a pricing page, and all supporting sections. The stack is Next.js 14 App Router, TypeScript, Tailwind CSS, Framer Motion for animations, and Lucide React for icons. No backend, no auth, no API calls — this is a pure static marketing site with mock content.
+
+Colour system — define in tailwind.config.ts and globals.css
+Every colour used anywhere on the site must come from these tokens. No hardcoded hex values anywhere in component files — always reference a token.
+--dl-teal:          #35858E   /* primary CTA, buttons, highlights */
+--dl-sage:          #7DA78C   /* secondary text, icon fills, dividers */
+--dl-sage-light:    #C2D099   /* subtle backgrounds, tag fills, borders */
+--dl-cream:         #E6EEC9   /* section backgrounds, card surfaces */
+--dl-card:          #F4F8EC   /* card background on light sections */
+--dl-nav:           #1C3B38   /* nav background, footer background */
+--dl-page:          #F0F5E8   /* default page background */
+--dl-forest:        #2A5C52   /* dark body text on light backgrounds */
+--dl-text:          #1C3B38   /* primary headings */
+--dl-muted:         #7DA78C   /* secondary / muted text */
+--dl-hint:          #9BB8A0   /* placeholders, captions, fine print */
+--dl-border:        #D4E0C8   /* default borders */
+--dl-border-mid:    #C2D099   /* emphasis borders */
+--dl-healthy:       #35858E   /* healthy SPS tier */
+--dl-watch:         #4A7A30   /* watch SPS tier */
+--dl-risk:          #C47820   /* at-risk SPS tier */
+--dl-critical:      #C03030   /* critical SPS tier */
+--dl-danger:        #E05252   /* danger / alert red */
+--dl-warning:       #E8963A   /* warning orange */
+In tailwind.config.ts:
+tscolors: {
+  dl: {
+    teal: '#35858E', sage: '#7DA78C', 'sage-light': '#C2D099',
+    cream: '#E6EEC9', card: '#F4F8EC', nav: '#1C3B38',
+    page: '#F0F5E8', forest: '#2A5C52', text: '#1C3B38',
+    muted: '#7DA78C', hint: '#9BB8A0',
+    border: '#D4E0C8', 'border-mid': '#C2D099',
+    healthy: '#35858E', watch: '#4A7A30',
+    risk: '#C47820', critical: '#C03030',
+    danger: '#E05252', warning: '#E8963A',
+  }
+}
+
+Typography
+Import Inter via next/font/google and apply globally. The type scale is as follows — apply these via Tailwind utility classes, never inline styles.
+The hero headline sits at 56px on desktop, 36px on mobile, weight 500, colour --dl-text, line-height 1.15, letter-spacing -0.02em. Section headings are 36px desktop / 26px mobile, weight 500, same colour. Sub-headings inside cards or feature blocks are 18px, weight 500. Body copy throughout is 15px, weight 400, colour --dl-forest, line-height 1.7. Muted body (captions, supporting copy) is 14px, colour --dl-muted. Labels and overlines are 11px, uppercase, letter-spacing 0.08em, weight 500, colour --dl-hint. The logo wordmark "DriftLogg" is 17px, weight 600, colour #C2D099 when on dark backgrounds and #1C3B38 when on light.
+
+Global styles — src/app/globals.css
+cssbody {
+  background: var(--dl-page);
+  color: var(--dl-text);
+  font-family: var(--font-inter), sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Section alternation pattern used throughout */
+.section-light { background: var(--dl-page); }
+.section-cream { background: var(--dl-cream); }
+.section-dark  { background: var(--dl-nav); }
+
+/* Primary CTA button */
+.btn-primary {
+  background: var(--dl-teal);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 11px 22px;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+/* Secondary outline button */
+.btn-secondary {
+  background: transparent;
+  color: var(--dl-teal);
+  border: 1.5px solid var(--dl-teal);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 11px 22px;
+  cursor: pointer;
+  transition: background 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-secondary:hover { background: rgba(53,133,142,0.07); }
+
+/* Ghost button — for dark backgrounds */
+.btn-ghost {
+  background: rgba(194,208,153,0.15);
+  color: var(--dl-cream);
+  border: 1px solid rgba(194,208,153,0.3);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 11px 22px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-ghost:hover { background: rgba(194,208,153,0.25); }
+
+/* Standard card */
+.dl-card {
+  background: var(--dl-card);
+  border: 1px solid var(--dl-border);
+  border-radius: 14px;
+  padding: 24px;
+}
+
+/* Tier chip — reused across landing and pricing */
+.tier-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 99px;
+}
+
+File structure
+src/
+├── app/
+│   ├── globals.css
+│   ├── layout.tsx           ← root layout, Inter font, metadata, Nav + Footer
+│   ├── page.tsx             ← landing page (assembles all sections)
+│   └── pricing/
+│       └── page.tsx         ← pricing page
+├── components/
+│   ├── layout/
+│   │   ├── Nav.tsx          ← sticky top nav
+│   │   └── Footer.tsx       ← full footer
+│   ├── landing/
+│   │   ├── Hero.tsx
+│   │   ├── SocialProof.tsx
+│   │   ├── ProblemSection.tsx
+│   │   ├── HowItWorks.tsx
+│   │   ├── FeatureGrid.tsx
+│   │   ├── DashboardPreview.tsx
+│   │   ├── Testimonials.tsx
+│   │   ├── ComparisonTable.tsx
+│   │   ├── FinalCTA.tsx
+│   └── pricing/
+│       ├── PricingHero.tsx
+│       ├── PricingCards.tsx
+│       ├── FeatureComparison.tsx
+│       ├── PricingFAQ.tsx
+│       └── PricingCTA.tsx
+├── lib/
+│   └── utils.ts             ← cn() helper
+└── types/
+    └── index.ts
+
+Component — Nav.tsx
+Sticky top nav. Background #1C3B38 always — does not change on scroll. Height 60px. Max-width 1200px centred with px-6. Left side: logo "DriftLogg" in #C2D099 17px/600. Centre (desktop only, hidden on mobile): nav links — "Product", "How it works", "Pricing", "Docs" — in rgba(194,208,153,0.55) 14px, hover #E6EEC9. Right side: "Sign in" ghost link in rgba(194,208,153,0.55) + "Start free" primary button (#35858E bg, white text, 11px 20px padding). On mobile collapse centre links into a hamburger menu (Lucide Menu icon, #C2D099). Hamburger opens a full-width dropdown below the nav in #1C3B38 with the same links stacked vertically. Use useState for open/close. Framer Motion: nav fades in opacity 0→1 over 0.3s on mount. Active link (matched by usePathname()) gets #E6EEC9 colour.
+
+Component — Footer.tsx
+Background #1C3B38. Max-width 1200px centred, padding 64px 24px 40px. Four columns in a CSS grid grid-cols-4 on desktop, grid-cols-2 on tablet, single column on mobile.
+Column 1 (brand): Logo "DriftLogg" #C2D099 17px/600. Tagline below: "Predict dependency rot before it hits production." in rgba(194,208,153,0.55) 13px, max-width 200px. Social icons (GitHub, Twitter/X, LinkedIn) as Lucide icons 18px rgba(194,208,153,0.5) with hover #C2D099.
+Column 2 (Product): heading "Product" 11px uppercase #9BB8A0. Links: Dashboard, Packages, Alerts, Integrations, Changelog — all 13px rgba(194,208,153,0.55) hover #E6EEC9.
+Column 3 (Company): heading "Company" same style. Links: About, Blog, Careers, Press, Contact.
+Column 4 (Legal): heading "Legal" same style. Links: Privacy Policy, Terms of Service, Security, Cookie Policy.
+Bottom bar: thin 1px solid rgba(194,208,153,0.12) divider. Below it: "© 2025 DriftLogg. All rights reserved." left in #9BB8A0 12px. Right: "Built for engineers who ship." in rgba(194,208,153,0.4) 12px italic.
+
+Landing page — app/page.tsx
+Assembles sections in this exact order: <Nav />, <Hero />, <SocialProof />, <ProblemSection />, <HowItWorks />, <FeatureGrid />, <DashboardPreview />, <Testimonials />, <ComparisonTable />, <FinalCTA />, <Footer />. No padding between sections — each section handles its own vertical padding internally.
+
+Section — Hero.tsx
+Background #1C3B38 (dark). Full viewport height on desktop, min-height 680px on mobile. Max-width 1200px centred, padding 120px 24px 100px.
+Layout is two columns on desktop (55% left text, 45% right visual), stacked on mobile.
+Left column content in order from top: an overline label "Predictive dependency intelligence" — 11px uppercase #7DA78C with a 1px #7DA78C left border pl-3. Then the headline: "Know which packages are dying — 60 days before they do." in #E6EEC9 56px/500 line-height 1.15. Then supporting copy: "DriftLogg monitors every open source dependency in your codebase and predicts abandonment before it becomes a production incident. Stop firefighting. Start planning." in rgba(194,208,153,0.7) 16px, max-width 480px. Then two buttons side by side: "Start free — no card needed" primary + "See how it works →" secondary ghost. Below buttons: three trust micro-signals in a flex row — a green dot + "SOC 2 in progress", a lock icon + "Read-only GitHub access", a shield icon + "No code ever stored" — all 12px rgba(194,208,153,0.5).
+Right column: a mock dashboard card — rgba(255,255,255,0.04) background, 1px solid rgba(194,208,153,0.12) border, 16px radius, padding 20px. Inside: a top row with "Dependency health" label left and a pulsing green dot + "Live" right. Below: three package rows showing a mock critical, at-risk, and healthy package. Each row has a package icon (2-letter mono abbreviation in a rgba(194,208,153,0.15) square), package name + version, a 5-bar sparkline (coloured by tier), and an SPS number (coloured by tier). Add a subtle glow effect on the card using box-shadow: 0 0 60px rgba(53,133,142,0.15). The pulsing green dot uses Framer Motion animate={{ opacity: [1, 0.3, 1] }} transition={{ repeat: Infinity, duration: 2 }}.
+Framer Motion: left column text children stagger in from left x: -20→0, opacity: 0→1 with staggerChildren: 0.1. Right column card slides in from right x: 30→0, opacity: 0→1 with 0.4s delay. Use useInView so animation only fires when section enters viewport.
+
+Section — SocialProof.tsx
+Background #F4F8EC. Padding 32px 24px. Max-width 1200px centred. Single horizontal flex row: "Trusted by engineering teams at" in #9BB8A0 13px left, then 5 mock company name logos as plain text in rgba(53,133,142,0.35) 14px/500 — "Acme Corp", "BuildCo", "ShipFast", "Stackery", "DevHQ" — evenly spaced. On mobile stack vertically with centred text. No actual image logos — text only. A thin 1px solid #D4E0C8 border at the top and bottom of this section.
+
+Section — ProblemSection.tsx
+Background #F0F5E8. Padding 100px 24px. Max-width 1000px centred.
+Overline: "The problem" 11px uppercase #7DA78C. Heading: "Your dependencies are decaying. You just don't know it yet." 36px/500 #1C3B38 centred, max-width 700px margin auto. Supporting copy centred below: "90% of modern software runs on open source. A meaningful fraction of those packages will lose their maintainers this year — silently. By the time your build breaks or your security scanner fires, the optimal window for low-cost migration has already closed." in #7DA78C 16px.
+Below that, three problem cards in a grid-cols-3 on desktop, stacked on mobile, gap 20px. Each card has #F4F8EC background, 1px solid #D4E0C8 border, 14px radius, 28px padding, a Lucide icon at top (48px, rgba(224,82,82,0.2) background square 56×56 8px radius, #E05252 icon 24px), a bold heading 17px/500 below, then 14px body copy #7DA78C.
+Card 1: Icon AlertTriangle. Heading "You find out too late." Copy "A failed build. A CVE alert. A broken upgrade path. These are lagging indicators that arrive long after the cheapest fix window has closed."
+Card 2: Icon Clock. Heading "Migration debt compounds." Copy "A 2-week migration this quarter becomes a 3-month rewrite in 18 months. Every deferred decision costs exponentially more."
+Card 3: Icon EyeOff. Heading "No signal, no warning." Copy "Existing tools flag known CVEs reactively. None model the 60–90 day window when maintainer decay is still reversible."
+Framer Motion: cards enter with useInView, stagger 0.12s, each card opacity 0→1, y 16→0.
+
+Section — HowItWorks.tsx
+Background #E6EEC9. Padding 100px 24px. Max-width 1100px centred.
+Overline: "How it works" 11px uppercase #7DA78C. Heading: "From connection to insight in under 60 seconds." 36px/500.
+Four steps in a horizontal timeline on desktop — a thin 1px solid #C2D099 line connecting the step numbers — and stacked vertically on mobile.
+Each step has a circle number (36×36px, #35858E background, white text 14px/500), a step title 16px/500 #1C3B38 below, and 13px body copy #7DA78C below that.
+Step 1: "Install GitHub App" — "One-click installation. Read-only access to your manifest files only. No source code, no secrets."
+Step 2: "Select your repos" — "Choose which repositories to monitor — individual repos or your entire org. Monorepo support included."
+Step 3: "We scan and score" — "DriftLogg reads your dependency manifests, collects signals from 8 external sources, and runs our XGBoost survival model."
+Step 4: "Get your risk dashboard" — "A ranked board of every dependency scored 0–100. Critical packages surface first. Migration recommendations included."
+Framer Motion: step circles animate in sequence, each with a 0.15s delay after the previous one, scale 0→1 with a spring transition stiffness: 200, damping: 18.
+
+Section — FeatureGrid.tsx
+Background #F0F5E8. Padding 100px 24px. Max-width 1200px centred.
+Overline: "Features". Heading: "Everything engineering teams need to stay ahead of dependency rot." 36px/500 max-width 640px.
+Six feature cards in grid-cols-3 on desktop, grid-cols-2 on tablet, grid-cols-1 on mobile, gap 16px. Each card: #F4F8EC bg, 1px solid #D4E0C8 border, 14px radius, 24px padding. A Lucide icon 22px #35858E at top. Feature name 15px/500 #1C3B38 below. Description 13px #7DA78C below.
+Feature 1: Icon TrendingDown. Name "60–90 day survival forecast". Description "Our XGBoost model predicts package abandonment probability before the signals become obvious."
+Feature 2: Icon GitBranch. Name "GitHub App integration". Description "One-click read-only connection. Supports monorepos, multiple manifest formats, and org-wide scanning."
+Feature 3: Icon Bell. Name "Threshold alerts". Description "Configure SPS drop thresholds per org. Get notified in Slack, email, or JIRA the moment a package crosses your line."
+Feature 4: Icon ArrowRightLeft. Name "Migration recommendations". Description "When a package falls, DriftLogg surfaces ranked replacement packages with estimated migration effort."
+Feature 5: Icon BarChart2. Name "Signal breakdown". Description "Six weighted signal categories — commit velocity, maintainer activity, funding, issues, community, security — visualised per package."
+Feature 6: Icon Shield. Name "Security hygiene tracking". Description "Days since last release, CVE age, and OSSF Scorecard delta tracked continuously alongside health signals."
+Framer Motion: useInView stagger on cards, opacity 0→1, y 12→0, staggerChildren 0.07s.
+
+Section — DashboardPreview.tsx
+Background #1C3B38. Padding 100px 24px. Max-width 1200px centred.
+Overline in #7DA78C. Heading "See every risk, ranked and ready to act on." in #E6EEC9 36px/500. Supporting copy in rgba(194,208,153,0.65) 15px below.
+Below the copy: a large mock dashboard UI card — rgba(255,255,255,0.04) bg, 1px solid rgba(194,208,153,0.1) border, 16px radius, padding 24px, width 100%, max-width 860px margin auto. Inside:
+A top bar with "Dependency dashboard" 14px/500 #E6EEC9 left, and three mock stat pills right: "340 packages" rgba(53,133,142,0.2) bg #35858E text, "8 critical" rgba(224,82,82,0.2) bg #E05252 text, "24 at risk" rgba(232,150,58,0.2) bg #E8963A text.
+Below: a mock table with 6 rows. Column headers: "Package", "Ecosystem", "Trend", "SPS", "Tier". Header row 11px uppercase rgba(194,208,153,0.4). Then 6 package rows:
+Row 1: moment · npm · declining sparkline · SPS 11 · Critical chip (red)
+Row 2: request · npm · declining sparkline · SPS 17 · Critical chip (red)
+Row 3: node-sass · npm · declining sparkline · SPS 32 · At risk chip (orange)
+Row 4: rxjs · npm · declining sparkline · SPS 38 · At risk chip (orange)
+Row 5: express · npm · flat sparkline · SPS 67 · Watch chip (olive)
+Row 6: lodash · npm · rising sparkline · SPS 84 · Healthy chip (teal)
+Sparklines are 5-bar mini bar charts as inline SVG, 60×24px, bar colours matching tier. SPS numbers are coloured by tier. Tier chips use the tier chip class from globals. Row hover: rgba(255,255,255,0.03) background transition.
+Box shadow on the whole card: 0 0 80px rgba(53,133,142,0.12).
+Framer Motion: card enters opacity 0→1, y 24→0 over 0.5s when in view.
+
+Section — Testimonials.tsx
+Background #F4F8EC. Padding 100px 24px. Max-width 1100px centred.
+Overline: "What engineers say". Heading: "Teams that stopped firefighting." 36px/500.
+Three testimonial cards in grid-cols-3 on desktop, stacked on mobile. Each card: #fff bg, 1px solid #D4E0C8 border, 14px radius, 28px padding. A large opening quote mark " in #C2D099 48px/300 at top. Quote text 15px #2A5C52 italic below. Author row at bottom: initials avatar circle (36×36px, #E6EEC9 bg, #35858E text 13px/500) + name 14px/500 #1C3B38 + role/company 12px #7DA78C.
+Testimonial 1: "We caught a critical abandonment in node-sass six weeks before our CI started failing. The migration recommendation pointed us straight to sass. Saved an entire sprint." — Priya M., VP Engineering at Stackery.
+Testimonial 2: "DriftLogg is the first tool that tells me what's about to break, not what already has. That's a completely different kind of value for a platform team." — Rohan D., Senior Platform Engineer at BuildCo.
+Testimonial 3: "We were asked to demonstrate software supply chain security posture to auditors. DriftLogg gave us the report we needed in one export. That alone justified the subscription." — Aditya K., CTO at ShipFast.
+Framer Motion: stagger 0.1s, opacity 0→1, y 10→0 per card on scroll into view.
+
+Section — ComparisonTable.tsx
+Background #F0F5E8. Padding 100px 24px. Max-width 900px centred.
+Overline: "How we compare". Heading: "Built for prediction, not reaction." 36px/500.
+A comparison table — #F4F8EC bg, 1px solid #D4E0C8 border, 14px radius, overflow hidden. Column headers: Feature · DriftLogg · Snyk · Dependabot · OSSF Scorecard. DriftLogg column header has #35858E bg #fff text to highlight it. Cell text 13px #2A5C52. Alternating row backgrounds: #F4F8EC and #fff. Check icons (Lucide Check 16px #35858E) for yes, dash for no (#D4E0C8), partial indicator for partial.
+Rows:
+"Predictive abandonment score" — DriftLogg ✓ · Snyk — · Dependabot — · OSSF —
+"60–90 day survival forecast" — DriftLogg ✓ · Snyk — · Dependabot — · OSSF —
+"Migration recommendations" — DriftLogg ✓ · Snyk partial · Dependabot partial · OSSF —
+"Known CVE detection" — DriftLogg ✓ · Snyk ✓ · Dependabot ✓ · OSSF partial
+"Maintainer activity signals" — DriftLogg ✓ · Snyk — · Dependabot — · OSSF ✓
+"Funding gap detection" — DriftLogg ✓ · Snyk — · Dependabot — · OSSF —
+"Slack + JIRA alerts" — DriftLogg ✓ · Snyk ✓ · Dependabot partial · OSSF —
+"OSSF Scorecard integration" — DriftLogg ✓ · Snyk partial · Dependabot — · OSSF ✓
+Below the table: a small caption "Comparison based on publicly available feature documentation as of May 2025." in #9BB8A0 11px centred.
+
+Section — FinalCTA.tsx
+Background #1C3B38. Padding 120px 24px. Max-width 800px centred, all content centred.
+Heading: "Start protecting your stack today." in #E6EEC9 40px/500. Supporting copy: "Free for one repo. No credit card. GitHub App installs in 60 seconds." in rgba(194,208,153,0.65) 16px. Two buttons side by side centred: "Start free →" primary + "Talk to us" ghost. Below buttons: three social proof micro-signals same as hero section. Framer Motion: content opacity 0→1, y 20→0 over 0.4s on scroll into view.
+
+Pricing page — app/pricing/page.tsx
+Assembles: <Nav />, <PricingHero />, <PricingCards />, <FeatureComparison />, <PricingFAQ />, <PricingCTA />, <Footer />.
+
+Component — PricingHero.tsx
+Background #1C3B38. Padding 100px 24px 80px. Centred. Overline "Pricing" in #7DA78C. Heading "Simple pricing. No surprises." in #E6EEC9 44px/500 centred. Supporting copy: "Start free on one repo. Upgrade when your team is ready. Cancel anytime." in rgba(194,208,153,0.65) 16px centred. Below: a billing toggle — "Monthly" and "Annual" as two pill buttons, annual selected by default and labelled with a #C2D099 badge "Save 20%". Use useState to track active billing period and pass it down to PricingCards as a prop. The toggle pill has #35858E background for the active option and rgba(255,255,255,0.06) for inactive, both inside a rgba(255,255,255,0.06) container with 8px radius.
+
+Component — PricingCards.tsx
+Props: billingPeriod: 'monthly' | 'annual'. Background #F0F5E8. Padding 0 24px 80px. Four pricing cards in grid-cols-4 on desktop, grid-cols-2 on tablet, grid-cols-1 on mobile, gap 16px, max-width 1100px centred. When annual, multiply all prices by 0.8 and show the monthly equivalent.
+Starter card — #F4F8EC bg, 1px solid #D4E0C8 border, 16px radius, 28px padding. Plan name "Starter" 13px uppercase #7DA78C. Price "$0" 40px/500 #1C3B38 + "/month" 14px muted. Tagline "Forever free." in #9BB8A0 13px. CTA button "Get started free" full-width secondary. Feature list below with Lucide Check 14px #35858E icons: 1 repo · Up to 200 packages · Weekly digest email · SPS scores for all packages · 7-day score history.
+Pro card — Same structure. Price "$49/month" (annual: "$39/month"). Tagline "For individual engineers and small teams." CTA "Start Pro trial" primary full-width. Features: 5 repos · Up to 2,000 packages · Slack + email alerts · Migration recommendations · 90-day score history · npm + PyPI ecosystems.
+Team card — This is the "Most popular" card. Add a #35858E top border 3px and a "Most popular" badge — #35858E bg #fff text 11px — positioned at the top centre of the card overlapping the border. Price "$199/month" (annual: "$159/month"). Tagline "For platform and DevSecOps teams." CTA "Start Team trial" primary full-width. Features: 25 repos · Up to 20,000 packages · JIRA + Linear integration · REST API access · 3 team seats · go.mod + Cargo.toml · Compliance CSV export · Priority support.
+Enterprise card — #1C3B38 background, 1px solid rgba(194,208,153,0.15) border, all text in cream/sage palette. Price "Custom" 40px/500 #E6EEC9. Tagline "For organisations with security and compliance requirements." in rgba(194,208,153,0.65). CTA "Talk to sales" ghost full-width. Features: Unlimited repos · Unlimited packages · Private registry support · SSO + SAML · SLA-backed alerting · SOC 2 report · Custom seats · Dedicated CSM — all in rgba(194,208,153,0.7) with rgba(194,208,153,0.4) check icons.
+Framer Motion: cards stagger in opacity 0→1, y 16→0 with staggerChildren: 0.08s. When billing period toggles, animate price numbers opacity 1→0→1 over 0.2s using AnimatePresence.
+
+Component — FeatureComparison.tsx
+Background #F4F8EC. Padding 80px 24px. Max-width 1000px centred. Heading "Full feature comparison" 28px/500 centred. A detailed comparison table with sticky first column (plan names) and 5 rows of feature groups.
+Table structure: first column is the feature name, then four plan columns (Starter, Pro, Team, Enterprise). Team column header has #35858E bg. Use <table> with table-layout: fixed. Column widths: 40% feature, 15% each plan.
+Feature groups with a group header row (#E6EEC9 bg, #35858E text 11px uppercase spanning all columns):
+Group "Repositories & packages": Repos (1 · 5 · 25 · Unlimited), Packages monitored (200 · 2,000 · 20,000 · Unlimited), Ecosystems (npm, PyPI · + go.mod · + Cargo, Maven · All), Monorepo support (✓ · ✓ · ✓ · ✓).
+Group "Scoring & intelligence": SPS scoring (✓ · ✓ · ✓ · ✓), Score history (7 days · 90 days · 90 days · 365 days), Migration recommendations (— · ✓ · ✓ · ✓), Signal breakdown (— · ✓ · ✓ · ✓), Predictive alerts (— · ✓ · ✓ · ✓).
+Group "Integrations": Slack (— · ✓ · ✓ · ✓), Email digest (✓ · ✓ · ✓ · ✓), JIRA / Linear (— · — · ✓ · ✓), REST API (— · — · ✓ · ✓), Webhooks (— · — · ✓ · ✓).
+Group "Security & compliance": OSSF Scorecard (✓ · ✓ · ✓ · ✓), CVE tracking (✓ · ✓ · ✓ · ✓), CSV export (— · — · ✓ · ✓), SOC 2 report (— · — · — · ✓), SSO / SAML (— · — · — · ✓), Private registry (— · — · — · ✓).
+Group "Support": Community (✓ · ✓ · ✓ · ✓), Email support (— · ✓ · ✓ · ✓), Priority support (— · — · ✓ · ✓), Dedicated CSM (— · — · — · ✓), SLA (— · — · — · ✓).
+
+Component — PricingFAQ.tsx
+Background #F0F5E8. Padding 80px 24px. Max-width 720px centred. Heading "Frequently asked questions" 28px/500 centred.
+Eight FAQ items as an accordion. Each item: question 15px/500 #1C3B38 in a full-width button with a Lucide ChevronDown icon right (rotates 180° when open, Framer Motion rotate: 0→180). Answer expands below with Framer Motion AnimatePresence — height: 0→auto using a motion.div with overflow: hidden. Answer text 14px #7DA78C with padding 12px 0 16px.
+FAQ items:
+Q: "What exactly does DriftLogg read from my GitHub?" A: "DriftLogg only reads your dependency manifest files — package.json, requirements.txt, go.mod, pom.xml, Gemfile, and Cargo.toml. It never reads your source code, environment files, or secrets. Our GitHub App requests the minimum possible permission scope."
+Q: "How does the Survival Probability Score work?" A: "SPS is a 0–100 index produced by an XGBoost machine learning model trained on historical data from 50,000+ open source packages. It models the probability that a package remains actively maintained over the next 60–90 days, based on six weighted signal categories: commit velocity, maintainer activity, funding status, issue resolution drift, community health, and security hygiene."
+Q: "How accurate are the predictions?" A: "In backtesting, DriftLogg correctly identified packages that went abandoned within 90 days with a precision of ~84% at the Critical tier threshold. False positives are surfaced with full signal breakdowns so engineers can make their own judgment calls."
+Q: "Can I use DriftLogg on private repos?" A: "Yes. The GitHub App installation works for both public and private repositories. Your manifest data is stored encrypted at rest using AES-256 and never shared."
+Q: "What ecosystems are supported?" A: "Phase 1 supports npm and PyPI. go.mod, Cargo.toml, Maven, and RubyGems are rolling out in Phase 2. Enterprise customers can request priority ecosystem support."
+Q: "How do I cancel my subscription?" A: "You can cancel at any time from the billing settings page. There are no lock-in contracts. Your data is retained for 30 days post-cancellation and then permanently deleted."
+Q: "Does DriftLogg integrate with my existing tools?" A: "Yes. Slack, email, JIRA, and Linear integrations are available on Pro and above. A REST API and webhook support are available on Team and above for custom integrations."
+Q: "Is there a free trial for paid plans?" A: "Pro and Team plans include a 14-day free trial with no credit card required. Enterprise plans include a guided proof-of-concept engagement."
+
+Component — PricingCTA.tsx
+Same design as FinalCTA.tsx on the landing page but with different copy. Background #1C3B38. Heading: "Not sure which plan? Start with Starter." in #E6EEC9 36px/500. Copy: "Free forever on one repo. No credit card. Upgrade only when your team needs more." in rgba(194,208,153,0.65). Two buttons: "Start free" primary + "Talk to sales" ghost.
+
+Responsive behaviour — applies to every component
+All sections use a max-width container of 1200px (1100px for pricing, 900px for comparison table) centred with mx-auto. Horizontal padding is px-6 on mobile, px-8 on desktop. Grid layouts use Tailwind responsive prefixes: grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 and so on — never hardcode column counts without responsive variants. The nav collapses to a hamburger below md breakpoint. Font sizes scale down on mobile: hero headline 56px→36px, section headings 36px→26px, all others remain the same. Touch targets on mobile are minimum 44px height.
+
+Animation rules — Framer Motion
+Every section uses useInView from Framer Motion with once: true and margin: "-80px" so animations fire once as the section scrolls into view, not on page load. The standard entrance pattern is initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.28, ease: 'easeOut' }} applied to the section wrapper. Child elements stagger using variants with staggerChildren. Never animate layout properties like width, height, or padding — only opacity, x, y, scale, and rotate. The pricing card billing toggle animates price text with AnimatePresence. The FAQ accordion animates height with motion.div wrapping the answer content.
+
+SEO and metadata — app/layout.tsx
+tsexport const metadata = {
+  title: 'DriftLogg — Predictive Dependency Health Monitoring',
+  description: 'Know which open source packages are dying 60 days before they do. DriftLogg monitors your dependencies and predicts abandonment before it hits production.',
+  openGraph: {
+    title: 'DriftLogg — Predictive Dependency Health Monitoring',
+    description: 'Predict dependency rot before it becomes a production incident.',
+    url: 'https://driftlogg.com',
+    siteName: 'DriftLogg',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'DriftLogg',
+    description: 'Predict dependency rot before it hits production.',
+  },
+}
+
+Build order — do not deviate
+Build and verify each step fully before moving to the next. Do not scaffold all components simultaneously.
+Step 1 — Foundation: tailwind.config.ts colour tokens, globals.css with all base styles and button classes, lib/utils.ts with the cn() helper, types/index.ts.
+Step 2 — Layout: Nav.tsx fully working including mobile hamburger, Footer.tsx with all four columns. Verify these render correctly at all breakpoints before continuing.
+Step 3 — Landing page sections in order: Hero.tsx, SocialProof.tsx, ProblemSection.tsx, HowItWorks.tsx, FeatureGrid.tsx, DashboardPreview.tsx, Testimonials.tsx, ComparisonTable.tsx, FinalCTA.tsx. Wire into app/page.tsx as you complete each one.
+Step 4 — Pricing page sections in order: PricingHero.tsx with the billing toggle, PricingCards.tsx with all four cards and the annual/monthly price animation, FeatureComparison.tsx, PricingFAQ.tsx with accordion, PricingCTA.tsx. Wire into app/pricing/page.tsx.
+Step 5 — Final pass: check all Framer Motion animations fire correctly on scroll, verify all colour tokens are consistent (no hardcoded hex escaping into component files), check mobile layout at 375px and 768px, verify the billing toggle correctly recalculates and animates prices on the pricing page.
+</user_query>

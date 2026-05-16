@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Dashboard theme (app routes) */
+:root {
+  --dl-critical: #FF4444;
+  --dl-risk: #FF8C00;
+  --dl-watch: #F5C518;
+  --dl-healthy: #22C55E;
+  --dl-bg: #0A0A0F;
+  --dl-surface: #111118;
+  --dl-border: #1E1E2E;
+  --dl-muted: #6B7280;
+  --dl-text: #F9FAFB;
+}
+
+/* Marketing site tokens */
+:root {
+  --dl-teal: #35858E;
+  --dl-sage: #7DA78C;
+  --dl-sage-light: #C2D099;
+  --dl-cream: #E6EEC9;
+  --dl-card: #F4F8EC;
+  --dl-nav: #1C3B38;
+  --dl-page: #F0F5E8;
+  --dl-forest: #2A5C52;
+  --dl-m-text: #1C3B38;
+  --dl-m-muted: #7DA78C;
+  --dl-hint: #9BB8A0;
+  --dl-m-border: #D4E0C8;
+  --dl-border-mid: #C2D099;
+  --dl-m-healthy: #35858E;
+  --dl-m-watch: #4A7A30;
+  --dl-m-risk: #C47820;
+  --dl-m-critical: #C03030;
+  --dl-danger: #E05252;
+  --dl-warning: #E8963A;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-inter), sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Marketing site body */
+.marketing-site {
+  background: var(--dl-page);
+  color: var(--dl-m-text);
+}
+
+/* Dashboard body */
+.dashboard-site {
+  background-color: var(--dl-bg);
+  color: var(--dl-text);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--dl-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--dl-border);
+  border-radius: 3px;
+}
+
+@layer components {
+  .section-light {
+    @apply bg-dl-page;
+  }
+  .section-cream {
+    @apply bg-dl-cream;
+  }
+  .section-dark {
+    @apply bg-dl-nav;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-lg border-none bg-dl-teal px-[22px] py-[11px] text-sm font-medium text-white transition-all duration-150;
+  }
+  .btn-primary:hover {
+    @apply opacity-[0.88] -translate-y-px;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 rounded-lg border-[1.5px] border-dl-teal bg-transparent px-[22px] py-[11px] text-sm font-medium text-dl-teal transition-colors duration-150;
+  }
+  .btn-secondary:hover {
+    background: rgba(53, 133, 142, 0.07);
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-lg border border-dl-sage-light/30 bg-dl-sage-light/15 px-[22px] py-[11px] text-sm font-medium text-dl-cream transition-colors duration-150;
+  }
+  .btn-ghost:hover {
+    @apply bg-dl-sage-light/25;
+  }
+
+  .dl-card {
+    @apply rounded-[14px] border border-dl-border bg-dl-card p-6;
+  }
+
+  .tier-chip {
+    @apply inline-flex items-center gap-[5px] rounded-full px-2.5 py-0.5 text-[11px] font-medium;
+  }
+
+  .tier-chip-critical {
+    @apply tier-chip bg-dl-critical/15 text-dl-critical;
+  }
+  .tier-chip-risk {
+    @apply tier-chip bg-dl-risk/15 text-dl-risk;
+  }
+  .tier-chip-watch {
+    @apply tier-chip bg-dl-watch/15 text-dl-watch;
+  }
+  .tier-chip-healthy {
+    @apply tier-chip bg-dl-teal/15 text-dl-teal;
+  }
+
+  .label-overline {
+    @apply text-[11px] font-medium uppercase tracking-[0.08em] text-dl-hint;
+  }
+}
