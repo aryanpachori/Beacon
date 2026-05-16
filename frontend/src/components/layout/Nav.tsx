@@ -12,7 +12,7 @@ const NAV_LINKS = [
   { href: '/#features', label: 'Product' },
   { href: '/#how-it-works', label: 'How it works' },
   { href: '/pricing', label: 'Pricing' },
-  { href: '#', label: 'Docs' },
+  { href: '/#how-it-works', label: 'Docs' },
 ]
 
 export function Nav() {

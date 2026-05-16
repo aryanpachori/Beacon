@@ -87,7 +87,7 @@ const PLANS = [
     tagline: 'For organisations with security and compliance requirements.',
     cta: 'Talk to sales',
     ctaClass: 'btn-ghost w-full justify-center',
-    href: '#',
+    href: 'mailto:hello@driftlogg.com?subject=Enterprise%20plan',
     popular: false,
     dark: true,
     features: [
@@ -136,7 +136,7 @@ export function PricingCards({ billingPeriod }: PricingCardsProps) {
               )}
               <p
                 className={`text-[13px] font-medium uppercase tracking-wide ${
-                  plan.dark ? 'text-dl-sage-light/70' : 'text-dl-muted'
+                  plan.dark ? 'text-dl-sage-light/70' : 'text-dl-forest/75'
                 }`}
               >
                 {plan.name}

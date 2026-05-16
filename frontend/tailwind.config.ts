@@ -29,6 +29,11 @@ const config: Config = {
           critical: '#C03030',
           danger: '#E05252',
           warning: '#E8963A',
+          m: {
+            text: '#1C3B38',
+            muted: '#7DA78C',
+            border: '#D4E0C8',
+          },
         },
         /* Dashboard app (dark theme) — use dash-* utilities, not top-level dl-* vars */
         dash: {
