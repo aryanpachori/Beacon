@@ -9,22 +9,22 @@ interface MigrationCardProps {
 
 export function MigrationCard({ pkg }: MigrationCardProps) {
   return (
-    <div className="rounded-lg border border-dl-border bg-dl-surface p-4">
-      <h3 className="text-sm font-semibold text-dl-text mb-3">Migration options</h3>
+    <div className="rounded-lg border border-dash-border bg-dash-surface p-4">
+      <h3 className="text-sm font-semibold text-dash-text mb-3">Migration options</h3>
 
       {pkg.recommendations.length === 0 ? (
-        <p className="text-xs text-dl-muted">No alternatives available for this package.</p>
+        <p className="text-xs text-dash-muted">No alternatives available for this package.</p>
       ) : (
         <div className="flex flex-col gap-2">
           {pkg.recommendations.map(rec => (
-            <div key={rec.name} className="flex items-center justify-between py-2 border-b border-dl-border last:border-0">
+            <div key={rec.name} className="flex items-center justify-between py-2 border-b border-dash-border last:border-0">
               <div className="flex items-center gap-2">
                 <EcosystemIcon ecosystem={rec.ecosystem} />
-                <span className="text-sm font-medium text-dl-text">{rec.name}</span>
+                <span className="text-sm font-medium text-dash-text">{rec.name}</span>
               </div>
               <div className="flex items-center gap-3">
                 {rec.weeklyDownloads > 0 && (
-                  <span className="text-xs text-dl-muted">{formatNumber(rec.weeklyDownloads)}/wk</span>
+                  <span className="text-xs text-dash-muted">{formatNumber(rec.weeklyDownloads)}/wk</span>
                 )}
                 <SPSBadge sps={rec.sps} />
               </div>
@@ -34,9 +34,9 @@ export function MigrationCard({ pkg }: MigrationCardProps) {
       )}
 
       {/* Effort estimate */}
-      <div className="mt-4 pt-3 border-t border-dl-border">
-        <p className="text-xs text-dl-muted mb-1">Migration effort</p>
-        <p className="text-xs text-dl-text">
+      <div className="mt-4 pt-3 border-t border-dash-border">
+        <p className="text-xs text-dash-muted mb-1">Migration effort</p>
+        <p className="text-xs text-dash-text">
           Lines impacted: {pkg.effortEstimate.linesImpacted.toLocaleString()} ·{' '}
           Files: {pkg.effortEstimate.filesAffected} ·{' '}
           ~{pkg.effortEstimate.sprintWeeks > 0

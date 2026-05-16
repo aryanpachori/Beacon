@@ -46,7 +46,7 @@ export default function PackageDetailPage({ params }: PageProps) {
       {/* Back */}
       <Link
         href="/packages"
-        className="inline-flex items-center gap-1.5 text-sm text-dl-muted hover:text-dl-text mb-5 transition-colors"
+        className="inline-flex items-center gap-1.5 text-sm text-dash-muted hover:text-dash-text mb-5 transition-colors"
       >
         <ArrowLeft className="w-3.5 h-3.5" />
         All packages
@@ -60,10 +60,10 @@ export default function PackageDetailPage({ params }: PageProps) {
             <EcosystemIcon ecosystem={pkg.ecosystem} />
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold text-dl-text">{pkg.name}</h1>
+                <h1 className="text-xl font-bold text-dash-text">{pkg.name}</h1>
                 <TierChip tier={pkg.tier} />
               </div>
-              <p className="text-sm text-dl-muted font-mono">v{pkg.version} · {pkg.repoName}</p>
+              <p className="text-sm text-dash-muted font-mono">v{pkg.version} · {pkg.repoName}</p>
             </div>
             <div className="ml-auto">
               <SPSBadge sps={pkg.sps} size="lg" />
@@ -71,8 +71,8 @@ export default function PackageDetailPage({ params }: PageProps) {
           </div>
 
           {/* SPS History Chart */}
-          <div className="rounded-lg border border-dl-border bg-dl-surface p-4">
-            <p className="text-xs text-dl-muted mb-3 uppercase tracking-wide">90-day SPS history</p>
+          <div className="rounded-lg border border-dash-border bg-dash-surface p-4">
+            <p className="text-xs text-dash-muted mb-3 uppercase tracking-wide">90-day SPS history</p>
             <ResponsiveContainer width="100%" height={200}>
               <LineChart data={chartData} margin={{ top: 4, right: 8, bottom: 4, left: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
@@ -116,7 +116,7 @@ export default function PackageDetailPage({ params }: PageProps) {
 
           {/* Signals grid */}
           <div>
-            <p className="text-xs text-dl-muted mb-3 uppercase tracking-wide">Signals</p>
+            <p className="text-xs text-dash-muted mb-3 uppercase tracking-wide">Signals</p>
             <div className="grid grid-cols-2 gap-3">
               {signalEntries.map(([key, signal]) => (
                 <SignalCard key={key} signalKey={key} signal={signal} />
@@ -132,7 +132,7 @@ export default function PackageDetailPage({ params }: PageProps) {
           {/* Recent alerts */}
           {pkgAlerts.length > 0 && (
             <div>
-              <p className="text-xs text-dl-muted mb-3 uppercase tracking-wide">Recent alerts</p>
+              <p className="text-xs text-dash-muted mb-3 uppercase tracking-wide">Recent alerts</p>
               <div className="flex flex-col gap-2">
                 {pkgAlerts.map(alert => (
                   <AlertCard key={alert.id} alert={alert} compact />
@@ -142,20 +142,20 @@ export default function PackageDetailPage({ params }: PageProps) {
           )}
 
           {/* Meta */}
-          <div className="rounded-lg border border-dl-border bg-dl-surface p-4">
-            <p className="text-xs text-dl-muted mb-2 uppercase tracking-wide">Details</p>
+          <div className="rounded-lg border border-dash-border bg-dash-surface p-4">
+            <p className="text-xs text-dash-muted mb-2 uppercase tracking-wide">Details</p>
             <dl className="text-xs space-y-1.5">
               <div className="flex justify-between">
-                <dt className="text-dl-muted">Ecosystem</dt>
-                <dd className="text-dl-text uppercase">{pkg.ecosystem}</dd>
+                <dt className="text-dash-muted">Ecosystem</dt>
+                <dd className="text-dash-text uppercase">{pkg.ecosystem}</dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-dl-muted">Last updated</dt>
-                <dd className="text-dl-text">{timeAgo(pkg.lastUpdated)}</dd>
+                <dt className="text-dash-muted">Last updated</dt>
+                <dd className="text-dash-text">{timeAgo(pkg.lastUpdated)}</dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-dl-muted">Monitored repo</dt>
-                <dd className="text-dl-text font-mono">{pkg.repoName}</dd>
+                <dt className="text-dash-muted">Monitored repo</dt>
+                <dd className="text-dash-text font-mono">{pkg.repoName}</dd>
               </div>
             </dl>
           </div>

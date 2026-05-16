@@ -7,8 +7,8 @@ export default function PackagesPage() {
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-xl font-bold text-dl-text">All packages</h1>
-        <p className="text-sm text-dl-muted mt-0.5">{packages.length} packages across 3 repos</p>
+        <h1 className="text-xl font-bold text-dash-text">All packages</h1>
+        <p className="text-sm text-dash-muted mt-0.5">{packages.length} packages across 3 repos</p>
       </div>
       <PackageTable packages={packages} />
     </div>

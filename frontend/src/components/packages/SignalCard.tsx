@@ -20,7 +20,7 @@ const TREND_ICON = {
 const TREND_COLOR = {
   up:     'text-dl-healthy',
   down:   'text-dl-critical',
-  stable: 'text-dl-muted',
+  stable: 'text-dash-muted',
 }
 
 interface SignalCardProps {
@@ -34,12 +34,12 @@ export function SignalCard({ signalKey, signal }: SignalCardProps) {
   const barColor = signal.value >= 70 ? 'bg-dl-healthy' : signal.value >= 40 ? 'bg-dl-watch' : 'bg-dl-critical'
 
   return (
-    <div className="rounded-lg border border-dl-border bg-dl-surface p-3">
+    <div className="rounded-lg border border-dash-border bg-dash-surface p-3">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs text-dl-muted">{SIGNAL_LABELS[signalKey] ?? signalKey}</span>
+        <span className="text-xs text-dash-muted">{SIGNAL_LABELS[signalKey] ?? signalKey}</span>
         <div className="flex items-center gap-1">
           <TrendIcon className={cn('w-3 h-3', TREND_COLOR[signal.trend])} />
-          <span className={cn('text-xs font-medium', signal.weight === 'high' ? 'text-dl-text' : 'text-dl-muted')}>
+          <span className={cn('text-xs font-medium', signal.weight === 'high' ? 'text-dash-text' : 'text-dash-muted')}>
             {signal.weight === 'high' ? '↑' : '·'}
           </span>
         </div>
@@ -51,7 +51,7 @@ export function SignalCard({ signalKey, signal }: SignalCardProps) {
             style={{ width: barWidth }}
           />
         </div>
-        <span className="text-xs font-mono text-dl-text w-6 text-right">{signal.value}</span>
+        <span className="text-xs font-mono text-dash-text w-6 text-right">{signal.value}</span>
       </div>
     </div>
   )

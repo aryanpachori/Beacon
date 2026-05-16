@@ -29,8 +29,8 @@ export default function AlertsPage() {
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-xl font-bold text-dl-text">Alerts</h1>
-        <p className="text-sm text-dl-muted mt-0.5">{alerts.length} alerts in the last 30 days</p>
+        <h1 className="text-xl font-bold text-dash-text">Alerts</h1>
+        <p className="text-sm text-dash-muted mt-0.5">{alerts.length} alerts in the last 30 days</p>
       </div>
 
       {/* Filter tabs */}
@@ -42,8 +42,8 @@ export default function AlertsPage() {
             className={cn(
               'px-3 py-1.5 rounded text-xs font-medium transition-colors',
               filter === tab.value
-                ? 'bg-white/10 text-dl-text'
-                : 'text-dl-muted hover:text-dl-text'
+                ? 'bg-white/10 text-dash-text'
+                : 'text-dash-muted hover:text-dash-text'
             )}
           >
             {tab.label}
@@ -62,8 +62,8 @@ export default function AlertsPage() {
         >
           {visible.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 gap-3">
-              <Bell className="w-8 h-8 text-dl-muted" />
-              <p className="text-sm text-dl-muted">No alerts — your stack looks healthy</p>
+              <Bell className="w-8 h-8 text-dash-muted" />
+              <p className="text-sm text-dash-muted">No alerts — your stack looks healthy</p>
             </div>
           ) : (
             visible.map(alert => (

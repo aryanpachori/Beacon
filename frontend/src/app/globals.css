@@ -15,7 +15,7 @@
   --dl-text: #F9FAFB;
 }
 
-/* Marketing site tokens */
+/* Public site tokens (landing, pricing, auth) */
 :root {
   --dl-teal: #35858E;
   --dl-sage: #7DA78C;
@@ -47,8 +47,8 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Marketing site body */
-.marketing-site {
+/* Public site shell (landing, pricing, auth) */
+.site-shell {
   background: var(--dl-page);
   color: var(--dl-m-text);
 }

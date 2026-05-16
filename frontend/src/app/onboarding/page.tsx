@@ -59,7 +59,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-dl-bg flex items-center justify-center p-6">
+    <div className="min-h-screen bg-dash-bg flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         <AnimatePresence mode="wait">
           {step === 1 && (
@@ -72,12 +72,12 @@ export default function OnboardingPage() {
               transition={{ duration: 0.25 }}
               className="flex flex-col items-center text-center gap-5"
             >
-              <div className="w-14 h-14 rounded-xl bg-dl-surface border border-dl-border flex items-center justify-center">
+              <div className="w-14 h-14 rounded-xl bg-dash-surface border border-dash-border flex items-center justify-center">
                 <ShieldCheck className="w-7 h-7 text-dl-healthy" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-dl-text mb-2">Know before they die.</h1>
-                <p className="text-sm text-dl-muted leading-relaxed">
+                <h1 className="text-2xl font-bold text-dash-text mb-2">Know before they die.</h1>
+                <p className="text-sm text-dash-muted leading-relaxed">
                   DriftLogg watches your dependencies and predicts abandonment 60-90 days before it happens.
                   Connect your GitHub repos to get started.
                 </p>
@@ -102,25 +102,25 @@ export default function OnboardingPage() {
               className="flex flex-col gap-5"
             >
               <div>
-                <h2 className="text-lg font-bold text-dl-text mb-1">Select repos to scan</h2>
-                <p className="text-sm text-dl-muted">Choose which repositories to monitor.</p>
+                <h2 className="text-lg font-bold text-dash-text mb-1">Select repos to scan</h2>
+                <p className="text-sm text-dash-muted">Choose which repositories to monitor.</p>
               </div>
               <div className="flex flex-col gap-2">
                 {MOCK_REPOS.map(repo => (
                   <label
                     key={repo}
-                    className="flex items-center gap-3 p-3 rounded-lg border border-dl-border bg-dl-surface cursor-pointer hover:border-white/20 transition-colors"
+                    className="flex items-center gap-3 p-3 rounded-lg border border-dash-border bg-dash-surface cursor-pointer hover:border-white/20 transition-colors"
                   >
                     <Checkbox.Root
                       checked={selected.includes(repo)}
                       onCheckedChange={() => toggleRepo(repo)}
-                      className="w-4 h-4 rounded border border-dl-border bg-white/5 flex items-center justify-center data-[state=checked]:bg-dl-healthy data-[state=checked]:border-dl-healthy"
+                      className="w-4 h-4 rounded border border-dash-border bg-white/5 flex items-center justify-center data-[state=checked]:bg-dl-healthy data-[state=checked]:border-dl-healthy"
                     >
                       <Checkbox.Indicator>
                         <Check className="w-3 h-3 text-black" />
                       </Checkbox.Indicator>
                     </Checkbox.Root>
-                    <span className="text-sm text-dl-text font-mono">{repo}</span>
+                    <span className="text-sm text-dash-text font-mono">{repo}</span>
                   </label>
                 ))}
               </div>
@@ -148,15 +148,15 @@ export default function OnboardingPage() {
               <motion.div
                 animate={{ scale: [1, 1.08, 1] }}
                 transition={{ repeat: Infinity, duration: 1.2 }}
-                className="w-14 h-14 rounded-xl bg-dl-surface border border-dl-healthy/30 flex items-center justify-center"
+                className="w-14 h-14 rounded-xl bg-dash-surface border border-dl-healthy/30 flex items-center justify-center"
               >
                 <ShieldCheck className="w-7 h-7 text-dl-healthy" />
               </motion.div>
 
               <div>
-                <h2 className="text-lg font-bold text-dl-text mb-1">Scanning your stack…</h2>
-                <p className="text-2xl font-bold font-mono text-dl-text">{count}</p>
-                <p className="text-xs text-dl-muted mt-0.5">packages discovered</p>
+                <h2 className="text-lg font-bold text-dash-text mb-1">Scanning your stack…</h2>
+                <p className="text-2xl font-bold font-mono text-dash-text">{count}</p>
+                <p className="text-xs text-dash-muted mt-0.5">packages discovered</p>
               </div>
 
               <div className="w-full">
@@ -180,28 +180,28 @@ export default function OnboardingPage() {
               transition={{ duration: 0.25 }}
               className="flex flex-col items-center text-center gap-5"
             >
-              <div className="w-14 h-14 rounded-xl bg-dl-surface border border-dl-healthy/30 flex items-center justify-center">
+              <div className="w-14 h-14 rounded-xl bg-dash-surface border border-dl-healthy/30 flex items-center justify-center">
                 <CheckCircle2 className="w-7 h-7 text-dl-healthy" />
               </div>
 
               <div>
-                <h2 className="text-xl font-bold text-dl-text mb-2">Your stack is ready.</h2>
-                <div className="rounded-lg border border-dl-border bg-dl-surface p-4 text-left">
+                <h2 className="text-xl font-bold text-dash-text mb-2">Your stack is ready.</h2>
+                <div className="rounded-lg border border-dash-border bg-dash-surface p-4 text-left">
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>
-                      <p className="text-dl-muted text-xs">Packages scanned</p>
-                      <p className="text-dl-text font-bold font-mono text-lg">340</p>
+                      <p className="text-dash-muted text-xs">Packages scanned</p>
+                      <p className="text-dash-text font-bold font-mono text-lg">340</p>
                     </div>
                     <div>
-                      <p className="text-dl-muted text-xs">Repos connected</p>
-                      <p className="text-dl-text font-bold font-mono text-lg">{selected.length}</p>
+                      <p className="text-dash-muted text-xs">Repos connected</p>
+                      <p className="text-dash-text font-bold font-mono text-lg">{selected.length}</p>
                     </div>
                     <div>
-                      <p className="text-dl-muted text-xs">Critical</p>
+                      <p className="text-dash-muted text-xs">Critical</p>
                       <p className="text-dl-critical font-bold font-mono text-lg">3</p>
                     </div>
                     <div>
-                      <p className="text-dl-muted text-xs">At risk</p>
+                      <p className="text-dash-muted text-xs">At risk</p>
                       <p className="text-dl-risk font-bold font-mono text-lg">8</p>
                     </div>
                   </div>

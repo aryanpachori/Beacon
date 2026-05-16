@@ -25,9 +25,9 @@ export function FinalCTA() {
           <Link href="/register" className="btn-primary">
             Start free →
           </Link>
-          <Link href="#" className="btn-ghost">
+          <a href="mailto:hello@driftlogg.com" className="btn-ghost">
             Talk to us
-          </Link>
+          </a>
         </div>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-xs text-dl-sage-light/50">
           <span className="flex items-center gap-1.5">

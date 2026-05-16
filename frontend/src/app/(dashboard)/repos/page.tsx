@@ -13,12 +13,12 @@ export default function ReposPage() {
     <div className="p-6 max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-xl font-bold text-dl-text">Repos</h1>
-          <p className="text-sm text-dl-muted mt-0.5">{repos.length} connected repositories</p>
+          <h1 className="text-xl font-bold text-dash-text">Repos</h1>
+          <p className="text-sm text-dash-muted mt-0.5">{repos.length} connected repositories</p>
         </div>
         <Dialog.Root open={open} onOpenChange={setOpen}>
           <Dialog.Trigger asChild>
-            <button className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-white/8 border border-dl-border text-sm text-dl-text hover:bg-white/12 transition-colors">
+            <button className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-white/8 border border-dash-border text-sm text-dash-text hover:bg-white/12 transition-colors">
               <Plus className="w-4 h-4" />
               Add repo
             </button>
@@ -26,11 +26,11 @@ export default function ReposPage() {
 
           <Dialog.Portal>
             <Dialog.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40" />
-            <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md rounded-xl border border-dl-border bg-dl-surface p-6 shadow-2xl">
-              <Dialog.Title className="text-base font-bold text-dl-text mb-1">
+            <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md rounded-xl border border-dash-border bg-dash-surface p-6 shadow-2xl">
+              <Dialog.Title className="text-base font-bold text-dash-text mb-1">
                 Connect a new repo
               </Dialog.Title>
-              <Dialog.Description className="text-sm text-dl-muted mb-5">
+              <Dialog.Description className="text-sm text-dash-muted mb-5">
                 Install the DriftLogg GitHub App to start scanning your repositories.
               </Dialog.Description>
 
@@ -42,11 +42,11 @@ export default function ReposPage() {
                 Install GitHub App
               </button>
 
-              <p className="text-xs text-dl-muted text-center">
+              <p className="text-xs text-dash-muted text-center">
                 Read-only access — DriftLogg never writes to your repos.
               </p>
               <Dialog.Close asChild>
-                <button className="absolute top-4 right-4 text-dl-muted hover:text-dl-text transition-colors text-lg leading-none">
+                <button className="absolute top-4 right-4 text-dash-muted hover:text-dash-text transition-colors text-lg leading-none">
                   ×
                 </button>
               </Dialog.Close>

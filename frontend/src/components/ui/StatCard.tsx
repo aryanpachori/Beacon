@@ -12,18 +12,18 @@ export function StatCard({ label, value, sub, accent, className }: StatCardProps
   return (
     <div
       className={cn(
-        'rounded-lg border border-dl-border bg-dl-surface p-4',
+        'rounded-lg border border-dash-border bg-dash-surface p-4',
         className
       )}
     >
-      <p className="text-xs text-dl-muted uppercase tracking-wide mb-1">{label}</p>
+      <p className="text-xs text-dash-muted uppercase tracking-wide mb-1">{label}</p>
       <p
         className="text-2xl font-bold font-mono tabular-nums"
         style={accent ? { color: accent } : undefined}
       >
         {value}
       </p>
-      {sub && <p className="text-xs text-dl-muted mt-1">{sub}</p>}
+      {sub && <p className="text-xs text-dash-muted mt-1">{sub}</p>}
     </div>
   )
 }

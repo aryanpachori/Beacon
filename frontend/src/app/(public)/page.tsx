@@ -10,7 +10,7 @@ import { Testimonials } from '@/components/landing/Testimonials'
 import { ComparisonTable } from '@/components/landing/ComparisonTable'
 import { FinalCTA } from '@/components/landing/FinalCTA'
 
-export default function MarketingHomePage() {
+export default function HomePage() {
   return (
     <>
       <Nav />

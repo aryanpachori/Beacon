@@ -15,7 +15,7 @@ export function AlertCard({ alert, compact = false }: AlertCardProps) {
   return (
     <div
       className={cn(
-        'rounded-lg border border-dl-border bg-dl-surface border-l-[3px] flex items-start gap-4',
+        'rounded-lg border border-dash-border bg-dash-surface border-l-[3px] flex items-start gap-4',
         compact ? 'px-3 py-2.5' : 'px-4 py-3.5',
         borderClass
       )}
@@ -24,10 +24,10 @@ export function AlertCard({ alert, compact = false }: AlertCardProps) {
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-0.5">
           <TierChip tier={alert.tier} />
-          <span className="text-sm font-medium text-dl-text truncate">{alert.packageName}</span>
+          <span className="text-sm font-medium text-dash-text truncate">{alert.packageName}</span>
         </div>
         {!compact && (
-          <p className="text-xs text-dl-muted truncate">
+          <p className="text-xs text-dash-muted truncate">
             {alert.repos.join(', ')}
           </p>
         )}
@@ -35,8 +35,8 @@ export function AlertCard({ alert, compact = false }: AlertCardProps) {
 
       {/* Centre — SPS drop */}
       <div className="flex items-center gap-1 shrink-0">
-        <span className="text-sm font-mono text-dl-muted">{alert.spsBefore}</span>
-        <span className="text-xs text-dl-muted mx-0.5">→</span>
+        <span className="text-sm font-mono text-dash-muted">{alert.spsBefore}</span>
+        <span className="text-xs text-dash-muted mx-0.5">→</span>
         <span className={cn('text-sm font-bold font-mono', tierColor(alert.tier, 'text'))}>
           {alert.spsAfter}
         </span>
@@ -45,17 +45,17 @@ export function AlertCard({ alert, compact = false }: AlertCardProps) {
       {/* Right */}
       {!compact && (
         <div className="flex flex-col items-end gap-1.5 shrink-0">
-          <span className="text-xs text-dl-muted">{timeAgo(alert.firedAt)}</span>
+          <span className="text-xs text-dash-muted">{timeAgo(alert.firedAt)}</span>
           <div className="flex gap-1.5">
             <button
               disabled
-              className="px-2.5 py-1 rounded border border-dl-border text-xs text-dl-muted opacity-40 cursor-not-allowed"
+              className="px-2.5 py-1 rounded border border-dash-border text-xs text-dash-muted opacity-40 cursor-not-allowed"
             >
               Slack
             </button>
             <button
               disabled
-              className="px-2.5 py-1 rounded border border-dl-border text-xs text-dl-muted opacity-40 cursor-not-allowed"
+              className="px-2.5 py-1 rounded border border-dash-border text-xs text-dash-muted opacity-40 cursor-not-allowed"
             >
               Jira
             </button>

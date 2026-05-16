@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { SiteLogo } from '@/components/layout/SiteLogo'
 import { Menu, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
@@ -28,13 +29,10 @@ export function Nav() {
       className="sticky top-0 z-50 h-[60px] bg-dl-nav"
     >
       <div className="mx-auto flex h-full max-w-[1200px] items-center justify-between px-6">
-        <Link
-          href="/"
-          className="text-[17px] font-semibold text-dl-sage-light"
+        <SiteLogo
+          className="text-dl-sage-light"
           onClick={() => setOpen(false)}
-        >
-          DriftLogg
-        </Link>
+        />
 
         <nav className="hidden items-center gap-8 md:flex">
           {NAV_LINKS.map((link) => (
