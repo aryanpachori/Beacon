@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 
 function GitHubIcon({ className }: { className?: string }) {
@@ -62,7 +63,16 @@ export function Footer() {
       <div className="mx-auto max-w-[1200px] px-6 pb-10 pt-16">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <p className="text-[17px] font-semibold text-dl-sage-light">DriftLogg</p>
+            <Link href="/" className="inline-flex items-center gap-2.5">
+              <Image
+                src="/logo.png"
+                alt=""
+                width={32}
+                height={32}
+                className="h-8 w-8 shrink-0 rounded-md"
+              />
+              <span className="text-[17px] font-semibold text-dl-sage-light">DriftLogg</span>
+            </Link>
             <p className="mt-3 max-w-[200px] text-[13px] leading-relaxed text-dl-sage-light/55">
               Predict dependency rot before it hits production.
             </p>

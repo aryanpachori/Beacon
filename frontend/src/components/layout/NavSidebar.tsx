@@ -2,7 +2,8 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Package, Bell, GitBranch, Activity } from 'lucide-react'
+import Image from 'next/image'
+import { LayoutDashboard, Package, Bell, GitBranch } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
@@ -17,11 +18,19 @@ export function NavSidebar() {
 
   return (
     <aside className="flex flex-col w-56 shrink-0 border-r border-dash-border bg-dash-surface h-screen sticky top-0">
-      {/* Logo */}
-      <div className="flex items-center gap-2 px-5 py-5 border-b border-dash-border">
-        <Activity className="w-5 h-5 text-dl-healthy" />
-        <span className="font-bold text-dash-text tracking-tight text-sm">DriftLogg</span>
-      </div>
+      <Link
+        href="/dashboard"
+        className="flex items-center gap-2.5 border-b border-dash-border px-5 py-5"
+      >
+        <Image
+          src="/logo.png"
+          alt=""
+          width={28}
+          height={28}
+          className="h-7 w-7 shrink-0 rounded-md"
+        />
+        <span className="text-sm font-bold tracking-tight text-dash-text">DriftLogg</span>
+      </Link>
 
       {/* Nav items */}
       <nav className="flex flex-col gap-1 p-3 flex-1">

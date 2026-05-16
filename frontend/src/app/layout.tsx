@@ -5,6 +5,10 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
 export const metadata: Metadata = {
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/logo.png',
+  },
   title: 'DriftLogg — Predictive Dependency Health',
   description:
     'Know which open source packages are dying before they become production incidents. Predictive dependency intelligence for engineering teams.',

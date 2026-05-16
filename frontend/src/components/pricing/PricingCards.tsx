@@ -9,6 +9,7 @@ export type BillingPeriod = 'monthly' | 'annual'
 
 type PricingCardsProps = {
   billingPeriod: BillingPeriod
+  onBillingChange: (period: BillingPeriod) => void
 }
 
 function formatPrice(monthly: number, billingPeriod: BillingPeriod) {
@@ -103,17 +104,55 @@ const PLANS = [
   },
 ]
 
-export function PricingCards({ billingPeriod }: PricingCardsProps) {
+export function PricingCards({ billingPeriod, onBillingChange }: PricingCardsProps) {
   return (
-    <section className="section-light px-6 pb-20">
+    <section className="section-light px-6 pb-20 pt-12 md:pt-16">
       <motion.div
-        className="mx-auto grid max-w-[1100px] grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+        className="mx-auto flex max-w-[1100px] flex-col gap-16 md:gap-20"
         initial="hidden"
         whileInView="visible"
         viewport={inViewOptions}
         variants={staggerContainer}
       >
-        {PLANS.map((plan) => {
+        <motion.div variants={sectionReveal} className="flex justify-center">
+          <motion.div
+            variants={sectionReveal}
+            className="inline-flex rounded-lg border border-dl-border bg-dl-cream p-1 shadow-sm"
+            role="group"
+            aria-label="Billing period"
+          >
+          <button
+            type="button"
+            onClick={() => onBillingChange('monthly')}
+            className={`rounded-md px-5 py-2 text-sm font-medium transition-colors ${
+              billingPeriod === 'monthly'
+                ? 'bg-dl-teal text-white'
+                : 'text-dl-muted hover:text-dl-text'
+            }`}
+          >
+            Monthly
+          </button>
+          <button
+            type="button"
+            onClick={() => onBillingChange('annual')}
+            className={`flex items-center gap-2 rounded-md px-5 py-2 text-sm font-medium transition-colors ${
+              billingPeriod === 'annual'
+                ? 'bg-dl-teal text-white'
+                : 'text-dl-muted hover:text-dl-text'
+            }`}
+          >
+            Annual
+            <span className="rounded-full bg-dl-sage-light px-2 py-0.5 text-[10px] font-medium text-dl-nav">
+              Save 20%
+            </span>
+          </button>
+          </motion.div>
+        </motion.div>
+        <motion.div
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+          variants={staggerContainer}
+        >
+          {PLANS.map((plan) => {
           const price =
             plan.monthlyPrice === null
               ? null
@@ -196,6 +235,7 @@ export function PricingCards({ billingPeriod }: PricingCardsProps) {
             </motion.div>
           )
         })}
+        </motion.div>
       </motion.div>
     </section>
   )

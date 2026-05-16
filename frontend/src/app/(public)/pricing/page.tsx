@@ -16,8 +16,8 @@ export default function PricingPage() {
     <>
       <Nav />
       <main>
-        <PricingHero billingPeriod={billingPeriod} onBillingChange={setBillingPeriod} />
-        <PricingCards billingPeriod={billingPeriod} />
+        <PricingHero />
+        <PricingCards billingPeriod={billingPeriod} onBillingChange={setBillingPeriod} />
         <FeatureComparison />
         <PricingFAQ />
         <PricingCTA />
