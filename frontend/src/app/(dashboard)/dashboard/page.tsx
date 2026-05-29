@@ -1,31 +1,32 @@
 'use client'
 
-import { packages, repos } from '@/lib/mockData'
-import { StatCard } from '@/components/ui/StatCard'
+import { packages } from '@/lib/mockData'
+import { HealthOverviewBar } from '@/components/dashboard/HealthOverviewBar'
+import { CriticalPackagesFeed } from '@/components/dashboard/CriticalPackagesFeed'
+import { AiSignalPanel } from '@/components/dashboard/AiSignalPanel'
 import { PackageTable } from '@/components/packages/PackageTable'
-import { PageHeader } from '@/components/ui/PageHeader'
 
 export default function DashboardPage() {
-  const critical = packages.filter(p => p.tier === 'critical').length
-  const atRisk   = packages.filter(p => p.tier === 'at-risk').length
-  const watch    = packages.filter(p => p.tier === 'watch').length
-  const avgSps   = Math.round(packages.reduce((s, p) => s + p.sps, 0) / packages.length)
-
   return (
     <div className="app-page">
-      <PageHeader
-        title="Dashboard"
-        description={`${repos.length} connected repos · ${packages.length} packages monitored`}
-      />
-
-      <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
-        <StatCard label="Total packages" value={packages.length} />
-        <StatCard label="Critical" value={critical} accent="var(--dl-critical)" />
-        <StatCard label="At risk" value={atRisk} accent="var(--dl-risk)" />
-        <StatCard label="Avg SPS" value={avgSps} sub={`${watch} watching`} />
+      <div className="mb-6">
+        <h1 className="page-heading text-dl-forest">Dashboard</h1>
+        <p className="page-description text-dl-muted">
+          AI health intelligence across your dependency stack
+        </p>
       </div>
 
-      <PackageTable packages={packages} />
+      <HealthOverviewBar />
+
+      <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-[65fr_35fr]">
+        <CriticalPackagesFeed />
+        <AiSignalPanel />
+      </div>
+
+      <section>
+        <p className="dash-section-label mb-4">ALL PACKAGES</p>
+        <PackageTable packages={packages} variant="dashboard" />
+      </section>
     </div>
   )
 }

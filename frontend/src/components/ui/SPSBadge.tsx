@@ -1,27 +1,24 @@
-import { tierColor } from '@/lib/constants'
-import { spsToTier } from '@/lib/constants'
-import { cn } from '@/lib/utils'
+import type { Tier } from '@/types'
 
-interface SPSBadgeProps {
-  sps: number
-  size?: 'sm' | 'lg'
-  className?: string
+const colourMap: Record<Tier, string> = {
+  healthy: 'text-[#5BBEC8]',
+  watch: 'text-[#8AB870]',
+  'at-risk': 'text-[#D4963A]',
+  critical: 'text-[#E07070]',
 }
 
-export function SPSBadge({ sps, size = 'sm', className }: SPSBadgeProps) {
-  const tier = spsToTier(sps)
-  const textClass = tierColor(tier, 'text')
+interface SPSBadgeProps {
+  score: number
+  tier: Tier
+  size?: 'sm' | 'md' | 'lg'
+}
 
+const sizeMap = { sm: 'text-[16px]', md: 'text-[22px]', lg: 'text-[32px]' }
+
+export function SPSBadge({ score, tier, size = 'md' }: SPSBadgeProps) {
   return (
-    <span
-      className={cn(
-        'font-mono font-medium tabular-nums',
-        size === 'lg' ? 'text-3xl' : 'text-sm',
-        textClass,
-        className
-      )}
-    >
-      {sps}
+    <span className={`font-medium tabular-nums ${sizeMap[size]} ${colourMap[tier]}`}>
+      {score}
     </span>
   )
 }

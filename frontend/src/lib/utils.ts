@@ -11,6 +11,10 @@ export function formatNumber(n: number): string {
   return String(n)
 }
 
+export function daysSinceDate(iso: string): number {
+  return Math.floor((Date.now() - new Date(iso).getTime()) / 86_400_000)
+}
+
 export function timeAgo(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime()
   const mins = Math.floor(diff / 60_000)

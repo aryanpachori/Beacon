@@ -1,23 +1,19 @@
 import type { Tier } from '@/types'
-import { TIER_LABELS } from '@/lib/constants'
-import { cn } from '@/lib/utils'
 
-const TIER_CLASS: Record<Tier, string> = {
-  critical: 'tier-chip-critical',
-  'at-risk': 'tier-chip-risk',
-  watch: 'tier-chip-watch',
-  healthy: 'tier-chip-healthy',
+const classMap: Record<Tier, string> = {
+  healthy: 'tier-chip tier-chip-healthy',
+  watch: 'tier-chip tier-chip-watch',
+  'at-risk': 'tier-chip tier-chip-risk',
+  critical: 'tier-chip tier-chip-critical',
 }
 
-interface TierChipProps {
-  tier: Tier
-  className?: string
+const labelMap: Record<Tier, string> = {
+  healthy: 'Healthy',
+  watch: 'Watch',
+  'at-risk': 'At risk',
+  critical: 'Critical',
 }
 
-export function TierChip({ tier, className }: TierChipProps) {
-  return (
-    <span className={cn(TIER_CLASS[tier], className)}>
-      {TIER_LABELS[tier]}
-    </span>
-  )
+export function TierChip({ tier }: { tier: Tier }) {
+  return <span className={classMap[tier]}>{labelMap[tier]}</span>
 }

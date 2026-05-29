@@ -3,12 +3,14 @@ import Link from 'next/link'
 
 type SiteLogoProps = {
   className?: string
+  iconClassName?: string
   onClick?: () => void
   showWordmark?: boolean
 }
 
 export function SiteLogo({
   className = '',
+  iconClassName = '',
   onClick,
   showWordmark = true,
 }: SiteLogoProps) {
@@ -20,14 +22,18 @@ export function SiteLogo({
       onClick={onClick}
       className="inline-flex items-center gap-2.5"
     >
-      <Image
-        src="/logo.png"
-        alt="DriftLogg"
-        width={32}
-        height={32}
-        className="h-8 w-8 shrink-0 rounded-md"
-        priority
-      />
+      <span
+        className={`flex h-8 w-8 shrink-0 items-center justify-center ${iconClassName}`}
+      >
+        <Image
+          src="/logo.png"
+          alt=""
+          width={32}
+          height={32}
+          className="h-7 w-7 shrink-0 object-contain"
+          priority
+        />
+      </span>
       {showWordmark && (
         <span className={`text-[17px] font-medium tracking-tight ${wordmarkClass}`}>
           DriftLogg

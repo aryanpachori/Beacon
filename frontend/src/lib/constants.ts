@@ -2,13 +2,13 @@ import type { Tier } from '@/types'
 
 // Complete string literals so Tailwind JIT scanner includes all classes (D7)
 export const TIER_CLASSES = {
-  critical: { text: 'text-dl-critical', bg: 'bg-dl-critical', border: 'border-dl-critical' },
-  'at-risk': { text: 'text-dl-risk',     bg: 'bg-dl-risk',     border: 'border-dl-risk'     },
-  watch:    { text: 'text-dl-watch',    bg: 'bg-dl-watch',    border: 'border-dl-watch'    },
-  healthy:  { text: 'text-dl-healthy',  bg: 'bg-dl-healthy',  border: 'border-dl-healthy'  },
+  critical: { text: 'text-dl-critical', bg: 'bg-dl-critical', border: 'border-dl-critical', stroke: 'var(--dl-critical)' },
+  'at-risk': { text: 'text-dl-risk',     bg: 'bg-dl-risk',     border: 'border-dl-risk',     stroke: 'var(--dl-risk)'     },
+  watch:    { text: 'text-dl-watch',    bg: 'bg-dl-watch',    border: 'border-dl-watch',    stroke: 'var(--dl-watch)'    },
+  healthy:  { text: 'text-dl-healthy',  bg: 'bg-dl-healthy',  border: 'border-dl-healthy',  stroke: 'var(--dl-healthy)'  },
 } as const
 
-export function tierColor(tier: Tier, variant: 'text' | 'bg' | 'border'): string {
+export function tierColor(tier: Tier, variant: 'text' | 'bg' | 'border' | 'stroke'): string {
   return TIER_CLASSES[tier][variant]
 }
 
