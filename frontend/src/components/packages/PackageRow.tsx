@@ -22,7 +22,7 @@ export function PackageRow({ pkg, index }: PackageRowProps) {
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.04, duration: 0.2 }}
-      className="border-b border-dash-border hover:bg-white/3 transition-colors cursor-pointer"
+      className="border-b border-dl-m-border transition-colors hover:bg-dl-teal/[0.04] cursor-pointer"
     >
       <td className="px-5 py-3.5">
         <Link href={`/packages/${pkg.id}`} className="flex items-center gap-2">

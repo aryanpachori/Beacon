@@ -1,6 +1,6 @@
 'use client'
 
-import { packages } from '@/lib/mockData'
+import { packages, repos } from '@/lib/mockData'
 import { StatCard } from '@/components/ui/StatCard'
 import { PackageTable } from '@/components/packages/PackageTable'
 import { PageHeader } from '@/components/ui/PageHeader'
@@ -15,7 +15,7 @@ export default function DashboardPage() {
     <div className="app-page">
       <PageHeader
         title="Dashboard"
-        description="Monitoring 3 repos · Last updated 4 minutes ago"
+        description={`${repos.length} connected repos · ${packages.length} packages monitored`}
       />
 
       <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">

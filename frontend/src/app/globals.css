@@ -2,21 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Dashboard theme (app routes) */
+/* Shared tokens — light theme everywhere (landing + app) */
 :root {
-  --dl-critical: #FF4444;
-  --dl-risk: #FF8C00;
-  --dl-watch: #F5C518;
-  --dl-healthy: #22C55E;
-  --dl-bg: #0A0A0F;
-  --dl-surface: #111118;
-  --dl-border: #1E1E2E;
-  --dl-muted: #6B7280;
-  --dl-text: #F9FAFB;
-}
-
-/* Public site tokens (landing, pricing, auth) */
-:root {
+  --dl-critical: #C03030;
+  --dl-risk: #C47820;
+  --dl-watch: #4A7A30;
+  --dl-healthy: #35858E;
+  --dl-bg: #F0F5E8;
+  --dl-surface: #F4F8EC;
+  --dl-border: #D4E0C8;
+  --dl-muted: #7DA78C;
+  --dl-text: #1C3B38;
   --dl-teal: #35858E;
   --dl-sage: #7DA78C;
   --dl-sage-light: #C2D099;
@@ -47,16 +43,10 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Public site shell (landing, pricing, auth) */
-.site-shell {
+.site-shell,
+.dashboard-site {
   background: var(--dl-page);
   color: var(--dl-m-text);
-}
-
-/* Dashboard body */
-.dashboard-site {
-  background-color: var(--dl-bg);
-  color: var(--dl-text);
 }
 
 ::-webkit-scrollbar {
@@ -64,10 +54,10 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--dl-bg);
+  background: var(--dl-page);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--dl-border);
+  background: var(--dl-m-border);
   border-radius: 3px;
 }
 
@@ -104,7 +94,7 @@ body {
   }
 
   .dl-card {
-    @apply rounded-[14px] border border-dl-border bg-dl-card p-6;
+    @apply rounded-[14px] border border-dl-m-border bg-dl-card p-6;
   }
 
   .tier-chip {
@@ -131,15 +121,14 @@ body {
     @apply text-[11px] font-medium uppercase tracking-[0.08em] text-dl-muted;
   }
 
-  /* App shell — shared typography (landing-aligned) */
   .page-heading {
-    @apply text-xl font-medium tracking-tight text-dash-text md:text-2xl;
+    @apply text-xl font-medium tracking-tight text-dl-forest md:text-2xl;
   }
   .page-description {
-    @apply mt-1.5 text-sm leading-relaxed text-dash-muted;
+    @apply mt-1.5 text-sm leading-relaxed text-dl-m-muted;
   }
   .card-heading {
-    @apply text-lg font-medium tracking-tight text-dash-text;
+    @apply text-lg font-medium tracking-tight text-dl-forest;
   }
   .marketing-title {
     @apply text-[28px] font-medium tracking-tight text-dl-forest md:text-[32px];
@@ -156,14 +145,14 @@ body {
   }
 
   .dash-card {
-    @apply overflow-hidden rounded-[14px] border border-dash-border bg-dash-surface;
+    @apply overflow-hidden rounded-[14px] border border-dl-m-border bg-dl-card;
   }
 
   .btn-dash-primary {
     @apply inline-flex items-center justify-center gap-2 rounded-lg bg-dl-teal px-4 py-2.5 text-sm font-medium text-white transition-all duration-150 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40;
   }
   .btn-dash-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-dash-border bg-white/5 px-4 py-2.5 text-sm font-medium text-dash-text transition-colors hover:bg-white/10;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-dl-m-border bg-white px-4 py-2.5 text-sm font-medium text-dl-forest transition-colors hover:bg-dl-cream;
   }
 
   .form-label {
@@ -173,27 +162,27 @@ body {
     @apply w-full rounded-lg border border-dl-m-border bg-white px-3 py-2.5 text-sm text-dl-forest placeholder:text-dl-hint transition-colors focus:border-dl-teal focus:outline-none focus:ring-2 focus:ring-dl-teal/20;
   }
   .dash-input {
-    @apply w-full rounded-lg border border-dash-border bg-white/5 px-3 py-2.5 text-sm text-dash-text placeholder:text-dash-muted transition-colors focus:border-dl-teal/50 focus:outline-none focus:ring-2 focus:ring-dl-teal/20;
+    @apply w-full rounded-lg border border-dl-m-border bg-white px-3 py-2.5 text-sm text-dl-forest placeholder:text-dl-hint transition-colors focus:border-dl-teal focus:outline-none focus:ring-2 focus:ring-dl-teal/20;
   }
 
   .filter-tab {
-    @apply rounded-lg px-3 py-1.5 text-xs font-medium text-dash-muted transition-colors hover:text-dash-text;
+    @apply rounded-lg px-3 py-1.5 text-xs font-medium text-dl-m-muted transition-colors hover:text-dl-forest;
   }
   .filter-tab-active {
-    @apply bg-white/10 text-dash-text;
+    @apply bg-dl-teal/10 text-dl-forest;
   }
 
   .progress-track {
-    @apply h-1.5 overflow-hidden rounded-full bg-white/10;
+    @apply h-1.5 overflow-hidden rounded-full bg-dl-m-border/60;
   }
   .progress-fill {
     @apply h-full rounded-full bg-dl-teal transition-[width] duration-150 ease-out;
   }
 
   .dash-section-label {
-    @apply text-xs font-medium uppercase tracking-wide text-dash-muted;
+    @apply text-xs font-medium uppercase tracking-wide text-dl-m-muted;
   }
   .stat-value {
-    @apply text-2xl font-medium font-mono tabular-nums text-dash-text;
+    @apply text-2xl font-medium font-mono tabular-nums text-dl-forest;
   }
 }

@@ -1,22 +1,20 @@
 {
-  "date": "2026-05-17",
-  "url": "http://localhost:3004",
-  "healthScore": 84,
+  "date": "2026-05-29",
+  "url": "http://localhost:3000",
+  "healthScore": 94,
   "issues": [
-    { "id": "ISSUE-001", "title": "Unreadable text on light marketing backgrounds", "severity": "critical", "category": "accessibility", "status": "fixed-uncommitted" },
-    { "id": "ISSUE-002", "title": "Footer legal links pointed to homepage", "severity": "medium", "category": "functional", "status": "fixed-uncommitted" },
-    { "id": "ISSUE-003", "title": "Nav Docs duplicated How it works", "severity": "medium", "category": "ux", "status": "fixed-uncommitted" },
-    { "id": "ISSUE-004", "title": "Stale comparison footnote date", "severity": "medium", "category": "content", "status": "fixed-uncommitted" },
-    { "id": "ISSUE-005", "title": "US spelling consistency", "severity": "low", "category": "content", "status": "fixed-uncommitted" },
-    { "id": "ISSUE-006", "title": "Abrupt light-to-dark jump at onboarding", "severity": "low", "category": "ux", "status": "deferred" }
+    { "id": "ISSUE-001", "title": "Dev server 500 after concurrent build", "severity": "low", "category": "functional" },
+    { "id": "ISSUE-002", "title": "Dead Testimonials/SocialProof components", "severity": "low", "category": "content" },
+    { "id": "ISSUE-003", "title": "acme-corp demo naming in mock data", "severity": "low", "category": "content" }
   ],
   "categoryScores": {
-    "console": 70,
+    "console": 100,
     "links": 100,
-    "visual": 85,
-    "functional": 90,
-    "ux": 80,
-    "performance": 85,
-    "accessibility": 82
+    "visual": 92,
+    "functional": 98,
+    "ux": 90,
+    "performance": 90,
+    "content": 95,
+    "accessibility": 88
   }
 }

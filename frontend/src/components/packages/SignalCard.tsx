@@ -45,7 +45,7 @@ export function SignalCard({ signalKey, signal }: SignalCardProps) {
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <div className="flex-1 h-1.5 rounded-full bg-white/5">
+        <div className="h-1.5 flex-1 rounded-full bg-dl-m-border/50">
           <div
             className={cn('h-full rounded-full transition-all', barColor)}
             style={{ width: barWidth }}

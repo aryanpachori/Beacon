@@ -15,8 +15,8 @@ const FAQS = [
     a: 'We combine 12 signals: commit frequency, maintainer activity, issue response time, download trends, bus factor, and more. Each is weighted and normalized to 0–100.',
   },
   {
-    q: 'Can I try Team features before upgrading?',
-    a: 'Yes. Start a 14-day Team trial from your dashboard — no credit card required.',
+    q: 'What is included in Pro?',
+    a: 'Pro adds more repos, Slack alerts, migration recommendations, 90-day score history, and signal breakdown. Starter stays free for one repo.',
   },
   {
     q: 'What happens when I exceed my package limit?',
@@ -31,12 +31,8 @@ const FAQS = [
     a: 'Yes. Cancel from billing settings. You keep access until the end of your billing period.',
   },
   {
-    q: 'Is there a discount for startups?',
-    a: 'Teams under 2 years old with under $5M raised get 50% off Pro for 12 months. Email hello@driftlogg.com.',
-  },
-  {
     q: 'How does annual billing work?',
-    a: 'Pay yearly upfront and save 20%. You can switch between monthly and annual anytime from billing settings.',
+    a: 'Pay yearly upfront and save 20% on Pro. You can switch between monthly and annual anytime from billing settings.',
   },
 ]
 

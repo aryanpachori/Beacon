@@ -35,17 +35,17 @@ const config: Config = {
             border: '#D4E0C8',
           },
         },
-        /* Dashboard app (dark theme) — use dash-* utilities, not top-level dl-* vars */
+        /* App shell — same light palette as marketing */
         dash: {
-          critical: 'var(--dl-critical)',
-          risk: 'var(--dl-risk)',
-          watch: 'var(--dl-watch)',
-          healthy: 'var(--dl-healthy)',
-          bg: 'var(--dl-bg)',
-          surface: 'var(--dl-surface)',
-          border: 'var(--dl-border)',
-          muted: 'var(--dl-muted)',
-          text: 'var(--dl-text)',
+          critical: '#C03030',
+          risk: '#C47820',
+          watch: '#4A7A30',
+          healthy: '#35858E',
+          bg: '#F0F5E8',
+          surface: '#F4F8EC',
+          border: '#D4E0C8',
+          muted: '#7DA78C',
+          text: '#1C3B38',
         },
       },
       fontFamily: {

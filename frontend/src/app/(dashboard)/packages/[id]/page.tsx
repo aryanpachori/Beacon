@@ -75,30 +75,30 @@ export default function PackageDetailPage({ params }: PageProps) {
             <p className="dash-section-label mb-4">90-day SPS history</p>
             <ResponsiveContainer width="100%" height={200}>
               <LineChart data={chartData} margin={{ top: 4, right: 8, bottom: 4, left: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(42, 92, 82, 0.08)" />
                 <XAxis
                   dataKey="date"
-                  tick={{ fontSize: 10, fill: 'var(--dl-muted)' }}
+                  tick={{ fontSize: 10, fill: '#7DA78C' }}
                   tickLine={false}
                   axisLine={false}
                   interval={14}
                 />
                 <YAxis
                   domain={[0, 100]}
-                  tick={{ fontSize: 10, fill: 'var(--dl-muted)' }}
+                  tick={{ fontSize: 10, fill: '#7DA78C' }}
                   tickLine={false}
                   axisLine={false}
                   width={28}
                 />
                 <Tooltip
                   contentStyle={{
-                    background: 'var(--dl-surface)',
-                    border: '1px solid var(--dl-border)',
-                    borderRadius: 6,
+                    background: '#F4F8EC',
+                    border: '1px solid #D4E0C8',
+                    borderRadius: 8,
                     fontSize: 12,
                   }}
-                  labelStyle={{ color: 'var(--dl-muted)' }}
-                  itemStyle={{ color: 'var(--dl-text)' }}
+                  labelStyle={{ color: '#7DA78C' }}
+                  itemStyle={{ color: '#1C3B38' }}
                 />
                 <ReferenceLine y={20} stroke="var(--dl-critical)" strokeDasharray="4 4" strokeOpacity={0.5} />
                 <ReferenceLine y={50} stroke="var(--dl-watch)"    strokeDasharray="4 4" strokeOpacity={0.5} />

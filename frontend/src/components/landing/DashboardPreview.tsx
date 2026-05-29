@@ -64,17 +64,7 @@ export function DashboardPreview() {
         >
           <motion.div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <span className="text-sm font-medium text-dl-cream">Dependency dashboard</span>
-            <div className="flex flex-wrap gap-2">
-              <span className="rounded-full bg-dl-teal/20 px-3 py-1 text-xs font-medium text-dl-teal">
-                340 packages
-              </span>
-              <span className="rounded-full bg-dl-danger/20 px-3 py-1 text-xs font-medium text-dl-danger">
-                8 critical
-              </span>
-              <span className="rounded-full bg-dl-warning/20 px-3 py-1 text-xs font-medium text-dl-warning">
-                24 at risk
-              </span>
-            </div>
+            <span className="text-xs text-dl-sage-light/50">Sample view</span>
           </motion.div>
 
           <div className="overflow-x-auto">
