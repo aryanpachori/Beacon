@@ -13,6 +13,8 @@ const NAV_ITEMS = [
   { label: 'Packages', href: '/packages', icon: Package },
   { label: 'Alerts', href: '/alerts', icon: Bell, showBadge: true },
   { label: 'Repos', href: '/repos', icon: GitBranch },
+  { label: 'Emails', href: '/email-previews', icon: Mail },
+  { label: 'Integrations', href: '/integrations', icon: Settings },
 ]
 
 const alertCount = alerts.filter(a => !a.slackSent).length

@@ -29,9 +29,9 @@ const TESTIMONIALS = [
 
 export function Testimonials() {
   return (
-    <section className="bg-dl-card px-6 py-[100px]">
+    <section className="relative overflow-hidden bg-dl-card py-[100px]">
       <motion.div
-        className="mx-auto max-w-[1100px]"
+        className="mx-auto max-w-[1100px] px-6"
         initial="hidden"
         whileInView="visible"
         viewport={inViewOptions}
@@ -46,20 +46,29 @@ export function Testimonials() {
         >
           Teams that stopped firefighting.
         </motion.h2>
+      </motion.div>
 
-        <motion.div
-          variants={staggerContainer}
-          className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-3"
-        >
-          {TESTIMONIALS.map((t) => (
-            <motion.div
-              key={t.name}
-              variants={sectionReveal}
-              className="rounded-[14px] border border-dl-border bg-white p-7"
+      {/* Full-width Marquee Container */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={inViewOptions}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="relative mt-16 w-full overflow-hidden"
+      >
+        {/* Left and Right Fade Overlays */}
+        <div className="pointer-events-none absolute bottom-0 left-0 top-0 w-12 bg-gradient-to-r from-dl-card to-transparent z-10 sm:w-24" />
+        <div className="pointer-events-none absolute bottom-0 right-0 top-0 w-12 bg-gradient-to-l from-dl-card to-transparent z-10 sm:w-24" />
+
+        <div className="animate-marquee gap-6 py-4">
+          {[...TESTIMONIALS, ...TESTIMONIALS, ...TESTIMONIALS, ...TESTIMONIALS].map((t, idx) => (
+            <div
+              key={`${t.name}-${idx}`}
+              className="w-[360px] shrink-0 rounded-[14px] border border-dl-border bg-white p-7 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1"
             >
-              <span className="text-5xl font-light leading-none text-dl-sage-light">&ldquo;</span>
+              <span className="text-5xl font-light leading-none text-dl-sage-light select-none">&ldquo;</span>
               <p className="mt-2 text-[15px] italic leading-relaxed text-dl-forest">{t.quote}</p>
-              <motion.div variants={sectionReveal} className="mt-6 flex items-center gap-3">
+              <div className="mt-6 flex items-center gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-full bg-dl-cream text-[13px] font-medium text-dl-teal">
                   {t.initials}
                 </div>
@@ -67,10 +76,10 @@ export function Testimonials() {
                   <p className="text-sm font-medium text-dl-text">{t.name}</p>
                   <p className="text-xs text-dl-muted">{t.role}</p>
                 </div>
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </motion.div>
     </section>
   )
