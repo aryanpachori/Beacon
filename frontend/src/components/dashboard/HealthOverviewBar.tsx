@@ -28,9 +28,9 @@ export function HealthOverviewBar() {
         <p className="dash-section-label mb-2">AI ASSESSMENT</p>
         <p className="text-[13px] leading-relaxed text-dl-forest">
           Your stack has{' '}
-          <strong className="text-dl-cream">{critical} critical packages</strong> requiring
+          <strong className="text-dl-critical">{critical} critical packages</strong> requiring
           immediate action. moment last saw a commit 195 days ago and has no active sponsors.{' '}
-          <strong className="text-dl-cream">{crossedRisk} packages</strong> crossed the risk
+          <strong className="text-dl-risk">{crossedRisk} packages</strong> crossed the risk
           threshold this week.
         </p>
       </div>

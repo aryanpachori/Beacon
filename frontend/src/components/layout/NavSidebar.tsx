@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Package, Bell, GitBranch } from 'lucide-react'
+import { LayoutDashboard, Package, Bell, GitBranch, Mail, Settings } from 'lucide-react'
 import { SiteLogo } from '@/components/layout/SiteLogo'
 import { alerts } from '@/lib/mockData'
 import { cn } from '@/lib/utils'
@@ -12,6 +12,8 @@ const NAV_ITEMS = [
   { label: 'Packages', href: '/packages', icon: Package },
   { label: 'Alerts', href: '/alerts', icon: Bell, showBadge: true },
   { label: 'Repos', href: '/repos', icon: GitBranch },
+  { label: 'Emails', href: '/email-previews', icon: Mail },
+  { label: 'Integrations', href: '/integrations', icon: Settings },
 ]
 
 const alertCount = alerts.filter(a => !a.slackSent).length
