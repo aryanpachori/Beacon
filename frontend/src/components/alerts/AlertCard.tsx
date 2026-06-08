@@ -1,7 +1,8 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight, Sparkles } from 'lucide-react'
+import { ArrowRight, Sparkles, RefreshCw } from 'lucide-react'
 import type { Alert } from '@/types'
 import { TierChip } from '@/components/ui/TierChip'
 import { spsToTier, tierColor } from '@/lib/constants'
@@ -13,6 +14,7 @@ import {
   isAlertUnread,
 } from '@/lib/alertsData'
 import { cn } from '@/lib/utils'
+import { packages } from '@/lib/mockData'
 
 interface AlertCardProps {
   alert: Alert
@@ -31,6 +33,63 @@ export function AlertCard({ alert }: AlertCardProps) {
   const unread = isAlertUnread(alert)
   const pills = getAlertSignalPills(alert)
   const aiReason = getAlertAiReason(alert)
+
+  const pkg = packages.find(p => p.id === alert.packageId || p.name === alert.packageName)
+
+  const [jiraLoading, setJiraLoading] = useState(false)
+  const [jiraUrl, setJiraUrl] = useState<string | null>(alert.jiraCreated ? '#' : null)
+
+  const handleOpenJira = async () => {
+    if (alert.jiraCreated || (jiraUrl && jiraUrl !== '#')) {
+      window.open(jiraUrl === '#' ? 'https://jira.atlassian.com' : (jiraUrl || ''), '_blank')
+      return
+    }
+
+    const domain = localStorage.getItem('driftlogg_jira_domain')
+    const email = localStorage.getItem('driftlogg_jira_email')
+    const token = localStorage.getItem('driftlogg_jira_token')
+    const projectKey = localStorage.getItem('driftlogg_jira_proj_key')
+
+    if (!domain || !email || !token || !projectKey) {
+      window.alert(
+        'JIRA integration is not configured. Please go to the "Integrations" page and save your JIRA connection details first!'
+      )
+      return
+    }
+
+    setJiraLoading(true)
+    try {
+      const res = await fetch('/api/integrations/jira', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          domain,
+          email,
+          apiToken: token,
+          projectKey,
+          alert,
+          recommendations: pkg?.recommendations || [
+            { name: 'dayjs', sps: 94, weeklyDownloads: 18500000, ecosystem: 'npm' },
+            { name: 'date-fns', sps: 91, weeklyDownloads: 32000000, ecosystem: 'npm' },
+          ],
+          effortEstimate: pkg?.effortEstimate || { sprintWeeks: 1, linesImpacted: 150, filesAffected: 4 },
+        }),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setJiraUrl(data.issueUrl)
+        window.alert(`JIRA ticket ${data.issueKey} created successfully! Opening ticket...`)
+        window.open(data.issueUrl, '_blank')
+      } else {
+        window.alert(`Failed to create JIRA ticket: ${data.error}`)
+      }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'An unknown error occurred.'
+      window.alert(`Network error: ${message}`)
+    } finally {
+      setJiraLoading(false)
+    }
+  }
 
   return (
     <article
@@ -89,8 +148,14 @@ export function AlertCard({ alert }: AlertCardProps) {
         >
           View package →
         </Link>
-        <button type="button" className="btn-dash-secondary px-3 py-1.5 text-[12px]">
-          Open in JIRA
+        <button
+          type="button"
+          onClick={handleOpenJira}
+          disabled={jiraLoading}
+          className="btn-dash-secondary px-3 py-1.5 text-[12px] flex items-center gap-1.5"
+        >
+          {jiraLoading && <RefreshCw className="h-3 w-3 animate-spin" />}
+          {alert.jiraCreated || jiraUrl ? 'Open in JIRA' : 'Create JIRA Task'}
         </button>
         <button
           type="button"

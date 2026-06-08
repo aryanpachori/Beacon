@@ -11,10 +11,10 @@
   --dl-bg: #F0F5E8;
   --dl-surface: #F4F8EC;
   --dl-border: #D4E0C8;
-  --dl-muted: #7DA78C;
+  --dl-muted: #457056;
   --dl-text: #1C3B38;
   --dl-teal: #35858E;
-  --dl-sage: #7DA78C;
+  --dl-sage: #457056;
   --dl-sage-light: #C2D099;
   --dl-cream: #E6EEC9;
   --dl-card: #F4F8EC;
@@ -22,8 +22,8 @@
   --dl-page: #F0F5E8;
   --dl-forest: #2A5C52;
   --dl-m-text: #1C3B38;
-  --dl-m-muted: #7DA78C;
-  --dl-hint: #9BB8A0;
+  --dl-m-muted: #457056;
+  --dl-hint: #5F856D;
   --dl-m-border: #D4E0C8;
   --dl-border-mid: #C2D099;
   --dl-m-healthy: #35858E;
@@ -585,4 +585,24 @@ body {
     background: rgba(53, 133, 142, 0.06);
     border-bottom: 1px solid var(--dl-m-border);
   }
+}
+
+/* Horizontal scrolling marquee for testimonials */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 35s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
 }
