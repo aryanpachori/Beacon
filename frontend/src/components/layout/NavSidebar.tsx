@@ -2,7 +2,8 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Package, Bell, GitBranch, Mail, Settings } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { LayoutDashboard, Package, Bell, GitBranch, Mail, Settings, User, LogOut } from 'lucide-react'
 import { SiteLogo } from '@/components/layout/SiteLogo'
 import { alerts } from '@/lib/mockData'
 import { cn } from '@/lib/utils'
@@ -25,6 +26,20 @@ interface NavSidebarProps {
 
 export function NavSidebar({ open, onClose }: NavSidebarProps) {
   const pathname = usePathname()
+  const [menuOpen, setMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   return (
     <aside
@@ -66,11 +81,45 @@ export function NavSidebar({ open, onClose }: NavSidebarProps) {
         })}
       </nav>
 
-      <div className="flex items-center gap-3 border-t border-dl-border px-4 py-4">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-dl-teal/20 text-[12px] font-medium text-dl-teal">
-          DL
-        </div>
-        <span className="truncate text-[11px] text-dl-hint">you@driftlogg.io</span>
+      <div ref={menuRef} className="relative border-t border-dl-border px-4 py-4">
+        {/* Dropdown Menu */}
+        {menuOpen && (
+          <div className="absolute bottom-16 left-4 right-4 z-50 flex flex-col gap-1 rounded-lg border border-dl-m-border bg-dl-card p-1.5 shadow-lg">
+            <Link
+              href="/profile"
+              onClick={() => {
+                setMenuOpen(false)
+                onClose()
+              }}
+              className="flex items-center gap-2.5 rounded-md px-3 py-2 text-xs text-dl-muted hover:bg-dl-cream hover:text-dl-forest transition-colors duration-150"
+            >
+              <User className="h-3.5 w-3.5" />
+              <span>Profile settings</span>
+            </Link>
+            <Link
+              href="/login"
+              onClick={() => {
+                setMenuOpen(false)
+                onClose()
+              }}
+              className="flex items-center gap-2.5 rounded-md px-3 py-2 text-xs text-dl-critical hover:bg-dl-critical/10 transition-colors duration-150"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+              <span>Sign out</span>
+            </Link>
+          </div>
+        )}
+
+        <button
+          type="button"
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="flex w-full items-center gap-3 rounded-lg text-left transition-colors duration-150 hover:bg-dl-cream/5 focus:outline-none"
+        >
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-dl-teal/20 text-[12px] font-medium text-dl-teal">
+            DL
+          </div>
+          <span className="truncate text-[11px] text-dl-hint">you@driftlogg.io</span>
+        </button>
       </div>
     </aside>
   )
