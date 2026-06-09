@@ -1,11 +1,18 @@
 {
   "name": "driftlogg-root",
   "private": true,
+  "type": "module",
   "version": "1.0.0",
   "scripts": {
     "dev": "npm run dev --prefix frontend",
     "build": "npm run build --prefix frontend",
     "start": "npm run start --prefix frontend",
-    "lint": "npm run lint --prefix frontend"
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.4.1",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.61.0"
   }
 }

@@ -1,65 +1,53 @@
 import { NextRequest, NextResponse } from 'next/server'
-import * as React from 'react'
-import { DailyDigestEmail } from '@/emails/DailyDigestEmail'
-import { packages as mockPackages } from '@/lib/mockData'
-import { renderEmail } from '@/lib/emailRenderer'
+import { packages } from '@/lib/mockData'
 
-// Pre-defined organizations for multi-tenant simulation across timezones
-interface Organization {
+// ── Organization config ──────────────────────────────────────
+const ORGANIZATIONS = [
+  {
+    id: 'acme-corp',
+    name: 'Acme Corp',
+    timezone: 'America/New_York',
+    recipientEmail: 'team@acme.com',
+  },
+  {
+    id: 'stark-industries',
+    name: 'Stark Industries',
+    timezone: 'America/Los_Angeles',
+    recipientEmail: 'security@stark.com',
+  },
+  {
+    id: 'wayne-enterprises',
+    name: 'Wayne Enterprises',
+    timezone: 'Europe/London',
+    recipientEmail: 'devops@wayne.com',
+  },
+  {
+    id: 'umbrella-corp',
+    name: 'Umbrella Corp',
+    timezone: 'Asia/Tokyo',
+    recipientEmail: 'admin@umbrella.com',
+  },
+]
+
+// ── Helpers ──────────────────────────────────────────────────
+function getHourInTimezone(timezone: string, date: Date): number {
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: timezone,
+    hour: 'numeric',
+    hour12: false,
+  })
+  return parseInt(formatter.format(date), 10)
+}
+
+interface OrgConfig {
   id: string
   name: string
   timezone: string
   recipientEmail: string
 }
 
-const ORGANIZATIONS: Organization[] = [
-  {
-    id: 'acme-corp',
-    name: 'Acme Corp',
-    timezone: 'America/New_York', // ET (Eastern Time)
-    recipientEmail: 'team@acme.com',
-  },
-  {
-    id: 'stark-industries',
-    name: 'Stark Industries',
-    timezone: 'Europe/London', // BST / GMT
-    recipientEmail: 'security@stark.com',
-  },
-  {
-    id: 'wayne-enterprises',
-    name: 'Wayne Enterprises',
-    timezone: 'Asia/Kolkata', // IST
-    recipientEmail: 'devops@wayne.com',
-  },
-  {
-    id: 'umbrella-corp',
-    name: 'Umbrella Corp',
-    timezone: 'Asia/Tokyo', // JST
-    recipientEmail: 'admin@umbrella.com',
-  },
-]
-
-// Get local hour in a specific timezone
-function getHourInTimezone(timezone: string, baseTime: Date): number {
-  try {
-    const formatter = new Intl.DateTimeFormat('en-US', {
-      timeZone: timezone,
-      hour: 'numeric',
-      hour12: false,
-    })
-    return parseInt(formatter.format(baseTime), 10)
-  } catch (error) {
-    console.error(`Error formatting timezone ${timezone}:`, error)
-    return baseTime.getUTCHours() // Fallback to UTC
-  }
-}
-
-// Compile stats and aggregate delta score changes for an organization
-function compileDigestForOrg(org: Organization) {
-  // Map/filter packages dynamically.
-  // For 'acme-corp', use the mock data packages directly.
-  // For other orgs, dynamically translate repo names and slightly adjust scores for realistic variation.
-  const orgPackages = mockPackages.map(p => {
+function compileDigestForOrg(org: OrgConfig) {
+  const orgPackages = packages.map(p => {
     if (org.id === 'acme-corp') {
       return p
     }
@@ -141,9 +129,9 @@ function compileDigestForOrg(org: Organization) {
     dateString: todayStr,
     stackHealthIndex,
     previousHealthIndex,
-    healthIndex: stackHealthIndex, // Compatibility for UI integrations check
-    previousIndex: previousHealthIndex, // Compatibility for UI integrations check
-    packagesMonitored: orgPackages.length * 21, // Scaled for demo purposes (like dashboard 340 packages)
+    healthIndex: stackHealthIndex,
+    previousIndex: previousHealthIndex,
+    packagesMonitored: orgPackages.length * 21,
     criticalCount,
     atRiskCount,
     watchCount,
@@ -176,23 +164,6 @@ interface CompiledDigestData {
 
 // Core execution handler for a compiled digest
 async function sendDigestEmail(compiledData: CompiledDigestData, apiKey?: string) {
-  // Render JSX component to static HTML string
-  const emailHtml = await renderEmail(
-    React.createElement(DailyDigestEmail, {
-      orgName: compiledData.orgName,
-      dateString: compiledData.dateString,
-      stackHealthIndex: compiledData.stackHealthIndex,
-      previousHealthIndex: compiledData.previousHealthIndex,
-      packagesMonitored: compiledData.packagesMonitored,
-      criticalCount: compiledData.criticalCount,
-      atRiskCount: compiledData.atRiskCount,
-      watchCount: compiledData.watchCount,
-      healthyCount: compiledData.healthyCount,
-      spsDeltas: compiledData.spsDeltas,
-      dashboardUrl: 'https://driftlogg.com/dashboard',
-    })
-  )
-
   if (!apiKey) {
     return {
       success: true,
@@ -202,6 +173,7 @@ async function sendDigestEmail(compiledData: CompiledDigestData, apiKey?: string
     }
   }
 
+  // With a real API key, send via Resend
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
@@ -212,7 +184,7 @@ async function sendDigestEmail(compiledData: CompiledDigestData, apiKey?: string
       from: 'digests@driftlogg.com',
       to: compiledData.recipientEmail,
       subject: `[DriftLogg] Daily Digest for ${compiledData.orgName}`,
-      html: emailHtml,
+      html: `<h1>Daily Digest for ${compiledData.orgName}</h1><p>Health Index: ${compiledData.stackHealthIndex}/100</p>`,
     }),
   })
 
@@ -237,7 +209,6 @@ async function handleRequest(req: NextRequest) {
   try {
     const apiKey = process.env.RESEND_API_KEY
     
-    // Parse body or query params
     interface RequestBody {
       orgName?: string
       recipientEmail?: string
@@ -253,7 +224,7 @@ async function handleRequest(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams
     const bypassTimezone = searchParams.get('bypassTimezone') === 'true' || body.bypassTimezone === true
     const targetHourStr = searchParams.get('targetHour') || body.targetHour
-    const targetHour = targetHourStr ? parseInt(targetHourStr, 10) : 8 // Default to 8am local time
+    const targetHour = targetHourStr ? parseInt(targetHourStr, 10) : 8
 
     const currentTimeParam = searchParams.get('currentTime') || body.currentTime
     const baseTime = currentTimeParam ? new Date(currentTimeParam) : new Date()
