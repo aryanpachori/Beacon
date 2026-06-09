@@ -74,7 +74,7 @@ const PLAIN_MESSAGES: Record<string, { headline: string; body: string }> = {
   passport:    { headline: 'Your passport package is getting stale.',          body: "Bug fixes and updates have been slow to arrive. It still works, but keep an eye on it — newer auth tools are catching up." },
 }
 
-function getMessage(packageId: string, tier: string) {
+function getMessage(packageId: string) {
   return PLAIN_MESSAGES[packageId] ?? {
     headline: `Your ${packageId} package needs attention.`,
     body: `Something changed with this package and it\'s not looking healthy. Take a look before it causes any issues.`,
@@ -241,7 +241,7 @@ export function NavSidebar({ open, onClose }: NavSidebarProps) {
                             <span className="mt-[3px] h-1.5 w-1.5 rounded-full shrink-0" style={{ background: '#35858E' }} />
                           )}
                           <span style={{ fontSize: '11px', fontWeight: 600, color: '#d4ede8', lineHeight: '1.4' }}>
-                            {getMessage(alert.packageId, alert.tier).headline}
+                            {getMessage(alert.packageId).headline}
                           </span>
                         </div>
                         <span style={{ fontSize: '9px', color: '#3d6b63', whiteSpace: 'nowrap', marginTop: '2px', flexShrink: 0 }}>
