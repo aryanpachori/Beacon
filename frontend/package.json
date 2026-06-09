@@ -12,6 +12,7 @@
     "@radix-ui/react-checkbox": "^1",
     "@radix-ui/react-dialog": "^1",
     "@radix-ui/react-tooltip": "^1.2.8",
+    "@vercel/speed-insights": "^2.0.0",
     "clsx": "^2.1.1",
     "framer-motion": "^11",
     "lucide-react": "^1.16.0",
