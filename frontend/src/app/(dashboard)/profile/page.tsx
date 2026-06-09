@@ -259,24 +259,28 @@ export default function ProfilePage() {
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             {/* Limit breakdown metrics */}
-            <div className="flex flex-col gap-3 rounded-xl border border-dl-border bg-dl-page/30 p-5 md:col-span-1">
-              <span className="text-xs font-semibold uppercase tracking-wider text-dl-muted">Slot Capacity</span>
+            <div className="relative overflow-hidden flex flex-col gap-3 rounded-xl border border-dl-m-border/40 bg-gradient-to-br from-[#1c3b38] via-[#243f3c] to-[#142e2b] p-5 shadow-lg text-white md:col-span-1">
+              {/* Glassmorphic overlay highlights */}
+              <div className="absolute inset-0 bg-white/[0.02] pointer-events-none" />
+              <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-dl-teal/10 blur-xl pointer-events-none" />
+
+              <span className="relative z-10 text-xs font-semibold uppercase tracking-wider text-dl-sage-light">Slot Capacity</span>
               
-              <div className="flex flex-col gap-1.5">
+              <div className="relative z-10 flex flex-col gap-1.5">
                 <div className="flex items-baseline gap-1.5">
-                  <span className="text-3xl font-bold text-dl-forest">{utilizedSlots}</span>
-                  <span className="text-sm text-dl-muted">/ {totalSlots === 999999 ? '∞' : totalSlots}</span>
-                  <span className="text-xs text-dl-muted ml-1">repos utilized</span>
+                  <span className="text-3xl font-bold text-white">{utilizedSlots}</span>
+                  <span className="text-sm text-white/60">/ {totalSlots === 999999 ? '∞' : totalSlots}</span>
+                  <span className="text-xs text-white/50 ml-1">repos utilized</span>
                 </div>
-                <div className="text-xs text-dl-hint">
-                  Free slots remaining: <span className="font-semibold text-dl-teal">{freeSlots}</span>
+                <div className="text-xs text-white/70">
+                  Free slots remaining: <span className="font-semibold text-dl-sage-light">{freeSlots}</span>
                 </div>
               </div>
 
               {/* Progress track */}
-              <div className="h-2 w-full overflow-hidden rounded-full bg-dl-m-border/20 mt-2">
+              <div className="relative z-10 h-2 w-full overflow-hidden rounded-full bg-white/10 mt-2">
                 <div
-                  className="h-full rounded-full bg-gradient-to-r from-dl-teal to-dl-sage transition-all duration-500 ease-out"
+                  className="h-full rounded-full bg-gradient-to-r from-dl-teal to-dl-sage-light transition-all duration-500 ease-out"
                   style={{ width: `${slotsPercentage}%` }}
                 />
               </div>
@@ -304,19 +308,23 @@ export default function ProfilePage() {
                   {reposList.map(repo => (
                     <div
                       key={repo.id}
-                      className="flex items-center justify-between rounded-xl border border-dl-border bg-dl-card/40 px-4 py-3.5 hover:bg-dl-card transition-all duration-150"
+                      className="relative overflow-hidden flex items-center justify-between rounded-xl border border-dl-m-border/40 bg-gradient-to-br from-[#1c3b38] via-[#243f3c] to-[#142e2b] px-4 py-3.5 hover:opacity-95 shadow-md text-white transition-all duration-150"
                     >
-                      <div>
-                        <div className="text-sm font-semibold text-dl-forest">{repo.name}</div>
-                        <div className="text-xs text-dl-muted mt-0.5">
-                          Org: {repo.org} · Scanned: {repo.packageCount} dependencies
+                      {/* Glassmorphic overlay highlights */}
+                      <div className="absolute inset-0 bg-white/[0.02] pointer-events-none" />
+                      <div className="absolute -right-8 -top-8 h-16 w-16 rounded-full bg-dl-teal/5 blur-lg pointer-events-none" />
+
+                      <div className="relative z-10">
+                        <div className="text-sm font-semibold text-white">{repo.name}</div>
+                        <div className="text-xs text-white/60 mt-0.5">
+                          Org: <span className="text-dl-sage-light">{repo.org}</span> · Scanned: {repo.packageCount} dependencies
                         </div>
                       </div>
 
                       <button
                         type="button"
                         onClick={() => handleRemoveRepo(repo.id, repo.name)}
-                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-transparent text-dl-muted hover:border-dl-critical/30 hover:bg-dl-critical/10 hover:text-dl-critical transition-all duration-150"
+                        className="relative z-10 flex h-8 w-8 items-center justify-center rounded-lg border border-transparent text-white/60 hover:bg-white/10 hover:text-dl-danger transition-all duration-150"
                         title="Remove repository"
                       >
                         <Trash2 className="h-4 w-4" />
