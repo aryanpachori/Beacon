@@ -5,6 +5,7 @@ import { HealthOverviewBar } from '@/components/dashboard/HealthOverviewBar'
 import { CriticalPackagesFeed } from '@/components/dashboard/CriticalPackagesFeed'
 import { AiSignalPanel } from '@/components/dashboard/AiSignalPanel'
 import { PackageTable } from '@/components/packages/PackageTable'
+import { NotificationBell } from '@/components/dashboard/NotificationBell'
 import { Sparkles } from 'lucide-react'
 
 const USER_NAME = 'Samarth Kapoor'
@@ -57,11 +58,14 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="mb-6">
-        <h2 className="page-heading text-dl-forest">Dashboard</h2>
-        <p className="page-description text-dl-muted">
-          AI health intelligence across your dependency stack
-        </p>
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h2 className="page-heading text-dl-forest">Dashboard</h2>
+          <p className="page-description text-dl-muted">
+            AI health intelligence across your dependency stack
+          </p>
+        </div>
+        <NotificationBell />
       </div>
 
       <HealthOverviewBar />

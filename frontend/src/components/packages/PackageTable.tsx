@@ -4,6 +4,7 @@ import { useState } from 'react'
 import type { Package, Tier } from '@/types'
 import { PackageRow } from './PackageRow'
 import { FilterTabs } from '@/components/ui/FilterTabs'
+import { ArrowUp, ArrowDown } from 'lucide-react'
 
 type FilterTab = 'all' | Tier
 
@@ -37,8 +38,13 @@ interface PackageTableProps {
 export function PackageTable({ packages, variant = 'default' }: PackageTableProps) {
   const [filter, setFilter] = useState<FilterTab>('all')
   const [search, setSearch] = useState('')
+  const [spsSort, setSpsSort] = useState<'asc' | 'desc'>('asc')
   const isDashboard = variant === 'dashboard'
   const headers = isDashboard ? DASHBOARD_HEADERS : DEFAULT_HEADERS
+
+  const handleSortSps = () => {
+    setSpsSort(prev => (prev === 'asc' ? 'desc' : 'asc'))
+  }
 
   const visible = packages
     .filter(p => filter === 'all' || p.tier === filter)
@@ -48,7 +54,9 @@ export function PackageTable({ packages, variant = 'default' }: PackageTableProp
         p.name.toLowerCase().includes(search.toLowerCase()) ||
         p.repoName.toLowerCase().includes(search.toLowerCase())
     )
-    .sort((a, b) => a.sps - b.sps)
+    .sort((a, b) => {
+      return spsSort === 'asc' ? a.sps - b.sps : b.sps - a.sps
+    })
 
   return (
     <div>
@@ -68,11 +76,29 @@ export function PackageTable({ packages, variant = 'default' }: PackageTableProp
           <table className="w-full">
             <thead>
               <tr className="dash-table-header">
-                {headers.map(h => (
-                  <th key={h || 'actions'} className="dash-section-label px-4 py-3 text-left">
-                    {h}
-                  </th>
-                ))}
+                {headers.map(h => {
+                  const isSps = h === 'SPS'
+                  return (
+                    <th
+                      key={h || 'actions'}
+                      onClick={isSps ? handleSortSps : undefined}
+                      className={`dash-section-label px-4 py-3 text-left ${
+                        isSps ? 'cursor-pointer select-none hover:text-dl-forest transition-colors' : ''
+                      }`}
+                    >
+                      <div className="flex items-center gap-1.5">
+                        <span>{h}</span>
+                        {isSps && (
+                          spsSort === 'asc' ? (
+                            <ArrowUp className="h-3.5 w-3.5 text-dl-teal shrink-0" />
+                          ) : (
+                            <ArrowDown className="h-3.5 w-3.5 text-dl-teal shrink-0" />
+                          )
+                        )}
+                      </div>
+                    </th>
+                  )
+                })}
               </tr>
             </thead>
             <tbody>
