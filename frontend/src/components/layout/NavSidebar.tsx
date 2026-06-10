@@ -8,7 +8,8 @@ import {
   CreditCard, User, LogOut,
 } from 'lucide-react'
 import { SiteLogo } from '@/components/layout/SiteLogo'
-import { alerts } from '@/lib/mockData'
+import { useAppData } from '@/context/AppDataContext'
+import { getUnreadCount } from '@/lib/alertsData'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
@@ -20,8 +21,6 @@ const NAV_ITEMS = [
   { label: 'Billing',      href: '/billing',         icon: CreditCard },
 ]
 
-const alertCount = alerts.filter(a => !a.slackSent).length
-
 
 interface NavSidebarProps {
   open: boolean
@@ -30,6 +29,8 @@ interface NavSidebarProps {
 
 export function NavSidebar({ open, onClose }: NavSidebarProps) {
   const pathname = usePathname()
+  const { user, alerts, signOut } = useAppData()
+  const alertCount = getUnreadCount(alerts)
 
   const [profileOpen, setProfileOpen] = useState(false)
   const profileRef = useRef<HTMLDivElement>(null)
@@ -101,14 +102,18 @@ export function NavSidebar({ open, onClose }: NavSidebarProps) {
                 <User className="h-3.5 w-3.5" />
                 <span>Profile settings</span>
               </Link>
-              <Link
-                href="/login"
-                onClick={() => { setProfileOpen(false); onClose() }}
-                className="flex items-center gap-2.5 rounded-md px-3 py-2 text-xs text-dl-critical hover:bg-dl-critical/10 transition-colors duration-150"
+              <button
+                type="button"
+                onClick={() => {
+                  setProfileOpen(false)
+                  onClose()
+                  signOut()
+                }}
+                className="flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-xs text-dl-critical hover:bg-dl-critical/10 transition-colors duration-150"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 <span>Sign out</span>
-              </Link>
+              </button>
             </div>
           )}
 
@@ -118,9 +123,14 @@ export function NavSidebar({ open, onClose }: NavSidebarProps) {
             className="flex w-full items-center gap-2 rounded-lg text-left transition-colors duration-150 hover:bg-dl-cream/5 focus:outline-none"
           >
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-dl-teal/20 text-[12px] font-medium text-dl-teal">
-              DL
+              {(user?.fullName
+                ? user.fullName.split(/\s+/).map((p) => p[0]).join('').slice(0, 2)
+                : (user?.email ?? 'U').slice(0, 2)
+              ).toUpperCase()}
             </div>
-            <span className="truncate text-[11px] text-dl-hint">you@driftlogg.io</span>
+            <span className="truncate text-[11px] text-dl-hint">
+              {user?.nickname ?? user?.fullName ?? user?.email ?? '…'}
+            </span>
           </button>
         </div>
 

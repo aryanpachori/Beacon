@@ -1,0 +1,413 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id                     String               @id @default(uuid())
+  email                  String               @unique
+  passwordHash           String
+  fullName               String?
+  nickname               String?
+  avatarThemeIndex       Int                  @default(0)
+  plan                   Plan                 @default(starter)
+  planStatus             PlanStatus           @default(active)
+  trialEndsAt            DateTime?
+  repoLimit              Int                  @default(1)
+  packageLimit           Int                  @default(200)
+  razorpayCustomerId     String?
+  razorpaySubscriptionId String?
+  onboardingStep         Int                  @default(0)
+  onboardingCompletedAt  DateTime?
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+  installations          GithubInstallation[]
+  notifications          Notification[]
+  refreshTokens          RefreshToken[]
+  subscriptions          Subscription[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid())
+  userId    String
+  tokenHash String
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+model GithubInstallation {
+  id             String          @id @default(uuid())
+  userId         String
+  installationId BigInt          @unique
+  accountLogin   String
+  accountType    String          @default("Organization")
+  accountAvatar  String?
+  selectedRepos  Json?
+  scanStatus     ScanStatus      @default(pending)
+  scanProgress   Json            @default("{}")
+  suspendedAt    DateTime?
+  lastScannedAt  DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  alerts         Alert[]
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notifications  Notification[]
+  integration    OrgIntegration?
+  repos          Repo[]
+
+  @@index([userId])
+  @@map("github_installations")
+}
+
+model Repo {
+  id             String             @id @default(uuid())
+  installationId String
+  githubRepoId   BigInt
+  name           String
+  org            String
+  fullName       String
+  defaultBranch  String             @default("main")
+  isPrivate      Boolean            @default(false)
+  lastScannedAt  DateTime?
+  createdAt      DateTime           @default(now())
+  repoPackages   RepoPackage[]
+  installation   GithubInstallation @relation(fields: [installationId], references: [id], onDelete: Cascade)
+
+  @@unique([installationId, githubRepoId])
+  @@index([installationId])
+  @@map("repos")
+}
+
+model Package {
+  id                   String              @id @default(uuid())
+  name                 String
+  ecosystem            Ecosystem
+  currentSps           Int?
+  tier                 Tier?
+  lastScoredAt         DateTime?
+  description          String?
+  homepageUrl          String?
+  githubRepoUrl        String?
+  githubOwner          String?
+  githubRepoName       String?
+  npmUrl               String?
+  pypiUrl              String?
+  issuesUrl            String?
+  changelogUrl         String?
+  latestVersion        String?
+  weeklyDownloads      BigInt?
+  totalStars           Int?
+  totalForks           Int?
+  totalOpenIssues      Int?
+  license              String?
+  keywords             Json?
+  isDeprecated         Boolean             @default(false)
+  deprecationMsg       String?
+  successorPackage     String?
+  predictedCriticalAt  DateTime?
+  predictionConfidence Float?
+  predictionSlope      Float?
+  predictionReason     String?
+  firstSeenAt          DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+  alertsAsSubject      Alert[]
+  notifications        Notification[]
+  maintainers          PackageMaintainer[]
+  scores               PackageScore[]
+  signals              PackageSignal[]
+  recommendationsFrom  Recommendation[]    @relation("FromPackage")
+  recommendationsTo    Recommendation[]    @relation("ToPackage")
+  repoPackages         RepoPackage[]
+
+  @@unique([name, ecosystem])
+  @@index([tier])
+  @@index([currentSps])
+  @@map("packages")
+}
+
+model RepoPackage {
+  id              String    @id @default(uuid())
+  repoId          String
+  packageId       String
+  manifestFile    String?
+  manifestPath    String?
+  declaredVersion String?
+  isDevDep        Boolean   @default(false)
+  addedAt         DateTime  @default(now())
+  removedAt       DateTime?
+  package         Package   @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  repo            Repo      @relation(fields: [repoId], references: [id], onDelete: Cascade)
+
+  @@unique([repoId, packageId, manifestPath])
+  @@index([repoId])
+  @@index([packageId])
+  @@map("repo_packages")
+}
+
+model PackageSignal {
+  id         String   @id @default(uuid())
+  packageId  String
+  signalType String
+  value      Float
+  rawValue   Float?
+  rawData    Json?
+  source     String?
+  capturedAt DateTime @default(now())
+  package    Package  @relation(fields: [packageId], references: [id], onDelete: Cascade)
+
+  @@index([packageId])
+  @@index([signalType])
+  @@index([capturedAt(sort: Desc)])
+  @@index([packageId, signalType, capturedAt(sort: Desc)])
+  @@map("package_signals")
+}
+
+model PackageScore {
+  id            String   @id @default(uuid())
+  packageId     String
+  sps           Int
+  tier          Tier
+  featureVector Json?
+  modelVersion  String?
+  scoredAt      DateTime @default(now())
+  package       Package  @relation(fields: [packageId], references: [id], onDelete: Cascade)
+
+  @@index([packageId])
+  @@index([scoredAt(sort: Desc)])
+  @@index([packageId, scoredAt(sort: Desc)])
+  @@map("package_scores")
+}
+
+model Maintainer {
+  id               String              @id @default(uuid())
+  githubLogin      String              @unique
+  displayName      String?
+  avatarUrl        String?
+  company          String?
+  publicReposCount Int?
+  followersCount   Int?
+  lastPushAt       DateTime?
+  daysInactive     Int?
+  isSponsorEnabled Boolean?
+  fetchedAt        DateTime            @default(now())
+  packages         PackageMaintainer[]
+
+  @@map("maintainers")
+}
+
+model PackageMaintainer {
+  id           String     @id @default(uuid())
+  packageId    String
+  maintainerId String
+  commitCount  Int?
+  isPrimary    Boolean    @default(false)
+  addedAt      DateTime   @default(now())
+  maintainer   Maintainer @relation(fields: [maintainerId], references: [id], onDelete: Cascade)
+  package      Package    @relation(fields: [packageId], references: [id], onDelete: Cascade)
+
+  @@unique([packageId, maintainerId])
+  @@index([packageId])
+  @@map("package_maintainers")
+}
+
+model Alert {
+  id               String             @id @default(uuid())
+  installationId   String
+  packageId        String
+  spsBefore        Int?
+  spsAfter         Int?
+  tierBefore       Tier?
+  tierAfter        Tier?
+  aiReason         String?
+  signalPills      Json?
+  primarySignal    String?
+  alertType        AlertType          @default(threshold)
+  severity         AlertSeverity      @default(normal)
+  cveId            String?
+  cisaUrl          String?
+  affectedVersions Json?
+  safeVersions     Json?
+  slackSent        Boolean            @default(false)
+  slackSentAt      DateTime?
+  gchatSent        Boolean            @default(false)
+  gchatSentAt      DateTime?
+  emailSent        Boolean            @default(false)
+  emailSentAt      DateTime?
+  resolved         Boolean            @default(false)
+  resolvedAt       DateTime?
+  snoozedUntil     DateTime?
+  firedAt          DateTime           @default(now())
+  installation     GithubInstallation @relation(fields: [installationId], references: [id], onDelete: Cascade)
+  package          Package            @relation(fields: [packageId], references: [id], onDelete: Cascade)
+
+  @@index([installationId])
+  @@index([packageId])
+  @@index([firedAt(sort: Desc)])
+  @@index([resolved])
+  @@map("alerts")
+}
+
+model Notification {
+  id             String              @id @default(uuid())
+  userId         String
+  installationId String?
+  packageId      String?
+  packageName    String?
+  message        String
+  tier           Tier?
+  read           Boolean             @default(false)
+  readAt         DateTime?
+  actionUrl      String?
+  createdAt      DateTime            @default(now())
+  installation   GithubInstallation? @relation(fields: [installationId], references: [id])
+  package        Package?            @relation(fields: [packageId], references: [id])
+  user           User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([userId, read])
+  @@map("notifications")
+}
+
+model Recommendation {
+  id            String   @id @default(uuid())
+  fromPackageId String
+  toPackageId   String
+  reason        String?
+  effortLines   Int?
+  effortFiles   Int?
+  effortWeeks   Float?
+  confidence    Float?
+  isOfficial    Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  fromPackage   Package  @relation("FromPackage", fields: [fromPackageId], references: [id], onDelete: Cascade)
+  toPackage     Package  @relation("ToPackage", fields: [toPackageId], references: [id], onDelete: Cascade)
+
+  @@unique([fromPackageId, toPackageId])
+  @@index([fromPackageId])
+  @@map("recommendations")
+}
+
+model OrgIntegration {
+  id              String             @id @default(uuid())
+  installationId  String             @unique
+  slackWebhookUrl String?
+  slackEnabled    Boolean            @default(false)
+  slackVerifiedAt DateTime?
+  gchatWebhookUrl String?
+  gchatEnabled    Boolean            @default(false)
+  gchatVerifiedAt DateTime?
+  digestEmail     String?
+  digestFrequency DigestFrequency    @default(daily)
+  digestEnabled   Boolean            @default(true)
+  digestDay       Int                @default(1)
+  digestHour      Int                @default(8)
+  alertThreshold  Int                @default(40)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  installation    GithubInstallation @relation(fields: [installationId], references: [id], onDelete: Cascade)
+
+  @@map("org_integrations")
+}
+
+model Subscription {
+  id                     String    @id @default(uuid())
+  userId                 String
+  razorpaySubscriptionId String    @unique
+  razorpayPlanId         String?
+  plan                   Plan
+  billingPeriod          String    @default("monthly")
+  status                 String
+  currentPeriodStart     DateTime?
+  currentPeriodEnd       DateTime?
+  amountPaise            Int?
+  currency               String    @default("INR")
+  rawPayload             Json?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+  user                   User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("subscriptions")
+}
+
+model DigestSubscriber {
+  id               String    @id @default(uuid())
+  email            String    @unique
+  subscribed       Boolean   @default(true)
+  unsubscribeToken String    @unique @default(uuid())
+  source           String    @default("landing_page")
+  subscribedAt     DateTime  @default(now())
+  unsubscribedAt   DateTime?
+
+  @@index([subscribed])
+  @@map("digest_subscribers")
+}
+
+enum Plan {
+  starter
+  pro
+  team
+  enterprise
+}
+
+enum PlanStatus {
+  active
+  trial
+  expired
+  cancelled
+  past_due
+}
+
+enum ScanStatus {
+  pending
+  scanning
+  scoring
+  complete
+  failed
+}
+
+enum Ecosystem {
+  npm
+  pypi
+  cargo
+  maven
+  gem
+  go
+}
+
+enum Tier {
+  healthy
+  watch
+  at_risk
+  critical
+}
+
+enum AlertType {
+  threshold
+  tier_change
+  recovery
+  supply_chain
+}
+
+enum AlertSeverity {
+  normal
+  critical_override
+}
+
+enum DigestFrequency {
+  daily
+  weekly
+  never
+}

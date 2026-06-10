@@ -10,6 +10,36 @@ export interface Signal {
   weight: SignalWeight
 }
 
+export interface SignalFacts {
+  daysSinceLastCommit: number
+  commitsLast30d: number
+  commitsLast90d: number
+  primaryMaintainerLogin: string | null
+  primaryMaintainerName: string | null
+  contributorCount: number
+  openIssues: number
+  closeRatePct: number
+  staleIssuePct: number
+  stars: number
+  forks: number
+  forkStarRatio: number
+  sponsorCount: number
+  hasFundingYml: boolean
+  ossfScore: number
+  daysSinceRelease: number
+  cveCount: number
+  signalSourceRepo: string
+}
+
+export interface MaintainerSnapshot {
+  login: string
+  name: string
+  lastCommitDays: number
+  publicRepos: number
+  sponsor: string
+  isPrimary: boolean
+}
+
 export interface Recommendation {
   name: string
   sps: number
@@ -25,6 +55,8 @@ export interface Package {
   repoName: string
   sps: number
   tier: Tier
+  /** True when signals are collected but intelligence scoring has not run yet */
+  scoringPending?: boolean
   spsHistory: number[]  // 90 values, index 0 = 90 days ago, index 89 = today
   lastUpdated: string
   signals: {
@@ -37,6 +69,8 @@ export interface Package {
   }
   recommendations: Recommendation[]
   effortEstimate: { linesImpacted: number; filesAffected: number; sprintWeeks: number }
+  signalFacts?: SignalFacts | null
+  maintainers?: MaintainerSnapshot[]
 }
 
 export interface Alert {
@@ -50,6 +84,8 @@ export interface Alert {
   repos: string[]
   slackSent: boolean
   jiraCreated: boolean
+  aiReason?: string
+  signalPills?: string[]
 }
 
 export interface Repo {

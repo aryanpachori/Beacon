@@ -1,18 +1,62 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
+import { ApiError, apiFetch, setAuthTokens } from '@/lib/api'
 
-export default function LoginPage() {
+function useRedirectParam(): string | null {
+  const searchParams = useSearchParams()
+  const redirect = searchParams.get('redirect')
+  return redirect && redirect.startsWith('/') ? redirect : null
+}
+
+function LoginForm() {
   const router = useRouter()
+  const redirectTo = useRedirectParam()
+  const registerHref = redirectTo
+    ? `/register?redirect=${encodeURIComponent(redirectTo)}`
+    : '/register'
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [errorCode, setErrorCode] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    router.push('/dashboard')
+    setError('')
+    setErrorCode(null)
+    setLoading(true)
+    try {
+      const data = await apiFetch<{
+        accessToken: string
+        refreshToken: string
+        user: { onboardingStep?: number }
+      }>('/api/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email: email.trim(), password }),
+      })
+      setAuthTokens(data.accessToken, data.refreshToken)
+
+      if (redirectTo) {
+        router.push(redirectTo)
+        return
+      }
+
+      const step = data.user?.onboardingStep ?? 1
+      router.push(step >= 4 ? '/dashboard' : '/onboarding')
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message)
+        setErrorCode(err.code ?? null)
+      } else {
+        setError(err instanceof Error ? err.message : 'Sign in failed')
+      }
+      setLoading(false)
+    }
   }
 
   return (
@@ -29,6 +73,20 @@ export default function LoginPage() {
             Know which packages are dying before they do.
           </p>
 
+          {error && (
+            <div className="mb-4 rounded-lg bg-dl-critical/10 px-3 py-2 text-sm text-dl-critical">
+              <p>{error}</p>
+              {errorCode === 'USER_NOT_FOUND' && (
+                <Link
+                  href={registerHref}
+                  className="mt-2 inline-block font-medium text-dl-teal hover:underline"
+                >
+                  Create an account →
+                </Link>
+              )}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div>
               <label className="form-label" htmlFor="email">
@@ -41,6 +99,8 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@company.com"
                 className="form-input"
+                required
+                autoComplete="email"
               />
             </div>
             <div>
@@ -54,21 +114,41 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 className="form-input"
+                required
+                autoComplete="current-password"
               />
             </div>
-            <button type="submit" className="btn-primary mt-1 w-full justify-center py-2.5">
-              Sign in
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary mt-1 w-full justify-center py-2.5 disabled:opacity-60"
+            >
+              {loading ? 'Signing in…' : 'Sign in'}
             </button>
           </form>
         </div>
 
         <p className="mt-5 text-center text-xs text-dl-m-muted">
           No account?{' '}
-          <Link href="/register" className="font-medium text-dl-teal hover:underline">
+          <Link href={registerHref} className="font-medium text-dl-teal hover:underline">
             Create one
           </Link>
         </p>
       </div>
     </motion.div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex flex-1 items-center justify-center px-4 py-10 text-sm text-dl-muted">
+          Loading…
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   )
 }

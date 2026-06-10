@@ -87,27 +87,69 @@ const MAINTAINER_PROFILES: Record<string, MaintainerProfile[]> = {
 
 const SIGNAL_COPY: Record<string, (pkg: Package, signal: Signal) => string> = {
   commitVelocity: (pkg) => {
+    const facts = pkg.signalFacts
+    if (facts) {
+      if (facts.signalSourceRepo.startsWith('unresolved:')) {
+        return `Could not resolve the upstream GitHub repository for ${pkg.name}. Re-scan after registry metadata is available.`
+      }
+      const cadence =
+        facts.commitsLast30d > 0
+          ? `${facts.commitsLast30d} commits in the last 30 days on ${facts.signalSourceRepo}`
+          : `Last commit on ${facts.signalSourceRepo} was ${facts.daysSinceLastCommit} days ago`
+      return `${cadence}. Healthy packages average a commit every 12 days.`
+    }
     const days = daysSinceDate(pkg.lastUpdated)
     return `Last commit was ${days} days ago. Healthy packages average a commit every 12 days.`
   },
   maintainerActivity: (pkg, s) => {
-    const handle = MAINTAINER_PROFILES[pkg.id]?.[0]?.handle ?? '@primary-maintainer'
-    const days = Math.max(60, Math.round((100 - s.value) * 0.8))
-    return `Primary maintainer ${handle} has not pushed to any public repo in ${days} days.`
+    const facts = pkg.signalFacts
+    const handle = facts?.primaryMaintainerLogin
+      ? `@${facts.primaryMaintainerLogin}`
+      : pkg.maintainers?.[0]?.login
+        ? `@${pkg.maintainers[0].login}`
+        : '@primary-maintainer'
+    const days = facts?.daysSinceLastCommit ?? Math.max(60, Math.round((100 - s.value) * 0.8))
+    const contributors = facts?.contributorCount
+    const suffix =
+      contributors != null && contributors <= 1 ? ' Single maintainer on record.' : ''
+    return `Primary maintainer ${handle} has not pushed to any public repo in ${days} days.${suffix}`
   },
-  funding: (pkg, s) =>
-    s.value < 20
+  funding: (pkg, s) => {
+    const facts = pkg.signalFacts
+    if (facts?.hasFundingYml || (facts?.sponsorCount ?? 0) > 0) {
+      return 'Sponsor or funding metadata detected — backing may cover maintenance costs.'
+    }
+    return s.value < 20
       ? 'No OpenCollective, GitHub Sponsors, or corporate backing detected.'
-      : 'Limited sponsor signals — funding covers infrastructure but not full-time maintenance.',
+      : 'Limited sponsor signals — funding covers infrastructure but not full-time maintenance.'
+  },
   issueResolution: (pkg, s) => {
-    const stale = Math.min(95, 100 - s.value + 40)
+    const facts = pkg.signalFacts
+    const stale = facts?.staleIssuePct ?? Math.min(95, 100 - s.value + 40)
+    const closeRate = facts?.closeRatePct
+    if (closeRate != null) {
+      return `${stale}% of open issues appear stale; ${closeRate}% close rate across recent issues. Industry stale average is ~23%.`
+    }
     return `${stale}% of issues older than 90 days have no response. Industry average is 23%.`
   },
   communityHealth: (pkg, s) => {
-    const ratio = (s.value / 100 * 0.4).toFixed(2)
-    return `Fork-to-star ratio is ${ratio} — above 0.25 indicates community has diverged from main project.`
+    const facts = pkg.signalFacts
+    const ratio = facts?.forkStarRatio ?? Number((s.value / 100 * 0.4).toFixed(2))
+    const stars = facts?.stars
+    const starLine = stars != null ? ` ${stars.toLocaleString()} stars.` : ''
+    return `Fork-to-star ratio is ${ratio} — above 0.25 indicates community has diverged from main project.${starLine}`
   },
   securityHygiene: (pkg, s) => {
+    const facts = pkg.signalFacts
+    if (facts) {
+      const cveLine =
+        facts.cveCount > 0
+          ? ` ${facts.cveCount} known CVE(s) on record.`
+          : facts.daysSinceRelease > 180
+            ? ` Last release was ${facts.daysSinceRelease} days ago.`
+            : ''
+      return `OSSF Scorecard estimate: ${facts.ossfScore}/100 (signal score ${s.value}).${cveLine}`
+    }
     const drop = ((50 - s.value) / 10).toFixed(1)
     const cveDays = Math.round((100 - s.value) * 28)
     return `OSSF Scorecard dropped ${drop} points in the last 90 days. Last CVE: ${cveDays} days ago.`
@@ -147,14 +189,26 @@ export function getReplacementBlurb(recName: string): string {
 }
 
 export function getMaintainerProfiles(pkg: Package): MaintainerProfile[] {
+  if (pkg.maintainers?.length) {
+    return pkg.maintainers.map((m) => ({
+      name: m.name,
+      handle: `@${m.login}`,
+      lastCommitDays: m.lastCommitDays,
+      publicRepos: m.publicRepos,
+      sponsor: m.sponsor,
+    }))
+  }
   if (MAINTAINER_PROFILES[pkg.id]) return MAINTAINER_PROFILES[pkg.id]
-  const days = daysSinceDate(pkg.lastUpdated)
+  const facts = pkg.signalFacts
+  const days = facts?.daysSinceLastCommit ?? daysSinceDate(pkg.lastUpdated)
+  const login = facts?.primaryMaintainerLogin ?? `${pkg.name}-maintainer`
+  const name = facts?.primaryMaintainerName ?? `${pkg.name} maintainer`
   return [
     {
-      name: pkg.name.charAt(0).toUpperCase() + pkg.name.slice(1) + ' Maintainer',
-      handle: `@${pkg.name}-maintainer`,
+      name,
+      handle: `@${login}`,
       lastCommitDays: days,
-      publicRepos: 8 + (pkg.sps % 12),
+      publicRepos: facts?.contributorCount ?? 8 + (pkg.sps % 12),
       sponsor: pkg.signals.funding.value > 40 ? 'GitHub Sponsors' : 'None',
     },
   ]
@@ -261,7 +315,13 @@ export function getMaintainerBarClass(days: number): string {
 }
 
 export function buildChartSeries(pkg: Package) {
-  const historical = pkg.spsHistory.map((sps, i) => {
+  const currentSps = pkg.sps ?? 0
+  const historySource =
+    pkg.spsHistory.length > 0
+      ? pkg.spsHistory.map((sps) => (sps == null ? currentSps : sps))
+      : Array.from({ length: 90 }, () => currentSps)
+
+  const historical = historySource.map((sps, i) => {
     const daysAgo = 89 - i
     const date = new Date()
     date.setDate(date.getDate() - daysAgo)
@@ -273,11 +333,11 @@ export function buildChartSeries(pkg: Package) {
     }
   })
 
-  const last = historical[historical.length - 1]
+  const lastSps = historical[historical.length - 1]?.sps ?? currentSps
   const projection = Array.from({ length: 91 }, (_, i) => ({
     dayIndex: 89 + i,
     date: i === 0 ? 'Today' : `+${i}d`,
-    sps: last.sps,
+    sps: lastSps,
     segment: 'projection' as const,
   }))
 

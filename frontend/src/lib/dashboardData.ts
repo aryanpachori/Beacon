@@ -47,10 +47,28 @@ export const PACKAGE_MAINTAINERS: Record<string, string> = {
 const DEFAULT_MAINTAINER = '@maintainer'
 
 export function getMaintainerHandle(pkg: Package): string {
+  const login = pkg.signalFacts?.primaryMaintainerLogin ?? pkg.maintainers?.[0]?.login
+  if (login) return `@${login}`
   return PACKAGE_MAINTAINERS[pkg.id] ?? DEFAULT_MAINTAINER
 }
 
 export function getAiReason(pkg: Package): string {
+  const facts = pkg.signalFacts
+  if (facts) {
+    const parts: string[] = []
+    if (facts.daysSinceLastCommit > 90) {
+      parts.push(`Last commit ${facts.daysSinceLastCommit}d ago`)
+    }
+    if (facts.sponsorCount === 0 && !facts.hasFundingYml) {
+      parts.push('No sponsor funding')
+    }
+    if (facts.commitsLast30d === 0) {
+      parts.push('Zero commits in 30d')
+    }
+    if (parts.length > 0) {
+      return parts.join('. ') + '.'
+    }
+  }
   return (
     PACKAGE_AI_REASONS[pkg.id] ??
     `SPS at ${pkg.sps} with declining maintainer signals across ${pkg.repoName}.`
@@ -60,9 +78,19 @@ export function getAiReason(pkg: Package): string {
 export function getRiskPills(pkg: Package): string[] {
   if (PACKAGE_RISK_PILLS[pkg.id]) return PACKAGE_RISK_PILLS[pkg.id]
   const pills: string[] = []
-  if (pkg.signals.commitVelocity.value < 30) pills.push('Low commits')
-  if (pkg.signals.funding.value < 20) pills.push('No sponsors')
-  if (pkg.signals.communityHealth.trend === 'down') pills.push('Community decline')
+  const facts = pkg.signalFacts
+  if (facts) {
+    if (facts.daysSinceLastCommit > 180) pills.push(`No commits ${facts.daysSinceLastCommit}d`)
+    else if (facts.commitsLast30d === 0) pills.push('No commits 30d')
+    if (facts.sponsorCount === 0 && !facts.hasFundingYml) pills.push('No sponsors')
+    if (facts.contributorCount <= 1) pills.push('Single maintainer')
+    if (facts.forkStarRatio > 0.25) pills.push('High fork ratio')
+    if (facts.staleIssuePct > 50) pills.push('Stale issues')
+  } else {
+    if (pkg.signals.commitVelocity.value < 30) pills.push('Low commits')
+    if (pkg.signals.funding.value < 20) pills.push('No sponsors')
+    if (pkg.signals.communityHealth.trend === 'down') pills.push('Community decline')
+  }
   return pills.slice(0, 3)
 }
 

@@ -70,10 +70,18 @@ export function PackageRow({ pkg, index, variant = 'default' }: PackageRowProps)
         </td>
       )}
       <td className="px-4 py-3">
-        <SPSBadge score={pkg.sps} tier={pkg.tier} size="sm" />
+        {pkg.scoringPending ? (
+          <span className="text-[13px] text-dl-muted">Pending</span>
+        ) : (
+          <SPSBadge score={pkg.sps} tier={pkg.tier} size="sm" />
+        )}
       </td>
       <td className="px-4 py-3">
-        <TierChip tier={pkg.tier} />
+        {pkg.scoringPending ? (
+          <span className="text-[11px] text-dl-muted">Scoring…</span>
+        ) : (
+          <TierChip tier={pkg.tier} />
+        )}
       </td>
       <td className="px-4 py-3">
         {isDashboard ? (

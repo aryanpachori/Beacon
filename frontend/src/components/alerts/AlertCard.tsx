@@ -14,7 +14,6 @@ import {
   isAlertUnread,
 } from '@/lib/alertsData'
 import { cn } from '@/lib/utils'
-import { packages } from '@/lib/mockData'
 
 interface AlertCardProps {
   alert: Alert
@@ -33,8 +32,6 @@ export function AlertCard({ alert }: AlertCardProps) {
   const unread = isAlertUnread(alert)
   const pills = getAlertSignalPills(alert)
   const aiReason = getAlertAiReason(alert)
-
-  const pkg = packages.find(p => p.id === alert.packageId || p.name === alert.packageName)
 
   const [jiraLoading, setJiraLoading] = useState(false)
   const [jiraUrl, setJiraUrl] = useState<string | null>(alert.jiraCreated ? '#' : null)
@@ -68,11 +65,11 @@ export function AlertCard({ alert }: AlertCardProps) {
           apiToken: token,
           projectKey,
           alert,
-          recommendations: pkg?.recommendations || [
+          recommendations: [
             { name: 'dayjs', sps: 94, weeklyDownloads: 18500000, ecosystem: 'npm' },
             { name: 'date-fns', sps: 91, weeklyDownloads: 32000000, ecosystem: 'npm' },
           ],
-          effortEstimate: pkg?.effortEstimate || { sprintWeeks: 1, linesImpacted: 150, filesAffected: 4 },
+          effortEstimate: { sprintWeeks: 1, linesImpacted: 150, filesAffected: 4 },
         }),
       })
       const data = await res.json()

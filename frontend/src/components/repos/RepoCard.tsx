@@ -21,8 +21,11 @@ import {
 } from '@/lib/reposData'
 import { cn } from '@/lib/utils'
 
+import { triggerRepoRescan } from '@/lib/api'
+
 interface RepoCardProps {
   repo: Repo
+  onRescan?: () => Promise<void>
 }
 
 const TIER_DOT_CLASS: Record<Tier, string> = {
@@ -32,7 +35,7 @@ const TIER_DOT_CLASS: Record<Tier, string> = {
   healthy: 'bg-dl-healthy',
 }
 
-export function RepoCard({ repo }: RepoCardProps) {
+export function RepoCard({ repo, onRescan }: RepoCardProps) {
   const [scanning, setScanning] = useState(false)
   const criticalCount = getCriticalCount(repo)
   const atRiskCount = getAtRiskCount(repo)
@@ -40,10 +43,15 @@ export function RepoCard({ repo }: RepoCardProps) {
   const topRisks = getTopRisks(repo)
   const avgSpsColor = getAvgSpsColorClass(repo)
 
-  const handleScan = () => {
+  const handleScan = async () => {
     if (scanning) return
     setScanning(true)
-    window.setTimeout(() => setScanning(false), 2000)
+    try {
+      await triggerRepoRescan()
+      await onRescan?.()
+    } finally {
+      window.setTimeout(() => setScanning(false), 1500)
+    }
   }
 
   return (

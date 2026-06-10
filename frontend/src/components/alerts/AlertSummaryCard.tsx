@@ -1,3 +1,4 @@
+import type { Alert } from '@/types'
 import { getWeeklySummary } from '@/lib/alertsData'
 
 const ROWS = [
@@ -7,8 +8,8 @@ const ROWS = [
   { key: 'avgSpsDrop', label: 'Avg SPS drop', suffix: 'pts' },
 ] as const
 
-export function AlertSummaryCard() {
-  const summary = getWeeklySummary()
+export function AlertSummaryCard({ alerts = [] }: { alerts?: Alert[] }) {
+  const summary = getWeeklySummary(alerts)
 
   return (
     <div className="dash-card mb-4 p-5">

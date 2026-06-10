@@ -1,0 +1,4 @@
+{
+  "prisma.pinToPrisma6": true,
+  "prisma.schema": "backend/prisma/schema.prisma"
+}

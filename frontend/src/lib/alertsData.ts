@@ -1,5 +1,5 @@
 import type { Alert } from '@/types'
-import { alerts, packages } from '@/lib/mockData'
+import { alerts } from '@/lib/mockData'
 import { spsToTier, TIER_LABELS } from '@/lib/constants'
 
 const AI_REASONS: Record<string, string> = {
@@ -45,29 +45,18 @@ export function getUnreadCount(alertList: Alert[] = alerts): number {
 }
 
 export function getAlertAiReason(alert: Alert): string {
+  if (alert.aiReason) return alert.aiReason
   if (AI_REASONS[alert.id]) return AI_REASONS[alert.id]
 
-  const pkg = packages.find(p => p.id === alert.packageId)
-  if (!pkg) {
-    return `SPS dropped from ${alert.spsBefore} to ${alert.spsAfter} after sustained negative signals across maintenance and community health.`
-  }
-
-  const days = Math.round((100 - pkg.signals.commitVelocity.value) * 2)
-  return `Commit velocity and funding signals deteriorated over the past ${days} days, pushing ${pkg.name} below your configured tier threshold.`
+  return `SPS changed from ${alert.spsBefore} to ${alert.spsAfter} for ${alert.packageName}.`
 }
 
 export function getAlertSignalPills(alert: Alert): string[] {
+  if (alert.signalPills && alert.signalPills.length > 0) {
+    return alert.signalPills.slice(0, 3)
+  }
   if (SIGNAL_PILLS[alert.id]) return SIGNAL_PILLS[alert.id].slice(0, 3)
-
-  const pkg = packages.find(p => p.id === alert.packageId)
-  if (!pkg) return ['SPS drop', 'Tier change']
-
-  const pills: string[] = []
-  if (pkg.signals.commitVelocity.value < 30) pills.push('Low commits')
-  if (pkg.signals.funding.value < 20) pills.push('No sponsors')
-  if (pkg.signals.securityHygiene.value < 40) pills.push('Security risk')
-  if (pills.length === 0) pills.push('Health decline')
-  return pills.slice(0, 3)
+  return ['Health decline', 'Tier change']
 }
 
 export function getTierChangeLabel(alert: Alert): string {
@@ -76,17 +65,10 @@ export function getTierChangeLabel(alert: Alert): string {
   return `${before} → ${after}`
 }
 
-/** Rolling 7-day window — mock aligns with triage copy ("5 alerts this week"). */
-const THIS_WEEK_IDS = new Set([
-  'alert-1',
-  'alert-2',
-  'alert-3',
-  'alert-4',
-  'alert-5',
-])
-
+/** Rolling 7-day window from alert firedAt timestamps. */
 export function getWeeklySummary(alertList: Alert[] = alerts) {
-  const week = alertList.filter(a => THIS_WEEK_IDS.has(a.id))
+  const weekAgo = Date.now() - 7 * 86_400_000
+  const week = alertList.filter(a => new Date(a.firedAt).getTime() >= weekAgo)
   const critical = week.filter(a => a.tier === 'critical').length
   const resolved = week.filter(isAlertResolved).length
   const drops = week.map(a => a.spsBefore - a.spsAfter)

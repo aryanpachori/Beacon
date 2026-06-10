@@ -1,0 +1,802 @@
+Here's the complete end to end architecture of everything DriftLogg is building.
+
+---
+
+## What DriftLogg is
+
+A predictive dependency health monitoring platform. Engineering teams connect their GitHub repos once. DriftLogg scans every package, scores each one 0–100 using machine learning, predicts which ones will be abandoned 60–90 days before it happens, and alerts the team before it becomes a production incident.
+
+---
+
+## The three services
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  Service 1 — API + Signal Worker          Node.js + Express     │
+│  Owns: auth, GitHub App, REST endpoints,                        │
+│        manifest scanning, signal collection,                    │
+│        alert dispatch, notifications, billing, crons            │
+├─────────────────────────────────────────────────────────────────┤
+│  Service 2 — Intelligence Service         Python + FastAPI      │
+│  Owns: XGBoost scoring, prediction engine,                      │
+│        reason generation, recommendation engine,                │
+│        advisory monitor                                         │
+├─────────────────────────────────────────────────────────────────┤
+│  Service 3 — Frontend                     Next.js               │
+│  Owns: landing page, dashboard, all app screens                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Full system diagram
+
+```
+                        USER'S BROWSER
+                             │
+                    ┌────────▼────────┐
+                    │    Next.js FE   │
+                    │  Vercel / EC2   │
+                    │                 │
+                    │  Landing page   │
+                    │  /pricing       │
+                    │  /login         │
+                    │  /register      │
+                    │  /onboarding    │
+                    │  /dashboard     │
+                    │  /packages      │
+                    │  /alerts        │
+                    │  /repos         │
+                    │  /integrations  │
+                    │  /billing       │
+                    └────────┬────────┘
+                             │ HTTPS REST
+                             │
+                    ┌────────▼────────┐
+                    │     Nginx       │
+                    │  Reverse proxy  │
+                    │  SSL terminate  │
+                    └────────┬────────┘
+                             │
+          ┌──────────────────▼──────────────────┐
+          │         Node.js API Service          │
+          │         Express + TypeScript         │
+          │         run: bun run dev             │
+          │                                      │
+          │  /api/auth        JWT auth           │
+          │  /api/github      GitHub App install   │
+          │  /api/dashboard   Stats + feeds      │
+          │  /api/packages    Package data       │
+          │  /api/alerts      Alert history      │
+          │  /api/repos       Repo management    │
+          │  /api/integrations Slack/GChat/email │
+          │  /api/notifications Bell feed        │
+          │  /api/billing     Razorpay           │
+          │  /api/public      Subscribe form     │
+          │  /api/internal    Inter-service      │
+          └──────────┬──────────────────────────┘
+                     │
+          ┌──────────▼──────────┐
+          │       BullMQ        │
+          │    Queue 1          │
+          │  signal-collect     │◄── GitHub push webhook
+          └──────────┬──────────┘    Daily 2am cron
+                     │               6hr critical cron
+          ┌──────────▼──────────┐    Manual scan
+          │  Signal Collect     │
+          │  Worker (Node.js)   │
+          │                     │
+          │  1. Parse manifests │
+          │  2. Collect signals │◄─── GitHub API (shipped)
+          │     (6 categories)  │◄─── OpenCollective (planned)
+          │  3. Write signals   │◄─── npm / PyPI registry (planned)
+          │     to PostgreSQL   │◄─── OSSF Scorecard API (planned)
+          │  4. Cache in Redis  │◄─── GitHub Advisory / OSV (planned)
+          └──────────┬──────────┘
+                     │ enqueue intelligence-score
+          ┌──────────▼──────────┐
+          │  Intelligence       │
+          │  Worker (Python)    │  ⚠ NOT IN REPO — must run separately
+          │  FastAPI service    │
+          │                     │
+          │  Consumes BullMQ    │
+          │  intelligence-score │
+          │                     │
+          │  1. XGBoost → SPS   │
+          │  2. Prediction      │
+          │     engine          │
+          │  3. Reason gen      │
+          │  4. Recommendations │
+          │  5. Write to PG     │
+          │  6. POST /internal  │
+          │     score-complete  │
+          └──────────┬──────────┘
+                     │ POST /api/internal/score-complete
+          ┌──────────▼──────────┐
+          │  Alert Service      │
+          │  (back in Node.js)  │
+          │                     │
+          │  Check threshold    │
+          │  Redis dedup        │
+          │  Write alert row    │
+          │  Write notification │
+          │  Dispatch channels  │
+          └──────┬──────┬───────┘
+                 │      │
+        ┌────────▼┐   ┌─▼──────────┐
+        │  Slack  │   │ Google Chat│
+        │  Block  │   │  Card V2   │
+        │  Kit    │   └────────────┘
+        └────────┬┘
+                 │
+        ┌────────▼────────┐
+        │  Email (Resend) │
+        │  Immediate alert│
+        │  Daily digest   │
+        │  Weekly digest  │
+        └─────────────────┘
+                     │
+          ┌──────────▼──────────┐
+          │     PostgreSQL      │
+          │   (Supabase host)   │
+          │                     │
+          │  users              │
+          │  github_installs    │
+          │  repos              │
+          │  packages           │
+          │  repo_packages      │
+          │  package_signals    │
+          │  package_scores     │
+          │  maintainers        │
+          │  alerts             │
+          │  notifications      │
+          │  recommendations    │
+          │  org_integrations   │
+          │  subscriptions      │
+          │  digest_subscribers │
+          └──────────┬──────────┘
+                     │
+          ┌──────────▼──────────┐
+          │       Redis         │
+          │                     │
+          │  BullMQ job store   │
+          │  Signal cache 6hr   │
+          │  Alert dedup 24hr   │
+          │  Rate limit counters│
+          │  JWT refresh tokens │
+          │  scan-progress:*    │◄── SSE onboarding (pub/sub, not a queue)
+          └─────────────────────┘
+```
+
+---
+
+## End to end user flow
+
+### Signup and onboarding
+
+```
+1. User visits driftlogg.com (Next.js landing)
+   → Clicks "Start free"
+   → /register page
+   → POST /api/auth/register
+   → bcrypt hash password
+   → INSERT INTO users
+   → JWT issued (access 15min + refresh 30d)
+   → Redirect to /onboarding
+
+2. /onboarding Step 1 — Connect GitHub
+   → GET /api/github/install-url (JWT required; state = userId)
+   → Redirect to https://github.com/apps/{GITHUB_APP_NAME}/installations/new
+   → User approves read-only access
+   → GitHub redirects to {API_URL}/api/github/callback?installation_id=…&state={userId}
+
+3. API callback handler
+   → UPSERT github_installations
+   → UPDATE scan_status = 'scanning'
+   → signalCollectQueue.add('scan', { installation_id, installationDbId, userId })
+   → Redis PUBLISH scan-progress:{userId} (live onboarding updates)
+   → Redirect to {FRONTEND_URL}/onboarding?step=3
+
+4. Frontend onboarding progress (Step 3)
+   → EventSource GET /api/github/onboarding/stream (SSE, not polling)
+   → Fallback poll: GET /api/github/onboarding/status
+   → Shows live counter "Analysing scanned/total packages…"
+   → When scan_status = 'complete' → advance to step 4
+   → Step 4 summary → "Go to dashboard"
+
+5. Onboarding Step 2 — Select repos (shipped)
+   → GET /api/repos lists GitHub-accessible repos for the installation
+   → User picks repos up to plan limit (Starter = 1, Pro = 5)
+   → PATCH /api/repos/selected { repoIds: [...] }
+   → Stored on github_installations.selectedRepos (JSON array of repo UUIDs)
+   → Only selected repos are scanned, listed on dashboard, and included in alerts
+```
+
+---
+
+### Signal collection worker — what runs in the background
+
+```
+5. Signal collect worker picks up job (runs inside API process via startWorkers())
+
+   Scope: ONLY repos in installation.selectedRepos (not all GitHub-granted repos)
+
+   For each selected repo:
+   → Walk GitHub file tree
+   → Find package.json, pyproject.toml, composer.json,
+     requirements.txt, go.mod, pom.xml, Gemfile, Cargo.toml
+   → Parse every dependency
+   → UPSERT packages (unique on name + ecosystem — shared across all users)
+   → UPSERT repo_packages (link repo ↔ package + declared version)
+
+   For each package (concurrent batches):
+   → GitHub REST against the MONITORED REPO (not upstream package repo yet):
+       commit_velocity_30d, days_since_last_commit
+       top contributor login, contributor count
+       open/closed issues → close rate, stale ratio
+       stars, forks, fork/star ratio
+   → Stubs (hardcoded until external APIs wired):
+       funding_sponsor_count (always 0)
+       ossf_score (placeholder)
+
+   Normalise raw values → six 0–100 scores:
+     commitVelocity, maintainerActivity, funding,
+     issueResolution, communityHealth, securityHygiene
+
+   Persist:
+   INSERT INTO package_signals (signalType, value, rawValue, rawData, source)
+     signalType keys: commit_velocity_30d, maintainer_activity,
+       funding_sponsor_count, issue_close_rate, fork_star_ratio, ossf_score
+     rawData: { facts, maintainers } — contextual copy for UI (on new scans)
+
+   Cache in Redis:
+     SET signals:{packageId} EX 21600
+     Payload: { ...6 scores, facts, maintainers }
+
+   Structured logs:
+     signals_cached_redis, intelligence_score_enqueued
+
+   Update scan_progress.scanned++
+
+   Enqueue intelligence queue:
+   intelligenceQueue.add('score', {
+     package_id,
+     installation_id,          // DB uuid
+     installation_github_id,   // GitHub numeric id
+     prev_sps: pkg.currentSps, // null on first scan
+     signals: {
+       commit_velocity, maintainer_activity, funding,
+       issue_resolution, community_health, security_hygiene
+     }
+   })
+```
+
+**API resolution layer** (`resolvePackageSignals.service.ts`):
+- Package list, detail, and dashboard critical feed call this before responding
+- Reads Redis cache first; falls back to latest `package_signals` rows per type
+- Maps DB signalType snake_case → camelCase for the frontend
+- Returns `{ ...normalized, facts, maintainers }` when available
+```
+
+---
+
+### Intelligence worker — scoring and prediction
+
+```
+6. Intelligence worker picks up job (Python — NOT IN THIS REPO YET)
+
+   Expected: separate FastAPI service (port 5000 locally)
+   Consumes: BullMQ queue "intelligence-score" (same Redis as Node)
+   Env: INTERNAL_WEBHOOK_SECRET for callback auth
+
+   Build feature vector from job payload (6 × 0–100 scores)
+
+   XGBoost inference → sps (0–100), tier (critical/at-risk/watch/healthy)
+
+   Prediction engine (subsequent scans):
+   SELECT last N package_scores → linear regression
+   → predicted_critical_at, prediction_confidence (R² gate)
+
+   Reason generation → prediction_reason (LLM or template)
+
+   Recommendation engine → top 3 healthy alternatives (same ecosystem)
+   Should UPSERT recommendations table — Node callback ignores this today
+
+   Call back Node.js (required to unblock UI + alerts):
+   POST /api/internal/score-complete
+   Header: x-internal-secret: {INTERNAL_WEBHOOK_SECRET}
+   body: {
+     package_id, installation_id,
+     new_sps, tier, prev_sps, prev_tier,
+     prediction_reason, recommendations, signals
+   }
+
+   Node → incrementScanScored():
+   UPDATE packages (currentSps, tier, predictionReason)
+   INSERT package_scores
+   scan_progress.scored++
+   checkAndFireAlert() — skipped when prev_sps is null
+
+   ⚠ CURRENT GAP: No Python worker running → jobs accumulate in Redis,
+     SPS/tier stay null, alerts never fire, recommendations empty.
+```
+
+---
+
+### Alert service — after scoring
+
+```
+7. Node.js receives POST /api/internal/score-complete
+
+   alert.service.ts checkAndFireAlert():
+
+   prev_sps = null → SKIP (first scan, never alert)
+
+   On subsequent scans:
+   prev_sps = 65, new_sps = 34
+
+   Check conditions:
+   → threshold crossed? 34 < 40 AND 65 >= 40 → YES
+   → tier worsened? Watch → Critical → YES
+   → tier improved? NO
+
+   Dedup check:
+   GET alert:dedup:threshold:{install_id}:{pkg_id}
+   → missing → proceed
+   SET alert:dedup:threshold:... EX 86400
+
+   Write records:
+   INSERT INTO alerts (sps_before=65, sps_after=34,
+     tier_before='watch', tier_after='critical',
+     ai_reason=..., alert_type='threshold')
+
+   INSERT INTO notifications (
+     message="Your moment package is about to expire.",
+     tier='critical',
+     action_url='/packages/{id}'
+   )
+   → Appears in bell feed immediately
+
+   Dispatch channels (Promise.allSettled):
+   → Slack Block Kit POST (if configured)
+   → Google Chat Card V2 POST (if configured)
+   → Immediate email via Resend (if configured)
+```
+
+---
+
+### Dashboard — what the user sees
+
+```
+8. User opens /dashboard
+
+   Current API (aggregated — shipped):
+   GET /api/dashboard
+   → healthCounts (healthy / watch / atRisk / critical)
+   → criticalPackages (top at-risk list)
+   → recentAlerts
+   → avgSps, totalPackages
+   → scanStatus + scanProgress (while first scan runs)
+
+   Frontend loads via AppDataContext (parallel on mount):
+   → GET /api/auth/me
+   → GET /api/dashboard
+   → GET /api/packages
+   → GET /api/alerts
+   → GET /api/repos
+
+   Packages with null SPS/tier show as "scoring pending" until Python worker
+   writes scores (intelligence-score queue → POST /api/internal/score-complete).
+
+   Signal data (shipped — independent of intelligence):
+   → GET /api/packages and /api/packages/:id include signals from Redis or DB
+   → Six signal cards on package detail show real scores + fact-based copy
+   → Maintainer profiles from signalFacts/maintainers when present
+   → Dashboard critical cards include signals for risk pills
+
+   Still empty until intelligence runs:
+   → SPS badge, tier chip, health ring breakdown
+   → SPS history chart (package_scores)
+   → AI verdict (uses template; predictionReason not exposed to FE yet)
+   → Migration panel (recommendations: [] from API)
+   → Alerts list (no rows until score-complete fires alerts)
+```
+
+---
+
+### What refreshes after the first scan
+
+```
+┌─────────────────┬──────────────────────────────────────────────┐
+│ Trigger         │ What happens                                  │
+├─────────────────┼──────────────────────────────────────────────┤
+│ Daily 2am UTC   │ signalCollectQueue.addBulk for ALL packages  │
+│                 │ Full pipeline reruns, new scores written      │
+│                 │ Alerts fire if thresholds crossed             │
+├─────────────────┼──────────────────────────────────────────────┤
+│ Every 6 hours   │ Same but Critical tier packages only         │
+│                 │ Catches recovery (tier improved alert)        │
+├─────────────────┼──────────────────────────────────────────────┤
+│ GitHub push     │ Only if manifest file changed                 │
+│ webhook         │ New packages added → scan those only         │
+├─────────────────┼──────────────────────────────────────────────┤
+│ Manual scan     │ User clicks Scan now on repos page            │
+│                 │ Invalidates Redis cache → fresh API calls     │
+├─────────────────┼──────────────────────────────────────────────┤
+│ Advisory cron   │ Every 30 mins — re-queues signal-collect for │
+│ (30 mins)       │ critical/at-risk packages (priority job)       │
+│                 │ CVE-specific alert type: schema exists, not    │
+│                 │ fully implemented in worker                    │
+└─────────────────┴──────────────────────────────────────────────┘
+```
+
+---
+
+### The four alert types
+
+```
+┌─────────────────────┬────────────────────────────────────────┐
+│ Type                │ When                                   │
+├─────────────────────┼────────────────────────────────────────┤
+│ Threshold           │ SPS drops below org threshold (40)     │
+│                     │ Dedup: 24hrs                           │
+├─────────────────────┼────────────────────────────────────────┤
+│ Tier change         │ Tier worsens even if below threshold   │
+│                     │ Dedup: 24hrs                           │
+├─────────────────────┼────────────────────────────────────────┤
+│ Recovery            │ Tier improves — positive news          │
+│                     │ Dedup: separate 24hr key               │
+├─────────────────────┼────────────────────────────────────────┤
+│ Supply chain        │ CVE advisory match found               │
+│                     │ Dedup: NONE — always fires             │
+│                     │ SPS hard-overridden to 2               │
+└─────────────────────┴────────────────────────────────────────┘
+```
+
+---
+
+### Notification surfaces
+
+```
+┌──────────────────────┬─────────────────────────────────────────┐
+│ Surface              │ When                                    │
+├──────────────────────┼─────────────────────────────────────────┤
+│ In-app bell feed     │ Every alert → INSERT INTO notifications │
+│                      │ Appears instantly, unread count badge   │
+├──────────────────────┼─────────────────────────────────────────┤
+│ Slack Block Kit      │ On every alert if webhook configured    │
+│                      │ Test alert from integrations page       │
+├──────────────────────┼─────────────────────────────────────────┤
+│ Google Chat Card V2  │ Same as Slack                           │
+├──────────────────────┼─────────────────────────────────────────┤
+│ Immediate email      │ On Critical/supply chain alerts         │
+│                      │ Single package, full AI dossier         │
+├──────────────────────┼─────────────────────────────────────────┤
+│ Daily/weekly digest  │ 8am UTC cron, per org preference        │
+│                      │ Summary of all changes in 24hrs/7days   │
+├──────────────────────┼─────────────────────────────────────────┤
+│ Public newsletter    │ Landing page subscribe form             │
+│                      │ Monday 9am UTC, digest_subscribers      │
+│                      │ Separate from org users entirely        │
+└──────────────────────┴─────────────────────────────────────────┘
+```
+
+---
+
+### Infrastructure
+
+```
+Phase 1 — everything on one EC2 t3.large
+
+  ┌─────────────────────────────────────────┐
+  │  EC2 t3.large (Ubuntu 24.04)            │
+  │                                         │
+  │  ┌─────────────┐  ┌─────────────────┐   │
+  │  │  Node.js    │  │  Python         │   │
+  │  │  API + Worker│  │  Intelligence   │   │
+  │  │  Port 4000  │  │  Port 5000      │   │
+  │  └─────────────┘  └─────────────────┘   │
+  │                                         │
+  │  PM2 managing both processes            │
+  │  Nginx on port 80/443                   │
+  └─────────────────────────────────────────┘
+
+  PostgreSQL → Supabase hosted (free tier to start)
+  Redis      → Upstash Redis (free tier to start)
+  Frontend   → Vercel (free tier)
+  Email      → Resend (free tier 3000/mo)
+
+Phase 2 — when load justifies it
+
+  API service         → EC2 t3.medium
+  Intelligence svc    → EC2 t3.large (CPU heavy, scale separately)
+  PostgreSQL          → RDS t3.medium + read replica
+  Redis               → ElastiCache cluster
+  Frontend            → stays on Vercel
+```
+
+---
+
+### What each dev owns
+
+```
+Dev 1 — API service + Signal worker
+  auth, GitHub App install + callback, webhook receiver,
+  manifest parser, signal collection (all 6),
+  REST endpoints (all routes),
+  alert service, notification dispatch,
+  integrations (Slack/GChat/email),
+  crons, billing, public subscribe
+
+Dev 2 — Intelligence service
+  BullMQ Python worker,
+  signal normalisation,
+  XGBoost inference,
+  prediction engine (linear regression),
+  reason generator,
+  recommendation engine,
+  advisory monitor (CVE feeds),
+  model training pipeline
+
+Dev 3 — Frontend
+  Next.js landing + all marketing pages,
+  dashboard app wired to live API (see Implementation status),
+  email templates (Resend React Email)
+```
+
+---
+
+### The two queues — nothing more
+
+```
+signal-collect queue
+  Pushed by:   API (GitHub callback, webhooks, crons)
+  Consumed by: Node.js signal worker
+  Job payload: { installation_id, repos, triggered_by }
+
+intelligence-score queue
+  Pushed by:   Node.js signal worker (after signals collected)
+  Consumed by: Python intelligence worker
+  Job payload: { package_id, installation_id,
+                 prev_sps, signals: { 6 normalised scores } }
+```
+
+---
+
+## Plan limits and repo scope
+
+```
+Plan enforcement (backend/src/lib/planLimits.ts):
+  Starter (free): 1 monitored repo
+  Pro:            5 monitored repos
+
+Enforcement points:
+  PATCH /api/repos/selected — rejects over limit
+  GET /api/repos — returns repoLimit, monitoredCount
+  GET /api/dashboard, /api/packages, /api/alerts — filtered to selectedRepos only
+  signal-collect worker — scans selected repos only (no fallback to all granted)
+  GitHub push webhook — rescan only if repo ∈ selectedRepos
+
+Downgrade (Razorpay webhook): selectedReposTrim.service trims excess repos
+```
+
+---
+
+## Package deduplication (multi-user)
+
+```
+packages table: UNIQUE (name, ecosystem)
+  → Same npm package scanned by two orgs shares one Package row
+  → package_signals attach to packageId (global signal snapshot)
+  → repo_packages links each user's repo to shared package
+
+Implication:
+  Re-scan by any user refreshes signals for everyone using that package
+  Future: stale-signal refresh policy + upstream repo resolution per package
+```
+
+---
+
+## Local development (current)
+
+```
+┌────────────────────┬──────────────────────────────────────────────────┐
+│ Service            │ Local URL / command                              │
+├────────────────────┼──────────────────────────────────────────────────┤
+│ Frontend (Next 14) │ http://localhost:3000 or 3001                    │
+│                    │ cd frontend && npm run dev                       │
+│ Backend API        │ http://localhost:4000                            │
+│                    │ cd backend && bun run dev                        │
+│                    │ OR docker compose up (api + redis only)          │
+│ Signal worker      │ Same process as API (startWorkers in index.ts)   │
+│ Redis              │ localhost:6379 (docker-compose redis service)    │
+│ PostgreSQL         │ Supabase pooler (DATABASE_URL + DIRECT_URL)      │
+│ Intelligence       │ http://localhost:5000 — NOT IN REPO, must run    │
+│                    │ separately; consumes intelligence-score queue    │
+└────────────────────┴──────────────────────────────────────────────────┘
+
+Frontend → Backend
+  frontend/.env.local
+    NEXT_PUBLIC_API_URL=http://localhost:4000
+
+Backend → Frontend (CORS + GitHub callback redirect)
+  backend/.env
+    FRONTEND_URL=http://localhost:3000
+    PORT=4000
+
+Backend health check: GET http://localhost:4000/health → { "status": "ok" }
+```
+
+---
+
+## Environment variables (GitHub App)
+
+Required for Connect GitHub + first scan:
+
+```
+GITHUB_APP_ID=…
+GITHUB_APP_NAME=driftlogg          → install URL slug
+GITHUB_APP_PRIVATE_KEY_PATH=…      → PEM file in backend/ (preferred locally)
+  OR GITHUB_APP_PRIVATE_KEY=…      → inline PEM with \n escapes (CI/Docker alt)
+
+GitHub App settings (developer):
+  Setup URL / Callback: http://localhost:4000/api/github/callback
+  Webhook URL (optional locally): needs public URL (ngrok/staging)
+  GITHUB_APP_WEBHOOK_SECRET=…      → only if webhooks enabled
+
+Optional (not used by current install flow):
+  GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET
+
+Docker: backend/docker-compose.yml mounts the PEM read-only into /app/
+  and runs scripts/docker-entrypoint.sh → prisma db push + prisma generate + API
+```
+
+Permissions: Metadata (read), Contents (read), Issues (read). Event: push (rescan on manifest change).
+
+Internal callback (intelligence → Node):
+```
+INTERNAL_WEBHOOK_SECRET=…   → required for POST /api/internal/score-complete
+```
+
+Prisma: pinned to v6 (`url` + `directUrl` in backend/prisma/schema.prisma). IDE may show false Prisma 7 warnings — use `.vscode/settings.json` prisma.pinToPrisma6.
+
+---
+
+## Redis: two roles (do not conflate)
+
+```
+BullMQ (job queues)
+  signal-collect, intelligence-score
+  Durable background work — survives restarts via Redis lists
+
+Pub/sub (ephemeral)
+  Channel: scan-progress:{userId}
+  Publisher: notifyScanProgress() after scan/score milestones
+  Subscriber: GET /api/github/onboarding/stream (SSE to browser)
+  Not persisted — onboarding UI only
+```
+
+---
+
+## Frontend ↔ API integration (shipped)
+
+```
+frontend/src/lib/api.ts
+  JWT in localStorage, auto refresh via POST /api/auth/refresh
+  fetchMe, fetchDashboard, fetchPackages, fetchPackageById,
+  fetchAlerts, fetchRepos, fetchGithubInstallUrl, openScanProgressStream
+
+frontend/src/lib/adapters.ts
+  Maps API shapes → UI Package / Alert / Repo types
+  DB signalType map: commit_velocity_30d → commitVelocity, etc.
+  extractSignalsPayload: normalized scores + facts + maintainers
+  scoringPending when sps or tier is null
+
+frontend/src/lib/packageDetailData.ts
+  Signal card copy from signalFacts when present (else score heuristics)
+  Maintainer profiles from pkg.maintainers or signalFacts
+  AI verdict / migration blurbs: templates until intelligence ships
+
+frontend/src/context/AppDataContext.tsx
+  Auth guard on dashboard layout; loads all list data in parallel
+  Wired pages: /login, /register, /onboarding, /dashboard, /packages,
+                /packages/[id], /alerts, /repos
+
+Partially wired / mock fallbacks:
+  /integrations — Next.js proxy routes + test payloads; backend
+                  /api/integrations exists but FE save flow incomplete
+  /billing — Razorpay checkout hook exists; profile page may use mocks
+  Package alert history on detail page — mock getPackageAlerts(), not API
+  Landing demos (Hero, SpsPlayground) — static mock data
+  alertsData.ts resolve/snooze heuristics — not aligned with DB resolved flag
+```
+
+---
+
+## Implementation status
+
+Last updated: May 2026. Reflects shipped code vs planned architecture.
+
+### Pipeline state (the critical path)
+
+```
+[✓] GitHub connect → manifest scan → package_signals → Redis cache
+[✓] Enqueue intelligence-score jobs (logged)
+[✗] Python worker consumes queue                    ← BLOCKER
+[✗] POST /api/internal/score-complete               ← never called
+[✗] package_scores, SPS, tier on packages            ← stays null
+[✗] Alerts INSERT + Slack/email dispatch            ← dormant
+[✗] Recommendations + AI verdict on package detail  ← empty/templates
+```
+
+---
+
+### Shipped (working end-to-end)
+
+| Area | Notes |
+|------|-------|
+| Auth (register/login/JWT refresh) | FE + `/api/auth/*` |
+| GitHub App install + callback | PEM path, BullMQ scan job, redirect |
+| Repo selection + plan limits | Starter 1 / Pro 5; `selectedRepos` enforced everywhere |
+| Signal collect worker | Manifests, GitHub signals, DB + Redis, intelligence enqueue |
+| Onboarding SSE progress | Redis pub/sub + EventSource |
+| Signal display on FE | List, detail, dashboard cards via `resolvePackageSignals` |
+| Package dedup | Shared `packages` row by name+ecosystem |
+| Dashboard / packages / alerts API | Live via AppDataContext; alerts list empty until scoring |
+| Repos page | List, select, rescan |
+| Crons registered | Daily 2am, critical 6hr, digest, advisory 30min |
+| Billing backend | Razorpay routes + webhook |
+| Integrations backend | Slack/GChat/digest/threshold on `org_integrations` |
+| Alert service code | `checkAndFireAlert`, dedup, notifications, channel dispatch |
+| Internal callback route | `POST /api/internal/score-complete` ready for Python |
+
+---
+
+### Partial (code exists, incomplete behavior)
+
+| Area | Gap |
+|------|-----|
+| Signal accuracy | Uses **monitored repo** GitHub data, not each package's upstream repo |
+| Funding signal | Stub — no OpenCollective / Sponsors API |
+| Security signal | Stub — no OSSF Scorecard API |
+| Maintainer table | `maintainers` / `package_maintainers` not populated on scan |
+| Package metadata | `githubOwner`, `weeklyDownloads`, etc. mostly unfilled |
+| GitHub push webhooks | Backend handler shipped; needs public URL + `GITHUB_APP_WEBHOOK_SECRET` |
+| Notifications bell | `/api/notifications` exists; FE bell not fully wired |
+| Integrations UI | Test webhooks via Next routes; not saving to backend orgIntegration |
+| SPS history chart | Needs `package_scores` rows from intelligence |
+| Dashboard health ring | Needs packages with non-null tier |
+
+---
+
+### Pending (not built or not running)
+
+| Area | What's needed |
+|------|----------------|
+| **Intelligence service (Python)** | Separate repo/service: consume `intelligence-score`, XGBoost, reason gen, recommendations, call `score-complete` |
+| **Live alerts** | Depends on intelligence → `incrementScanScored` → `checkAndFireAlert` |
+| **Recommendations persistence** | Node ignores `recommendations` in score-complete; FE returns `[]` |
+| **AI verdict on FE** | Expose `predictionReason` from API; replace template in AiVerdictCard |
+| **Package alert history** | Wire `PackageAlertHistory` to GET alerts filtered by packageId |
+| **Alert resolve / snooze** | DB columns exist; no PATCH routes; FE logic wrong |
+| **CVE / supply-chain alerts** | Schema + advisory cron stub; no OSV/advisory matching in worker |
+| **Jira integration** | FE route stub only |
+| **Upstream package repo resolution** | npm/PyPI registry → correct GitHub repo per dependency |
+| **Signal refresh policy** | When user B scans shared package, when to re-fetch vs reuse cache |
+
+---
+
+### Recommended build order
+
+```
+1. Run Python intelligence worker → score-complete (unblocks SPS, tiers, alerts)
+2. Persist recommendations in score-complete + return on GET /api/packages/:id
+3. Expose predictionReason to FE; wire package alert history to API
+4. Wire integrations page to backend /api/integrations (save + test)
+5. Upstream repo resolution + real funding/OSSF APIs
+6. CVE advisory path + supply-chain alert type
+```
+
+---
+
+That is the complete architecture. Three services, two queues, one database, one cache. Everything else is functions and cron jobs inside those three services.

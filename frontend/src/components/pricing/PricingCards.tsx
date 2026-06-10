@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { Check } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { inViewOptions, staggerContainer, sectionReveal } from '@/components/marketing/motion'
+import { ProCheckoutLink } from '@/components/billing/RazorpayUpgradeButton'
+import { formatInr, PRO_PLAN_PRICE_INR } from '@/lib/billing'
 
 export type BillingPeriod = 'monthly' | 'annual'
 
@@ -12,20 +14,12 @@ type PricingCardsProps = {
   onBillingChange: (period: BillingPeriod) => void
 }
 
-function formatPrice(monthly: number, billingPeriod: BillingPeriod) {
-  if (billingPeriod === 'annual') {
-    const annualMonthly = Math.round(monthly * 0.8)
-    return { amount: annualMonthly, suffix: '/month' }
-  }
-  return { amount: monthly, suffix: '/month' }
-}
-
 const PLANS = [
   {
     id: 'starter',
     name: 'Starter',
     monthlyPrice: 0,
-    priceLabel: '$0',
+    priceLabel: formatInr(0),
     tagline: 'Forever free.',
     cta: 'Get started free',
     ctaClass: 'btn-secondary w-full justify-center',
@@ -42,11 +36,10 @@ const PLANS = [
   {
     id: 'pro',
     name: 'Pro',
-    monthlyPrice: 15,
+    monthlyPrice: PRO_PLAN_PRICE_INR,
     tagline: 'For individual engineers and small teams.',
-    cta: 'Start Pro',
+    cta: 'Upgrade to Pro',
     ctaClass: 'btn-primary w-full justify-center',
-    href: '/register',
     popular: true,
     features: [
       '5 repos',
@@ -108,10 +101,12 @@ export function PricingCards({ billingPeriod, onBillingChange }: PricingCardsPro
           variants={staggerContainer}
         >
           {PLANS.map((plan) => {
-            const price =
+            const monthlyDisplay =
               plan.monthlyPrice === 0
-                ? null
-                : formatPrice(plan.monthlyPrice, billingPeriod)
+                ? plan.priceLabel
+                : billingPeriod === 'annual'
+                  ? formatInr(Math.round(plan.monthlyPrice * 0.8))
+                  : formatInr(plan.monthlyPrice)
 
             return (
               <motion.div
@@ -132,25 +127,32 @@ export function PricingCards({ billingPeriod, onBillingChange }: PricingCardsPro
                 <div className="mt-3 flex items-baseline gap-1">
                   <AnimatePresence mode="wait">
                     <motion.span
-                      key={price ? `${plan.id}-${price.amount}` : plan.id}
+                      key={`${plan.id}-${monthlyDisplay}`}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.2 }}
                       className="text-[40px] font-medium leading-none text-dl-text"
                     >
-                      {price ? `$${price.amount}` : plan.priceLabel}
+                      {monthlyDisplay}
                     </motion.span>
                   </AnimatePresence>
-                  {(price || plan.monthlyPrice === 0) && (
-                    <span className="text-sm text-dl-muted">/month</span>
-                  )}
+                  <span className="text-sm text-dl-muted">/month</span>
                 </div>
                 <p className="mt-2 text-[13px] text-dl-hint">{plan.tagline}</p>
-                <Link href={plan.href} className={`mt-6 ${plan.ctaClass}`}>
-                  {plan.cta}
-                </Link>
-                <ul className="mt-6 space-y-2.5">
+                {plan.id === 'pro' ? (
+                  <ProCheckoutLink className={`mt-6 ${plan.ctaClass}`}>
+                    {plan.cta}
+                  </ProCheckoutLink>
+                ) : (
+                  <Link href={plan.href!} className={`mt-6 ${plan.ctaClass}`}>
+                    {plan.cta}
+                  </Link>
+                )}
+                <p className="mt-2 text-center text-[11px] text-dl-hint">
+                  {plan.id === 'pro' ? 'Sign in required to complete payment' : null}
+                </p>
+                <ul className="mt-4 space-y-2.5">
                   {plan.features.map((feature) => (
                     <li
                       key={feature}

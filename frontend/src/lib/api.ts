@@ -1,0 +1,309 @@
+import type {
+  ApiAlert,
+  ApiDashboard,
+  ApiPackageDetail,
+  ApiPackageListItem,
+  ApiRepo,
+  ApiUser,
+} from '@/lib/adapters'
+import {
+  adaptAlert,
+  adaptPackageDetail,
+  adaptPackageListItem,
+  adaptRepo,
+} from '@/lib/adapters'
+import type { Alert, Package, Repo } from '@/types'
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000'
+
+const ACCESS_TOKEN_KEY = 'driftlogg_access_token'
+const REFRESH_TOKEN_KEY = 'driftlogg_refresh_token'
+
+export function getApiUrl(): string {
+  return API_URL.replace(/\/$/, '')
+}
+
+export function getAccessToken(): string | null {
+  if (typeof window === 'undefined') return null
+  return localStorage.getItem(ACCESS_TOKEN_KEY)
+}
+
+export function getRefreshToken(): string | null {
+  if (typeof window === 'undefined') return null
+  return localStorage.getItem(REFRESH_TOKEN_KEY)
+}
+
+export function setAuthTokens(accessToken: string, refreshToken: string): void {
+  localStorage.setItem(ACCESS_TOKEN_KEY, accessToken)
+  localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken)
+}
+
+export function clearAuthTokens(): void {
+  localStorage.removeItem(ACCESS_TOKEN_KEY)
+  localStorage.removeItem(REFRESH_TOKEN_KEY)
+}
+
+export class ApiError extends Error {
+  code?: string
+
+  constructor(message: string, code?: string) {
+    super(message)
+    this.name = 'ApiError'
+    this.code = code
+  }
+}
+
+function shouldSkipTokenRefresh(path: string): boolean {
+  return (
+    path.startsWith('/api/auth/login') ||
+    path.startsWith('/api/auth/register') ||
+    path.startsWith('/api/auth/refresh')
+  )
+}
+
+export async function apiFetch<T>(
+  path: string,
+  options: RequestInit = {}
+): Promise<T> {
+  const token = getAccessToken()
+  const headers = new Headers(options.headers)
+  headers.set('Content-Type', 'application/json')
+  if (token) headers.set('Authorization', `Bearer ${token}`)
+
+  const res = await fetch(`${getApiUrl()}${path}`, { ...options, headers })
+  if (res.status === 401 && getRefreshToken() && !shouldSkipTokenRefresh(path)) {
+    try {
+      const refreshed = await fetch(`${getApiUrl()}/api/auth/refresh`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refreshToken: getRefreshToken() }),
+      })
+      if (refreshed.ok) {
+        const { accessToken } = (await refreshed.json()) as { accessToken: string }
+        localStorage.setItem(ACCESS_TOKEN_KEY, accessToken)
+        headers.set('Authorization', `Bearer ${accessToken}`)
+        const retry = await fetch(`${getApiUrl()}${path}`, { ...options, headers })
+        if (!retry.ok) {
+          const body = await retry.json().catch(() => ({}))
+          throw new ApiError(
+            (body as { error?: string }).error ?? `Request failed (${retry.status})`,
+            (body as { code?: string }).code
+          )
+        }
+        return retry.json() as Promise<T>
+      }
+    } catch {
+      clearAuthTokens()
+    }
+  }
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}))
+    throw new ApiError(
+      (body as { error?: string }).error ?? `Request failed (${res.status})`,
+      (body as { code?: string }).code
+    )
+  }
+  return res.json() as Promise<T>
+}
+
+export async function fetchMe(): Promise<ApiUser> {
+  return apiFetch<ApiUser>('/api/auth/me')
+}
+
+export async function updateProfile(body: {
+  fullName?: string
+  nickname?: string
+  avatarThemeIndex?: number
+}): Promise<ApiUser> {
+  return apiFetch<ApiUser>('/api/auth/me', {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+  })
+}
+
+export async function updateSelectedRepos(repoIds: string[]): Promise<void> {
+  await apiFetch('/api/repos/selected', {
+    method: 'PATCH',
+    body: JSON.stringify({ repos: repoIds }),
+  })
+}
+
+export async function fetchDashboard(): Promise<ApiDashboard> {
+  return apiFetch<ApiDashboard>('/api/dashboard')
+}
+
+export async function fetchPackages(params?: {
+  tier?: string
+  ecosystem?: string
+}): Promise<Package[]> {
+  const qs = new URLSearchParams()
+  if (params?.tier) qs.set('tier', params.tier)
+  if (params?.ecosystem) qs.set('ecosystem', params.ecosystem)
+  const query = qs.toString()
+  const data = await apiFetch<{ packages: ApiPackageListItem[] }>(
+    `/api/packages${query ? `?${query}` : ''}`
+  )
+  return data.packages.map(adaptPackageListItem)
+}
+
+export async function fetchPackageById(id: string): Promise<Package> {
+  const data = await apiFetch<ApiPackageDetail>(`/api/packages/${id}`)
+  return adaptPackageDetail(data)
+}
+
+export async function fetchAlerts(limit = 50): Promise<Alert[]> {
+  const data = await apiFetch<{ alerts: ApiAlert[] }>(`/api/alerts?limit=${limit}`)
+  return data.alerts.map(adaptAlert)
+}
+
+export async function fetchRepos(): Promise<{
+  repos: Repo[]
+  repoLimit: number
+  monitoredCount: number
+}> {
+  const data = await apiFetch<{ repos: ApiRepo[]; repoLimit: number; monitoredCount: number }>(
+    '/api/repos'
+  )
+  return {
+    repos: data.repos.map(adaptRepo),
+    repoLimit: data.repoLimit,
+    monitoredCount: data.monitoredCount,
+  }
+}
+
+export async function triggerRepoRescan(): Promise<void> {
+  await apiFetch('/api/repos/rescan', { method: 'POST' })
+}
+
+export async function fetchGithubInstallUrl(): Promise<string> {
+  const origin =
+    typeof window !== 'undefined' ? encodeURIComponent(window.location.origin) : ''
+  const data = await apiFetch<{ url: string }>(
+    `/api/github/install-url${origin ? `?origin=${origin}` : ''}`
+  )
+  return data.url
+}
+
+export async function fetchGithubOAuthUrl(): Promise<string> {
+  const origin =
+    typeof window !== 'undefined' ? encodeURIComponent(window.location.origin) : ''
+  const data = await apiFetch<{ url: string }>(
+    `/api/github/oauth/url${origin ? `?origin=${origin}` : ''}`
+  )
+  return data.url
+}
+
+export type OnboardingState = {
+  connected: boolean
+  accountLogin: string | null
+  onboardingStep: number
+  onboardingComplete: boolean
+  scanStatus: ScanProgressEvent['status']
+  total: number
+  scanned: number
+  scored: number
+  selectedRepoCount: number
+  selectedRepoNames: string[]
+  configureUrl: string | null
+  repoLimit: number
+}
+
+export async function fetchOnboardingState(): Promise<OnboardingState> {
+  return apiFetch<OnboardingState>('/api/github/onboarding/state')
+}
+
+export type BillingPlanResponse = {
+  plan: string
+  planStatus: string
+  repoLimit: number
+  packageLimit: number
+  email: string
+  fullName: string | null
+  proAmountPaise: number
+}
+
+export async function fetchBillingPlan(): Promise<BillingPlanResponse> {
+  return apiFetch<BillingPlanResponse>('/api/billing/plan')
+}
+
+export async function createBillingOrder(amountPaise: number): Promise<{
+  order_id: string
+  amount: number
+  currency: string
+}> {
+  return apiFetch('/api/billing/create-order', {
+    method: 'POST',
+    body: JSON.stringify({ amount: amountPaise }),
+  })
+}
+
+export async function verifyBillingPayment(body: {
+  razorpay_order_id: string
+  razorpay_payment_id: string
+  razorpay_signature: string
+}): Promise<{ success: boolean; plan: string }> {
+  return apiFetch('/api/billing/verify-payment', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
+}
+
+export type OnboardingRepo = {
+  id: string
+  fullName: string
+  name: string
+  org: string
+}
+
+export type OnboardingReposResponse = {
+  repos: OnboardingRepo[]
+  repoLimit: number
+  selectedRepos: string[]
+}
+
+export async function fetchOnboardingRepos(): Promise<OnboardingReposResponse> {
+  return apiFetch<OnboardingReposResponse>('/api/github/onboarding/repos')
+}
+
+export async function startOnboardingScan(repoIds: string[]): Promise<void> {
+  await apiFetch('/api/github/start-scan', {
+    method: 'POST',
+    body: JSON.stringify({ repoIds }),
+  })
+}
+
+export type ScanProgressEvent = {
+  status: 'pending' | 'scanning' | 'scoring' | 'complete' | 'failed'
+  total: number
+  scanned: number
+  scored: number
+}
+
+export function openScanProgressStream(
+  onEvent: (event: ScanProgressEvent) => void,
+  onError?: () => void
+): () => void {
+  const token = getAccessToken()
+  if (!token) {
+    onError?.()
+    return () => {}
+  }
+
+  const url = `${getApiUrl()}/api/github/onboarding/stream?access_token=${encodeURIComponent(token)}`
+  const source = new EventSource(url)
+
+  source.onmessage = (message) => {
+    try {
+      onEvent(JSON.parse(message.data) as ScanProgressEvent)
+    } catch {
+      onError?.()
+    }
+  }
+
+  source.onerror = () => {
+    onError?.()
+    source.close()
+  }
+
+  return () => source.close()
+}

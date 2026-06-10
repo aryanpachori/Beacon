@@ -1,9 +1,11 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
-import { packages } from '@/lib/mockData'
+import { fetchPackageById } from '@/lib/api'
+import type { Package } from '@/types'
 import { PackageHeroHeader } from '@/components/packages/detail/PackageHeroHeader'
 import { PackageDetailLinks } from '@/components/packages/detail/PackageDetailLinks'
 import { SpsSurvivalChart } from '@/components/packages/detail/SpsSurvivalChart'
@@ -18,8 +20,36 @@ interface PageProps {
 }
 
 export default function PackageDetailPage({ params }: PageProps) {
-  const pkg = packages.find(p => p.id === params.id)
-  if (!pkg) notFound()
+  const [pkg, setPkg] = useState<Package | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [missing, setMissing] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      try {
+        const data = await fetchPackageById(params.id)
+        if (!cancelled) setPkg(data)
+      } catch {
+        if (!cancelled) setMissing(true)
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [params.id])
+
+  if (loading) {
+    return (
+      <div className="app-page flex min-h-[50vh] items-center justify-center">
+        <p className="text-sm text-dl-muted">Loading package…</p>
+      </div>
+    )
+  }
+
+  if (missing || !pkg) notFound()
 
   const signalEntries = Object.entries(pkg.signals) as [
     keyof typeof pkg.signals,
@@ -35,6 +65,13 @@ export default function PackageDetailPage({ params }: PageProps) {
         <ArrowLeft className="h-3.5 w-3.5" />
         All packages
       </Link>
+
+      {pkg.scoringPending && (
+        <div className="mb-6 rounded-lg border border-dl-teal/30 bg-dl-teal/5 px-4 py-3 text-sm text-dl-forest">
+          Signals collected. SPS score and tier will appear after the intelligence service
+          finishes scoring this package.
+        </div>
+      )}
 
       <PackageHeroHeader pkg={pkg} />
       <PackageDetailLinks pkg={pkg} />
