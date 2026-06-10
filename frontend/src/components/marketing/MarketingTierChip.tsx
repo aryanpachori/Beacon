@@ -23,7 +23,7 @@ interface MarketingTierChipProps {
 
 export function MarketingTierChip({ tier, className }: MarketingTierChipProps) {
   return (
-    <span className={cn(TIER_CLASS[tier], className)}>
+    <span className={cn('tier-chip', TIER_CLASS[tier], className)}>
       {TIER_LABEL[tier]}
     </span>
   )

@@ -62,7 +62,7 @@ export function BeforeAfter() {
             </div>
             <ul className="flex flex-col gap-3.5">
               {WITHOUT.map(({ icon: Icon, text }) => (
-                <li key={text} className="flex items-start gap-3 text-[13px] text-dl-forest/80">
+                <li key={text} className="flex items-start gap-3 text-[13px] text-dl-forest">
                   <Icon className="mt-0.5 h-4 w-4 shrink-0 text-dl-critical/60" />
                   {text}
                 </li>
@@ -83,7 +83,7 @@ export function BeforeAfter() {
             </div>
             <ul className="flex flex-col gap-3.5">
               {WITH.map(({ icon: Icon, text }) => (
-                <li key={text} className="flex items-start gap-3 text-[13px] text-dl-forest/80">
+                <li key={text} className="flex items-start gap-3 text-[13px] text-dl-forest">
                   <Icon className="mt-0.5 h-4 w-4 shrink-0 text-dl-teal/60" />
                   {text}
                 </li>
