@@ -80,7 +80,7 @@ export function FeatureComparison() {
       >
         <h2 className="text-center text-[28px] font-medium text-dl-text">Full feature comparison</h2>
 
-        <div className="mt-10 overflow-x-auto rounded-[14px] border border-dl-border bg-white">
+        <div className="mt-10 overflow-x-auto rounded-[14px] border border-dl-border bg-dl-page">
           <table className="w-full min-w-[480px] table-fixed text-center text-[13px] text-dl-forest">
             <thead>
               <tr className="border-b border-dl-border">

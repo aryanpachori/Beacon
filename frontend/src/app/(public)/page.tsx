@@ -1,13 +1,11 @@
 import { Nav } from '@/components/layout/Nav'
 import { Footer } from '@/components/layout/Footer'
 import { Hero } from '@/components/landing/Hero'
-import { SocialProof } from '@/components/landing/SocialProof'
 import { StatsCounter } from '@/components/landing/StatsCounter'
 import { ProblemSection } from '@/components/landing/ProblemSection'
 import { BeforeAfter } from '@/components/landing/BeforeAfter'
 import { HowItWorks } from '@/components/landing/HowItWorks'
 import { FeatureGrid } from '@/components/landing/FeatureGrid'
-import { SpsPlayground } from '@/components/landing/SpsPlayground'
 import { DashboardPreview } from '@/components/landing/DashboardPreview'
 import { Testimonials } from '@/components/landing/Testimonials'
 import { ComparisonTable } from '@/components/landing/ComparisonTable'
@@ -19,13 +17,11 @@ export default function HomePage() {
       <Nav />
       <main>
         <Hero />
-        <SocialProof />
         <StatsCounter />
         <ProblemSection />
         <BeforeAfter />
         <HowItWorks />
         <FeatureGrid />
-        <SpsPlayground />
         <DashboardPreview />
         <Testimonials />
         <ComparisonTable />
