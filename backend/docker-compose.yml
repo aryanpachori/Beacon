@@ -1,17 +1,4 @@
 services:
-  redis:
-    image: redis:7-alpine
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
   api:
     build: .
     restart: unless-stopped
@@ -22,11 +9,4 @@ services:
     volumes:
       - ./driftlogg.2026-06-10.private-key.pem:/app/driftlogg.2026-06-10.private-key.pem:ro
     environment:
-      REDIS_URL: redis://redis:6379
       GITHUB_APP_PRIVATE_KEY_PATH: /app/driftlogg.2026-06-10.private-key.pem
-    depends_on:
-      redis:
-        condition: service_healthy
-
-volumes:
-  redis_data:

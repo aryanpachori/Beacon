@@ -1,5 +1,6 @@
 import { Queue } from 'bullmq'
 import type { NormalizedSignals } from '../services/signals.service'
+import { getRedisConnectionOptions } from './redisConnection'
 
 /**
  * One Redis instance (REDIS_URL) backs everything:
@@ -70,17 +71,11 @@ export function toIntelligenceSignals(signals: NormalizedSignals): IntelligenceS
   }
 }
 
-function parseRedisConnection() {
-  const url = new URL(process.env.REDIS_URL!)
-  return {
-    host: url.hostname,
-    port: parseInt(url.port || '6379', 10),
-    password: url.password || undefined,
-  }
+/** Shared BullMQ connection — same Redis as lib/redis.ts (Upstash or local). */
+export const queueConnection = {
+  ...getRedisConnectionOptions(),
+  maxRetriesPerRequest: null,
 }
-
-/** Shared BullMQ connection — both queues use the same Redis. */
-export const queueConnection = parseRedisConnection()
 
 export const signalCollectQueue = new Queue<SignalCollectJobData>(Queues.SIGNAL_COLLECT, {
   connection: queueConnection,
