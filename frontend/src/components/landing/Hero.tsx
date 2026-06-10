@@ -221,14 +221,6 @@ export function Hero() {
         >
           <div className="mb-4 flex items-center justify-between">
             <span className="text-sm font-medium text-dl-cream">Dependency health</span>
-            <span className="flex items-center gap-1.5 text-xs text-dl-sage-light">
-              <motion.span
-                className="h-2 w-2 rounded-full bg-dl-healthy"
-                animate={{ opacity: [1, 0.3, 1] }}
-                transition={{ repeat: Infinity, duration: 2 }}
-              />
-              Live
-            </span>
           </div>
           {MOCK_PACKAGES.map((pkg) => (
             <PackageRow

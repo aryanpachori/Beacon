@@ -84,14 +84,14 @@ export function Testimonials() {
         className="relative mt-16 w-full overflow-hidden"
       >
         {/* Left and Right Fade Overlays */}
-        <div className="pointer-events-none absolute bottom-0 left-0 top-0 w-12 bg-gradient-to-r from-dl-card to-transparent z-10 sm:w-24" />
-        <div className="pointer-events-none absolute bottom-0 right-0 top-0 w-12 bg-gradient-to-l from-dl-card to-transparent z-10 sm:w-24" />
+        <div className="pointer-events-none absolute bottom-0 left-0 top-0 w-12 testimonial-fade-left z-10 sm:w-24" />
+        <div className="pointer-events-none absolute bottom-0 right-0 top-0 w-12 testimonial-fade-right z-10 sm:w-24" />
 
         <div className="animate-marquee gap-6 py-4">
           {[...TESTIMONIALS, ...TESTIMONIALS].map((t, idx) => (
             <div
               key={`${t.name}-${idx}`}
-              className="w-[360px] shrink-0 rounded-[14px] border border-dl-border bg-white p-7 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1"
+              className="w-[360px] shrink-0 rounded-[14px] border border-dl-border bg-dl-page p-7 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1"
             >
               <span className="text-5xl font-light leading-none text-dl-sage-light select-none">&ldquo;</span>
               <p className="mt-2 text-[15px] italic leading-relaxed text-dl-forest">{t.quote}</p>
