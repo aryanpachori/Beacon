@@ -126,7 +126,7 @@ export function PricingCards({ billingPeriod, onBillingChange }: PricingCardsPro
                     Most popular
                   </span>
                 )}
-                <p className="text-[13px] font-medium uppercase tracking-wide text-dl-forest/75">
+                <p className="text-[13px] font-medium uppercase tracking-wide text-dl-forest">
                   {plan.name}
                 </p>
                 <div className="mt-3 flex items-baseline gap-1">

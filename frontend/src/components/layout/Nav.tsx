@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { SiteLogo } from '@/components/layout/SiteLogo'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, Sun, Moon } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
@@ -18,6 +18,21 @@ const NAV_LINKS = [
 export function Nav() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
+  const [theme, setTheme] = useState<'light' | 'dark'>('light')
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null
+    const currentTheme = savedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+    setTheme(currentTheme)
+    document.documentElement.setAttribute('data-theme', currentTheme === 'dark' ? 'app' : 'light')
+  }, [])
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'light' ? 'dark' : 'light'
+    setTheme(nextTheme)
+    localStorage.setItem('theme', nextTheme)
+    document.documentElement.setAttribute('data-theme', nextTheme === 'dark' ? 'app' : 'light')
+  }
 
   const isActive = (href: string) => href === '/pricing' && pathname === '/pricing'
 
@@ -52,6 +67,14 @@ export function Nav() {
         </nav>
 
         <div className="hidden items-center gap-4 md:flex">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-dl-sage-light/55 transition-colors hover:bg-white/5 hover:text-dl-cream"
+            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+          >
+            {theme === 'dark' ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
+          </button>
           <Link
             href="/login"
             className="text-sm text-dl-sage-light/55 transition-colors hover:text-dl-cream"
@@ -97,6 +120,17 @@ export function Nav() {
                   {link.label}
                 </Link>
               ))}
+              <div className="flex items-center justify-between min-h-[44px] py-3 text-sm text-dl-sage-light/55 border-b border-dl-sage-light/10">
+                <span>Theme</span>
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-dl-sage-light/55 transition-colors hover:text-dl-cream"
+                  aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+                >
+                  {theme === 'dark' ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
+                </button>
+              </div>
               <Link
                 href="/login"
                 className="min-h-[44px] py-3 text-sm text-dl-sage-light/55"
