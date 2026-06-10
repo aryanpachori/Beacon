@@ -68,7 +68,7 @@ export function HowItWorks() {
 
         <div className="relative mt-14 grid grid-cols-1 gap-10 md:grid-cols-4 md:gap-6">
           {/* Animated progress line */}
-          <div className="absolute left-[12%] right-[12%] top-[18px] hidden h-px bg-dl-border-mid/30 md:block">
+          <div className="absolute left-[18px] right-[calc(25%-18px)] top-[18px] hidden h-px bg-dl-border-mid/30 md:block">
             <motion.div
               className="absolute inset-y-0 left-0 bg-dl-teal"
               style={{ width: lineWidth }}
