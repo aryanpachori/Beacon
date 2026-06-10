@@ -69,7 +69,7 @@ export function ComparisonTable() {
                   <tr
                     key={row.feature}
                     className={`transition-colors hover:bg-dl-teal/[0.04] ${
-                      i % 2 === 0 ? 'bg-dl-card' : 'bg-white'
+                      i % 2 === 0 ? 'bg-dl-card' : 'bg-dl-cream'
                     }`}
                   >
                     <td className="px-4 py-3 text-left font-medium text-dl-forest">{row.feature}</td>
