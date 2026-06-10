@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react'
 import type { Package } from '@/types'
-import { Heart, Wrench, AlertTriangle, ArrowRight } from 'lucide-react'
+import { Heart, Wrench, AlertTriangle, ArrowRight, Copy, CheckCircle } from 'lucide-react'
 import { EcosystemIcon } from '@/components/ui/EcosystemIcon'
 import {
   getPackageDescription,
@@ -14,6 +14,7 @@ import {
 } from '@/lib/packageDetailData'
 import { cn } from '@/lib/utils'
 import { TrendingDown, TrendingUp, Minus } from 'lucide-react'
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
 
 const BADGE_ICONS = {
   heart: Heart,
@@ -66,6 +67,7 @@ export function PackageHeroHeader({ pkg }: PackageHeroHeaderProps) {
   const openIssues = getOpenIssues(pkg)
   const commit = getDaysSinceCommit(pkg)
   const spsColor = getSpsColorClass(pkg)
+  const { copy, copied } = useCopyToClipboard()
   const IssueTrend =
     openIssues.trend === 'up' ? TrendingUp : openIssues.trend === 'down' ? TrendingDown : Minus
   const issueTrendClass =
@@ -85,7 +87,17 @@ export function PackageHeroHeader({ pkg }: PackageHeroHeaderProps) {
           />
           <div className="min-w-0">
             <h1 className="text-[22px] font-medium text-dl-forest">{pkg.name}</h1>
-            <p className="mt-0.5 font-mono text-[12px] text-dl-hint">v{pkg.version}</p>
+            <button
+              onClick={() => copy(`${pkg.name}@${pkg.version}`)}
+              title="Copy package@version"
+              className="mt-0.5 flex items-center gap-1 font-mono text-[12px] text-dl-hint hover:text-dl-teal transition-colors"
+            >
+              <span>v{pkg.version}</span>
+              {copied
+                ? <CheckCircle className="h-3 w-3 text-dl-teal" />
+                : <Copy className="h-3 w-3 opacity-0 group-hover:opacity-100" />
+              }
+            </button>
             <span className="mt-2 inline-flex rounded-full border border-dl-teal/20 bg-dl-teal/10 px-2.5 py-0.5 text-[11px] font-medium uppercase text-dl-teal">
               {pkg.ecosystem}
             </span>

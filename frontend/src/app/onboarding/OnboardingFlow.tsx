@@ -58,7 +58,7 @@ export function OnboardingFlow() {
   const [summaryRepoNames, setSummaryRepoNames] = useState<string[]>([])
   const [summaryPackageCount, setSummaryPackageCount] = useState(0)
 
-  const { progress, activeCount, percent, isComplete, isFailed, error } = useScanProgressStream(
+  const { progress, activeCount, percent, isComplete, isFailed, error, reconnectStatus } = useScanProgressStream(
     step === 3
   )
 
@@ -452,7 +452,17 @@ export function OnboardingFlow() {
                 <div className="progress-track w-full">
                   <div className="progress-fill" style={{ width: `${percent}%` }} />
                 </div>
-                {error && (
+                {reconnectStatus === 'reconnecting' && (
+                  <p className="text-xs text-amber-400">
+                    Connection lost — retrying…
+                  </p>
+                )}
+                {reconnectStatus === 'polling' && (
+                  <p className="text-xs text-amber-400">
+                    Live updates paused — refreshing every 5 seconds
+                  </p>
+                )}
+                {error && reconnectStatus === 'idle' && (
                   <p className="text-xs text-dl-m-critical">
                     Live updates disconnected. Refresh if progress stalls.
                   </p>

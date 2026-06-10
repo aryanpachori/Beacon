@@ -1,10 +1,14 @@
 'use client'
 
-import { Suspense, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
+import { AlertCircle, Info } from 'lucide-react'
 import { ApiError, apiFetch, setAuthTokens } from '@/lib/api'
+import { cn } from '@/lib/utils'
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 function useRedirectParam(): string | null {
   const searchParams = useSearchParams()
@@ -12,21 +16,65 @@ function useRedirectParam(): string | null {
   return redirect && redirect.startsWith('/') ? redirect : null
 }
 
+function FieldError({ message }: { message: string }) {
+  return (
+    <p className="mt-1 flex items-center gap-1 text-[11px] text-dl-danger">
+      <AlertCircle className="h-3 w-3 shrink-0" />
+      {message}
+    </p>
+  )
+}
+
 function LoginForm() {
   const router = useRouter()
   const redirectTo = useRedirectParam()
+  const searchParams = useSearchParams()
   const registerHref = redirectTo
     ? `/register?redirect=${encodeURIComponent(redirectTo)}`
     : '/register'
 
   const [email, setEmail] = useState('')
+  const [emailTouched, setEmailTouched] = useState(false)
+  const [emailError, setEmailError] = useState('')
+
   const [password, setPassword] = useState('')
+  const [passwordTouched, setPasswordTouched] = useState(false)
+  const [passwordError, setPasswordError] = useState('')
+
   const [error, setError] = useState('')
   const [errorCode, setErrorCode] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
+  const sessionExpired = searchParams.get('reason') === 'expired'
+
+  // Save intended URL before redirect
+  useEffect(() => {
+    if (redirectTo) {
+      localStorage.setItem('dl_intended_url', redirectTo)
+    }
+  }, [redirectTo])
+
+  const validateEmail = (val: string) => {
+    if (!val) return 'Email is required'
+    if (!EMAIL_RE.test(val)) return 'Enter a valid email address'
+    return ''
+  }
+
+  const validatePassword = (val: string) => {
+    if (!val) return 'Password is required'
+    return ''
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    const eErr = validateEmail(email)
+    const pErr = validatePassword(password)
+    setEmailError(eErr)
+    setPasswordError(pErr)
+    setEmailTouched(true)
+    setPasswordTouched(true)
+    if (eErr || pErr) return
+
     setError('')
     setErrorCode(null)
     setLoading(true)
@@ -41,8 +89,11 @@ function LoginForm() {
       })
       setAuthTokens(data.accessToken, data.refreshToken)
 
-      if (redirectTo) {
-        router.push(redirectTo)
+      const intended = localStorage.getItem('dl_intended_url')
+      localStorage.removeItem('dl_intended_url')
+
+      if (redirectTo || intended) {
+        router.push(redirectTo || intended!)
         return
       }
 
@@ -70,20 +121,32 @@ function LoginForm() {
         <div className="dl-card p-6 shadow-sm md:p-8">
           <h1 className="marketing-title mb-1 text-[22px] md:text-[24px]">Sign in</h1>
           <p className="marketing-subtitle mb-6">
-            Know which packages are dying before they do.
+            {redirectTo
+              ? 'Sign in to continue to Dashboard'
+              : 'Know which packages are dying before they do.'}
           </p>
 
+          {sessionExpired && (
+            <div className="mb-4 flex items-start gap-2 rounded-lg border border-blue-400/20 bg-blue-400/5 p-3 text-[13px] text-blue-300">
+              <Info className="mt-0.5 h-4 w-4 shrink-0" />
+              Your session expired. Please sign in again.
+            </div>
+          )}
+
           {error && (
-            <div className="mb-4 rounded-lg bg-dl-critical/10 px-3 py-2 text-sm text-dl-critical">
-              <p>{error}</p>
-              {errorCode === 'USER_NOT_FOUND' && (
-                <Link
-                  href={registerHref}
-                  className="mt-2 inline-block font-medium text-dl-teal hover:underline"
-                >
-                  Create an account →
-                </Link>
-              )}
+            <div className="mb-4 flex items-start gap-2 rounded-lg border border-dl-danger/30 bg-dl-danger/10 p-3 text-[13px] text-dl-danger">
+              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+              <div>
+                <p>{error}</p>
+                {errorCode === 'USER_NOT_FOUND' && (
+                  <Link
+                    href={registerHref}
+                    className="mt-1 inline-block font-medium text-dl-teal hover:underline"
+                  >
+                    Create an account →
+                  </Link>
+                )}
+              </div>
             </div>
           )}
 
@@ -96,13 +159,26 @@ function LoginForm() {
                 id="email"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                  if (emailTouched) setEmailError(validateEmail(e.target.value))
+                }}
+                onBlur={() => {
+                  setEmailTouched(true)
+                  setEmailError(validateEmail(email))
+                }}
                 placeholder="you@company.com"
-                className="form-input"
+                className={cn(
+                  'form-input',
+                  emailTouched && emailError && 'border-dl-danger focus:ring-dl-danger/20',
+                  emailTouched && !emailError && email && 'border-dl-teal',
+                )}
                 required
                 autoComplete="email"
               />
+              {emailTouched && emailError && <FieldError message={emailError} />}
             </div>
+
             <div>
               <label className="form-label" htmlFor="password">
                 Password
@@ -111,19 +187,39 @@ function LoginForm() {
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="form-input"
+                onChange={(e) => {
+                  setPassword(e.target.value)
+                  if (passwordTouched) setPasswordError(validatePassword(e.target.value))
+                }}
+                onBlur={() => {
+                  setPasswordTouched(true)
+                  setPasswordError(validatePassword(password))
+                }}
+                placeholder="Min. 8 characters"
+                className={cn(
+                  'form-input',
+                  passwordTouched && passwordError && 'border-dl-danger focus:ring-dl-danger/20',
+                )}
                 required
                 autoComplete="current-password"
               />
+              {passwordTouched && passwordError && <FieldError message={passwordError} />}
             </div>
+
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary mt-1 w-full justify-center py-2.5 disabled:opacity-60"
+              className={cn(
+                'btn-primary mt-1 w-full min-w-[120px] justify-center py-2.5',
+                loading && 'cursor-not-allowed opacity-70'
+              )}
             >
-              {loading ? 'Signing in…' : 'Sign in'}
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                  Signing in…
+                </span>
+              ) : 'Sign in'}
             </button>
           </form>
         </div>

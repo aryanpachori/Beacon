@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import { Toaster } from 'sonner'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
@@ -32,6 +33,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
         {children}
+        <Toaster
+          position="bottom-right"
+          theme="dark"
+          richColors
+          toastOptions={{
+            style: {
+              background: 'var(--dl-card)',
+              border: '1px solid var(--dl-border)',
+              color: 'var(--dl-forest)',
+            },
+          }}
+        />
         <Analytics />
         <SpeedInsights />
       </body>

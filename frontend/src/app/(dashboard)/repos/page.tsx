@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Plus, GitBranch } from 'lucide-react'
+import { Plus, GitBranch, RefreshCw } from 'lucide-react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { useAppData } from '@/context/AppDataContext'
 import { fetchGithubInstallUrl, fetchGithubOAuthUrl } from '@/lib/api'
@@ -50,8 +50,16 @@ export default function ReposPage() {
 
   if (error) {
     return (
-      <div className="app-page flex min-h-[50vh] items-center justify-center">
-        <p className="text-sm text-dl-critical">{error}</p>
+      <div className="app-page flex min-h-[50vh] flex-col items-center justify-center gap-3">
+        <p className="text-sm text-dl-critical">Could not load repositories. Check your connection.</p>
+        <button
+          type="button"
+          onClick={refresh}
+          className="btn-dash-secondary flex items-center gap-1.5 text-sm"
+        >
+          <RefreshCw className="h-3.5 w-3.5" />
+          Try again
+        </button>
       </div>
     )
   }

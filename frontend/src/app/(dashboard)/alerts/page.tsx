@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Bell } from 'lucide-react'
+import { Bell, CheckCircle, RefreshCw } from 'lucide-react'
 import type { Tier } from '@/types'
 import { useAppData } from '@/context/AppDataContext'
 import { AlertCard } from '@/components/alerts/AlertCard'
@@ -10,6 +10,7 @@ import { AlertSummaryCard } from '@/components/alerts/AlertSummaryCard'
 import { AlertTriageCard } from '@/components/alerts/AlertTriageCard'
 import { FilterTabs } from '@/components/ui/FilterTabs'
 import { getUnreadCount, isAlertResolved } from '@/lib/alertsData'
+import Link from 'next/link'
 
 type FilterTab = 'all' | Tier | 'resolved'
 
@@ -22,7 +23,7 @@ const TABS: { label: string; value: FilterTab }[] = [
 ]
 
 export default function AlertsPage() {
-  const { alerts, loading, error } = useAppData()
+  const { alerts, loading, error, refresh } = useAppData()
   const [filter, setFilter] = useState<FilterTab>('all')
   const unreadCount = getUnreadCount(alerts)
 
@@ -42,11 +43,23 @@ export default function AlertsPage() {
 
   if (error) {
     return (
-      <div className="app-page flex min-h-[50vh] items-center justify-center">
-        <p className="text-sm text-dl-critical">{error}</p>
+      <div className="app-page flex min-h-[50vh] flex-col items-center justify-center gap-3">
+        <p className="text-sm text-dl-critical">Could not load alerts. Check your connection.</p>
+        <button
+          type="button"
+          onClick={refresh}
+          className="btn-dash-secondary flex items-center gap-1.5 text-sm"
+        >
+          <RefreshCw className="h-3.5 w-3.5" />
+          Try again
+        </button>
       </div>
     )
   }
+
+  const hasFilterActive = filter !== 'all'
+  const noAlertsTotal = alerts.length === 0
+  const noFilterMatch = visible.length === 0 && !noAlertsTotal
 
   return (
     <div className="app-page">
@@ -71,12 +84,36 @@ export default function AlertsPage() {
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.15 }}
             >
-              {visible.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-20">
-                  <Bell className="h-10 w-10 text-dl-sage" />
-                  <p className="mt-3 text-[14px] text-dl-muted">
-                    No alerts yet — they appear when package health crosses your thresholds
+              {noAlertsTotal ? (
+                <div className="flex flex-col items-center justify-center py-20 text-center">
+                  <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-dl-teal/10">
+                    <CheckCircle className="h-6 w-6 text-dl-teal" />
+                  </div>
+                  <p className="text-[15px] font-medium text-dl-forest">
+                    Your stack is clean — no alerts fired yet
                   </p>
+                  <p className="mt-1 text-[13px] text-dl-muted">
+                    Alerts appear when package health crosses your thresholds.
+                  </p>
+                  <Link
+                    href="/packages"
+                    className="mt-4 text-[13px] font-medium text-dl-teal hover:underline"
+                  >
+                    View packages →
+                  </Link>
+                </div>
+              ) : noFilterMatch ? (
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <Bell className="mb-3 h-9 w-9 text-dl-hint opacity-50" />
+                  <p className="text-[14px] font-medium text-dl-forest">
+                    No {hasFilterActive ? filter : ''} alerts
+                  </p>
+                  <button
+                    onClick={() => setFilter('all')}
+                    className="mt-2 text-[13px] text-dl-teal hover:underline"
+                  >
+                    Show all alerts
+                  </button>
                 </div>
               ) : (
                 visible.map(alert => <AlertCard key={alert.id} alert={alert} />)

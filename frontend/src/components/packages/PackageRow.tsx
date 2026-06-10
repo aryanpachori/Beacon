@@ -9,7 +9,6 @@ import { TierChip } from '@/components/ui/TierChip'
 import { SparklineLine } from '@/components/ui/SparklineLine'
 import { SparklineBar } from '@/components/ui/SparklineBar'
 import { PackageSignalIcons } from '@/components/dashboard/PackageSignalIcons'
-import { timeAgo } from '@/lib/utils'
 import {
   getMaintainerHandle,
   getMaintainerActivity,
@@ -18,19 +17,23 @@ import {
   getLastUpdatedColorClass,
 } from '@/lib/dashboardData'
 import { cn } from '@/lib/utils'
+import { useRelativeTime } from '@/hooks/useRelativeTime'
+import { HighlightMatch } from '@/components/ui/HighlightMatch'
 
 interface PackageRowProps {
   pkg: Package
   index: number
   variant?: 'default' | 'dashboard'
+  searchQuery?: string
 }
 
-export function PackageRow({ pkg, index, variant = 'default' }: PackageRowProps) {
+export function PackageRow({ pkg, index, variant = 'default', searchQuery = '' }: PackageRowProps) {
   const last30 = pkg.spsHistory.slice(-30)
   const last5 = pkg.spsHistory.slice(-5)
   const isDashboard = variant === 'dashboard'
   const maintainer = getMaintainerHandle(pkg)
   const activity = getMaintainerActivity(pkg.lastUpdated)
+  const relativeTime = useRelativeTime(pkg.lastUpdated)
 
   return (
     <motion.tr
@@ -42,7 +45,9 @@ export function PackageRow({ pkg, index, variant = 'default' }: PackageRowProps)
       <td className="px-4 py-3">
         <Link href={`/packages/${pkg.id}`} className="flex items-center gap-2">
           <EcosystemIcon ecosystem={pkg.ecosystem} />
-          <span className="text-[13px] font-medium text-dl-forest hover:underline">{pkg.name}</span>
+          <span className="text-[13px] font-medium text-dl-forest hover:underline">
+            <HighlightMatch text={pkg.name} query={searchQuery} />
+          </span>
         </Link>
       </td>
       <td className="px-4 py-3 font-mono text-[13px] text-dl-forest">{pkg.version}</td>
@@ -85,11 +90,19 @@ export function PackageRow({ pkg, index, variant = 'default' }: PackageRowProps)
       </td>
       <td className="px-4 py-3">
         {isDashboard ? (
-          <span className={cn('text-[13px]', getLastUpdatedColorClass(pkg.lastUpdated))}>
+          <span
+            className={cn('text-[13px]', getLastUpdatedColorClass(pkg.lastUpdated))}
+            title={pkg.lastUpdated ? new Date(pkg.lastUpdated).toLocaleString() : undefined}
+          >
             {formatLastUpdatedLabel(pkg.lastUpdated)}
           </span>
         ) : (
-          <span className="text-[13px] text-dl-forest">{timeAgo(pkg.lastUpdated)}</span>
+          <span
+            className="text-[13px] text-dl-forest"
+            title={pkg.lastUpdated ? new Date(pkg.lastUpdated).toLocaleString() : undefined}
+          >
+            {relativeTime}
+          </span>
         )}
       </td>
       {isDashboard && (

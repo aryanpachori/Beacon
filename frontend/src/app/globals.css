@@ -587,6 +587,49 @@ body {
   }
 }
 
+/* Form input state classes */
+.form-input-default {
+  border: 1px solid var(--dl-border);
+  background: white;
+  color: var(--dl-forest);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.form-input-default:focus {
+  border-color: var(--dl-teal);
+  box-shadow: 0 0 0 3px rgba(53, 133, 142, 0.12);
+  outline: none;
+}
+.form-input-error {
+  border-color: var(--dl-danger) !important;
+  box-shadow: 0 0 0 3px rgba(224, 82, 82, 0.10) !important;
+}
+.form-input-success {
+  border-color: var(--dl-teal) !important;
+  box-shadow: 0 0 0 3px rgba(53, 133, 142, 0.10) !important;
+}
+.form-input-disabled {
+  background: var(--dl-card) !important;
+  color: var(--dl-hint) !important;
+  cursor: not-allowed !important;
+  opacity: 0.6 !important;
+}
+
+/* Focus visible ring for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--dl-teal);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Dash-card hover depth */
+.dash-card {
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.dash-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25), 0 0 0 1px var(--dl-border-mid);
+  border-color: var(--dl-border-mid);
+}
+
 /* Horizontal scrolling marquee for testimonials */
 @keyframes marquee {
   0% {

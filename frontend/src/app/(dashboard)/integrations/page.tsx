@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { MessageSquare, MessageCircle, RefreshCw, CheckCircle, AlertTriangle } from 'lucide-react'
+import { MessageSquare, MessageCircle, RefreshCw, CheckCircle, AlertTriangle, Loader2 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
-// Dummy alert payload for test triggers
 const TEST_ALERT = {
   packageId: 'moment',
   packageName: 'moment',
@@ -14,31 +14,76 @@ const TEST_ALERT = {
   effortEstimate: { sprintWeeks: 2, linesImpacted: 1240, filesAffected: 23 },
 }
 
-export default function IntegrationsPage() {
+type WebhookStatus = { type: 'success' | 'error'; text: string } | null
 
-  // Slack Integration States
+function HelperText({ text }: { text: string }) {
+  return <p className="mt-1 text-[11px] text-dl-hint">{text}</p>
+}
+
+function StatusBlock({ status }: { status: WebhookStatus }) {
+  if (!status) return null
+  return (
+    <div
+      className={cn(
+        'flex items-start gap-2 rounded-lg border p-3 text-xs leading-relaxed',
+        status.type === 'success'
+          ? 'border-dl-healthy/30 bg-dl-healthy/10 text-dl-healthy'
+          : 'border-dl-critical/30 bg-dl-critical/10 text-dl-critical'
+      )}
+    >
+      {status.type === 'success' ? (
+        <CheckCircle className="mt-0.5 h-4 w-4 shrink-0" />
+      ) : (
+        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+      )}
+      <span>{status.text}</span>
+    </div>
+  )
+}
+
+export default function IntegrationsPage() {
   const [slackUrl, setSlackUrl] = useState('')
   const [slackLoading, setSlackLoading] = useState(false)
-  const [slackStatus, setSlackStatus] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const [slackStatus, setSlackStatus] = useState<WebhookStatus>(null)
 
-  // Google Chat Integration States
   const [googleChatUrl, setGoogleChatUrl] = useState('')
   const [googleChatLoading, setGoogleChatLoading] = useState(false)
-  const [googleChatStatus, setGoogleChatStatus] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const [googleChatStatus, setGoogleChatStatus] = useState<WebhookStatus>(null)
 
-  // Cron Scheduler states
   const [cronEmail, setCronEmail] = useState('team@company.com')
   const [cronLoading, setCronLoading] = useState(false)
-  const [cronStatus, setCronStatus] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const [cronStatus, setCronStatus] = useState<WebhookStatus>(null)
 
-  // Handles Slack Webhook Dispatch
+  // Pre-fill from localStorage on mount
+  useEffect(() => {
+    const cachedSlack = localStorage.getItem('driftlogg_slack_url')
+    if (cachedSlack) {
+      setSlackUrl(cachedSlack)
+      setSlackStatus({ type: 'success', text: 'Connected ✓ — previously verified webhook URL.' })
+    }
+
+    const cachedGChat = localStorage.getItem('driftlogg_google_chat_url')
+    if (cachedGChat) {
+      setGoogleChatUrl(cachedGChat)
+      setGoogleChatStatus({ type: 'success', text: 'Connected ✓ — previously verified webhook URL.' })
+    }
+  }, [])
+
+  // Reset status when URL changes
+  const handleSlackUrlChange = (val: string) => {
+    setSlackUrl(val)
+    if (slackStatus) setSlackStatus(null)
+  }
+  const handleGChatUrlChange = (val: string) => {
+    setGoogleChatUrl(val)
+    if (googleChatStatus) setGoogleChatStatus(null)
+  }
+
   const handleTestSlack = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!slackUrl) return
-
     setSlackLoading(true)
     setSlackStatus(null)
-
     try {
       const res = await fetch('/api/integrations/slack', {
         method: 'POST',
@@ -46,7 +91,6 @@ export default function IntegrationsPage() {
         body: JSON.stringify({ webhookUrl: slackUrl, alert: TEST_ALERT }),
       })
       const data = await res.json()
-
       if (res.ok) {
         setSlackStatus({ type: 'success', text: 'Success! Block Kit alert delivered to Slack.' })
         localStorage.setItem('driftlogg_slack_url', slackUrl)
@@ -54,21 +98,17 @@ export default function IntegrationsPage() {
         setSlackStatus({ type: 'error', text: data.error || 'Failed to dispatch Slack webhook.' })
       }
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Network error occurred.'
-      setSlackStatus({ type: 'error', text: message })
+      setSlackStatus({ type: 'error', text: err instanceof Error ? err.message : 'Network error occurred.' })
     } finally {
       setSlackLoading(false)
     }
   }
 
-  // Handles Google Chat Webhook Dispatch
   const handleTestGoogleChat = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!googleChatUrl) return
-
     setGoogleChatLoading(true)
     setGoogleChatStatus(null)
-
     try {
       const res = await fetch('/api/integrations/google-chat', {
         method: 'POST',
@@ -76,7 +116,6 @@ export default function IntegrationsPage() {
         body: JSON.stringify({ webhookUrl: googleChatUrl, alert: TEST_ALERT }),
       })
       const data = await res.json()
-
       if (res.ok) {
         setGoogleChatStatus({ type: 'success', text: 'Success! Card alert delivered to Google Chat.' })
         localStorage.setItem('driftlogg_google_chat_url', googleChatUrl)
@@ -84,19 +123,16 @@ export default function IntegrationsPage() {
         setGoogleChatStatus({ type: 'error', text: data.error || 'Failed to dispatch Google Chat webhook.' })
       }
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Network error occurred.'
-      setGoogleChatStatus({ type: 'error', text: message })
+      setGoogleChatStatus({ type: 'error', text: err instanceof Error ? err.message : 'Network error occurred.' })
     } finally {
       setGoogleChatLoading(false)
     }
   }
 
-  // Simulates Daily Digest compilation & batch sending
   const handleTriggerDigest = async (e: React.FormEvent) => {
     e.preventDefault()
     setCronLoading(true)
     setCronStatus(null)
-
     try {
       const res = await fetch('/api/cron/daily-digest', {
         method: 'POST',
@@ -104,7 +140,6 @@ export default function IntegrationsPage() {
         body: JSON.stringify({ orgName: 'Acme Corp', recipientEmail: cronEmail }),
       })
       const data = await res.json()
-
       if (res.ok) {
         setCronStatus({
           type: 'success',
@@ -116,21 +151,11 @@ export default function IntegrationsPage() {
         setCronStatus({ type: 'error', text: data.error || 'Failed to run digest.' })
       }
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'An error occurred.'
-      setCronStatus({ type: 'error', text: message })
+      setCronStatus({ type: 'error', text: err instanceof Error ? err.message : 'An error occurred.' })
     } finally {
       setCronLoading(false)
     }
   }
-
-  // Load configuration details from cache on mount
-  useEffect(() => {
-    const cachedUrl = localStorage.getItem('driftlogg_slack_url')
-    if (cachedUrl) setSlackUrl(cachedUrl)
-
-    const cachedGoogleChatUrl = localStorage.getItem('driftlogg_google_chat_url')
-    if (cachedGoogleChatUrl) setGoogleChatUrl(cachedGoogleChatUrl)
-  }, [])
 
   return (
     <div className="app-page">
@@ -161,38 +186,28 @@ export default function IntegrationsPage() {
                 type="url"
                 required
                 value={slackUrl}
-                onChange={(e) => setSlackUrl(e.target.value)}
+                onChange={(e) => handleSlackUrlChange(e.target.value)}
                 placeholder="https://hooks.slack.com/services/..."
                 className="dash-input w-full"
               />
+              <HelperText text="Paste your Incoming Webhook URL from Slack App settings" />
             </div>
 
             <button
               type="submit"
               disabled={slackLoading || !slackUrl}
-              className="btn-dash-primary w-fit flex items-center gap-2"
+              className="btn-dash-primary flex min-w-[180px] items-center justify-center gap-2 self-start"
             >
-              {slackLoading && <RefreshCw className="h-3.5 w-3.5 animate-spin" />}
-              Save & Send Test Alert
+              {slackLoading ? (
+                <>
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  Sending test…
+                </>
+              ) : 'Save & Send Test Alert'}
             </button>
           </form>
 
-          {slackStatus && (
-            <div
-              className={`flex items-start gap-2 rounded-lg p-3 text-xs leading-relaxed ${
-                slackStatus.type === 'success'
-                  ? 'bg-dl-healthy/10 text-dl-healthy border border-dl-healthy/30'
-                  : 'bg-dl-critical/10 text-dl-critical border border-dl-critical/30'
-              }`}
-            >
-              {slackStatus.type === 'success' ? (
-                <CheckCircle className="h-4 w-4 shrink-0 mt-0.5" />
-              ) : (
-                <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
-              )}
-              <span>{slackStatus.text}</span>
-            </div>
-          )}
+          <StatusBlock status={slackStatus} />
         </div>
 
         {/* Google Chat Card */}
@@ -212,48 +227,34 @@ export default function IntegrationsPage() {
                 type="url"
                 required
                 value={googleChatUrl}
-                onChange={(e) => setGoogleChatUrl(e.target.value)}
+                onChange={(e) => handleGChatUrlChange(e.target.value)}
                 placeholder="https://chat.googleapis.com/v1/spaces/..."
                 className="dash-input w-full"
               />
+              <HelperText text="Paste your Google Chat Space webhook URL" />
             </div>
 
             <button
               type="submit"
               disabled={googleChatLoading || !googleChatUrl}
-              className="btn-dash-primary w-fit flex items-center gap-2"
+              className="btn-dash-primary flex min-w-[180px] items-center justify-center gap-2 self-start"
             >
-              {googleChatLoading && <RefreshCw className="h-3.5 w-3.5 animate-spin" />}
-              Save & Send Test Alert
+              {googleChatLoading ? (
+                <>
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  Sending test…
+                </>
+              ) : 'Save & Send Test Alert'}
             </button>
           </form>
 
-          {googleChatStatus && (
-            <div
-              className={`flex items-start gap-2 rounded-lg p-3 text-xs leading-relaxed ${
-                googleChatStatus.type === 'success'
-                  ? 'bg-dl-healthy/10 text-dl-healthy border border-dl-healthy/30'
-                  : 'bg-dl-critical/10 text-dl-critical border border-dl-critical/30'
-              }`}
-            >
-              {googleChatStatus.type === 'success' ? (
-                <CheckCircle className="h-4 w-4 shrink-0 mt-0.5" />
-              ) : (
-                <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
-              )}
-              <span>{googleChatStatus.text}</span>
-            </div>
-          )}
+          <StatusBlock status={googleChatStatus} />
         </div>
 
-
-
-
-
-        {/* Daily Digest Scheduler Cron trigger */}
+        {/* Daily Digest Scheduler */}
         <div className="dl-card flex flex-col gap-4">
           <div className="flex items-center gap-2">
-            <RefreshCw className="h-5 w-5 text-dl-teal animate-pulse" />
+            <RefreshCw className="h-5 w-5 animate-pulse text-dl-teal" />
             <h2 className="card-heading">Daily Digest Scheduler Cron</h2>
           </div>
           <p className="text-[13px] leading-relaxed text-dl-muted">
@@ -268,36 +269,27 @@ export default function IntegrationsPage() {
                 required
                 value={cronEmail}
                 onChange={(e) => setCronEmail(e.target.value)}
+                placeholder="engineering@yourcompany.com"
                 className="dash-input w-full"
               />
+              <HelperText text="You'll receive alerts at this address" />
             </div>
 
             <button
               type="submit"
               disabled={cronLoading}
-              className="btn-dash-primary w-fit flex items-center gap-2"
+              className="btn-dash-primary flex min-w-[220px] items-center justify-center gap-2 self-start"
             >
-              {cronLoading && <RefreshCw className="h-3.5 w-3.5 animate-spin" />}
-              Run Cron Scheduler Aggregator
+              {cronLoading ? (
+                <>
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  Running…
+                </>
+              ) : 'Run Cron Scheduler Aggregator'}
             </button>
           </form>
 
-          {cronStatus && (
-            <div
-              className={`flex items-start gap-2 rounded-lg p-3 text-xs leading-relaxed ${
-                cronStatus.type === 'success'
-                  ? 'bg-dl-healthy/10 text-dl-healthy border border-dl-healthy/30'
-                  : 'bg-dl-critical/10 text-dl-critical border border-dl-critical/30'
-              }`}
-            >
-              {cronStatus.type === 'success' ? (
-                <CheckCircle className="h-4 w-4 shrink-0 mt-0.5" />
-              ) : (
-                <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
-              )}
-              <span>{cronStatus.text}</span>
-            </div>
-          )}
+          <StatusBlock status={cronStatus} />
         </div>
       </div>
     </div>

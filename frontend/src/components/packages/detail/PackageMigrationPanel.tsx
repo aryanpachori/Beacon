@@ -1,3 +1,5 @@
+'use client'
+
 import type { Package } from '@/types'
 import { EcosystemIcon } from '@/components/ui/EcosystemIcon'
 import { SPSBadge } from '@/components/ui/SPSBadge'
@@ -8,9 +10,28 @@ import {
   getRecommendationNpmUrl,
   formatWeeklyDownloads,
 } from '@/lib/packageDetailData'
+import { Copy, CheckCircle } from 'lucide-react'
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
 
 interface PackageMigrationPanelProps {
   pkg: Package
+}
+
+function InstallCopyRow({ packageName }: { packageName: string }) {
+  const { copy, copied } = useCopyToClipboard()
+  const cmd = `npm install ${packageName}`
+  return (
+    <div className="mt-2 flex items-center gap-2 rounded-md bg-dl-nav/40 px-2.5 py-1.5 font-mono text-[11px] text-dl-forest">
+      <span className="flex-1">{cmd}</span>
+      <button
+        onClick={() => copy(cmd)}
+        title="Copy install command"
+        className="shrink-0 text-dl-hint hover:text-dl-teal transition-colors"
+      >
+        {copied ? <CheckCircle className="h-3.5 w-3.5 text-dl-teal" /> : <Copy className="h-3.5 w-3.5" />}
+      </button>
+    </div>
+  )
 }
 
 export function PackageMigrationPanel({ pkg }: PackageMigrationPanelProps) {
@@ -42,6 +63,7 @@ export function PackageMigrationPanel({ pkg }: PackageMigrationPanelProps) {
                     </span>
                   </div>
                   <p className="mt-1.5 text-[12px] text-dl-muted">{getReplacementBlurb(rec.name)}</p>
+                  {rec.ecosystem === 'npm' && <InstallCopyRow packageName={rec.name} />}
                   <div className="mt-2 flex items-center justify-between">
                     <span className="text-[11px] text-dl-hint">
                       {formatWeeklyDownloads(rec.weeklyDownloads)} weekly downloads

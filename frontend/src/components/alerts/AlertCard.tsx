@@ -2,11 +2,11 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight, Sparkles, RefreshCw } from 'lucide-react'
+import { ArrowRight, Sparkles, RefreshCw, CheckCircle } from 'lucide-react'
+import { toast } from 'sonner'
 import type { Alert } from '@/types'
 import { TierChip } from '@/components/ui/TierChip'
 import { spsToTier, tierColor } from '@/lib/constants'
-import { timeAgo } from '@/lib/utils'
 import {
   getAlertAiReason,
   getAlertSignalPills,
@@ -14,6 +14,7 @@ import {
   isAlertUnread,
 } from '@/lib/alertsData'
 import { cn } from '@/lib/utils'
+import { useRelativeTime } from '@/hooks/useRelativeTime'
 
 interface AlertCardProps {
   alert: Alert
@@ -32,9 +33,11 @@ export function AlertCard({ alert }: AlertCardProps) {
   const unread = isAlertUnread(alert)
   const pills = getAlertSignalPills(alert)
   const aiReason = getAlertAiReason(alert)
+  const timeLabel = useRelativeTime(alert.firedAt)
 
   const [jiraLoading, setJiraLoading] = useState(false)
   const [jiraUrl, setJiraUrl] = useState<string | null>(alert.jiraCreated ? '#' : null)
+  const [resolved, setResolved] = useState(false)
 
   const handleOpenJira = async () => {
     if (alert.jiraCreated || (jiraUrl && jiraUrl !== '#')) {
@@ -48,9 +51,7 @@ export function AlertCard({ alert }: AlertCardProps) {
     const projectKey = localStorage.getItem('driftlogg_jira_proj_key')
 
     if (!domain || !email || !token || !projectKey) {
-      window.alert(
-        'JIRA integration is not configured. Please go to the "Integrations" page and save your JIRA connection details first!'
-      )
+      toast.error('JIRA integration not configured. Go to Integrations to set it up.')
       return
     }
 
@@ -75,31 +76,46 @@ export function AlertCard({ alert }: AlertCardProps) {
       const data = await res.json()
       if (res.ok) {
         setJiraUrl(data.issueUrl)
-        window.alert(`JIRA ticket ${data.issueKey} created successfully! Opening ticket...`)
+        toast.success(`JIRA ticket ${data.issueKey} created successfully!`)
         window.open(data.issueUrl, '_blank')
       } else {
-        window.alert(`Failed to create JIRA ticket: ${data.error}`)
+        toast.error(`Failed to create JIRA ticket: ${data.error}`)
       }
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'An unknown error occurred.'
-      window.alert(`Network error: ${message}`)
+      toast.error(err instanceof Error ? err.message : 'Network error creating JIRA ticket.')
     } finally {
       setJiraLoading(false)
     }
   }
 
+  const handleMarkResolved = () => {
+    setResolved(true)
+    toast.success('Alert marked as resolved.', {
+      action: {
+        label: 'Undo',
+        onClick: () => setResolved(false),
+      },
+      duration: 4000,
+    })
+  }
+
+  if (resolved) return null
+
   return (
-    <article
-      className={cn('dash-card mb-3 border-l-[3px] p-4', TIER_BORDER[alert.tier])}
-    >
+    <article className={cn('dash-card mb-3 border-l-[3px] p-4', TIER_BORDER[alert.tier])}>
       <div className="mb-3 flex items-center gap-2">
         <TierChip tier={alert.tier} />
         <span className="text-[15px] font-medium text-dl-forest">{alert.packageName}</span>
         <div className="ml-auto flex items-center gap-2">
-          <span className="text-[11px] text-dl-hint">{timeAgo(alert.firedAt)}</span>
+          <span
+            className="text-[11px] text-dl-hint"
+            title={new Date(alert.firedAt).toLocaleString()}
+          >
+            {timeLabel}
+          </span>
           {unread && (
             <span
-              className="h-2 w-2 shrink-0 rounded-full bg-dl-teal"
+              className="h-2 w-2 shrink-0 animate-pulse rounded-full bg-dl-teal"
               title="Unread"
               aria-label="Unread alert"
             />
@@ -108,15 +124,11 @@ export function AlertCard({ alert }: AlertCardProps) {
       </div>
 
       <div className="mb-1 flex items-center gap-2">
-        <span
-          className={cn('text-[20px] font-medium tabular-nums', tierColor(beforeTier, 'text'))}
-        >
+        <span className={cn('text-[20px] font-medium tabular-nums', tierColor(beforeTier, 'text'))}>
           {alert.spsBefore}
         </span>
         <ArrowRight className="h-4 w-4 shrink-0 text-dl-muted" aria-hidden />
-        <span
-          className={cn('text-[20px] font-medium tabular-nums', tierColor(afterTier, 'text'))}
-        >
+        <span className={cn('text-[20px] font-medium tabular-nums', tierColor(afterTier, 'text'))}>
           {alert.spsAfter}
         </span>
       </div>
@@ -149,15 +161,17 @@ export function AlertCard({ alert }: AlertCardProps) {
           type="button"
           onClick={handleOpenJira}
           disabled={jiraLoading}
-          className="btn-dash-secondary px-3 py-1.5 text-[12px] flex items-center gap-1.5"
+          className="btn-dash-secondary flex items-center gap-1.5 px-3 py-1.5 text-[12px]"
         >
           {jiraLoading && <RefreshCw className="h-3 w-3 animate-spin" />}
           {alert.jiraCreated || jiraUrl ? 'Open in JIRA' : 'Create JIRA Task'}
         </button>
         <button
           type="button"
-          className="text-[12px] text-dl-hint transition-colors hover:text-dl-muted"
+          onClick={handleMarkResolved}
+          className="flex items-center gap-1 text-[12px] text-dl-hint transition-colors hover:text-dl-teal"
         >
+          <CheckCircle className="h-3.5 w-3.5" />
           Mark resolved
         </button>
       </div>

@@ -3,9 +3,11 @@
 import { useState } from 'react'
 import { Menu } from 'lucide-react'
 import { NavSidebar } from '@/components/layout/NavSidebar'
+import { useScrollMemory } from '@/hooks/useScrollMemory'
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  useScrollMemory()
 
   return (
     <div
