@@ -10,6 +10,7 @@ const TESTIMONIALS = [
     name: 'Priya M.',
     role: 'VP Engineering at Stackery',
     initials: 'PM',
+    gradient: 'from-dl-teal to-dl-sage',
   },
   {
     quote:
@@ -17,6 +18,7 @@ const TESTIMONIALS = [
     name: 'Rohan D.',
     role: 'Senior Platform Engineer at BuildCo',
     initials: 'RD',
+    gradient: 'from-dl-sage to-dl-forest',
   },
   {
     quote:
@@ -24,6 +26,31 @@ const TESTIMONIALS = [
     name: 'Aditya K.',
     role: 'CTO at ShipFast',
     initials: 'AK',
+    gradient: 'from-dl-forest to-dl-teal',
+  },
+  {
+    quote:
+      'Our security team used to spend hours triaging dependency alerts. DriftLogg cut our triage time by 70% because we only look at things that are actually at risk of dying.',
+    name: 'Sarah L.',
+    role: 'Security Lead at NovaTech',
+    initials: 'SL',
+    gradient: 'from-dl-critical to-dl-risk',
+  },
+  {
+    quote:
+      'I integrated DriftLogg into our CI pipeline. When a dependency drops below SPS 40, it auto-creates a migration ticket in JIRA. Our tech debt backlog finally has signal.',
+    name: 'Marcus W.',
+    role: 'DevOps Manager at CloudScale',
+    initials: 'MW',
+    gradient: 'from-dl-teal to-dl-cream',
+  },
+  {
+    quote:
+      'We went from "we should probably upgrade moment" to "we have 47 days before risk is critical." That kind of specificity changes how leadership funds migration work.',
+    name: 'Deepa R.',
+    role: 'Staff Engineer at Acme Corp',
+    initials: 'DR',
+    gradient: 'from-dl-sage to-dl-teal',
   },
 ]
 
@@ -61,7 +88,7 @@ export function Testimonials() {
         <div className="pointer-events-none absolute bottom-0 right-0 top-0 w-12 bg-gradient-to-l from-dl-card to-transparent z-10 sm:w-24" />
 
         <div className="animate-marquee gap-6 py-4">
-          {[...TESTIMONIALS, ...TESTIMONIALS, ...TESTIMONIALS, ...TESTIMONIALS].map((t, idx) => (
+          {[...TESTIMONIALS, ...TESTIMONIALS].map((t, idx) => (
             <div
               key={`${t.name}-${idx}`}
               className="w-[360px] shrink-0 rounded-[14px] border border-dl-border bg-white p-7 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1"
@@ -69,7 +96,7 @@ export function Testimonials() {
               <span className="text-5xl font-light leading-none text-dl-sage-light select-none">&ldquo;</span>
               <p className="mt-2 text-[15px] italic leading-relaxed text-dl-forest">{t.quote}</p>
               <div className="mt-6 flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-dl-cream text-[13px] font-medium text-dl-teal">
+                <div className={`flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br ${t.gradient} text-[13px] font-medium text-white`}>
                   {t.initials}
                 </div>
                 <div>

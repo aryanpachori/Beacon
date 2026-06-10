@@ -7,15 +7,11 @@ import { repos as mockRepos } from '@/lib/mockData'
 const PLAN_CAPACITIES: Record<string, number> = {
   'Starter': 1,
   'Pro': 5,
-  'Team': 25,
-  'Enterprise': 999999, // Representing unlimited
 }
 
 const PLAN_PRICES: Record<string, string> = {
   'Starter': '$0 (Free)',
-  'Pro': '$49/month',
-  'Team': '$199/month',
-  'Enterprise': 'Custom Enterprise Contract',
+  'Pro': '$15/month',
 }
 
 const AVATAR_BACKGROUNDS = [

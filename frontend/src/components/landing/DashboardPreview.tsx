@@ -1,6 +1,7 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useScroll, useTransform, useMotionTemplate } from 'framer-motion'
 import { SparklineBars } from '@/components/marketing/SparklineBars'
 import { MarketingTierChip, type MarketingTier } from '@/components/marketing/MarketingTierChip'
 import { inViewOptions, sectionReveal } from '@/components/marketing/motion'
@@ -37,8 +38,18 @@ const SPARK_COLOR: Record<MarketingTier, string> = {
 }
 
 export function DashboardPreview() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'center center'],
+  })
+  const rotateX = useTransform(scrollYProgress, [0, 1], [4, 0])
+  const scale = useTransform(scrollYProgress, [0, 1], [0.96, 1])
+  const shadowOpacity = useTransform(scrollYProgress, [0, 1], [0.05, 0.18])
+  const boxShadow = useMotionTemplate`0 0 80px rgba(53, 133, 142, ${shadowOpacity})`
+
   return (
-    <section className="section-dark px-6 py-[100px]">
+    <section ref={sectionRef} className="section-dark px-6 py-[100px]">
       <motion.div
         className="mx-auto max-w-[1200px] text-center"
         initial="hidden"
@@ -56,6 +67,12 @@ export function DashboardPreview() {
         </p>
 
         <motion.div
+          style={{
+            rotateX,
+            scale,
+            transformPerspective: 1200,
+            boxShadow,
+          }}
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: 'easeOut' }}

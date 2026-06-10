@@ -17,8 +17,13 @@ const ROWS: { feature: string; driftlogg: CellValue; snyk: CellValue; dependabot
   { feature: 'OSSF Scorecard integration', driftlogg: 'yes', snyk: 'partial', dependabot: 'no', ossf: 'yes' },
 ]
 
-function Cell({ value }: { value: CellValue }) {
-  if (value === 'yes') return <Check className="mx-auto h-4 w-4 text-dl-teal" />
+function Cell({ value, isDriftLogg }: { value: CellValue; isDriftLogg?: boolean }) {
+  if (value === 'yes')
+    return (
+      <Check
+        className={`mx-auto ${isDriftLogg ? 'h-5 w-5 text-dl-teal' : 'h-4 w-4 text-dl-teal/70'}`}
+      />
+    )
   if (value === 'partial') return <span className="text-dl-hint">partial</span>
   return <Minus className="mx-auto h-4 w-4 text-dl-border" />
 }
@@ -50,7 +55,10 @@ export function ComparisonTable() {
               <thead>
                 <tr className="border-b border-dl-border bg-dl-card">
                   <th className="px-4 py-3 text-left font-medium text-dl-text">Feature</th>
-                  <th className="bg-dl-teal px-4 py-3 font-medium text-white">DriftLogg</th>
+                  <th className="relative px-4 py-3 font-medium text-white">
+                    <div className="absolute inset-0 bg-dl-teal" />
+                    <span className="relative z-10">DriftLogg</span>
+                  </th>
                   <th className="px-4 py-3 font-medium text-dl-muted">Snyk</th>
                   <th className="px-4 py-3 font-medium text-dl-muted">Dependabot</th>
                   <th className="px-4 py-3 font-medium text-dl-muted">OSSF Scorecard</th>
@@ -60,11 +68,13 @@ export function ComparisonTable() {
                 {ROWS.map((row, i) => (
                   <tr
                     key={row.feature}
-                    className={i % 2 === 0 ? 'bg-dl-card' : 'bg-white'}
+                    className={`transition-colors hover:bg-dl-teal/[0.04] ${
+                      i % 2 === 0 ? 'bg-dl-card' : 'bg-white'
+                    }`}
                   >
                     <td className="px-4 py-3 text-left font-medium text-dl-forest">{row.feature}</td>
-                    <td className="px-4 py-3">
-                      <Cell value={row.driftlogg} />
+                    <td className="bg-dl-teal/[0.06] px-4 py-3">
+                      <Cell value={row.driftlogg} isDriftLogg />
                     </td>
                     <td className="px-4 py-3">
                       <Cell value={row.snyk} />

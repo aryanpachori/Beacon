@@ -1,5 +1,9 @@
+'use client'
+
+import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Mail } from 'lucide-react'
 
 const FOUNDER = {
   name: 'Aryan Pachori',
@@ -96,10 +100,60 @@ function FooterColumn({ title, links }: { title: string; links: { label: string;
   )
 }
 
+function NewsletterSignup() {
+  const [email, setEmail] = useState('')
+  const [submitted, setSubmitted] = useState(false)
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (email.trim()) {
+      setSubmitted(true)
+      setEmail('')
+    }
+  }
+
+  return (
+    <div className="rounded-xl border border-dl-sage-light/10 bg-white/[0.03] p-6">
+      <div className="flex items-center gap-2.5 mb-2">
+        <Mail className="h-4 w-4 text-dl-teal" />
+        <p className="text-[15px] font-medium text-dl-cream">Weekly Dependency Digest</p>
+      </div>
+      <p className="text-[13px] text-dl-sage-light/50 mb-4">
+        Get a weekly summary of trending package risks. No spam, unsubscribe anytime.
+      </p>
+      {submitted ? (
+        <p className="text-sm text-dl-teal font-medium">✓ You&apos;re subscribed! Check your inbox.</p>
+      ) : (
+        <form onSubmit={handleSubmit} className="flex gap-2">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@company.com"
+            required
+            className="flex-1 rounded-lg border border-dl-sage-light/15 bg-white/[0.04] px-3.5 py-2.5 text-sm text-dl-cream placeholder:text-dl-sage-light/30 outline-none transition-colors focus:border-dl-teal/50"
+          />
+          <button
+            type="submit"
+            className="rounded-lg bg-dl-teal px-5 py-2.5 text-sm font-medium text-white transition-all hover:opacity-90"
+          >
+            Subscribe
+          </button>
+        </form>
+      )}
+    </div>
+  )
+}
+
 export function Footer() {
   return (
     <footer className="bg-dl-nav">
       <div className="mx-auto max-w-[1200px] px-6 pb-10 pt-16">
+        {/* Newsletter Signup Row */}
+        <div className="mb-12">
+          <NewsletterSignup />
+        </div>
+
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <Link href="/" className="inline-flex items-center gap-2.5">
