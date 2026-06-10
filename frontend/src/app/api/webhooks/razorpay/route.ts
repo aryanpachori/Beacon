@@ -30,8 +30,8 @@ export async function POST(req: Request) {
         statusMessage = 'Subscription payment captured. Upgraded to Pro Plan.'
         break
       case 'subscription.charged':
-        planLevel = 'Team'
-        statusMessage = 'Subscription payment charged. Upgraded to Team Plan.'
+        planLevel = 'Pro'
+        statusMessage = 'Subscription payment charged. Upgraded to Pro Plan.'
         break
       case 'subscription.cancelled':
         planLevel = 'Starter'

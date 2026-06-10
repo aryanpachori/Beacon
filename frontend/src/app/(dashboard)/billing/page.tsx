@@ -74,39 +74,6 @@ const PLANS: Plan[] = [
       'npm + PyPI ecosystems',
     ],
   },
-  {
-    id: 'ultra',
-    name: 'Ultra',
-    monthlyPrice: 49,
-    priceSuffix: '/mo.',
-    tagline: 'Get maximum value with unlimited scans and priority access.',
-    cta: 'Choose plan',
-    features: [
-      'Everything in Pro',
-      'Unlimited repos',
-      'Unlimited packages',
-      'All ecosystems (npm, PyPI, Maven, Crates)',
-      'Priority access to new features',
-      'Highest throughput and limits',
-    ],
-  },
-  {
-    id: 'teams',
-    name: 'Teams',
-    monthlyPrice: 25,
-    priceSuffix: '/user/mo.',
-    tagline: 'Everything on Individual, plus:',
-    cta: 'Get Teams',
-    features: [
-      'Shared team dashboard with org-wide context',
-      'Team-wide alert rules and automations',
-      'Security review workflows',
-      'SSO + enforced team-level privacy mode',
-      'Team plugin marketplace',
-      'Usage analytics',
-      'Centralised team billing',
-    ],
-  },
 ]
 
 function getPrice(plan: Plan, period: BillingPeriod) {
@@ -130,7 +97,7 @@ function AdjustPlanModal({ onClose }: { onClose: () => void }) {
 
       {/* Modal */}
       <div
-        className="relative z-10 w-full max-w-[920px] max-h-[90vh] overflow-y-auto rounded-2xl mx-4"
+        className="relative z-10 w-full max-w-[560px] max-h-[90vh] overflow-y-auto rounded-2xl mx-4"
         style={{
           background: '#0a1614',
           border: '1px solid rgba(255,255,255,0.08)',
@@ -188,7 +155,7 @@ function AdjustPlanModal({ onClose }: { onClose: () => void }) {
           </div>
 
           {/* Plan cards grid */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {PLANS.map((plan) => {
               const isCurrent = plan.id === CURRENT_PLAN_ID
               const price = getPrice(plan, billingPeriod)
@@ -335,7 +302,7 @@ export default function BillingPage() {
           <div className="flex flex-col gap-1.5">
             <div className="flex items-baseline gap-2">
               <span className="text-[17px] font-bold text-dl-teal">Pro</span>
-              <span className="text-[13px] text-dl-muted">$20 /mo.</span>
+              <span className="text-[13px] text-dl-muted">$15 /mo.</span>
             </div>
             <p className="text-[13px] text-dl-muted leading-relaxed max-w-lg">
               Entry-level plan with access to premium health signals, unlimited package scans, and more.
@@ -444,7 +411,7 @@ export default function BillingPage() {
             </div>
             <div className="flex flex-col gap-1">
               <span className="text-[10px] font-semibold uppercase tracking-wider text-dl-muted">Next charge</span>
-              <span className="text-[13px] font-medium text-dl-teal">$20.00</span>
+              <span className="text-[13px] font-medium text-dl-teal">$15.00</span>
             </div>
           </div>
 
