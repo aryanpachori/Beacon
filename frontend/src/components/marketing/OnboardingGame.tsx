@@ -44,9 +44,10 @@ export function OnboardingGame() {
       gravity: 0.55,
       jumpStrength: -9.5,
       isGrounded: true,
+      jumpsRemaining: 2,
     }
 
-    let obstacles: { x: number; y: number; width: number; height: number; speed: number }[] = []
+    let obstacles: { type: 'package' | 'drone'; x: number; y: number; width: number; height: number; speed: number }[] = []
     let scoreVal = 0
     let currentGameState = 'idle'
     let obstacleTimer = 0
@@ -75,9 +76,17 @@ export function OnboardingGame() {
         setScore(0)
         player.y = groundY - player.height
         player.vy = 0
-      } else if (currentGameState === 'playing' && player.isGrounded) {
-        player.vy = player.jumpStrength
-        player.isGrounded = false
+        player.isGrounded = true
+        player.jumpsRemaining = 2
+      } else if (currentGameState === 'playing') {
+        if (player.isGrounded) {
+          player.vy = player.jumpStrength
+          player.isGrounded = false
+          player.jumpsRemaining = 1
+        } else if (player.jumpsRemaining > 0) {
+          player.vy = player.jumpStrength * 0.9
+          player.jumpsRemaining = 0
+        }
       } else if (currentGameState === 'gameover') {
         currentGameState = 'playing'
         setGameState('playing')
@@ -86,6 +95,8 @@ export function OnboardingGame() {
         setScore(0)
         player.y = groundY - player.height
         player.vy = 0
+        player.isGrounded = true
+        player.jumpsRemaining = 2
       }
     }
 
@@ -169,6 +180,7 @@ export function OnboardingGame() {
           player.y = groundY - player.height
           player.vy = 0
           player.isGrounded = true
+          player.jumpsRemaining = 2
         }
       }
 
@@ -209,23 +221,37 @@ export function OnboardingGame() {
         const spawnThreshold = Math.max(55, 115 - Math.floor(scoreVal / 2))
         if (obstacleTimer > spawnThreshold) {
           obstacleTimer = 0
-          const sizeType = Math.random()
-          let width = 24
-          let height = 24
-          if (sizeType > 0.7) {
-            width = 30
-            height = 30
-          } else if (sizeType > 0.4) {
-            width = 20
-            height = 34
+          const isDrone = Math.random() < 0.35
+
+          if (isDrone) {
+            obstacles.push({
+              type: 'drone',
+              x: canvas.width,
+              y: groundY - 52, // flies at head level
+              width: 24,
+              height: 16,
+              speed: 5.0 + Math.min(4, scoreVal / 45),
+            })
+          } else {
+            const sizeType = Math.random()
+            let width = 24
+            let height = 24
+            if (sizeType > 0.7) {
+              width = 30
+              height = 30
+            } else if (sizeType > 0.4) {
+              width = 20
+              height = 34
+            }
+            obstacles.push({
+              type: 'package',
+              x: canvas.width,
+              y: groundY - height,
+              width,
+              height,
+              speed: 4.5 + Math.min(4, scoreVal / 45),
+            })
           }
-          obstacles.push({
-            x: canvas.width,
-            y: groundY - height,
-            width,
-            height,
-            speed: 4.5 + Math.min(4, scoreVal / 45),
-          })
         }
       }
 
@@ -235,21 +261,45 @@ export function OnboardingGame() {
           obs.x -= obs.speed
         }
 
-        ctx.fillStyle = '#c68a4c'
-        ctx.fillRect(Math.floor(obs.x), Math.floor(obs.y), obs.width, obs.height)
+        if (obs.type === 'drone') {
+          // Draw drone body (8-bit style)
+          ctx.fillStyle = '#4a5568'
+          ctx.fillRect(Math.floor(obs.x + 4), Math.floor(obs.y + 4), obs.width - 8, obs.height - 8)
 
-        ctx.fillStyle = '#a56c33'
-        ctx.fillRect(Math.floor(obs.x), Math.floor(obs.y), obs.width, 2)
-        ctx.fillRect(Math.floor(obs.x), Math.floor(obs.y + obs.height - 2), obs.width, 2)
-        ctx.fillRect(Math.floor(obs.x), Math.floor(obs.y), 2, obs.height)
-        ctx.fillRect(Math.floor(obs.x + obs.width - 2), Math.floor(obs.y), 2, obs.height)
+          // Spinning propellers animation
+          const propOffset = Math.floor(frameCount / 3) % 2 === 0 ? 0 : 2
+          ctx.fillStyle = '#cbd5e0'
+          // Left propeller
+          ctx.fillRect(Math.floor(obs.x), Math.floor(obs.y + propOffset), 6, 2)
+          // Right propeller
+          ctx.fillRect(Math.floor(obs.x + obs.width - 6), Math.floor(obs.y + propOffset), 6, 2)
 
-        ctx.fillStyle = '#563c22'
-        ctx.fillRect(Math.floor(obs.x + 2), Math.floor(obs.y + obs.height / 2 - 3), obs.width - 4, 5)
-        ctx.fillRect(Math.floor(obs.x + obs.width / 2 - 3), Math.floor(obs.y + 2), 5, obs.height - 4)
+          // Connector rods
+          ctx.fillStyle = '#2d3748'
+          ctx.fillRect(Math.floor(obs.x + 3), Math.floor(obs.y + 3), 2, 3)
+          ctx.fillRect(Math.floor(obs.x + obs.width - 5), Math.floor(obs.y + 3), 2, 3)
 
-        ctx.fillStyle = '#f0f5e8'
-        ctx.fillRect(Math.floor(obs.x + 4), Math.floor(obs.y + 4), 6, 5)
+          // Blinking red light
+          const isLightOn = Math.floor(frameCount / 10) % 2 === 0
+          ctx.fillStyle = isLightOn ? '#e53e3e' : '#742a2a'
+          ctx.fillRect(Math.floor(obs.x + obs.width / 2 - 2), Math.floor(obs.y + obs.height / 2 - 2), 4, 4)
+        } else {
+          ctx.fillStyle = '#c68a4c'
+          ctx.fillRect(Math.floor(obs.x), Math.floor(obs.y), obs.width, obs.height)
+
+          ctx.fillStyle = '#a56c33'
+          ctx.fillRect(Math.floor(obs.x), Math.floor(obs.y), obs.width, 2)
+          ctx.fillRect(Math.floor(obs.x), Math.floor(obs.y + obs.height - 2), obs.width, 2)
+          ctx.fillRect(Math.floor(obs.x), Math.floor(obs.y), 2, obs.height)
+          ctx.fillRect(Math.floor(obs.x + obs.width - 2), Math.floor(obs.y), 2, obs.height)
+
+          ctx.fillStyle = '#563c22'
+          ctx.fillRect(Math.floor(obs.x + 2), Math.floor(obs.y + obs.height / 2 - 3), obs.width - 4, 5)
+          ctx.fillRect(Math.floor(obs.x + obs.width / 2 - 3), Math.floor(obs.y + 2), 5, obs.height - 4)
+
+          ctx.fillStyle = '#f0f5e8'
+          ctx.fillRect(Math.floor(obs.x + 4), Math.floor(obs.y + 4), 6, 5)
+        }
 
         // Collision Check
         const padX = 5
