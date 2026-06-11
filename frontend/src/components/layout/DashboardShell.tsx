@@ -1,13 +1,28 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Menu } from 'lucide-react'
 import { NavSidebar } from '@/components/layout/NavSidebar'
 import { useScrollMemory } from '@/hooks/useScrollMemory'
+import { cn } from '@/lib/utils'
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(false)
   useScrollMemory()
+
+  useEffect(() => {
+    const collapsed = localStorage.getItem('dl_sidebar_collapsed') === 'true'
+    setIsCollapsed(collapsed)
+  }, [])
+
+  const handleToggleCollapse = () => {
+    setIsCollapsed((prev) => {
+      const next = !prev
+      localStorage.setItem('dl_sidebar_collapsed', String(next))
+      return next
+    })
+  }
 
   return (
     <div
@@ -35,10 +50,18 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         </button>
       )}
 
-      <NavSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <NavSidebar
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        isCollapsed={isCollapsed}
+        onToggleCollapse={handleToggleCollapse}
+      />
 
       <main
-        className="ml-0 min-h-screen flex-1 md:ml-[220px]"
+        className={cn(
+          "ml-0 min-h-screen flex-1 transition-[margin] duration-200",
+          isCollapsed ? "md:ml-[64px]" : "md:ml-[220px]"
+        )}
         style={{ background: 'var(--dl-page)' }}
       >
         {children}
