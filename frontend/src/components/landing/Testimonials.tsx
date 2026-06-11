@@ -91,7 +91,7 @@ export function Testimonials() {
           {[...TESTIMONIALS, ...TESTIMONIALS].map((t, idx) => (
             <div
               key={`${t.name}-${idx}`}
-              className="w-[360px] shrink-0 rounded-[14px] border border-dl-border bg-dl-page p-7 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1"
+              className="w-[290px] sm:w-[360px] shrink-0 rounded-[14px] border border-dl-border bg-dl-page p-7 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1"
             >
               <span className="text-5xl font-light leading-none text-dl-sage-light select-none">&ldquo;</span>
               <p className="mt-2 text-[15px] italic leading-relaxed text-dl-forest">{t.quote}</p>

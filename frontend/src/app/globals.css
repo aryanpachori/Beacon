@@ -374,6 +374,7 @@ body {
 .dashboard-site {
   background: var(--dl-page);
   color: var(--dl-m-text);
+  overflow-x: hidden;
 }
 
 ::-webkit-scrollbar {

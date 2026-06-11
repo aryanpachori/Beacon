@@ -124,7 +124,7 @@ function NewsletterSignup() {
       {submitted ? (
         <p className="text-sm text-dl-teal font-medium">✓ You&apos;re subscribed! Check your inbox.</p>
       ) : (
-        <form onSubmit={handleSubmit} className="flex gap-2">
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
           <input
             type="email"
             value={email}
@@ -135,7 +135,7 @@ function NewsletterSignup() {
           />
           <button
             type="submit"
-            className="rounded-lg bg-dl-teal px-5 py-2.5 text-sm font-medium text-white transition-all hover:opacity-90"
+            className="w-full sm:w-auto rounded-lg bg-dl-teal px-5 py-2.5 text-sm font-medium text-white transition-all hover:opacity-90"
           >
             Subscribe
           </button>

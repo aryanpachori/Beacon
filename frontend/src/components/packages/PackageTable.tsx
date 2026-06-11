@@ -85,9 +85,9 @@ export function PackageTable({ packages, variant = 'default' }: PackageTableProp
 
   return (
     <div>
-      <div className="mb-4 flex items-center justify-between gap-4">
+      <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <FilterTabs tabs={TABS} value={filter} onChange={setFilter} />
-        <div className="relative flex items-center">
+        <div className="relative flex items-center w-full sm:w-auto">
           <input
             id="package-search"
             ref={searchRef}
@@ -97,7 +97,7 @@ export function PackageTable({ packages, variant = 'default' }: PackageTableProp
             onChange={e => setSearch(e.target.value)}
             onFocus={() => setSearchFocused(true)}
             onBlur={() => setSearchFocused(false)}
-            className="dash-input w-[200px] pr-16 transition-[width] duration-200 focus:w-[280px]"
+            className="dash-input w-full sm:w-[200px] pr-16 transition-[width] duration-200 sm:focus:w-[280px]"
           />
           <div className="pointer-events-none absolute right-2 flex items-center gap-1">
             {isDebouncing ? (
