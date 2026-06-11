@@ -17,6 +17,8 @@ import {
   type OnboardingRepo,
 } from '@/lib/api'
 import { useScanProgressStream } from '@/hooks/useScanProgressStream'
+import { cn } from '@/lib/utils'
+import { OnboardingGame } from '@/components/marketing/OnboardingGame'
 
 const stepVariants = {
   enter: { opacity: 0, y: 12 },
@@ -250,7 +252,7 @@ export function OnboardingFlow() {
         <SiteLogo />
       </div>
 
-      <div className="w-full max-w-md">
+      <div className={cn("w-full transition-all duration-300", step === 3 ? "max-w-4xl" : "max-w-md")}>
         <div className="dl-card p-8">
           <AnimatePresence mode="wait">
             {step === 1 && (
@@ -437,41 +439,52 @@ export function OnboardingFlow() {
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.25 }}
-                className="flex flex-col items-center gap-6 py-4 text-center"
+                className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-8 py-2 items-center animate-fade-in"
               >
-                <Spinner size="lg" label={statusLabel} className="[&_p]:text-dl-m-muted" />
-                <div>
-                  <p className="text-3xl font-medium font-mono tabular-nums text-dl-forest">
-                    {activeCount}
-                    {progress.total > 0 ? ` / ${progress.total}` : ''}
-                  </p>
-                  <p className="mt-1 text-xs text-dl-m-muted">
-                    {progress.status === 'scoring' ? 'packages scored' : 'packages scanned'}
-                  </p>
-                </div>
-                <div className="progress-track w-full">
-                  <div className="progress-fill" style={{ width: `${percent}%` }} />
-                </div>
-                {reconnectStatus === 'reconnecting' && (
-                  <p className="text-xs text-amber-400">
-                    Connection lost — retrying…
-                  </p>
-                )}
-                {reconnectStatus === 'polling' && (
-                  <p className="text-xs text-amber-400">
-                    Live updates paused — refreshing every 5 seconds
-                  </p>
-                )}
-                {error && reconnectStatus === 'idle' && (
-                  <p className="text-xs text-dl-m-critical">
-                    Live updates disconnected. Refresh if progress stalls.
-                  </p>
-                )}
-                {isFailed && (
-                  <div className="flex flex-col gap-3">
-                    <p className="text-xs text-dl-m-critical">
-                      Scan failed. Pick a repository and try again.
+                <div className="flex flex-col items-center gap-5 text-center md:border-r border-dl-m-border/40 pb-6 md:pb-0 md:pr-8">
+                  <Spinner size="lg" label={statusLabel} className="[&_p]:text-dl-m-muted" />
+                  <div>
+                    <p className="text-3xl font-medium font-mono tabular-nums text-dl-forest">
+                      {activeCount}
+                      {progress.total > 0 ? ` / ${progress.total}` : ''}
                     </p>
+                    <p className="mt-1 text-xs text-dl-m-muted">
+                      {progress.status === 'scoring' ? 'packages scored' : 'packages scanned'}
+                    </p>
+                  </div>
+                  <div className="progress-track w-full">
+                    <div className="progress-fill" style={{ width: `${percent}%` }} />
+                  </div>
+                  {reconnectStatus === 'reconnecting' && (
+                    <p className="text-xs text-amber-400">
+                      Connection lost — retrying…
+                    </p>
+                  )}
+                  {reconnectStatus === 'polling' && (
+                    <p className="text-xs text-amber-400">
+                      Live updates paused — refreshing every 5 seconds
+                    </p>
+                  )}
+                  {error && reconnectStatus === 'idle' && (
+                    <p className="text-xs text-dl-m-critical">
+                      Live updates disconnected. Refresh if progress stalls.
+                    </p>
+                  )}
+                  {isFailed && (
+                    <div className="flex flex-col gap-3">
+                      <p className="text-xs text-dl-m-critical">
+                        Scan failed. Pick a repository and try again.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setStep(2)}
+                        className="text-sm text-dl-teal underline"
+                      >
+                        Back to repo selection
+                      </button>
+                    </div>
+                  )}
+                  {!isFailed && progress.total === 0 && progress.status === 'scanning' && (
                     <button
                       type="button"
                       onClick={() => setStep(2)}
@@ -479,17 +492,12 @@ export function OnboardingFlow() {
                     >
                       Back to repo selection
                     </button>
-                  </div>
-                )}
-                {!isFailed && progress.total === 0 && progress.status === 'scanning' && (
-                  <button
-                    type="button"
-                    onClick={() => setStep(2)}
-                    className="text-sm text-dl-teal underline"
-                  >
-                    Back to repo selection
-                  </button>
-                )}
+                  )}
+                </div>
+
+                <div className="w-full">
+                  <OnboardingGame />
+                </div>
               </motion.div>
             )}
 
