@@ -47,7 +47,7 @@ export function OnboardingGame() {
       jumpsRemaining: 2,
     }
 
-    let obstacles: { type: 'package' | 'drone'; x: number; y: number; width: number; height: number; speed: number }[] = []
+    let obstacles: { type: 'package' | 'drone' | 'missile'; x: number; y: number; width: number; height: number; speed: number }[] = []
     let scoreVal = 0
     let currentGameState = 'idle'
     let obstacleTimer = 0
@@ -221,18 +221,30 @@ export function OnboardingGame() {
         const spawnThreshold = Math.max(55, 115 - Math.floor(scoreVal / 2))
         if (obstacleTimer > spawnThreshold) {
           obstacleTimer = 0
-          const isDrone = Math.random() < 0.35
+          const spawnType = Math.random()
 
-          if (isDrone) {
+          if (spawnType < 0.20) {
+            // Missile (high level flying obstacle)
+            obstacles.push({
+              type: 'missile',
+              x: canvas.width,
+              y: groundY - 100, // flies high above the ground (head height of double jump)
+              width: 28,
+              height: 12,
+              speed: 6.0 + Math.min(4, scoreVal / 45),
+            })
+          } else if (spawnType < 0.45) {
+            // Drone (head level flying obstacle)
             obstacles.push({
               type: 'drone',
               x: canvas.width,
-              y: groundY - 52, // flies at head level
+              y: groundY - 45, // lowered to hit running player head
               width: 24,
               height: 16,
               speed: 5.0 + Math.min(4, scoreVal / 45),
             })
           } else {
+            // Ground package
             const sizeType = Math.random()
             let width = 24
             let height = 24
@@ -283,6 +295,26 @@ export function OnboardingGame() {
           const isLightOn = Math.floor(frameCount / 10) % 2 === 0
           ctx.fillStyle = isLightOn ? '#e53e3e' : '#742a2a'
           ctx.fillRect(Math.floor(obs.x + obs.width / 2 - 2), Math.floor(obs.y + obs.height / 2 - 2), 4, 4)
+        } else if (obs.type === 'missile') {
+          // Draw missile body (red with orange nose cone and fins)
+          ctx.fillStyle = '#e53e3e'
+          ctx.fillRect(Math.floor(obs.x + 6), Math.floor(obs.y + 2), obs.width - 10, obs.height - 4)
+
+          // Nose cone
+          ctx.fillStyle = '#f6ad55'
+          ctx.fillRect(Math.floor(obs.x + obs.width - 4), Math.floor(obs.y + 4), 4, obs.height - 8)
+
+          // Rear fins
+          ctx.fillStyle = '#742a2a'
+          ctx.fillRect(Math.floor(obs.x + 2), Math.floor(obs.y), 4, 3)
+          ctx.fillRect(Math.floor(obs.x + 2), Math.floor(obs.y + obs.height - 3), 4, 3)
+
+          // Flickering flame trail
+          const flameOffset = Math.floor(frameCount / 2) % 2 === 0 ? 0 : 3
+          ctx.fillStyle = '#ecc94b'
+          ctx.fillRect(Math.floor(obs.x - 6 + flameOffset), Math.floor(obs.y + 4), 8 - flameOffset, 4)
+          ctx.fillStyle = '#f6ad55'
+          ctx.fillRect(Math.floor(obs.x + 2), Math.floor(obs.y + 3), 4, 6)
         } else {
           ctx.fillStyle = '#c68a4c'
           ctx.fillRect(Math.floor(obs.x), Math.floor(obs.y), obs.width, obs.height)
