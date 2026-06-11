@@ -60,12 +60,29 @@ export function NavSidebar({
         isCollapsed ? 'w-[220px] md:w-[64px]' : 'w-[220px] md:w-[220px]'
       )}
     >
-      {/* Logo */}
-      <div className={cn("border-b border-dl-border px-5 py-5 flex items-center transition-all duration-200", isCollapsed ? "md:px-4 md:justify-center" : "")}>
+      {/* Logo and Toggle */}
+      <div className={cn(
+        "border-b border-dl-border px-5 py-5 flex items-center justify-between transition-all duration-200",
+        isCollapsed ? "md:px-4 md:flex-col md:gap-3 md:justify-center" : ""
+      )}>
         <SiteLogo
           className={cn("text-[17px] font-semibold text-dl-sage-light transition-all duration-200", isCollapsed ? "md:hidden" : "")}
           iconClassName="rounded-md bg-dl-teal/20"
         />
+        {onToggleCollapse && (
+          <button
+            type="button"
+            onClick={onToggleCollapse}
+            className="hidden md:flex items-center justify-center rounded-lg p-1.5 text-dl-muted hover:bg-dl-cream hover:text-dl-forest transition-colors focus:outline-none"
+            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {isCollapsed ? (
+              <ChevronRight className="h-4 w-4 shrink-0" />
+            ) : (
+              <ChevronLeft className="h-4 w-4 shrink-0" />
+            )}
+          </button>
+        )}
       </div>
 
       {/* Nav links */}
@@ -154,28 +171,6 @@ export function NavSidebar({
             </span>
           </button>
         </div>
-
-        {/* Toggle Collapse button */}
-        {onToggleCollapse && (
-          <button
-            type="button"
-            onClick={onToggleCollapse}
-            className={cn(
-              "hidden md:flex items-center gap-3 rounded-lg py-2 text-[13px] text-dl-muted hover:bg-dl-cream hover:text-dl-forest transition-colors duration-150",
-              isCollapsed ? "px-0 justify-center" : "px-3"
-            )}
-          >
-            {isCollapsed ? (
-              <ChevronRight className="h-4 w-4 shrink-0" />
-            ) : (
-              <>
-                <ChevronLeft className="h-4 w-4 shrink-0" />
-                <span>Collapse sidebar</span>
-              </>
-            )}
-          </button>
-        )}
-
       </div>
     </aside>
   )
