@@ -252,6 +252,7 @@ export function adaptAlert(a: ApiAlert): Alert {
     jiraCreated: a.jiraCreated,
     aiReason: a.aiReason ?? undefined,
     signalPills: a.signalPills,
+    alertType: a.alertType,
   }
 }
 

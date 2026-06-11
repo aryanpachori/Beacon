@@ -26,6 +26,11 @@ internalRouter.post('/score-complete', async (req, res, next) => {
       prediction_reason,
       recommendations,
       signals,
+      is_advisory,
+      cve_id,
+      cisa_url,
+      affected_versions,
+      safe_versions,
     } = req.body as {
       package_id: string
       installation_id: string
@@ -36,6 +41,11 @@ internalRouter.post('/score-complete', async (req, res, next) => {
       prediction_reason?: string
       recommendations?: unknown
       signals?: Record<string, number>
+      is_advisory?: boolean
+      cve_id?: string
+      cisa_url?: string
+      affected_versions?: string[]
+      safe_versions?: string[]
     }
 
     if (!package_id || !installation_id || new_sps === undefined || !tier) {
@@ -50,7 +60,12 @@ internalRouter.post('/score-complete', async (req, res, next) => {
       prev_sps ?? null,
       prev_tier ?? null,
       prediction_reason ?? 'Score updated by intelligence service',
-      signals ?? {}
+      signals ?? {},
+      is_advisory,
+      cve_id,
+      cisa_url,
+      affected_versions,
+      safe_versions
     )
 
     void recommendations

@@ -1,4 +1,4 @@
-import { AlertType, ScanStatus } from '@prisma/client'
+import { AlertType, ScanStatus, AlertSeverity } from '@prisma/client'
 import { prisma, fromApiTier, tierRank, toApiTier } from '../db/client'
 import { redis } from '../lib/redis'
 import {
@@ -17,6 +17,11 @@ export interface CheckAlertParams {
   prevTier: string | null
   signals: Record<string, number>
   reason: string
+  isAdvisory?: boolean
+  cveId?: string
+  cisaUrl?: string
+  affectedVersions?: string[]
+  safeVersions?: string[]
 }
 
 function buildSignalPills(signals: Record<string, number>): string[] {
@@ -42,9 +47,22 @@ export async function checkAndFireAlert(params: CheckAlertParams): Promise<void>
   const tierWorsened = tierRank(tierAfter) < tierRank(tierBefore)
   const tierImproved = tierRank(tierAfter) > tierRank(tierBefore)
 
-  if (!crossedThreshold && !tierWorsened && !tierImproved) return
+  let alertType: AlertType
+  let severity: AlertSeverity = AlertSeverity.normal
 
-  const alertType: AlertType = tierImproved ? AlertType.recovery : AlertType.threshold
+  if (params.isAdvisory || params.cveId) {
+    alertType = AlertType.supply_chain
+    severity = AlertSeverity.critical_override
+  } else if (tierImproved) {
+    alertType = AlertType.recovery
+  } else if (crossedThreshold) {
+    alertType = AlertType.threshold
+  } else if (tierWorsened) {
+    alertType = AlertType.tier_change
+  } else {
+    return
+  }
+
   const dedupKey = `alert:dedup:${alertType}:${params.installationId}:${params.packageId}`
   if (await redis.get(dedupKey)) return
   await redis.setex(dedupKey, 86400, '1')
@@ -59,6 +77,11 @@ export async function checkAndFireAlert(params: CheckAlertParams): Promise<void>
       tierAfter,
       aiReason: params.reason,
       alertType,
+      severity,
+      cveId: params.cveId || null,
+      cisaUrl: params.cisaUrl || null,
+      affectedVersions: params.affectedVersions ?? undefined,
+      safeVersions: params.safeVersions ?? undefined,
       signalPills: buildSignalPills(params.signals),
     },
   })
@@ -75,7 +98,7 @@ export async function checkAndFireAlert(params: CheckAlertParams): Promise<void>
       installationId: params.installationId,
       packageId: params.packageId,
       packageName: params.packageName,
-      message: generateNotificationMessage(params.packageName, params.tier),
+      message: generateNotificationMessage(params.packageName, params.tier, alertType),
       tier: tierAfter,
       actionUrl: `/packages/${params.packageId}`,
     },
@@ -89,6 +112,8 @@ export async function checkAndFireAlert(params: CheckAlertParams): Promise<void>
     tier: params.tier,
     prevTier: params.prevTier,
     reason: params.reason,
+    alertType,
+    cveId: params.cveId,
   })
 }
 
@@ -100,7 +125,12 @@ export async function incrementScanScored(
   prevSps: number | null,
   prevTier: string | null,
   reason: string,
-  signals: Record<string, number>
+  signals: Record<string, number>,
+  isAdvisory?: boolean,
+  cveId?: string,
+  cisaUrl?: string,
+  affectedVersions?: string[],
+  safeVersions?: string[]
 ): Promise<void> {
   const tierEnum = fromApiTier(tier)
   const prevTierEnum = prevTier ? fromApiTier(prevTier) : null
@@ -163,5 +193,10 @@ export async function incrementScanScored(
     prevTier: prevTierEnum ? toApiTier(prevTierEnum) : null,
     signals,
     reason,
+    isAdvisory,
+    cveId,
+    cisaUrl,
+    affectedVersions,
+    safeVersions,
   })
 }
