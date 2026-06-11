@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ShieldCheck, CheckCircle2, Check } from 'lucide-react'
+import { ShieldCheck, CheckCircle2, Check, Search } from 'lucide-react'
 import * as Checkbox from '@radix-ui/react-checkbox'
 import { SiteLogo } from '@/components/layout/SiteLogo'
 import { Spinner } from '@/components/ui/Spinner'
@@ -47,6 +47,7 @@ export function OnboardingFlow() {
   const [step, setStep] = useState(1)
   const [selected, setSelected] = useState<string[]>([])
   const [repos, setRepos] = useState<OnboardingRepo[]>([])
+  const [searchQuery, setSearchQuery] = useState('')
   const [repoLimit, setRepoLimit] = useState(1)
   const [accountLogin, setAccountLogin] = useState<string | null>(null)
   const [configureUrl, setConfigureUrl] = useState<string | null>(null)
@@ -63,6 +64,16 @@ export function OnboardingFlow() {
   const { progress, activeCount, percent, isComplete, isFailed, error, reconnectStatus } = useScanProgressStream(
     step === 3
   )
+
+  const filteredRepos = repos.filter((repo) =>
+    repo.fullName.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  useEffect(() => {
+    if (step !== 2) {
+      setSearchQuery('')
+    }
+  }, [step])
 
   const loadRepos = useCallback(async () => {
     setLoadingRepos(true)
@@ -378,6 +389,19 @@ export function OnboardingFlow() {
                   )}
                 </div>
 
+                {repos.length > 0 && !loadingRepos && (
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Search repositories..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="form-input pl-9"
+                    />
+                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-dl-m-muted" />
+                  </div>
+                )}
+
                 {loadingRepos ? (
                   <div className="flex justify-center py-8">
                     <Spinner size="md" label="Loading repositories…" />
@@ -387,9 +411,13 @@ export function OnboardingFlow() {
                     No repositories found. Grant DriftLogg access to at least one repo on GitHub,
                     then refresh this page.
                   </div>
+                ) : filteredRepos.length === 0 ? (
+                  <div className="rounded-lg border border-dl-m-border bg-white onboarding-repo-card p-4 text-sm text-dl-m-muted text-center">
+                    No repositories match &quot;{searchQuery}&quot;
+                  </div>
                 ) : (
                   <div className="flex max-h-64 flex-col gap-2 overflow-y-auto">
-                    {repos.map((repo) => {
+                    {filteredRepos.map((repo) => {
                       const checked = selected.includes(repo.id)
                       const atLimit = !checked && selected.length >= repoLimit
                       return (
