@@ -223,46 +223,94 @@ export function OnboardingGame() {
           obstacleTimer = 0
           const spawnType = Math.random()
 
-          if (spawnType < 0.20) {
-            // Missile (high level flying obstacle)
-            obstacles.push({
-              type: 'missile',
-              x: canvas.width,
-              y: groundY - 100, // flies high above the ground (head height of double jump)
-              width: 28,
-              height: 12,
-              speed: 6.0 + Math.min(4, scoreVal / 45),
-            })
-          } else if (spawnType < 0.45) {
-            // Drone (head level flying obstacle)
-            obstacles.push({
-              type: 'drone',
-              x: canvas.width,
-              y: groundY - 45, // lowered to hit running player head
-              width: 24,
-              height: 16,
-              speed: 5.0 + Math.min(4, scoreVal / 45),
-            })
-          } else {
-            // Ground package
-            const sizeType = Math.random()
-            let width = 24
-            let height = 24
-            if (sizeType > 0.7) {
-              width = 30
-              height = 30
-            } else if (sizeType > 0.4) {
-              width = 20
-              height = 34
+          // 18% chance to spawn a combination (flying + ground obstacles at the same time) once score > 10
+          if (spawnType < 0.18 && scoreVal > 10) {
+            const comboType = Math.random()
+            if (comboType < 0.5) {
+              // Combo 1: Low ground package + high missile vertically stacked (requires precision single-jump through the gap!)
+              const packageHeight = 22
+              obstacles.push({
+                type: 'package',
+                x: canvas.width,
+                y: groundY - packageHeight,
+                width: 22,
+                height: packageHeight,
+                speed: 4.5 + Math.min(4, scoreVal / 45),
+              })
+              obstacles.push({
+                type: 'missile',
+                x: canvas.width,
+                y: groundY - 105,
+                width: 28,
+                height: 12,
+                speed: 4.5 + Math.min(4, scoreVal / 45),
+              })
+            } else {
+              // Combo 2: Ground package followed closely by a drone (requires a jump + double-jump sequence)
+              const packageHeight = 24
+              obstacles.push({
+                type: 'package',
+                x: canvas.width,
+                y: groundY - packageHeight,
+                width: 24,
+                height: packageHeight,
+                speed: 4.5 + Math.min(4, scoreVal / 45),
+              })
+              const randomHeight = Math.floor(Math.random() * 75) + 30 // any height from 30 to 105 pixels above ground
+              obstacles.push({
+                type: 'drone',
+                x: canvas.width + 80, // offset in X
+                y: groundY - randomHeight,
+                width: 24,
+                height: 16,
+                speed: 4.5 + Math.min(4, scoreVal / 45),
+              })
             }
-            obstacles.push({
-              type: 'package',
-              x: canvas.width,
-              y: groundY - height,
-              width,
-              height,
-              speed: 4.5 + Math.min(4, scoreVal / 45),
-            })
+          } else {
+            // Standard single obstacle spawns
+            const singleType = Math.random()
+            if (singleType < 0.25) {
+              // Missile (high level flying obstacle)
+              obstacles.push({
+                type: 'missile',
+                x: canvas.width,
+                y: groundY - 100,
+                width: 28,
+                height: 12,
+                speed: 6.0 + Math.min(4, scoreVal / 45),
+              })
+            } else if (singleType < 0.50) {
+              // Drone (any height flying obstacle)
+              const randomHeight = Math.floor(Math.random() * 75) + 30 // any height from 30 to 105 pixels above ground
+              obstacles.push({
+                type: 'drone',
+                x: canvas.width,
+                y: groundY - randomHeight,
+                width: 24,
+                height: 16,
+                speed: 5.0 + Math.min(4, scoreVal / 45),
+              })
+            } else {
+              // Ground package
+              const sizeType = Math.random()
+              let width = 24
+              let height = 24
+              if (sizeType > 0.7) {
+                width = 30
+                height = 30
+              } else if (sizeType > 0.4) {
+                width = 20
+                height = 34
+              }
+              obstacles.push({
+                type: 'package',
+                x: canvas.width,
+                y: groundY - height,
+                width,
+                height,
+                speed: 4.5 + Math.min(4, scoreVal / 45),
+              })
+            }
           }
         }
       }
