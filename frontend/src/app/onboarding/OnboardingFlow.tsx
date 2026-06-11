@@ -265,7 +265,7 @@ export function OnboardingFlow() {
                 transition={{ duration: 0.25 }}
                 className="flex flex-col items-center gap-6 text-center"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-dl-border bg-white">
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-dl-border bg-white onboarding-icon-container">
                   {githubConnected ? (
                     <CheckCircle2 className="h-7 w-7 text-dl-teal" />
                   ) : (
@@ -383,7 +383,7 @@ export function OnboardingFlow() {
                     <Spinner size="md" label="Loading repositories…" />
                   </div>
                 ) : repos.length === 0 ? (
-                  <div className="rounded-lg border border-dl-m-border bg-white p-4 text-sm text-dl-m-muted">
+                  <div className="rounded-lg border border-dl-m-border bg-white onboarding-repo-card p-4 text-sm text-dl-m-muted">
                     No repositories found. Grant DriftLogg access to at least one repo on GitHub,
                     then refresh this page.
                   </div>
@@ -395,7 +395,7 @@ export function OnboardingFlow() {
                       return (
                         <label
                           key={repo.id}
-                          className={`flex items-center gap-3 rounded-lg border border-dl-m-border bg-white p-3 transition-colors ${
+                          className={`flex items-center gap-3 rounded-lg border border-dl-m-border bg-white onboarding-repo-card p-3 transition-colors ${
                             atLimit
                               ? 'cursor-not-allowed opacity-50'
                               : 'cursor-pointer hover:border-dl-teal/40'
@@ -405,7 +405,7 @@ export function OnboardingFlow() {
                             checked={checked}
                             disabled={atLimit}
                             onCheckedChange={() => toggleRepo(repo.id)}
-                            className="flex h-4 w-4 items-center justify-center rounded border border-dl-m-border bg-white data-[state=checked]:border-dl-teal data-[state=checked]:bg-dl-teal"
+                            className="flex h-4 w-4 items-center justify-center rounded border border-dl-m-border bg-white onboarding-checkbox data-[state=checked]:border-dl-teal data-[state=checked]:bg-dl-teal"
                           >
                             <Checkbox.Indicator>
                               <Check className="h-3 w-3 text-white" />
@@ -521,7 +521,7 @@ export function OnboardingFlow() {
                       <h2 className="marketing-title mt-3 text-[24px] md:text-[28px]">
                         Your stack is ready.
                       </h2>
-                      <div className="mt-5 rounded-lg border border-dl-m-border bg-white p-5 text-left">
+                      <div className="mt-5 rounded-lg border border-dl-m-border bg-white onboarding-repo-card p-5 text-left">
                         <div className="grid grid-cols-2 gap-4 text-sm">
                           <div>
                             <p className="text-xs text-dl-m-muted">Packages scanned</p>
@@ -553,7 +553,7 @@ export function OnboardingFlow() {
                   </>
                 ) : (
                   <>
-                    <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-dl-border bg-white">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-dl-border bg-white onboarding-icon-container">
                       <ShieldCheck className="h-7 w-7 text-dl-teal" />
                     </div>
                     <div>
