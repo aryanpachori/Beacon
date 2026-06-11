@@ -59,6 +59,18 @@ function RegisterForm() {
   const validatePassword = (val: string) => {
     if (!val) return 'Password is required'
     if (val.length < 8) return 'Password must be at least 8 characters'
+    
+    const hasCapital = /[A-Z]/.test(val)
+    const hasNumber = /[0-9]/.test(val)
+    const hasSymbol = /[^A-Za-z0-9]/.test(val)
+    
+    if (!hasCapital || !hasNumber || !hasSymbol) {
+      const missing = []
+      if (!hasCapital) missing.push('a capital letter')
+      if (!hasNumber) missing.push('a number')
+      if (!hasSymbol) missing.push('a symbol')
+      return `Password must contain at least ${missing.join(', ')}`
+    }
     return ''
   }
 
@@ -269,7 +281,7 @@ function RegisterForm() {
                 <FieldError message={passwordError} />
               ) : (
                 <p className="mt-1 text-[11px] text-dl-hint">
-                  At least 8 characters, 1 number recommended
+                  Min. 8 characters with a capital letter, a number, and a symbol
                 </p>
               )}
             </div>
