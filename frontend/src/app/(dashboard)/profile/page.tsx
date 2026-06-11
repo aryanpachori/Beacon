@@ -34,6 +34,62 @@ function planLabel(plan: string): string {
   return plan === 'pro' ? 'Pro' : 'Starter'
 }
 
+function CreditCardUi({
+  name,
+  last2Digits = '11',
+  brand = 'Visa',
+}: {
+  name: string
+  last2Digits?: string
+  brand?: string
+}) {
+  return (
+    <div className="relative aspect-[1.586/1] w-full rounded-xl bg-gradient-to-br from-[#1c3b38] via-[#244b47] to-[#0e1e1c] p-5 text-white shadow-lg border border-white/10 overflow-hidden flex flex-col justify-between">
+      {/* Glow Effects */}
+      <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-dl-teal/20 blur-2xl pointer-events-none" />
+      <div className="absolute -left-10 -bottom-10 h-32 w-32 rounded-full bg-dl-sage-light/10 blur-2xl pointer-events-none" />
+      
+      {/* Top row: Chip and Card Brand */}
+      <div className="relative z-10 flex items-center justify-between">
+        {/* Styled Card Chip */}
+        <div className="relative h-7 w-9 rounded bg-[#d4af37]/15 border border-[#d4af37]/30 flex flex-col gap-1 p-1 overflow-hidden">
+          <div className="flex justify-between h-full w-full">
+            <div className="w-1/2 border-r border-[#d4af37]/20" />
+            <div className="w-1/2" />
+          </div>
+          <div className="absolute inset-0 m-auto h-3 w-5 rounded border border-[#d4af37]/20" />
+        </div>
+        
+        {/* Card Brand */}
+        <span className="font-mono text-[11px] font-bold tracking-widest text-white/60">
+          {brand.toUpperCase()}
+        </span>
+      </div>
+
+      {/* Middle row: Card Number */}
+      <div className="relative z-10 my-4 text-center">
+        <span className="font-mono text-[18px] sm:text-[20px] font-medium tracking-[0.25em] text-white/90">
+          •••• •••• •••• ••{last2Digits}
+        </span>
+      </div>
+
+      {/* Bottom row: Cardholder Name & Expiration */}
+      <div className="relative z-10 flex items-end justify-between">
+        <div className="flex flex-col min-w-0">
+          <span className="text-[9px] uppercase tracking-wider text-white/40 font-medium">Cardholder</span>
+          <span className="text-xs font-semibold text-white/95 uppercase tracking-wide truncate max-w-[150px] sm:max-w-[180px]">
+            {name || 'Aryan Pachori'}
+          </span>
+        </div>
+        <div className="flex flex-col items-end shrink-0">
+          <span className="text-[9px] uppercase tracking-wider text-white/40 font-medium">Expires</span>
+          <span className="font-mono text-xs font-medium text-white/95">12 / 28</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function planPrice(plan: string): string {
   return plan === 'pro' ? `${formatInr(PRO_PLAN_PRICE_INR)}/month` : 'Free'
 }
@@ -288,17 +344,22 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <div className="rounded-lg border border-dl-border bg-dl-card/50 px-4 py-3 text-[12px] leading-relaxed text-dl-muted">
-                {activePlan === 'pro' ? (
-                  <>
+              {activePlan === 'pro' ? (
+                <div className="flex flex-col gap-3">
+                  <CreditCardUi
+                    name={user?.fullName || name || 'Aryan Pachori'}
+                    last2Digits="11"
+                    brand="Visa"
+                  />
+                  <div className="text-[11px] leading-relaxed text-dl-muted text-center mt-1">
                     Your Pro subscription is active. Payments are handled securely through Razorpay.
-                  </>
-                ) : (
-                  <>
-                    You are on the free Starter plan. Upgrade to Pro for more repos and alerts.
-                  </>
-                )}
-              </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="rounded-lg border border-dl-border bg-dl-card/50 px-4 py-3 text-[12px] leading-relaxed text-dl-muted">
+                  You are on the free Starter plan. Upgrade to Pro for more repos and alerts.
+                </div>
+              )}
 
               <Link href="/billing" className="btn-dash-secondary w-full text-center text-sm">
                 Manage billing & upgrade
