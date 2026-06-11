@@ -62,7 +62,7 @@ export default function DashboardPage() {
               </span>
             </div>
             <h1 className="text-2xl font-semibold tracking-tight text-white">
-              Hope you&apos;re having a good day, {displayName.split(' ')[0]}! 👋
+              Hope you&apos;re having a good day, {displayName.split(' ')[0]}!
             </h1>
             <p className="text-sm text-white/60 mt-0.5">
               Signed in as{' '}
