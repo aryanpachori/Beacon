@@ -7,6 +7,7 @@ import { motion } from 'framer-motion'
 import { AlertCircle } from 'lucide-react'
 import { ApiError, apiFetch, setAuthTokens } from '@/lib/api'
 import { cn } from '@/lib/utils'
+import { Eye, EyeOff } from 'lucide-react'
 
 const FULL_NAME_MAX = 50
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -40,7 +41,7 @@ function RegisterForm() {
   const [password, setPassword] = useState('')
   const [passwordTouched, setPasswordTouched] = useState(false)
   const [passwordError, setPasswordError] = useState('')
-
+  const [showPassword, setShowPassword] = useState(false)
   const [fullName, setFullName] = useState('')
   const [nickname, setNickname] = useState('')
   const [error, setError] = useState('')
@@ -167,7 +168,7 @@ function RegisterForm() {
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value.slice(0, FULL_NAME_MAX))}
-                placeholder="Aryan Pachori"
+                placeholder="John Doe"
                 className="form-input"
                 autoComplete="name"
                 maxLength={FULL_NAME_MAX}
@@ -228,28 +229,42 @@ function RegisterForm() {
               <label className="form-label" htmlFor="password">
                 Password
               </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value)
-                  if (passwordTouched) setPasswordError(validatePassword(e.target.value))
-                }}
-                onBlur={() => {
-                  setPasswordTouched(true)
-                  setPasswordError(validatePassword(password))
-                }}
-                placeholder="Min. 8 characters"
-                className={cn(
-                  'form-input',
-                  passwordTouched && passwordError && 'border-dl-danger focus:ring-dl-danger/20',
-                  passwordTouched && !passwordError && password && 'border-dl-teal',
-                )}
-                required
-                minLength={8}
-                autoComplete="new-password"
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value)
+                    if (passwordTouched) setPasswordError(validatePassword(e.target.value))
+                  }}
+                  onBlur={() => {
+                    setPasswordTouched(true)
+                    setPasswordError(validatePassword(password))
+                  }}
+                  placeholder="Min. 8 characters"
+                  className={cn(
+                    'form-input pr-10',
+                    passwordTouched && passwordError && 'border-dl-danger focus:ring-dl-danger/20',
+                    passwordTouched && !passwordError && password && 'border-dl-teal',
+                  )}
+                  required
+                  minLength={8}
+                  autoComplete="new-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-dl-hint hover:text-dl-forest"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-[18px] w-[18px]" />
+                  ) : (
+                    <Eye className="h-[18px] w-[18px]" />
+                  )}
+                </button>
+              </div>
               {passwordTouched && passwordError ? (
                 <FieldError message={passwordError} />
               ) : (
