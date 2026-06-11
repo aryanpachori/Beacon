@@ -46,6 +46,7 @@
   --dl-muted: #6b9e94;
   --dl-hint: #4a7a72;
   --dl-text: #d4ede8;
+  --dl-m-muted: #6b9e94;
   background-color: var(--dl-page);
   color: var(--dl-text);
 }
@@ -74,6 +75,9 @@
 }
 [data-theme='app'] .text-dl-text {
   color: var(--dl-text);
+}
+[data-theme='app'] .text-dl-m-muted {
+  color: var(--dl-m-muted);
 }
 [data-theme='app'] .border-dl-border {
   border-color: var(--dl-border);
@@ -137,6 +141,26 @@
 [data-theme='app'] .dash-input:focus {
   border-color: var(--dl-teal);
   background: rgba(53, 133, 142, 0.06);
+}
+
+[data-theme='app'] .form-input {
+  background-color: rgba(255, 255, 255, 0.04);
+  color: var(--dl-forest);
+  border-color: var(--dl-m-border);
+}
+
+[data-theme='app'] .form-input::placeholder {
+  color: var(--dl-hint);
+}
+
+[data-theme='app'] .form-input:focus {
+  border-color: var(--dl-teal);
+  background-color: rgba(53, 133, 142, 0.06);
+}
+
+[data-theme='app'] .dl-card {
+  background-color: var(--dl-card);
+  border-color: var(--dl-m-border);
 }
 
 [data-theme='app'] .text-dl-critical {
