@@ -86,6 +86,7 @@ export interface Alert {
   jiraCreated: boolean
   aiReason?: string
   signalPills?: string[]
+  alertType?: string
 }
 
 export interface Repo {

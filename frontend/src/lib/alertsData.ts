@@ -60,6 +60,9 @@ export function getAlertSignalPills(alert: Alert): string[] {
 }
 
 export function getTierChangeLabel(alert: Alert): string {
+  if (alert.alertType === 'supply_chain') {
+    return 'Security Advisory / CVE Override Alert'
+  }
   const before = TIER_LABELS[spsToTier(alert.spsBefore)]
   const after = TIER_LABELS[alert.tier]
   return `${before} → ${after}`
