@@ -79,6 +79,15 @@
 [data-theme='app'] .text-dl-m-muted {
   color: var(--dl-m-muted);
 }
+[data-theme='app'] .onboarding-repo-card {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+[data-theme='app'] .onboarding-checkbox:not([data-state='checked']) {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+[data-theme='app'] .onboarding-icon-container {
+  background-color: rgba(255, 255, 255, 0.04);
+}
 [data-theme='app'] .border-dl-border {
   border-color: var(--dl-border);
 }
