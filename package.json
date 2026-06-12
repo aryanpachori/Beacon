@@ -1,0 +1,11 @@
+{
+  "name": "driftlogg",
+  "private": true,
+  "scripts": {
+    "prepare": "husky",
+    "check": "npm --prefix frontend run check && npm --prefix backend run check"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}
