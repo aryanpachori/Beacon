@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useState } from 'react'
 import { SiteLogo } from '@/components/layout/SiteLogo'
 import { Menu, X, Sun, Moon } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
+import { useTheme } from '@/hooks/useTheme'
 
 const NAV_LINKS = [
   { href: '/#features', label: 'Product' },
@@ -18,21 +19,7 @@ const NAV_LINKS = [
 export function Nav() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
-  const [theme, setTheme] = useState<'light' | 'dark'>('light')
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null
-    const currentTheme = savedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-    setTheme(currentTheme)
-    document.documentElement.setAttribute('data-theme', currentTheme === 'dark' ? 'app' : 'light')
-  }, [])
-
-  const toggleTheme = () => {
-    const nextTheme = theme === 'light' ? 'dark' : 'light'
-    setTheme(nextTheme)
-    localStorage.setItem('theme', nextTheme)
-    document.documentElement.setAttribute('data-theme', nextTheme === 'dark' ? 'app' : 'light')
-  }
+  const [theme, toggleTheme] = useTheme()
 
   const isActive = (href: string) => href === '/pricing' && pathname === '/pricing'
 
