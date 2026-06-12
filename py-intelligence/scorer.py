@@ -36,7 +36,6 @@ _SIGNAL_LABELS = {
     "community_health": "Community health",
 }
 
-# security_hygiene <= 15 means npm deprecated (set during signal collection)
 _DEPRECATED_SECURITY_THRESHOLD = 15
 _DEPRECATED_SPS_CAP = 30
 

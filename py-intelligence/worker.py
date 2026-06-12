@@ -4,8 +4,11 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import os
 import signal
 import sys
+import threading
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from typing import Any
 
 from bullmq import Worker  # type: ignore
@@ -23,6 +26,30 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 QUEUE_NAME = "intelligence-score"
+
+
+class _HealthHandler(BaseHTTPRequestHandler):
+    def do_GET(self) -> None:
+        if self.path in ("/", "/health"):
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(b'{"status":"ok"}')
+            return
+        self.send_response(404)
+        self.end_headers()
+
+    def log_message(self, format: str, *args: object) -> None:
+        return
+
+
+def _start_health_server() -> None:
+    """Render Web Services require a process listening on $PORT."""
+    port = int(os.environ.get("PORT", "8080"))
+    server = HTTPServer(("0.0.0.0", port), _HealthHandler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    logger.info("health_server_listening port=%s", port)
 
 
 async def process_job(job: Any, job_token: str) -> None:  # noqa: ARG001
@@ -55,6 +82,7 @@ async def process_job(job: Any, job_token: str) -> None:  # noqa: ARG001
 
 
 async def main() -> None:
+    _start_health_server()
     initialize_scoring()
     logger.info("intelligence_worker_starting queue=%s redis=%s", QUEUE_NAME, config.REDIS_URL)
 

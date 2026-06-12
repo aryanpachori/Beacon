@@ -22,6 +22,7 @@ import { webhooksRouter } from './routes/webhooks.routes'
 import { internalRouter } from './routes/internal.routes'
 import { errorMiddleware } from './middleware/error.middleware'
 import { startWorkers } from './workers/signalCollect.worker'
+import { startIntelligenceWorker } from './workers/intelligenceScore.worker'
 import { startCrons } from './cron'
 
 const app = express()
@@ -84,6 +85,11 @@ async function main() {
   app.listen(PORT, () => {
     console.log(`DriftLogg API running on port ${PORT}`)
     startWorkers()
+    if (process.env.ENABLE_NODE_INTELLIGENCE_WORKER === 'true') {
+      startIntelligenceWorker()
+    } else {
+      console.log('Node intelligence worker disabled — use py-intelligence/ for scoring')
+    }
     startCrons()
   })
 }

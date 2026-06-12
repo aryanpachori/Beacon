@@ -28,10 +28,6 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 .cache
 *.tsbuildinfo
 
-# Python intelligence service
-intelligence/__pycache__/
-intelligence/.venv/
-
 # IntelliJ based IDEs
 .idea
 

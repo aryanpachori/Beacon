@@ -5,7 +5,7 @@ import { getRedisConnectionOptions } from './redisConnection'
 /**
  * One Redis instance (REDIS_URL) backs everything:
  * - BullMQ queue 1: signal-collect  (Node worker consumes)
- * - BullMQ queue 2: intelligence-score (Python worker consumes)
+ * - BullMQ queue 2: intelligence-score (py-intelligence worker, or Node if enabled)
  * - Signal cache, alert dedup, rate limits, JWT refresh (ioredis in lib/redis.ts)
  *
  * Queues are separated by BullMQ queue name — not separate Redis DBs.
@@ -15,7 +15,7 @@ import { getRedisConnectionOptions } from './redisConnection'
 export const Queues = {
   /** GitHub connect, webhooks, crons → manifest scan + signal collection */
   SIGNAL_COLLECT: 'signal-collect',
-  /** After signals persisted → XGBoost scoring in Python service */
+  /** After signals persisted → SPS scoring (py-intelligence worker) */
   INTELLIGENCE_SCORE: 'intelligence-score',
 } as const
 
@@ -51,7 +51,7 @@ export interface IntelligenceSignalsPayload {
   security_hygiene: number
 }
 
-/** Pushed by Node after signal collection. Consumed by Python intelligence worker. */
+/** Pushed by Node after signal collection. Consumed by py-intelligence worker. */
 export interface IntelligenceScoreJobData {
   package_id: string
   installation_id: string
