@@ -17,7 +17,7 @@ import { buildUnresolvedPackageSignals } from '../services/unresolvedSignals.ser
 import { bumpScanProgress, notifyScanProgress } from '../services/scanProgress.service'
 import { markScanFailed } from '../services/githubInstallation.service'
 
-const MANIFEST_CONCURRENCY = 10
+const MANIFEST_CONCURRENCY = 20
 
 export function startWorkers(): void {
   const worker = new Worker<SignalCollectJobData>(
@@ -156,82 +156,93 @@ async function processScanJob(data: SignalCollectJobData): Promise<void> {
 
   const chunks = chunkArray(packageRecords, MANIFEST_CONCURRENCY)
   for (const chunk of chunks) {
-    await Promise.all(
+    await Promise.allSettled(
       chunk.map(async ({ packageId, dep }) => {
-        const upstream = await resolvePackageGithubRepo(packageId, dep.name, dep.ecosystem)
+        try {
+          const upstream = await resolvePackageGithubRepo(packageId, dep.name, dep.ecosystem)
 
-        let collected
-        if (!upstream) {
-          console.warn(
-            JSON.stringify({
-              event: 'package_upstream_repo_unresolved',
-              packageId,
-              packageName: dep.name,
-              ecosystem: dep.ecosystem,
-            })
-          )
-          collected = await buildUnresolvedPackageSignals(dep.name, dep.ecosystem)
-        } else {
-          console.log(
-            JSON.stringify({
-              event: 'package_signals_collecting',
-              packageId,
-              packageName: dep.name,
-              ecosystem: dep.ecosystem,
-              upstreamRepo: `${upstream.owner}/${upstream.repo}`,
-              resolveSource: upstream.source,
-            })
-          )
-          try {
-            collected = await collectPackageSignals({
-              owner: upstream.owner,
-              repo: upstream.repo,
-              packageName: dep.name,
-              ecosystem: dep.ecosystem,
-              octokit,
-            })
-          } catch (err) {
+          let collected
+          if (!upstream) {
             console.warn(
               JSON.stringify({
-                event: 'package_signals_github_failed',
+                event: 'package_upstream_repo_unresolved',
                 packageId,
                 packageName: dep.name,
-                upstreamRepo: `${upstream.owner}/${upstream.repo}`,
-                error: err instanceof Error ? err.message : String(err),
+                ecosystem: dep.ecosystem,
               })
             )
             collected = await buildUnresolvedPackageSignals(dep.name, dep.ecosystem)
+          } else {
+            console.log(
+              JSON.stringify({
+                event: 'package_signals_collecting',
+                packageId,
+                packageName: dep.name,
+                ecosystem: dep.ecosystem,
+                upstreamRepo: `${upstream.owner}/${upstream.repo}`,
+                resolveSource: upstream.source,
+              })
+            )
+            try {
+              collected = await collectPackageSignals({
+                owner: upstream.owner,
+                repo: upstream.repo,
+                packageName: dep.name,
+                ecosystem: dep.ecosystem,
+                octokit,
+              })
+            } catch (err) {
+              console.warn(
+                JSON.stringify({
+                  event: 'package_signals_github_failed',
+                  packageId,
+                  packageName: dep.name,
+                  upstreamRepo: `${upstream.owner}/${upstream.repo}`,
+                  error: err instanceof Error ? err.message : String(err),
+                })
+              )
+              collected = await buildUnresolvedPackageSignals(dep.name, dep.ecosystem)
+            }
           }
+
+          await persistSignals(packageId, collected)
+          await cacheSignals(packageId, collected)
+
+          const pkg = await prisma.package.findUnique({
+            where: { id: packageId },
+            select: { currentSps: true },
+          })
+
+          const signalRepo = collected.facts.signalSourceRepo.startsWith('unresolved:')
+            ? dep.name
+            : collected.facts.signalSourceRepo
+
+          await enqueueIntelligenceScore(
+            {
+              package_id: packageId,
+              prev_sps: pkg?.currentSps ?? null,
+              installation_id: installation.id,
+              installation_github_id: installation_id,
+              signals: toIntelligenceSignals(collected.normalized),
+            },
+            {
+              packageName: dep.name,
+              repoFullName: signalRepo,
+              triggeredBy: data.triggered_by,
+            }
+          )
+
+          await bumpScanProgress(installation.id, 'scanned')
+        } catch (err) {
+          console.error(
+            JSON.stringify({
+              event: 'package_processing_failed',
+              packageId,
+              packageName: dep.name,
+              error: err instanceof Error ? err.message : String(err),
+            })
+          )
         }
-
-        await persistSignals(packageId, collected)
-        await cacheSignals(packageId, collected)
-
-        const pkg = await prisma.package.findUnique({
-          where: { id: packageId },
-          select: { currentSps: true },
-        })
-
-        const signalRepo = collected.facts.signalSourceRepo.startsWith('unresolved:')
-          ? dep.name
-          : collected.facts.signalSourceRepo
-
-        await enqueueIntelligenceScore(
-          {
-            package_id: packageId,
-            prev_sps: pkg?.currentSps ?? null,
-            installation_id: installation.id,
-            installation_github_id: installation_id,
-            signals: toIntelligenceSignals(collected.normalized),
-          },
-          {
-            packageName: dep.name,
-            repoFullName: signalRepo,
-            triggeredBy: data.triggered_by,
-          }
-        )
-
-        await bumpScanProgress(installation.id, 'scanned')
       })
     )
   }

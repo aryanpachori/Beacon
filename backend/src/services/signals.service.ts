@@ -99,34 +99,34 @@ async function getCommitSignals(ctx: SignalCollectionContext) {
   const since90 = new Date()
   since90.setDate(since90.getDate() - 90)
 
-  const { data: commits30 } = await ctx.octokit.rest.repos.listCommits({
-    owner: ctx.owner,
-    repo: ctx.repo,
-    since: since30.toISOString(),
-    per_page: 100,
-  })
+  const [r30, r90, rLatest] = await Promise.all([
+    ctx.octokit.rest.repos.listCommits({
+      owner: ctx.owner,
+      repo: ctx.repo,
+      since: since30.toISOString(),
+      per_page: 100,
+    }),
+    ctx.octokit.rest.repos.listCommits({
+      owner: ctx.owner,
+      repo: ctx.repo,
+      since: since90.toISOString(),
+      per_page: 100,
+    }),
+    ctx.octokit.rest.repos.listCommits({
+      owner: ctx.owner,
+      repo: ctx.repo,
+      per_page: 1,
+    }),
+  ])
 
-  const { data: commits90 } = await ctx.octokit.rest.repos.listCommits({
-    owner: ctx.owner,
-    repo: ctx.repo,
-    since: since90.toISOString(),
-    per_page: 100,
-  })
-
-  const { data: latest } = await ctx.octokit.rest.repos.listCommits({
-    owner: ctx.owner,
-    repo: ctx.repo,
-    per_page: 1,
-  })
-
-  const lastCommitDate = latest[0]?.commit.author?.date
+  const lastCommitDate = rLatest.data[0]?.commit.author?.date
   const daysSinceLastCommit = lastCommitDate
     ? Math.floor((Date.now() - new Date(lastCommitDate).getTime()) / 86400000)
     : 365
 
   return {
-    commitVelocity30d: commits30.length,
-    commitVelocity90d: commits90.length,
+    commitVelocity30d: r30.data.length,
+    commitVelocity90d: r90.data.length,
     daysSinceLastCommit,
   }
 }
@@ -165,20 +165,12 @@ async function getMaintainerSignals(ctx: SignalCollectionContext, daysSinceLastC
 }
 
 async function getFundingSignals(ctx: SignalCollectionContext) {
-  let hasFundingYml = false
-  for (const path of ['.github/FUNDING.yml', 'FUNDING.yml', '.github/FUNDING.yaml']) {
-    try {
-      await ctx.octokit.rest.repos.getContent({
-        owner: ctx.owner,
-        repo: ctx.repo,
-        path,
-      })
-      hasFundingYml = true
-      break
-    } catch {
-      // file not present
-    }
-  }
+  const results = await Promise.allSettled(
+    ['.github/FUNDING.yml', 'FUNDING.yml', '.github/FUNDING.yaml'].map((path) =>
+      ctx.octokit.rest.repos.getContent({ owner: ctx.owner, repo: ctx.repo, path })
+    )
+  )
+  const hasFundingYml = results.some((r) => r.status === 'fulfilled')
 
   return {
     sponsorCount: 0,
