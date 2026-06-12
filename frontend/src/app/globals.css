@@ -491,8 +491,8 @@ body {
 }
 .animate-marquee:hover { animation-play-state: paused; }
 
-.testimonial-fade-left  { background: linear-gradient(to right, var(--dl-bg), transparent); }
-.testimonial-fade-right { background: linear-gradient(to left, var(--dl-bg), transparent); }
+.testimonial-fade-left  { background: linear-gradient(to right, var(--dl-card), transparent); }
+.testimonial-fade-right { background: linear-gradient(to left, var(--dl-card), transparent); }
 
 /* ─── Hero mesh gradient ─── */
 @keyframes hero-mesh {
