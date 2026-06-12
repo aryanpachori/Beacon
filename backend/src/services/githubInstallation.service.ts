@@ -76,6 +76,20 @@ export async function markScanFailed(installationDbId: string): Promise<void> {
   await notifyScanProgress(installationDbId)
 }
 
+/** Called once all packages are scored (scanStatus → complete). */
+export async function markOnboardingComplete(installationDbId: string): Promise<void> {
+  const installation = await prisma.githubInstallation.findUnique({
+    where: { id: installationDbId },
+    select: { userId: true, scanStatus: true },
+  })
+  if (!installation?.userId || installation.scanStatus !== ScanStatus.complete) return
+
+  await prisma.user.updateMany({
+    where: { id: installation.userId, onboardingCompletedAt: null },
+    data: { onboardingStep: 4, onboardingCompletedAt: new Date() },
+  })
+}
+
 export async function linkInstallationForGitHubUser(
   githubLogin: string,
   userId: string

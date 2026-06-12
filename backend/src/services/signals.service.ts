@@ -1,6 +1,9 @@
+import axios from 'axios'
 import { Octokit } from '@octokit/rest'
 import { redis } from '../lib/redis'
 import type { MaintainerSnapshot, SignalFacts } from './resolvePackageSignals.service'
+
+const DEPRECATED_SECURITY_SCORE = 10
 
 export interface NormalizedSignals {
   commitVelocity: number
@@ -43,7 +46,11 @@ export async function collectPackageSignals(
     funding: normalizeFunding(funding.sponsorCount, funding.hasFundingYml),
     issueResolution: normalizeIssueResolution(issues.staleRatio, issues.closeRate),
     communityHealth: normalizeCommunity(community.forkStarRatio, community.contributorTrend),
-    securityHygiene: normalizeSecurity(security.cveCount, security.daysSinceRelease),
+    securityHygiene: normalizeSecurity(
+      security.cveCount,
+      security.daysSinceRelease,
+      security.isDeprecated,
+    ),
   }
 
   const facts: SignalFacts = {
@@ -64,6 +71,8 @@ export async function collectPackageSignals(
     ossfScore: security.ossfScore,
     daysSinceRelease: security.daysSinceRelease,
     cveCount: security.cveCount,
+    isDeprecated: security.isDeprecated,
+    deprecatedMessage: security.deprecatedMessage,
     signalSourceRepo: `${ctx.owner}/${ctx.repo}`,
   }
 
@@ -219,12 +228,67 @@ async function getCommunitySignals(ctx: SignalCollectionContext) {
   }
 }
 
-async function getSecuritySignals(_ctx: SignalCollectionContext) {
+type NpmRegistryMeta = {
+  isDeprecated: boolean
+  deprecatedMessage: string | null
+  daysSinceRelease: number
+}
+
+async function fetchNpmRegistryMeta(packageName: string): Promise<NpmRegistryMeta | null> {
+  try {
+    const encoded = encodeURIComponent(packageName)
+    const { data } = await axios.get(`https://registry.npmjs.org/${encoded}`, {
+      timeout: 15000,
+      validateStatus: (status) => status === 200,
+    })
+
+    const latest: string | undefined = data['dist-tags']?.latest
+    const versionMeta = latest ? data.versions?.[latest] : undefined
+    const deprecatedRaw =
+      versionMeta?.deprecated ?? data.deprecated ?? null
+    const isDeprecated =
+      deprecatedRaw !== null &&
+      deprecatedRaw !== undefined &&
+      String(deprecatedRaw).trim().length > 0
+
+    let daysSinceRelease = 365
+    const releaseTime = latest ? data.time?.[latest] : undefined
+    if (releaseTime) {
+      daysSinceRelease = Math.floor(
+        (Date.now() - new Date(releaseTime).getTime()) / 86400000,
+      )
+    }
+
+    return {
+      isDeprecated,
+      deprecatedMessage: isDeprecated ? String(deprecatedRaw) : null,
+      daysSinceRelease,
+    }
+  } catch {
+    return null
+  }
+}
+
+async function getSecuritySignals(ctx: SignalCollectionContext) {
+  if (ctx.ecosystem === 'npm') {
+    const npm = await fetchNpmRegistryMeta(ctx.packageName)
+    if (npm) {
+      return {
+        ossfScore: npm.isDeprecated ? DEPRECATED_SECURITY_SCORE : 50,
+        cveCount: 0,
+        daysSinceRelease: npm.daysSinceRelease,
+        isDeprecated: npm.isDeprecated,
+        deprecatedMessage: npm.deprecatedMessage,
+      }
+    }
+  }
+
   return {
     ossfScore: 50,
-    ossfDelta: 0,
     cveCount: 0,
-    daysSinceRelease: 30,
+    daysSinceRelease: 365,
+    isDeprecated: false,
+    deprecatedMessage: null,
   }
 }
 
@@ -250,10 +314,17 @@ function normalizeCommunity(forkStarRatio: number, contributorTrend: number): nu
   return Math.min(100, Math.round(forkStarRatio * 50 + contributorTrend * 50 + 30))
 }
 
-function normalizeSecurity(cveCount: number, daysSinceRelease: number): number {
+function normalizeSecurity(
+  cveCount: number,
+  daysSinceRelease: number,
+  isDeprecated: boolean,
+): number {
+  if (isDeprecated) return DEPRECATED_SECURITY_SCORE
+
   let score = 80
   score -= cveCount * 15
   if (daysSinceRelease > 180) score -= 20
+  if (daysSinceRelease > 365) score -= 15
   return Math.max(0, Math.min(100, score))
 }
 
@@ -306,3 +377,6 @@ export async function cacheSignals(
 }
 
 export { rawValueForSignal }
+
+/** npm registry metadata for unresolved-repo fallback and security signals. */
+export const fetchNpmRegistryMetaForPackage = fetchNpmRegistryMeta

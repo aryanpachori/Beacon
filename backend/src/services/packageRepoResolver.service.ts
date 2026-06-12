@@ -1,42 +1,47 @@
-import axios from 'axios'
-import { Ecosystem } from '@prisma/client'
-import { prisma } from '../db/client'
-import { redis } from '../lib/redis'
+import axios from "axios";
+import { Ecosystem } from "@prisma/client";
+import { prisma } from "../db/client";
+import { redis } from "../lib/redis";
 
 export type ResolvedPackageRepo = {
-  owner: string
-  repo: string
-  url: string
-  homepage: string | null
-  source: 'database' | 'registry' | 'github_sponsor'
-}
+  owner: string;
+  repo: string;
+  url: string;
+  homepage: string | null;
+  source: "database" | "registry" | "github_sponsor";
+};
 
-const CACHE_TTL_SECONDS = 86400 * 7 // 7 days
+const CACHE_TTL_SECONDS = 86400 * 7; // 7 days
 
 function cacheKey(ecosystem: string, name: string): string {
-  return `pkg-repo:${ecosystem}:${name.toLowerCase()}`
+  return `pkg-repo:${ecosystem}:${name.toLowerCase()}`;
 }
 
 /** Parse owner/repo from common GitHub URL shapes and npm `github:` shorthand. */
-export function parseGithubRepoFromUrl(raw: string): { owner: string; repo: string } | null {
-  const url = raw.trim()
-  if (!url) return null
+export function parseGithubRepoFromUrl(
+  raw: string,
+): { owner: string; repo: string } | null {
+  const url = raw.trim();
+  if (!url) return null;
 
-  const githubShorthand = url.match(/^github:([^/]+)\/([^/\s#?]+)/i)
+  const githubShorthand = url.match(/^github:([^/]+)\/([^/\s#?]+)/i);
   if (githubShorthand) {
-    return { owner: githubShorthand[1]!, repo: stripGitSuffix(githubShorthand[2]!) }
+    return {
+      owner: githubShorthand[1]!,
+      repo: stripGitSuffix(githubShorthand[2]!),
+    };
   }
 
-  const match = url.match(/github\.com[/:]([^/]+)\/([^/\s#?.]+)/i)
+  const match = url.match(/github\.com[/:]([^/]+)\/([^/\s#?.]+)/i);
   if (match) {
-    return { owner: match[1]!, repo: stripGitSuffix(match[2]!) }
+    return { owner: match[1]!, repo: stripGitSuffix(match[2]!) };
   }
 
-  return null
+  return null;
 }
 
 function stripGitSuffix(name: string): string {
-  return name.replace(/\.git$/i, '')
+  return name.replace(/\.git$/i, "");
 }
 
 function toResolved(
@@ -44,160 +49,216 @@ function toResolved(
   repo: string,
   url: string,
   homepage: string | null,
-  source: ResolvedPackageRepo['source']
+  source: ResolvedPackageRepo["source"],
 ): ResolvedPackageRepo {
   return {
     owner,
     repo,
-    url: url.startsWith('http') ? url : `https://github.com/${owner}/${repo}`,
+    url: url.startsWith("http") ? url : `https://github.com/${owner}/${repo}`,
     homepage,
     source,
-  }
+  };
 }
 
-async function fromRegistry(ecosystem: string, name: string): Promise<ResolvedPackageRepo | null> {
+async function fromRegistry(
+  ecosystem: string,
+  name: string,
+): Promise<ResolvedPackageRepo | null> {
   switch (ecosystem) {
-    case 'npm':
-      return resolveNpm(name)
-    case 'pypi':
-      return resolvePyPI(name)
-    case 'cargo':
-      return resolveCargo(name)
-    case 'gem':
-      return resolveRubyGems(name)
+    case "npm":
+      return resolveNpm(name);
+    case "pypi":
+      return resolvePyPI(name);
+    case "cargo":
+      return resolveCargo(name);
+    case "gem":
+      return resolveRubyGems(name);
     default:
-      return null
+      return null;
   }
 }
 
 async function resolveNpm(name: string): Promise<ResolvedPackageRepo | null> {
-  const encoded = encodeURIComponent(name)
+  const encoded = encodeURIComponent(name);
   const { data } = await axios.get(`https://registry.npmjs.org/${encoded}`, {
     timeout: 15000,
     validateStatus: (s) => s === 200,
-  })
+  });
 
   const homepage =
-    typeof data.homepage === 'string' && data.homepage.length > 0 ? data.homepage : null
+    typeof data.homepage === "string" && data.homepage.length > 0
+      ? data.homepage
+      : null;
 
-  const repository = data.repository
-  if (typeof repository === 'string') {
-    const parsed = parseGithubRepoFromUrl(repository)
-    if (parsed) return toResolved(parsed.owner, parsed.repo, repository, homepage, 'registry')
+  const repository = data.repository;
+  if (typeof repository === "string") {
+    const parsed = parseGithubRepoFromUrl(repository);
+    if (parsed)
+      return toResolved(
+        parsed.owner,
+        parsed.repo,
+        repository,
+        homepage,
+        "registry",
+      );
   }
-  if (repository && typeof repository === 'object' && typeof repository.url === 'string') {
-    const parsed = parseGithubRepoFromUrl(repository.url)
+  if (
+    repository &&
+    typeof repository === "object" &&
+    typeof repository.url === "string"
+  ) {
+    const parsed = parseGithubRepoFromUrl(repository.url);
     if (parsed) {
-      return toResolved(parsed.owner, parsed.repo, repository.url, homepage, 'registry')
+      return toResolved(
+        parsed.owner,
+        parsed.repo,
+        repository.url,
+        homepage,
+        "registry",
+      );
     }
   }
 
   if (data.bugs?.url) {
-    const parsed = parseGithubRepoFromUrl(String(data.bugs.url))
+    const parsed = parseGithubRepoFromUrl(String(data.bugs.url));
     if (parsed) {
       return toResolved(
         parsed.owner,
         parsed.repo,
         `https://github.com/${parsed.owner}/${parsed.repo}`,
         homepage,
-        'registry'
-      )
+        "registry",
+      );
     }
   }
 
-  return null
+  return null;
 }
 
 async function resolvePyPI(name: string): Promise<ResolvedPackageRepo | null> {
-  const encoded = encodeURIComponent(name)
+  const encoded = encodeURIComponent(name);
   const { data } = await axios.get(`https://pypi.org/pypi/${encoded}/json`, {
     timeout: 15000,
     validateStatus: (s) => s === 200,
-  })
+  });
 
-  const info = data.info ?? {}
-  const homepage = typeof info.home_page === 'string' ? info.home_page : null
-  const urls: Record<string, string> = info.project_urls ?? {}
+  const info = data.info ?? {};
+  const homepage = typeof info.home_page === "string" ? info.home_page : null;
+  const urls: Record<string, string> = info.project_urls ?? {};
 
   const candidates = [
     urls.Source,
     urls.source,
     urls.Repository,
     urls.repository,
-    urls['Source Code'],
+    urls["Source Code"],
     homepage,
-  ].filter((u): u is string => typeof u === 'string' && u.length > 0)
+  ].filter((u): u is string => typeof u === "string" && u.length > 0);
 
   for (const candidate of candidates) {
-    const parsed = parseGithubRepoFromUrl(candidate)
+    const parsed = parseGithubRepoFromUrl(candidate);
     if (parsed) {
       return toResolved(
         parsed.owner,
         parsed.repo,
-        candidate.startsWith('http') ? candidate : `https://github.com/${parsed.owner}/${parsed.repo}`,
+        candidate.startsWith("http")
+          ? candidate
+          : `https://github.com/${parsed.owner}/${parsed.repo}`,
         homepage,
-        'registry'
-      )
+        "registry",
+      );
     }
   }
 
-  return null
+  return null;
 }
 
 async function resolveCargo(name: string): Promise<ResolvedPackageRepo | null> {
-  const encoded = encodeURIComponent(name)
-  const { data } = await axios.get(`https://crates.io/api/v1/crates/${encoded}`, {
-    timeout: 15000,
-    validateStatus: (s) => s === 200,
-    headers: { Accept: 'application/json' },
-  })
+  const encoded = encodeURIComponent(name);
+  const { data } = await axios.get(
+    `https://crates.io/api/v1/crates/${encoded}`,
+    {
+      timeout: 15000,
+      validateStatus: (s) => s === 200,
+      headers: { Accept: "application/json" },
+    },
+  );
 
-  const crate = data.crate ?? data
-  const repository = crate.repository as string | undefined
-  const homepage = (crate.homepage as string | undefined) ?? null
+  const crate = data.crate ?? data;
+  const repository = crate.repository as string | undefined;
+  const homepage = (crate.homepage as string | undefined) ?? null;
 
   if (repository) {
-    const parsed = parseGithubRepoFromUrl(repository)
+    const parsed = parseGithubRepoFromUrl(repository);
     if (parsed) {
-      return toResolved(parsed.owner, parsed.repo, repository, homepage, 'registry')
+      return toResolved(
+        parsed.owner,
+        parsed.repo,
+        repository,
+        homepage,
+        "registry",
+      );
     }
   }
 
-  return null
+  return null;
 }
 
-async function resolveRubyGems(name: string): Promise<ResolvedPackageRepo | null> {
-  const encoded = encodeURIComponent(name)
-  const { data } = await axios.get(`https://rubygems.org/api/v1/gems/${encoded}.json`, {
-    timeout: 15000,
-    validateStatus: (s) => s === 200,
-  })
+async function resolveRubyGems(
+  name: string,
+): Promise<ResolvedPackageRepo | null> {
+  const encoded = encodeURIComponent(name);
+  const { data } = await axios.get(
+    `https://rubygems.org/api/v1/gems/${encoded}.json`,
+    {
+      timeout: 15000,
+      validateStatus: (s) => s === 200,
+    },
+  );
 
-  const homepage = typeof data.homepage_uri === 'string' ? data.homepage_uri : null
-  const source = data.source_code_uri as string | undefined
+  const homepage =
+    typeof data.homepage_uri === "string" ? data.homepage_uri : null;
+  const source = data.source_code_uri as string | undefined;
 
   if (source) {
-    const parsed = parseGithubRepoFromUrl(source)
+    const parsed = parseGithubRepoFromUrl(source);
     if (parsed) {
-      return toResolved(parsed.owner, parsed.repo, source, homepage, 'registry')
+      return toResolved(
+        parsed.owner,
+        parsed.repo,
+        source,
+        homepage,
+        "registry",
+      );
     }
   }
 
-  return null
+  return null;
 }
 
-async function readCached(ecosystem: string, name: string): Promise<ResolvedPackageRepo | null> {
-  const raw = await redis.get(cacheKey(ecosystem, name))
-  if (!raw) return null
+async function readCached(
+  ecosystem: string,
+  name: string,
+): Promise<ResolvedPackageRepo | null> {
+  const raw = await redis.get(cacheKey(ecosystem, name));
+  if (!raw) return null;
   try {
-    return JSON.parse(raw) as ResolvedPackageRepo
+    return JSON.parse(raw) as ResolvedPackageRepo;
   } catch {
-    return null
+    return null;
   }
 }
 
-async function writeCache(ecosystem: string, name: string, resolved: ResolvedPackageRepo): Promise<void> {
-  await redis.setex(cacheKey(ecosystem, name), CACHE_TTL_SECONDS, JSON.stringify(resolved))
+async function writeCache(
+  ecosystem: string,
+  name: string,
+  resolved: ResolvedPackageRepo,
+): Promise<void> {
+  await redis.setex(
+    cacheKey(ecosystem, name),
+    CACHE_TTL_SECONDS,
+    JSON.stringify(resolved),
+  );
 }
 
 /**
@@ -207,45 +268,51 @@ async function writeCache(ecosystem: string, name: string, resolved: ResolvedPac
 export async function resolvePackageGithubRepo(
   packageId: string,
   name: string,
-  ecosystem: string
+  ecosystem: string,
 ): Promise<ResolvedPackageRepo | null> {
-  const cached = await readCached(ecosystem, name)
-  if (cached) return cached
+  const cached = await readCached(ecosystem, name);
+  if (cached) return cached;
 
   const existing = await prisma.package.findUnique({
     where: { id: packageId },
-    select: { githubOwner: true, githubRepoName: true, githubRepoUrl: true, homepageUrl: true },
-  })
+    select: {
+      githubOwner: true,
+      githubRepoName: true,
+      githubRepoUrl: true,
+      homepageUrl: true,
+    },
+  });
 
   if (existing?.githubOwner && existing.githubRepoName) {
     const fromDb = toResolved(
       existing.githubOwner,
       existing.githubRepoName,
-      existing.githubRepoUrl ?? `https://github.com/${existing.githubOwner}/${existing.githubRepoName}`,
+      existing.githubRepoUrl ??
+        `https://github.com/${existing.githubOwner}/${existing.githubRepoName}`,
       existing.homepageUrl,
-      'database'
-    )
-    await writeCache(ecosystem, name, fromDb)
-    return fromDb
+      "database",
+    );
+    await writeCache(ecosystem, name, fromDb);
+    return fromDb;
   }
 
-  let resolved: ResolvedPackageRepo | null = null
+  let resolved: ResolvedPackageRepo | null = null;
   try {
-    resolved = await fromRegistry(ecosystem, name)
+    resolved = await fromRegistry(ecosystem, name);
   } catch (err) {
     console.warn(
       JSON.stringify({
-        event: 'package_repo_resolve_failed',
+        event: "package_repo_resolve_failed",
         packageId,
         name,
         ecosystem,
         error: err instanceof Error ? err.message : String(err),
-      })
-    )
+      }),
+    );
   }
 
   if (resolved) {
-    await writeCache(ecosystem, name, resolved)
+    await writeCache(ecosystem, name, resolved);
     await prisma.package.update({
       where: { id: packageId },
       data: {
@@ -254,20 +321,20 @@ export async function resolvePackageGithubRepo(
         githubRepoUrl: resolved.url,
         homepageUrl: resolved.homepage ?? undefined,
       },
-    })
+    });
   }
 
-  return resolved
+  return resolved;
 }
 
 export async function resolvePackageGithubRepoByName(
   name: string,
-  ecosystem: Ecosystem
+  ecosystem: Ecosystem,
 ): Promise<ResolvedPackageRepo | null> {
   const pkg = await prisma.package.findUnique({
     where: { name_ecosystem: { name, ecosystem } },
     select: { id: true },
-  })
-  if (!pkg) return null
-  return resolvePackageGithubRepo(pkg.id, name, ecosystem)
+  });
+  if (!pkg) return null;
+  return resolvePackageGithubRepo(pkg.id, name, ecosystem);
 }

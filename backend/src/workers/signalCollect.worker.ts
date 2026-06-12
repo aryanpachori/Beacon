@@ -14,7 +14,7 @@ import { collectPackageSignals, cacheSignals } from '../services/signals.service
 import { persistSignals } from '../services/signalPersistence.service'
 import { resolvePackageGithubRepo } from '../services/packageRepoResolver.service'
 import { buildUnresolvedPackageSignals } from '../services/unresolvedSignals.service'
-import { notifyScanProgress } from '../services/scanProgress.service'
+import { bumpScanProgress, notifyScanProgress } from '../services/scanProgress.service'
 import { markScanFailed } from '../services/githubInstallation.service'
 
 const MANIFEST_CONCURRENCY = 10
@@ -98,16 +98,6 @@ async function processScanJob(data: SignalCollectJobData): Promise<void> {
     return
   }
 
-  await prisma.githubInstallation.update({
-    where: { id: installation.id },
-    data: {
-      scanProgress: { total: uniqueDeps.length, scanned: 0, scored: 0 },
-      scanStatus: ScanStatus.scanning,
-    },
-  })
-  await notifyScanProgress(installation.id)
-
-  let scanned = 0
   const packageRecords: Array<{
     packageId: string
     dep: ParsedDependency & { manifestPath: string; repoId: string }
@@ -152,6 +142,17 @@ async function processScanJob(data: SignalCollectJobData): Promise<void> {
     }
   }
 
+  const totalPackages = packageRecords.length
+
+  await prisma.githubInstallation.update({
+    where: { id: installation.id },
+    data: {
+      scanProgress: { total: totalPackages, scanned: 0, scored: 0 },
+      scanStatus: ScanStatus.scanning,
+    },
+  })
+  await notifyScanProgress(installation.id)
+
   const chunks = chunkArray(packageRecords, MANIFEST_CONCURRENCY)
   for (const chunk of chunks) {
     await Promise.all(
@@ -168,7 +169,7 @@ async function processScanJob(data: SignalCollectJobData): Promise<void> {
               ecosystem: dep.ecosystem,
             })
           )
-          collected = buildUnresolvedPackageSignals(dep.name, dep.ecosystem)
+          collected = await buildUnresolvedPackageSignals(dep.name, dep.ecosystem)
         } else {
           console.log(
             JSON.stringify({
@@ -198,7 +199,7 @@ async function processScanJob(data: SignalCollectJobData): Promise<void> {
                 error: err instanceof Error ? err.message : String(err),
               })
             )
-            collected = buildUnresolvedPackageSignals(dep.name, dep.ecosystem)
+            collected = await buildUnresolvedPackageSignals(dep.name, dep.ecosystem)
           }
         }
 
@@ -229,28 +230,28 @@ async function processScanJob(data: SignalCollectJobData): Promise<void> {
           }
         )
 
-        scanned++
-        const current = await prisma.githubInstallation.findUnique({
-          where: { id: installation.id },
-          select: { scanProgress: true },
-        })
-        const progress = (current?.scanProgress ?? {}) as Record<string, number>
-        await prisma.githubInstallation.update({
-          where: { id: installation.id },
-          data: {
-            scanProgress: { ...progress, scanned },
-          },
-        })
-        await notifyScanProgress(installation.id)
+        await bumpScanProgress(installation.id, 'scanned')
       })
     )
   }
 
+  const afterScan = await prisma.githubInstallation.findUnique({
+    where: { id: installation.id },
+    select: { scanProgress: true, scanStatus: true },
+  })
+  const progressAfterScan = (afterScan?.scanProgress ?? {}) as {
+    total?: number
+    scanned?: number
+    scored?: number
+  }
+  const scored = progressAfterScan.scored ?? 0
+  const total = progressAfterScan.total ?? totalPackages
+  const scanComplete = total > 0 && scored >= total
+
   await prisma.githubInstallation.update({
     where: { id: installation.id },
     data: {
-      scanStatus: ScanStatus.complete,
-      scanProgress: { total: uniqueDeps.length, scanned, scored: scanned },
+      scanStatus: scanComplete ? ScanStatus.complete : ScanStatus.scoring,
     },
   })
   await notifyScanProgress(installation.id)
@@ -259,18 +260,14 @@ async function processScanJob(data: SignalCollectJobData): Promise<void> {
     JSON.stringify({
       event: 'signal_collect_job_complete',
       installationDbId: installation.id,
-      totalDependencies: uniqueDeps.length,
-      scanned,
+      totalDependencies: totalPackages,
+      scanned: progressAfterScan.scanned ?? totalPackages,
+      scored,
+      scanComplete,
       timestamp: new Date().toISOString(),
     })
   )
 
-  if (installation.userId) {
-    await prisma.user.update({
-      where: { id: installation.userId },
-      data: { onboardingStep: 4, onboardingCompletedAt: new Date() },
-    })
-  }
 }
 
 async function resolveRepos(
