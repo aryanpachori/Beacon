@@ -42,18 +42,16 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <head />
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('dl_theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.classList.add('dark')}catch(e){}` }} />
+      </head>
       <body className={`${plusJakarta.variable} ${geistMono.variable} font-sans antialiased`}>
         {children}
         <Toaster
           position="bottom-right"
-          theme="light"
           richColors
           toastOptions={{
             style: {
-              background: '#ffffff',
-              border: '1px solid #c6d1d7',
-              color: '#555663',
               fontFamily: 'var(--font-inter)',
             },
           }}

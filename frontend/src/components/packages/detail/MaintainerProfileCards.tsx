@@ -29,18 +29,18 @@ export function MaintainerProfileCards({ pkg, className }: MaintainerProfileCard
           const badge = activityBadge(profile.lastCommitDays)
           const login = profile.handle.replace('@', '')
           return (
-            <div key={profile.handle} className="overflow-hidden rounded-2xl border border-[#e4e8ee] bg-white p-4">
+            <div key={profile.handle} className="overflow-hidden rounded-2xl border border-dl-border bg-dl-bg p-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#2f7eda] to-[#1a5fb4] text-[14px] font-bold text-white">
                   {initials(profile.name)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="truncate text-[13px] font-bold text-[#1e2a3c]">{profile.name}</p>
+                  <p className="truncate text-[13px] font-bold text-dl-navy">{profile.name}</p>
                   <a
                     href={`https://github.com/${login}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 font-mono text-[11px] text-[#9fa0b5] hover:text-[#2f7eda] transition-colors"
+                    className="flex items-center gap-1 font-mono text-[11px] text-dl-muted hover:text-[#2f7eda] transition-colors"
                   >
                     <ExternalLink className="h-3 w-3" />
                     {profile.handle}
@@ -53,20 +53,20 @@ export function MaintainerProfileCards({ pkg, className }: MaintainerProfileCard
 
               <dl className="mt-4 space-y-2 text-[12px]">
                 <div className="flex justify-between gap-2">
-                  <dt className="text-[#9fa0b5]">Last commit</dt>
+                  <dt className="text-dl-muted">Last commit</dt>
                   <dd className="font-semibold" style={{ color: badge.color }}>{profile.lastCommitDays}d ago</dd>
                 </div>
                 <div className="flex justify-between gap-2">
-                  <dt className="text-[#9fa0b5]">Public repos</dt>
-                  <dd className="font-semibold text-[#1e2a3c]">{profile.publicRepos}</dd>
+                  <dt className="text-dl-muted">Public repos</dt>
+                  <dd className="font-semibold text-dl-navy">{profile.publicRepos}</dd>
                 </div>
                 <div className="flex justify-between gap-2">
-                  <dt className="text-[#9fa0b5]">Sponsor</dt>
-                  <dd className="font-semibold text-[#1e2a3c]">{profile.sponsor}</dd>
+                  <dt className="text-dl-muted">Sponsor</dt>
+                  <dd className="font-semibold text-dl-navy">{profile.sponsor}</dd>
                 </div>
               </dl>
 
-              <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-[#f0f2f5]" title={`Last activity ${profile.lastCommitDays} days ago`}>
+              <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-dl-surface" title={`Last activity ${profile.lastCommitDays} days ago`}>
                 <div className={cn('h-full', getMaintainerBarClass(profile.lastCommitDays))} style={{ width: `${Math.max(5, 100 - Math.min(profile.lastCommitDays, 100))}%` }} />
               </div>
             </div>

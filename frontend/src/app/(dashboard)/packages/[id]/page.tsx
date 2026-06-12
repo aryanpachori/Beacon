@@ -82,7 +82,7 @@ export default function PackageDetailPage({ params }: PageProps) {
       )}
 
       {pkg.scoringPending && (
-        <div className="mb-5 rounded-2xl border border-[#2f7eda]/20 bg-[#eaf2fd] px-4 py-3 text-[13px] text-[#2f7eda]">
+        <div className="mb-5 rounded-2xl border border-dl-blue/20 bg-dl-blue-pale px-4 py-3 text-[13px] text-dl-blue">
           Signals collected. SPS score and tier will appear after the intelligence service finishes scoring.
         </div>
       )}
@@ -91,8 +91,8 @@ export default function PackageDetailPage({ params }: PageProps) {
       {(pkg.weeklyDownloads || pkg.totalStars || pkg.totalForks || pkg.license || (pkg.signalFacts?.cveCount ?? 0) > 0) && (
         <div className="mb-5 flex flex-wrap items-center gap-2">
           {pkg.weeklyDownloads && (
-            <div className="flex items-center gap-1.5 rounded-xl border border-[#e4e8ee] bg-white px-3 py-1.5 text-[12px] font-semibold text-[#555663]">
-              <Download className="h-3.5 w-3.5 text-[#9fa0b5]" />
+            <div className="flex items-center gap-1.5 rounded-xl border border-dl-border bg-dl-bg px-3 py-1.5 text-[12px] font-semibold text-dl-text">
+              <Download className="h-3.5 w-3.5 text-dl-muted" />
               {pkg.weeklyDownloads >= 1_000_000
                 ? `${(pkg.weeklyDownloads / 1_000_000).toFixed(1)}M`
                 : pkg.weeklyDownloads >= 1_000
@@ -102,20 +102,20 @@ export default function PackageDetailPage({ params }: PageProps) {
             </div>
           )}
           {(pkg.totalStars ?? 0) > 0 && (
-            <div className="flex items-center gap-1.5 rounded-xl border border-[#e4e8ee] bg-white px-3 py-1.5 text-[12px] font-semibold text-[#555663]">
+            <div className="flex items-center gap-1.5 rounded-xl border border-dl-border bg-dl-bg px-3 py-1.5 text-[12px] font-semibold text-dl-text">
               <Star className="h-3.5 w-3.5 text-[#ca8a04]" />
               {(pkg.totalStars ?? 0).toLocaleString()}
             </div>
           )}
           {(pkg.totalForks ?? 0) > 0 && (
-            <div className="flex items-center gap-1.5 rounded-xl border border-[#e4e8ee] bg-white px-3 py-1.5 text-[12px] font-semibold text-[#555663]">
-              <GitFork className="h-3.5 w-3.5 text-[#9fa0b5]" />
+            <div className="flex items-center gap-1.5 rounded-xl border border-dl-border bg-dl-bg px-3 py-1.5 text-[12px] font-semibold text-dl-text">
+              <GitFork className="h-3.5 w-3.5 text-dl-muted" />
               {(pkg.totalForks ?? 0).toLocaleString()}
             </div>
           )}
           {pkg.license && (
-            <div className="flex items-center gap-1.5 rounded-xl border border-[#e4e8ee] bg-white px-3 py-1.5 text-[12px] font-semibold text-[#555663]">
-              <Shield className="h-3.5 w-3.5 text-[#2f7eda]" />
+            <div className="flex items-center gap-1.5 rounded-xl border border-dl-border bg-dl-bg px-3 py-1.5 text-[12px] font-semibold text-dl-text">
+              <Shield className="h-3.5 w-3.5 text-dl-blue" />
               {pkg.license}
             </div>
           )}
@@ -127,7 +127,7 @@ export default function PackageDetailPage({ params }: PageProps) {
           )}
           {pkg.githubRepoUrl && (
             <a href={pkg.githubRepoUrl} target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-1.5 rounded-xl border border-[#e4e8ee] bg-white px-3 py-1.5 text-[12px] font-semibold text-[#9fa0b5] hover:text-[#2f7eda] hover:border-[#2f7eda]/30 transition-colors">
+              className="flex items-center gap-1.5 rounded-xl border border-dl-border bg-dl-bg px-3 py-1.5 text-[12px] font-semibold text-dl-muted hover:text-dl-blue hover:border-dl-blue/30 transition-colors">
               <ExternalLink className="h-3.5 w-3.5" />
               GitHub
             </a>

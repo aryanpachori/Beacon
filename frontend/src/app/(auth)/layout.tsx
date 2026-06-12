@@ -1,6 +1,6 @@
 'use client'
 
-import { Shield, TrendingDown, Bell, Zap, CheckCircle2, Package } from 'lucide-react'
+import { Shield, TrendingDown, Bell, Zap, Package } from 'lucide-react'
 import { SiteLogo } from '@/components/layout/SiteLogo'
 
 const FEATURES = [
@@ -8,11 +8,6 @@ const FEATURES = [
   { icon: Shield,       text: 'CVE & supply chain alerts in real-time' },
   { icon: Bell,         text: 'Slack & Google Chat notifications' },
   { icon: Zap,          text: 'XGBoost-powered SPS scoring engine' },
-]
-
-const TESTIMONIALS = [
-  { quote: 'Found 3 critical packages before our release. Saved us a production incident.', name: 'Priya S.', role: 'Lead Engineer' },
-  { quote: 'The SPS trend chart is exactly what our quarterly security review needed.', name: 'Marcus L.', role: 'CTO' },
 ]
 
 const STATS = [
@@ -25,7 +20,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="flex min-h-screen bg-white">
       {/* ── Left brand panel ── */}
-      <div className="relative hidden w-[480px] shrink-0 flex-col justify-between overflow-hidden bg-[#0f1e3a] p-12 lg:flex xl:w-[520px]">
+      <div className="relative hidden w-[480px] shrink-0 flex-col gap-12 overflow-hidden bg-[#0f1e3a] p-12 lg:flex xl:w-[520px]">
         {/* Background decorations */}
         <div className="pointer-events-none absolute -right-32 -top-32 h-80 w-80 rounded-full blur-3xl"
           style={{ background: 'rgba(47,126,218,0.2)' }} />
@@ -92,28 +87,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </div>
         </div>
 
-        {/* Testimonial */}
-        <div className="relative z-10 space-y-4">
-          {TESTIMONIALS.map(({ quote, name, role }) => (
-            <div key={name} className="rounded-xl border border-white/8 bg-white/5 p-4">
-              <div className="mb-2 flex gap-0.5">
-                {[...Array(5)].map((_, i) => (
-                  <CheckCircle2 key={i} className="h-3 w-3 text-[#2f7eda]" />
-                ))}
-              </div>
-              <p className="text-[12px] leading-relaxed text-white/60">&ldquo;{quote}&rdquo;</p>
-              <div className="mt-2 flex items-center gap-2">
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2f7eda]/30 text-[10px] font-bold text-white">
-                  {name[0]}
-                </div>
-                <div>
-                  <p className="text-[11px] font-semibold text-white/80">{name}</p>
-                  <p className="text-[10px] text-white/40">{role}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* ── Right form panel ── */}

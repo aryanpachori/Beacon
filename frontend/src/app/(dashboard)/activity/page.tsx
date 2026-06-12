@@ -98,8 +98,8 @@ export default function ActivityPage() {
             onClick={() => setFilter(f.key)}
             className={`shrink-0 rounded-xl px-3.5 py-1.5 text-[12px] font-semibold transition-all ${
               filter === f.key
-                ? 'bg-[#1e2a3c] text-white shadow-sm'
-                : 'bg-white border border-[#e4e8ee] text-[#9fa0b5] hover:border-[#c6d1d7] hover:text-[#555663]'
+                ? 'bg-dl-navy text-dl-bg shadow-sm'
+                : 'bg-dl-bg border border-dl-border text-dl-muted hover:border-dl-muted hover:text-dl-text'
             }`}
           >
             {f.label}
@@ -120,12 +120,12 @@ export default function ActivityPage() {
           ))}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-[#e4e8ee] bg-white py-20 text-center">
-          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#f5f7fa]">
-            <Activity className="h-7 w-7 text-[#c6d1d7]" />
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-dl-border bg-dl-bg py-20 text-center">
+          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-dl-surface">
+            <Activity className="h-7 w-7 text-dl-border" />
           </div>
-          <p className="text-[15px] font-semibold text-[#1e2a3c]">No events yet</p>
-          <p className="mt-1.5 max-w-sm text-sm text-[#9fa0b5]">
+          <p className="text-[15px] font-semibold text-dl-navy">No events yet</p>
+          <p className="mt-1.5 max-w-sm text-sm text-dl-muted">
             Activity appears here after GitHub is connected and your first scan completes.
           </p>
         </div>
@@ -143,7 +143,7 @@ export default function ActivityPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: Math.min(i * 0.03, 0.3) }}
-                className="group flex items-start gap-4 rounded-2xl border border-[#e4e8ee] bg-white p-4 transition-all hover:border-[#c6d1d7] hover:shadow-sm"
+                className="group flex items-start gap-4 rounded-2xl border border-dl-border bg-dl-bg p-4 transition-all hover:border-dl-muted hover:shadow-sm"
               >
                 {/* Event type icon */}
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ background: cfg.bg }}>
@@ -156,7 +156,7 @@ export default function ActivityPage() {
                     {/* Ecosystem dot */}
                     <span className="h-2 w-2 rounded-full shrink-0" style={{ background: ecoColor }} />
                     {/* Package name */}
-                    <span className="text-[13px] font-bold text-[#1e2a3c] truncate">{event.packageName}</span>
+                    <span className="text-[13px] font-bold text-dl-navy truncate">{event.packageName}</span>
                     {/* Event type label */}
                     <span className="rounded-md px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide"
                       style={{ background: cfg.bg, color: cfg.color }}>
@@ -176,7 +176,7 @@ export default function ActivityPage() {
 
                   {/* SPS change */}
                   {event.spsBefore != null && event.spsAfter != null && (
-                    <p className="text-[12px] text-[#9fa0b5] mb-1">
+                    <p className="text-[12px] text-dl-muted mb-1">
                       SPS{' '}
                       <span className="font-bold" style={{ color: tierColor(event.tier) }}>
                         {event.spsBefore} → {event.spsAfter}
@@ -190,7 +190,7 @@ export default function ActivityPage() {
 
                   {/* AI reason */}
                   {event.aiReason && (
-                    <p className="text-[12px] text-[#9fa0b5] line-clamp-2">{event.aiReason}</p>
+                    <p className="text-[12px] text-dl-muted line-clamp-2">{event.aiReason}</p>
                   )}
 
                   {/* CVE info */}
@@ -201,10 +201,10 @@ export default function ActivityPage() {
 
                 {/* Right: time + link */}
                 <div className="flex shrink-0 flex-col items-end gap-2">
-                  <span className="text-[11px] text-[#9fa0b5]">{relativeTime(event.firedAt)}</span>
+                  <span className="text-[11px] text-dl-muted">{relativeTime(event.firedAt)}</span>
                   <Link
                     href={`/packages/${event.packageId}`}
-                    className="flex items-center gap-1 rounded-lg border border-[#e4e8ee] bg-[#f5f7fa] px-2.5 py-1 text-[11px] font-semibold text-[#555663] hover:border-[#2f7eda]/30 hover:bg-[#eaf2fd] hover:text-[#2f7eda] transition-all"
+                    className="flex items-center gap-1 rounded-lg border border-dl-border bg-dl-surface px-2.5 py-1 text-[11px] font-semibold text-dl-text hover:border-dl-blue/30 hover:bg-dl-blue-pale hover:text-dl-blue transition-all"
                   >
                     <Package className="h-3 w-3" />
                     View

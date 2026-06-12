@@ -98,6 +98,16 @@ async function processScanJob(data: SignalCollectJobData): Promise<void> {
     return
   }
 
+  // Publish total immediately so the UI shows "Found N packages" before the upsert loop
+  await prisma.githubInstallation.update({
+    where: { id: installation.id },
+    data: {
+      scanProgress: { total: uniqueDeps.length, scanned: 0, scored: 0 },
+      scanStatus: ScanStatus.scanning,
+    },
+  })
+  await notifyScanProgress(installation.id)
+
   const packageRecords: Array<{
     packageId: string
     dep: ParsedDependency & { manifestPath: string; repoId: string }
@@ -143,15 +153,6 @@ async function processScanJob(data: SignalCollectJobData): Promise<void> {
   }
 
   const totalPackages = packageRecords.length
-
-  await prisma.githubInstallation.update({
-    where: { id: installation.id },
-    data: {
-      scanProgress: { total: totalPackages, scanned: 0, scored: 0 },
-      scanStatus: ScanStatus.scanning,
-    },
-  })
-  await notifyScanProgress(installation.id)
 
   const chunks = chunkArray(packageRecords, MANIFEST_CONCURRENCY)
   for (const chunk of chunks) {

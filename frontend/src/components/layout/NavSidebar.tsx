@@ -7,8 +7,9 @@ import {
   LayoutDashboard, Package, Bell, GitBranch, Settings2,
   CreditCard, User, LogOut, ChevronLeft, ChevronRight,
   BarChart2, Activity, HelpCircle, Zap, Shield, Users,
-  Command, ChevronDown,
+  Command, ChevronDown, Sun, Moon,
 } from 'lucide-react'
+import { useTheme } from '@/hooks/useTheme'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SiteLogo } from '@/components/layout/SiteLogo'
 import { useAppData } from '@/context/AppDataContext'
@@ -85,6 +86,7 @@ export function NavSidebar({
   const { user, alerts, signOut } = useAppData()
   const alertCount = getUnreadCount(alerts)
 
+  const [theme, toggleTheme] = useTheme()
   const [profileOpen, setProfileOpen] = useState(false)
   const profileRef = useRef<HTMLDivElement>(null)
 
@@ -124,19 +126,19 @@ export function NavSidebar({
   return (
     <aside
       className={cn(
-        'fixed top-0 left-0 z-30 flex h-screen flex-col border-r border-[#e4e8ee] bg-white transition-[width,transform] duration-300 ease-in-out',
+        'fixed top-0 left-0 z-30 flex h-screen flex-col border-r border-dl-border bg-dl-bg transition-[width,transform] duration-300 ease-in-out',
         open ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
         isCollapsed ? 'w-[240px] md:w-[64px]' : 'w-[240px] md:w-[240px]'
       )}
     >
       {/* ── Logo row ── */}
       <div className={cn(
-        'flex h-[60px] shrink-0 items-center justify-between border-b border-[#e4e8ee] px-4',
+        'flex h-[60px] shrink-0 items-center justify-between border-b border-dl-border px-4',
         isCollapsed ? 'md:justify-center md:px-3' : ''
       )}>
         <SiteLogo
           className={cn(
-            'text-[16px] font-bold tracking-tight text-[#1e2a3c] transition-all duration-200',
+            'text-[16px] font-bold tracking-tight text-dl-navy transition-all duration-200',
             isCollapsed ? 'md:hidden' : ''
           )}
           iconClassName="rounded-lg bg-[#2f7eda]/10"
@@ -146,7 +148,7 @@ export function NavSidebar({
             type="button"
             onClick={onToggleCollapse}
             className={cn(
-              'flex items-center justify-center rounded-lg p-1.5 text-[#9fa0b5] hover:bg-[#f0f5ff] hover:text-[#2f7eda] transition-all duration-150 focus:outline-none',
+              'flex items-center justify-center rounded-lg p-1.5 text-dl-muted hover:bg-[#f0f5ff] hover:text-[#2f7eda] transition-all duration-150 focus:outline-none',
               isCollapsed ? 'md:mt-0' : 'hidden md:flex'
             )}
             aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
@@ -177,11 +179,11 @@ export function NavSidebar({
                   onClick={() => toggleSection(label)}
                   className="group mb-1 flex w-full items-center justify-between px-2 py-0.5 focus:outline-none"
                 >
-                  <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#c6d1d7] group-hover:text-[#9fa0b5] transition-colors">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-dl-border group-hover:text-dl-muted transition-colors">
                     {label}
                   </span>
                   <ChevronDown className={cn(
-                    'h-3 w-3 text-[#c6d1d7] transition-transform duration-200 group-hover:text-[#9fa0b5]',
+                    'h-3 w-3 text-dl-border transition-transform duration-200 group-hover:text-dl-muted',
                     sectionOpen ? 'rotate-0' : '-rotate-90'
                   )} />
                 </button>
@@ -212,8 +214,8 @@ export function NavSidebar({
                           className={cn(
                             'group relative flex items-center gap-2.5 rounded-xl py-2 text-[13px] font-medium transition-all duration-150',
                             active
-                              ? 'bg-[#eaf2fd] text-[#2f7eda]'
-                              : 'text-[#9fa0b5] hover:bg-[#f5f7fa] hover:text-[#555663]',
+                              ? 'bg-dl-blue-pale text-dl-blue'
+                              : 'text-dl-muted hover:bg-dl-surface hover:text-dl-text',
                             isCollapsed ? 'md:justify-center md:px-0 md:py-2.5' : 'px-2.5',
                             soon ? 'cursor-not-allowed' : ''
                           )}
@@ -227,23 +229,23 @@ export function NavSidebar({
                           <div className={cn(
                             'relative flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-all duration-150',
                             active
-                              ? 'bg-[#2f7eda]/12'
+                              ? 'bg-dl-blue/12'
                               : `group-hover:bg-[${colors.bg}]`
                           )}
                             style={!active ? undefined : { background: `${colors.bg}` }}
                           >
                             <Icon className={cn(
                               'h-3.5 w-3.5 transition-colors',
-                              active ? 'text-[#2f7eda]' : 'text-[#9fa0b5] group-hover:text-[#555663]'
+                              active ? 'text-[#2f7eda]' : 'text-dl-muted group-hover:text-dl-text'
                             )}
                               style={active ? { color: colors.icon } : undefined}
                             />
                             {/* Collapsed alert dot */}
                             {showBadge && alertCount > 0 && isCollapsed && (
-                              <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white" />
+                              <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-dl-bg" />
                             )}
                             {showActivityBadge && alertCount > 0 && isCollapsed && (
-                              <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-[#2f7eda] ring-2 ring-white" />
+                              <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-[#2f7eda] ring-2 ring-dl-bg" />
                             )}
                           </div>
 
@@ -269,7 +271,7 @@ export function NavSidebar({
 
                           {/* Soon badge */}
                           {soon && !isCollapsed && (
-                            <span className="rounded-md bg-[#edeff3] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-[#9fa0b5]">
+                            <span className="rounded-md bg-dl-surface px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-dl-muted">
                               Soon
                             </span>
                           )}
@@ -284,29 +286,49 @@ export function NavSidebar({
         })}
       </nav>
 
-      {/* ── ⌘K hint ── */}
+      {/* ── ⌘K hint + theme toggle ── */}
       {!isCollapsed && (
-        <div className="px-4 pb-2">
-          <div className="flex items-center gap-2 rounded-lg border border-[#e4e8ee] bg-[#f5f7fa] px-3 py-2">
-            <Command className="h-3 w-3 shrink-0 text-[#c6d1d7]" />
-            <span className="flex-1 text-[11px] text-[#c6d1d7]">Quick search</span>
-            <span className="flex items-center gap-0.5 rounded bg-white px-1 py-0.5 text-[10px] font-bold text-[#9fa0b5] shadow-sm border border-[#e4e8ee]">
+        <div className="px-4 pb-2 flex items-center gap-2">
+          <div className="flex flex-1 items-center gap-2 rounded-lg border border-dl-border bg-dl-surface px-3 py-2">
+            <Command className="h-3 w-3 shrink-0 text-dl-border" />
+            <span className="flex-1 text-[11px] text-dl-border">Quick search</span>
+            <span className="flex items-center gap-0.5 rounded bg-dl-bg px-1 py-0.5 text-[10px] font-bold text-dl-muted shadow-sm border border-dl-border">
               ⌘K
             </span>
           </div>
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-dl-border bg-dl-surface text-dl-muted transition-all hover:border-dl-blue hover:text-dl-blue"
+            aria-label="Toggle dark mode"
+          >
+            {theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+          </button>
+        </div>
+      )}
+      {isCollapsed && (
+        <div className="px-2 pb-2 flex justify-center">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-dl-border bg-dl-surface text-dl-muted transition-all hover:border-dl-blue hover:text-dl-blue"
+            aria-label="Toggle dark mode"
+          >
+            {theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+          </button>
         </div>
       )}
 
       {/* ── Help link ── */}
       <div className={cn(
-        'border-t border-[#e4e8ee] px-3 py-2',
+        'border-t border-dl-border px-3 py-2',
         isCollapsed ? 'md:px-2' : ''
       )}>
         <a
           href="mailto:support@driftlogg.com"
           title={isCollapsed ? 'Help & Support' : undefined}
           className={cn(
-            'flex items-center gap-2.5 rounded-xl py-2 text-[12px] font-medium text-[#9fa0b5] hover:bg-[#f5f7fa] hover:text-[#555663] transition-all duration-150',
+            'flex items-center gap-2.5 rounded-xl py-2 text-[12px] font-medium text-dl-muted hover:bg-dl-surface hover:text-dl-text transition-all duration-150 dark:hover:bg-dl-surface',
             isCollapsed ? 'md:justify-center md:px-0' : 'px-2.5'
           )}
         >
@@ -321,7 +343,7 @@ export function NavSidebar({
 
       {/* ── Profile ── */}
       <div className={cn(
-        'border-t border-[#e4e8ee] p-3',
+        'border-t border-dl-border p-3',
         isCollapsed ? 'md:px-2' : ''
       )}>
         <div ref={profileRef} className="relative w-full">
@@ -334,21 +356,21 @@ export function NavSidebar({
                 exit={{ opacity: 0, y: 6, scale: 0.97 }}
                 transition={{ duration: 0.14, ease: [0.22, 1, 0.36, 1] }}
                 className={cn(
-                  'absolute bottom-16 left-0 z-50 flex flex-col rounded-2xl border border-[#e4e8ee] bg-white shadow-2xl overflow-hidden',
+                  'absolute bottom-16 left-0 z-50 flex flex-col rounded-2xl border border-dl-border bg-dl-bg shadow-2xl overflow-hidden',
                   isCollapsed ? 'md:left-full md:ml-2 md:bottom-0 w-52' : 'w-full'
                 )}
               >
                 {/* Profile header */}
-                <div className="px-4 py-3 bg-gradient-to-b from-[#f5f7fa] to-white border-b border-[#f0f2f5]">
+                <div className="px-4 py-3 bg-dl-surface border-b border-dl-border">
                   <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#2f7eda] to-[#1a5fb4] text-[11px] font-bold text-white shadow-sm">
                       {initials}
                     </div>
                     <div className="min-w-0">
-                      <p className="truncate text-[13px] font-semibold text-[#1e2a3c]">
+                      <p className="truncate text-[13px] font-semibold text-dl-navy">
                         {user?.fullName ?? user?.nickname ?? 'User'}
                       </p>
-                      <p className="truncate text-[11px] text-[#9fa0b5]">{user?.email}</p>
+                      <p className="truncate text-[11px] text-dl-muted">{user?.email}</p>
                     </div>
                   </div>
                   <span
@@ -364,7 +386,7 @@ export function NavSidebar({
                   <Link
                     href="/profile"
                     onClick={() => { setProfileOpen(false); onClose() }}
-                    className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-[12px] font-medium text-[#555663] hover:bg-[#f5f7fa] hover:text-[#2f7eda] transition-colors"
+                    className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-[12px] font-medium text-dl-text hover:bg-dl-surface hover:text-dl-blue transition-colors"
                   >
                     <User className="h-3.5 w-3.5" />
                     Profile settings
@@ -387,7 +409,7 @@ export function NavSidebar({
             type="button"
             onClick={() => setProfileOpen(p => !p)}
             className={cn(
-              'flex w-full items-center gap-2.5 rounded-xl p-2 text-left transition-all duration-150 hover:bg-[#f5f7fa] focus:outline-none',
+              'flex w-full items-center gap-2.5 rounded-xl p-2 text-left transition-all duration-150 hover:bg-dl-surface focus:outline-none',
               isCollapsed ? 'md:justify-center' : ''
             )}
           >
@@ -395,13 +417,13 @@ export function NavSidebar({
               {initials}
             </div>
             <div className={cn('flex-1 min-w-0', isCollapsed ? 'md:hidden' : '')}>
-              <p className="truncate text-[12px] font-semibold text-[#1e2a3c]">
+              <p className="truncate text-[12px] font-semibold text-dl-navy">
                 {user?.nickname ?? user?.fullName ?? user?.email ?? '…'}
               </p>
-              <p className="truncate text-[11px] text-[#9fa0b5]">{user?.email}</p>
+              <p className="truncate text-[11px] text-dl-muted">{user?.email}</p>
             </div>
             <ChevronRight className={cn(
-              'h-3.5 w-3.5 text-[#9fa0b5] transition-transform duration-150',
+              'h-3.5 w-3.5 text-dl-muted transition-transform duration-150',
               profileOpen ? 'rotate-90' : '',
               isCollapsed ? 'md:hidden' : ''
             )} />

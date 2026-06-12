@@ -26,7 +26,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex min-h-screen bg-[#f5f7fa]">
+    <div className="flex min-h-screen bg-dl-surface dark:bg-dl-bg">
       {sidebarOpen && (
         <button
           type="button"
@@ -39,11 +39,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       {!sidebarOpen && (
         <button
           type="button"
-          className="fixed left-4 top-4 z-40 rounded-lg border border-[#c6d1d7] bg-white p-2 shadow-sm md:hidden"
+          className="fixed left-4 top-4 z-40 rounded-lg border border-dl-border bg-dl-bg p-2 shadow-sm md:hidden"
           onClick={() => setSidebarOpen(true)}
           aria-label="Open menu"
         >
-          <Menu className="h-5 w-5 text-[#555663]" />
+          <Menu className="h-5 w-5 text-dl-text" />
         </button>
       )}
 

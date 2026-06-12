@@ -56,19 +56,19 @@ export function PackageCard({ pkg, index, searchQuery = '' }: PackageCardProps) 
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: Math.min(index * 0.04, 0.5) }}
-      className="group flex flex-col gap-4 rounded-2xl border border-[#e4e8ee] bg-white p-4 transition-shadow hover:shadow-md"
+      className="group flex flex-col gap-4 rounded-2xl border border-dl-border bg-dl-bg p-4 transition-shadow hover:shadow-md"
     >
       {/* Header */}
       <div className="flex items-start gap-3">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#f5f7fa]">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-dl-surface">
           <EcosystemIcon ecosystem={pkg.ecosystem} className="h-5 min-w-5 text-[11px]" />
         </div>
         <div className="flex-1 min-w-0">
           <Link href={`/packages/${pkg.id}`}
-            className="block truncate text-[13px] font-bold text-[#1e2a3c] hover:text-[#2f7eda] transition-colors">
+            className="block truncate text-[13px] font-bold text-dl-navy hover:text-dl-blue transition-colors">
             <HighlightMatch text={pkg.name} query={searchQuery} />
           </Link>
-          <p className="truncate text-[11px] text-[#9fa0b5]">{pkg.repoName}</p>
+          <p className="truncate text-[11px] text-dl-muted">{pkg.repoName}</p>
         </div>
         {/* SPS circle */}
         <div className="flex h-10 w-10 shrink-0 flex-col items-center justify-center rounded-full text-[13px] font-bold shadow-sm"
@@ -94,7 +94,7 @@ export function PackageCard({ pkg, index, searchQuery = '' }: PackageCardProps) 
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           {pkg.scoringPending ? (
-            <span className="rounded-full bg-[#f0f2f5] px-2 py-0.5 text-[10px] font-semibold text-[#9fa0b5]">Scoring…</span>
+            <span className="rounded-full bg-dl-surface px-2 py-0.5 text-[10px] font-semibold text-dl-muted">Scoring…</span>
           ) : (
             <TierChip tier={pkg.tier} />
           )}
@@ -105,7 +105,7 @@ export function PackageCard({ pkg, index, searchQuery = '' }: PackageCardProps) 
                          <Minus          className="h-3.5 w-3.5 text-[#c6d1d7]" />
           )}
         </div>
-        <span className="text-[10px] text-[#c6d1d7]">{relTime}</span>
+        <span className="text-[10px] text-dl-border">{relTime}</span>
       </div>
     </motion.div>
   )

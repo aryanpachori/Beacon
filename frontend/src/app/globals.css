@@ -49,6 +49,38 @@
   --dl-m-critical:  #dc2626;
 }
 
+/* ═══════════════════════════════════════════════════════
+   Dark mode overrides
+   ═══════════════════════════════════════════════════════ */
+.dark {
+  --dl-bg:         #0f1117;
+  --dl-surface:    #1a1d27;
+  --dl-border:     #2a2d3e;
+  --dl-muted:      #6b7280;
+  --dl-text:       #d1d5db;
+  --dl-navy:       #e2e8f0;
+
+  --dl-blue:       #60a5fa;
+  --dl-blue-light: #93c5fd;
+  --dl-blue-dark:  #3b82f6;
+  --dl-blue-pale:  #1e3a5f;
+
+  /* Legacy aliases */
+  --dl-page:       #0f1117;
+  --dl-card:       #1a1d27;
+  --dl-nav:        #e2e8f0;
+  --dl-forest:     #d1d5db;
+  --dl-hint:       #6b7280;
+  --dl-sage:       #6b7280;
+  --dl-sage-light: #2a2d3e;
+  --dl-border-mid: #2a2d3e;
+  --dl-m-border:   #2a2d3e;
+  --dl-m-text:     #d1d5db;
+  --dl-m-muted:    #6b7280;
+  --dl-cream:      #1a1d27;
+  --dl-teal:       #60a5fa;
+}
+
 /* ─── Base reset ─── */
 * { box-sizing: border-box; }
 
@@ -111,7 +143,7 @@ body {
 
   /* ── Cards ── */
   .dash-card {
-    background: #ffffff;
+    background: var(--dl-bg);
     border: 1px solid var(--dl-border);
     border-radius: 14px;
     padding: 20px;
@@ -123,7 +155,7 @@ body {
   }
 
   .dl-card {
-    @apply rounded-[14px] border border-dl-border bg-white p-6;
+    @apply rounded-[14px] border border-dl-border bg-dl-bg p-6;
     transition: box-shadow 0.2s ease, border-color 0.2s ease;
   }
   .dl-card:hover {
@@ -133,7 +165,7 @@ body {
 
   /* Insight / stat card */
   .insight-card {
-    background: #ffffff;
+    background: var(--dl-bg);
     border: 1px solid var(--dl-border);
     border-radius: 14px;
     padding: 20px 22px;
@@ -183,13 +215,13 @@ body {
     box-shadow: 0 2px 8px rgba(47,126,218,0.3);
   }
   .btn-dash-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-dl-border bg-white px-4 py-2.5 text-sm font-medium text-dl-text transition-colors hover:bg-dl-surface hover:border-dl-muted;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-dl-border bg-dl-bg px-4 py-2.5 text-sm font-medium text-dl-text transition-colors hover:bg-dl-surface hover:border-dl-muted;
   }
 
   /* ── Form elements ── */
   .form-label { @apply mb-1.5 block text-xs font-medium text-dl-muted; }
   .form-input {
-    @apply w-full rounded-lg border border-dl-border bg-white px-3 py-2.5 text-sm text-dl-text placeholder:text-dl-muted transition-all duration-150;
+    @apply w-full rounded-lg border border-dl-border bg-dl-bg px-3 py-2.5 text-sm text-dl-text placeholder:text-dl-muted transition-all duration-150;
     outline: none;
   }
   .form-input:focus {
@@ -198,7 +230,7 @@ body {
   }
 
   .dash-input {
-    background: white;
+    background: var(--dl-bg);
     border: 1px solid var(--dl-border);
     border-radius: 8px;
     padding: 8px 12px;
@@ -414,7 +446,7 @@ body {
 /* ─── Form input state overrides ─── */
 .form-input-default {
   border: 1px solid var(--dl-border);
-  background: white;
+  background: var(--dl-bg);
   color: var(--dl-text);
   transition: border-color 0.15s, box-shadow 0.15s;
 }
@@ -459,8 +491,8 @@ body {
 }
 .animate-marquee:hover { animation-play-state: paused; }
 
-.testimonial-fade-left  { background: linear-gradient(to right, white, transparent); }
-.testimonial-fade-right { background: linear-gradient(to left, white, transparent); }
+.testimonial-fade-left  { background: linear-gradient(to right, var(--dl-bg), transparent); }
+.testimonial-fade-right { background: linear-gradient(to left, var(--dl-bg), transparent); }
 
 /* ─── Hero mesh gradient ─── */
 @keyframes hero-mesh {
