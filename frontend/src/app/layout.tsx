@@ -30,31 +30,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                var savedTheme = localStorage.getItem('theme');
-                var currentTheme = savedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-                document.documentElement.setAttribute('data-theme', currentTheme === 'dark' ? 'app' : 'light');
-              } catch (e) {}
-            `,
-          }}
-        />
-      </head>
+    <html lang="en">
+      <head />
       <body className={`${inter.variable} font-sans antialiased`}>
         {children}
         <Toaster
           position="bottom-right"
-          theme="dark"
+          theme="light"
           richColors
           toastOptions={{
             style: {
-              background: 'var(--dl-card)',
-              border: '1px solid var(--dl-border)',
-              color: 'var(--dl-forest)',
+              background: '#ffffff',
+              border: '1px solid #c6d1d7',
+              color: '#555663',
             },
           }}
         />

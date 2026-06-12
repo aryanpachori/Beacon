@@ -9,16 +9,17 @@ import {
   PREDICTED_RISK,
 } from '@/lib/dashboardData'
 
+/* Blue-scaled heatmap: 0=empty, 1=pale, 2=mid, 3=full */
 const HEATMAP_COLORS = [
-  'rgba(255,255,255,0.04)',
-  'rgba(53,133,142,0.2)',
-  'rgba(53,133,142,0.5)',
-  'var(--dl-teal)',
+  '#f0f2f5',
+  'rgba(47,126,218,0.2)',
+  'rgba(47,126,218,0.5)',
+  '#2f7eda',
 ]
 
 const cardVariants = {
-  hidden: { opacity: 0, x: 16 },
-  show: { opacity: 1, x: 0 },
+  hidden: { opacity: 0, y: 12 },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] } },
 }
 
 export function AiSignalPanel() {
@@ -34,65 +35,90 @@ export function AiSignalPanel() {
         show: { transition: { staggerChildren: 0.1 } },
       }}
     >
+      {/* Maintainer activity heatmap */}
       <motion.div variants={cardVariants} className="dash-card">
-        <p className="dash-section-label mb-3">MAINTAINER ACTIVITY</p>
+        <div className="mb-3 flex items-center justify-between">
+          <p className="dash-section-label">Maintainer Activity</p>
+          <span className="rounded-full bg-[#eaf2fd] px-2 py-0.5 text-[10px] font-semibold text-[#2f7eda]">
+            Live
+          </span>
+        </div>
         <div className="flex flex-col gap-0.5">
           {HEATMAP_GRID.map((row, rowIdx) => (
             <div key={rowIdx} className="flex gap-0.5">
               {row.map((level, colIdx) => (
                 <div
                   key={colIdx}
-                  className="h-2.5 w-2.5 rounded-sm"
+                  className="h-2.5 w-2.5 rounded-sm transition-colors duration-150"
                   style={{ backgroundColor: HEATMAP_COLORS[level] }}
                 />
               ))}
             </div>
           ))}
         </div>
-        <p className="mt-3 text-[11px] text-dl-hint">Across all monitored maintainers</p>
+        <p className="mt-3 text-[11px] text-[#9fa0b5]">Across all monitored maintainers</p>
       </motion.div>
 
+      {/* Sponsor health */}
       <motion.div variants={cardVariants} className="dash-card">
-        <p className="dash-section-label mb-3">SPONSOR HEALTH</p>
-        <div className="sponsor-bar-track mb-2">
-          <div
-            className="sponsor-bar-fill"
-            style={{ width: `${sponsorPct}%` }}
-          />
+        <p className="dash-section-label mb-3">Sponsor Health</p>
+        <div className="mb-3">
+          <div className="mb-1.5 flex items-center justify-between">
+            <span className="text-[12px] text-[#555663]">No funding</span>
+            <span className="text-[12px] font-semibold text-[#dc2626]">{Math.round(sponsorPct)}%</span>
+          </div>
+          <div className="h-2 overflow-hidden rounded-full bg-[#f0f2f5]">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-[#f97316] to-[#dc2626] transition-[width] duration-700"
+              style={{ width: `${sponsorPct}%` }}
+            />
+          </div>
         </div>
-        <p className="mb-3 text-[12px] text-dl-muted">
+        <p className="mb-3 text-[12px] text-[#9fa0b5]">
           {SPONSOR_NO_FUNDING_COUNT} packages have no sponsor funding
         </p>
-        <p className="mb-2 text-[12px] text-dl-muted">
-          3 packages lost sponsors in the last 90 days
+        <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#9fa0b5]">
+          Lost sponsors recently
         </p>
-        <ul className="space-y-1">
+        <ul className="space-y-1.5">
           {SPONSOR_LOST_RECENT.map(name => (
-            <li key={name} className="flex items-center gap-2 text-[12px] text-dl-forest">
-              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-dl-warning" />
+            <li key={name} className="flex items-center gap-2 text-[12px] text-[#555663]">
+              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#f97316]" />
               {name}
             </li>
           ))}
         </ul>
       </motion.div>
 
+      {/* Predicted risk */}
       <motion.div variants={cardVariants} className="dash-card">
-        <p className="dash-section-label mb-3">PREDICTED RISK</p>
+        <div className="mb-3 flex items-center justify-between">
+          <p className="dash-section-label">Predicted Risk</p>
+          <span className="rounded-full bg-[#fef2f2] px-2 py-0.5 text-[10px] font-semibold text-[#dc2626]">
+            AI
+          </span>
+        </div>
         <div className="space-y-4">
-          {PREDICTED_RISK.map(({ name, days }) => (
-            <div key={name}>
-              <div className="mb-1.5 flex items-baseline justify-between gap-2">
-                <span className="text-[13px] text-dl-forest">{name}</span>
-                <span className="text-[12px] text-dl-risk">→ Critical in ~{days} days</span>
+          {PREDICTED_RISK.map(({ name, days }) => {
+            const urgency = days < 20 ? '#dc2626' : days < 45 ? '#ea580c' : '#ca8a04'
+            const pct = ((90 - days) / 90) * 100
+            return (
+              <div key={name}>
+                <div className="mb-1.5 flex items-baseline justify-between gap-2">
+                  <span className="text-[13px] font-medium text-[#555663]">{name}</span>
+                  <span className="text-[11px] font-semibold" style={{ color: urgency }}>
+                    ~{days}d
+                  </span>
+                </div>
+                <div className="h-1.5 overflow-hidden rounded-full bg-[#f0f2f5]">
+                  <div
+                    className="h-full rounded-full transition-[width] duration-700"
+                    style={{ width: `${pct}%`, background: urgency }}
+                  />
+                </div>
               </div>
-              <div className="signal-bar-track">
-                <div
-                  className="signal-bar-fill-mid"
-                  style={{ width: `${((90 - days) / 90) * 100}%` }}
-                />
-              </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </motion.div>
     </motion.div>

@@ -104,9 +104,9 @@ export function getHealthyPercentage(): number {
 }
 
 export function getHealthyRingColor(pct: number): string {
-  if (pct > 80) return 'rgba(53, 133, 142, 0.85)'
-  if (pct >= 60) return 'rgba(196, 120, 32, 0.75)'
-  return 'rgba(192, 48, 48, 0.75)'
+  if (pct > 80) return '#16a34a'
+  if (pct >= 60) return '#ca8a04'
+  return '#dc2626'
 }
 
 export function getStackAvgSpsTrend14(): { day: number; avg: number }[] {

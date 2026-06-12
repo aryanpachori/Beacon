@@ -25,15 +25,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div
-      data-theme="app"
-      className="flex min-h-screen"
-      style={{ background: 'var(--dl-page)' }}
-    >
+    <div className="flex min-h-screen bg-[#f5f7fa]">
       {sidebarOpen && (
         <button
           type="button"
-          className="fixed inset-0 z-20 bg-black/50 md:hidden"
+          className="fixed inset-0 z-20 bg-black/30 backdrop-blur-sm md:hidden"
           onClick={() => setSidebarOpen(false)}
           aria-label="Close sidebar"
         />
@@ -42,11 +38,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       {!sidebarOpen && (
         <button
           type="button"
-          className="fixed left-4 top-4 z-40 rounded-lg bg-dl-nav p-2 md:hidden"
+          className="fixed left-4 top-4 z-40 rounded-lg border border-[#c6d1d7] bg-white p-2 shadow-sm md:hidden"
           onClick={() => setSidebarOpen(true)}
           aria-label="Open menu"
         >
-          <Menu className="h-5 w-5 text-dl-sage-light" />
+          <Menu className="h-5 w-5 text-[#555663]" />
         </button>
       )}
 
@@ -59,12 +55,13 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
       <main
         className={cn(
-          "ml-0 min-h-screen flex-1 transition-[margin] duration-200",
-          isCollapsed ? "md:ml-[64px]" : "md:ml-[220px]"
+          'ml-0 min-h-screen flex-1 transition-[margin] duration-300 ease-in-out',
+          isCollapsed ? 'md:ml-[64px]' : 'md:ml-[240px]'
         )}
-        style={{ background: 'var(--dl-page)' }}
       >
-        {children}
+        <div className="page-enter">
+          {children}
+        </div>
       </main>
     </div>
   )
