@@ -17,10 +17,10 @@ function spsColor(sps: number): string {
 }
 
 function spsBg(sps: number): string {
-  if (sps >= 75) return '#f0fdf4'
-  if (sps >= 60) return '#eaf2fd'
-  if (sps >= 40) return '#fefce8'
-  return '#fef2f2'
+  if (sps >= 75) return 'rgba(22, 163, 74, 0.15)'
+  if (sps >= 60) return 'rgba(47, 126, 218, 0.15)'
+  if (sps >= 40) return 'rgba(202, 138, 4, 0.15)'
+  return 'rgba(220, 38, 38, 0.15)'
 }
 
 const SIGNAL_KEYS = [
@@ -102,7 +102,7 @@ export function PackageCard({ pkg, index, searchQuery = '' }: PackageCardProps) 
           {history.length >= 2 && (
             delta > 2  ? <ArrowUpRight  className="h-3.5 w-3.5 text-green-500" /> :
             delta < -2 ? <ArrowDownRight className="h-3.5 w-3.5 text-red-500" /> :
-                         <Minus          className="h-3.5 w-3.5 text-[#c6d1d7]" />
+                         <Minus          className="h-3.5 w-3.5 text-dl-border" />
           )}
         </div>
         <span className="text-[10px] text-dl-border">{relTime}</span>

@@ -11,10 +11,10 @@ import {
 
 /* Blue-scaled heatmap: 0=empty, 1=pale, 2=mid, 3=full */
 const HEATMAP_COLORS = [
-  '#f0f2f5',
+  'var(--dl-border)',
   'rgba(47,126,218,0.2)',
   'rgba(47,126,218,0.5)',
-  '#2f7eda',
+  'var(--dl-blue)',
 ]
 
 const cardVariants = {
@@ -39,7 +39,7 @@ export function AiSignalPanel() {
       <motion.div variants={cardVariants} className="dash-card">
         <div className="mb-3 flex items-center justify-between">
           <p className="dash-section-label">Maintainer Activity</p>
-          <span className="rounded-full bg-[#eaf2fd] px-2 py-0.5 text-[10px] font-semibold text-[#2f7eda]">
+          <span className="rounded-full bg-dl-blue-pale px-2 py-0.5 text-[10px] font-semibold text-dl-blue">
             Live
           </span>
         </div>
@@ -56,7 +56,7 @@ export function AiSignalPanel() {
             </div>
           ))}
         </div>
-        <p className="mt-3 text-[11px] text-[#9fa0b5]">Across all monitored maintainers</p>
+        <p className="mt-3 text-[11px] text-dl-muted">Across all monitored maintainers</p>
       </motion.div>
 
       {/* Sponsor health */}
@@ -64,25 +64,25 @@ export function AiSignalPanel() {
         <p className="dash-section-label mb-3">Sponsor Health</p>
         <div className="mb-3">
           <div className="mb-1.5 flex items-center justify-between">
-            <span className="text-[12px] text-[#555663]">No funding</span>
+            <span className="text-[12px] text-dl-text">No funding</span>
             <span className="text-[12px] font-semibold text-[#dc2626]">{Math.round(sponsorPct)}%</span>
           </div>
-          <div className="h-2 overflow-hidden rounded-full bg-[#f0f2f5]">
+          <div className="progress-track">
             <div
               className="h-full rounded-full bg-gradient-to-r from-[#f97316] to-[#dc2626] transition-[width] duration-700"
               style={{ width: `${sponsorPct}%` }}
             />
           </div>
         </div>
-        <p className="mb-3 text-[12px] text-[#9fa0b5]">
+        <p className="mb-3 text-[12px] text-dl-muted">
           {SPONSOR_NO_FUNDING_COUNT} packages have no sponsor funding
         </p>
-        <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#9fa0b5]">
+        <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-dl-muted">
           Lost sponsors recently
         </p>
         <ul className="space-y-1.5">
           {SPONSOR_LOST_RECENT.map(name => (
-            <li key={name} className="flex items-center gap-2 text-[12px] text-[#555663]">
+            <li key={name} className="flex items-center gap-2 text-[12px] text-dl-text">
               <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#f97316]" />
               {name}
             </li>
@@ -94,7 +94,7 @@ export function AiSignalPanel() {
       <motion.div variants={cardVariants} className="dash-card">
         <div className="mb-3 flex items-center justify-between">
           <p className="dash-section-label">Predicted Risk</p>
-          <span className="rounded-full bg-[#fef2f2] px-2 py-0.5 text-[10px] font-semibold text-[#dc2626]">
+          <span className="rounded-full bg-red-500/10 px-2 py-0.5 text-[10px] font-semibold text-red-500">
             AI
           </span>
         </div>
@@ -105,12 +105,12 @@ export function AiSignalPanel() {
             return (
               <div key={name}>
                 <div className="mb-1.5 flex items-baseline justify-between gap-2">
-                  <span className="text-[13px] font-medium text-[#555663]">{name}</span>
+                  <span className="text-[13px] font-medium text-dl-text">{name}</span>
                   <span className="text-[11px] font-semibold" style={{ color: urgency }}>
                     ~{days}d
                   </span>
                 </div>
-                <div className="h-1.5 overflow-hidden rounded-full bg-[#f0f2f5]">
+                <div className="progress-track">
                   <div
                     className="h-full rounded-full transition-[width] duration-700"
                     style={{ width: `${pct}%`, background: urgency }}

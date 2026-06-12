@@ -134,7 +134,7 @@ export default function MaintainersPage() {
                 <div className="flex items-start gap-3">
                   {/* Avatar */}
                   {m.avatarUrl ? (
-                    <Image src={m.avatarUrl} alt={m.displayName} width={40} height={40} className="h-10 w-10 rounded-full border border-[#e4e8ee]" />
+                    <Image src={m.avatarUrl} alt={m.displayName} width={40} height={40} className="h-10 w-10 rounded-full border border-dl-border" />
                   ) : (
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#2f7eda] to-[#1a5fb4] text-[12px] font-bold text-white">
                       {initials}

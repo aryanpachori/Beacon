@@ -16,19 +16,11 @@ import { useAppData } from '@/context/AppDataContext'
 import { getUnreadCount } from '@/lib/alertsData'
 import { cn } from '@/lib/utils'
 
-/* ── Section icon color map ──────────────────────────────────────────── */
-const SECTION_COLORS: Record<string, { icon: string; bg: string }> = {
-  Overview:   { icon: '#2f7eda', bg: '#eaf2fd' },
-  Monitoring: { icon: '#8b5cf6', bg: '#f5f0ff' },
-  People:     { icon: '#0ea5e9', bg: '#f0f9ff' },
-  System:     { icon: '#555663', bg: '#f0f2f5' },
-}
-
 /* ── Plan label/color ────────────────────────────────────────────────── */
 function planChip(plan: string) {
-  if (plan === 'pro')  return { label: 'Pro',  bg: '#eaf2fd', text: '#2f7eda' }
-  if (plan === 'team') return { label: 'Team', bg: '#f0fdf4', text: '#16a34a' }
-  return                      { label: 'Free', bg: '#f0f2f5', text: '#9fa0b5' }
+  if (plan === 'pro')  return { label: 'Pro',  bg: 'rgba(47,126,218,0.15)', text: 'var(--dl-blue)' }
+  if (plan === 'team') return { label: 'Team', bg: 'rgba(22,163,74,0.15)', text: 'var(--dl-healthy)' }
+  return                      { label: 'Free', bg: 'var(--dl-surface)', text: 'var(--dl-muted)' }
 }
 
 const NAV_SECTIONS = [
@@ -86,18 +78,26 @@ export function NavSidebar({
   const { user, alerts, signOut } = useAppData()
   const alertCount = getUnreadCount(alerts)
 
-  const [theme, toggleTheme] = useTheme()
+  const [theme, toggleTheme, themeMounted] = useTheme()
   const [profileOpen, setProfileOpen] = useState(false)
   const profileRef = useRef<HTMLDivElement>(null)
 
-  // Track which sections are open (persisted to localStorage)
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>(() => {
-    const saved = typeof window !== 'undefined' ? localStorage.getItem('dl_nav_sections') : null
-    if (saved) {
-      try { return JSON.parse(saved) } catch { /* ignore */ }
+  const defaultOpenSections = Object.fromEntries(
+    NAV_SECTIONS.map((s) => [s.label, s.defaultOpen])
+  )
+
+  // Defaults on SSR; hydrate from localStorage after mount to avoid mismatch
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>(defaultOpenSections)
+
+  useEffect(() => {
+    const saved = localStorage.getItem('dl_nav_sections')
+    if (!saved) return
+    try {
+      setOpenSections(JSON.parse(saved))
+    } catch {
+      /* ignore */
     }
-    return Object.fromEntries(NAV_SECTIONS.map(s => [s.label, s.defaultOpen]))
-  })
+  }, [])
 
   function toggleSection(label: string) {
     setOpenSections(prev => {
@@ -148,7 +148,7 @@ export function NavSidebar({
             type="button"
             onClick={onToggleCollapse}
             className={cn(
-              'flex items-center justify-center rounded-lg p-1.5 text-dl-muted hover:bg-[#f0f5ff] hover:text-[#2f7eda] transition-all duration-150 focus:outline-none',
+              'flex items-center justify-center rounded-lg p-1.5 text-dl-muted hover:bg-dl-surface hover:text-dl-blue transition-all duration-150 focus:outline-none',
               isCollapsed ? 'md:mt-0' : 'hidden md:flex'
             )}
             aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
@@ -168,7 +168,6 @@ export function NavSidebar({
       )}>
         {NAV_SECTIONS.map(({ label, items }) => {
           const sectionOpen = openSections[label] !== false
-          const colors = SECTION_COLORS[label] ?? SECTION_COLORS.System
 
           return (
             <div key={label} className="flex flex-col gap-0.5">
@@ -179,11 +178,11 @@ export function NavSidebar({
                   onClick={() => toggleSection(label)}
                   className="group mb-1 flex w-full items-center justify-between px-2 py-0.5 focus:outline-none"
                 >
-                  <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-dl-border group-hover:text-dl-muted transition-colors">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-dl-muted group-hover:text-dl-text transition-colors">
                     {label}
                   </span>
                   <ChevronDown className={cn(
-                    'h-3 w-3 text-dl-border transition-transform duration-200 group-hover:text-dl-muted',
+                    'h-3 w-3 text-dl-muted transition-transform duration-200 group-hover:text-dl-text',
                     sectionOpen ? 'rotate-0' : '-rotate-90'
                   )} />
                 </button>
@@ -215,7 +214,7 @@ export function NavSidebar({
                             'group relative flex items-center gap-2.5 rounded-xl py-2 text-[13px] font-medium transition-all duration-150',
                             active
                               ? 'bg-dl-blue-pale text-dl-blue'
-                              : 'text-dl-muted hover:bg-dl-surface hover:text-dl-text',
+                              : 'text-dl-text/80 hover:bg-dl-surface hover:text-dl-navy',
                             isCollapsed ? 'md:justify-center md:px-0 md:py-2.5' : 'px-2.5',
                             soon ? 'cursor-not-allowed' : ''
                           )}
@@ -230,15 +229,13 @@ export function NavSidebar({
                             'relative flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-all duration-150',
                             active
                               ? 'bg-dl-blue/12'
-                              : `group-hover:bg-[${colors.bg}]`
+                              : 'bg-transparent group-hover:bg-dl-surface'
                           )}
-                            style={!active ? undefined : { background: `${colors.bg}` }}
                           >
                             <Icon className={cn(
                               'h-3.5 w-3.5 transition-colors',
-                              active ? 'text-[#2f7eda]' : 'text-dl-muted group-hover:text-dl-text'
+                              active ? 'text-dl-blue' : 'text-dl-muted group-hover:text-dl-text'
                             )}
-                              style={active ? { color: colors.icon } : undefined}
                             />
                             {/* Collapsed alert dot */}
                             {showBadge && alertCount > 0 && isCollapsed && (
@@ -290,9 +287,9 @@ export function NavSidebar({
       {!isCollapsed && (
         <div className="px-4 pb-2 flex items-center gap-2">
           <div className="flex flex-1 items-center gap-2 rounded-lg border border-dl-border bg-dl-surface px-3 py-2">
-            <Command className="h-3 w-3 shrink-0 text-dl-border" />
-            <span className="flex-1 text-[11px] text-dl-border">Quick search</span>
-            <span className="flex items-center gap-0.5 rounded bg-dl-bg px-1 py-0.5 text-[10px] font-bold text-dl-muted shadow-sm border border-dl-border">
+            <Command className="h-3 w-3 shrink-0 text-dl-muted" />
+            <span className="flex-1 text-[11px] text-dl-muted">Quick search</span>
+            <span className="flex items-center gap-0.5 rounded bg-dl-surface px-1 py-0.5 text-[10px] font-bold text-dl-text shadow-sm border border-dl-border">
               ⌘K
             </span>
           </div>
@@ -302,7 +299,7 @@ export function NavSidebar({
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-dl-border bg-dl-surface text-dl-muted transition-all hover:border-dl-blue hover:text-dl-blue"
             aria-label="Toggle dark mode"
           >
-            {theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+            {themeMounted && theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
           </button>
         </div>
       )}
@@ -314,7 +311,7 @@ export function NavSidebar({
             className="flex h-8 w-8 items-center justify-center rounded-lg border border-dl-border bg-dl-surface text-dl-muted transition-all hover:border-dl-blue hover:text-dl-blue"
             aria-label="Toggle dark mode"
           >
-            {theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+            {themeMounted && theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
           </button>
         </div>
       )}
@@ -328,7 +325,7 @@ export function NavSidebar({
           href="mailto:support@driftlogg.com"
           title={isCollapsed ? 'Help & Support' : undefined}
           className={cn(
-            'flex items-center gap-2.5 rounded-xl py-2 text-[12px] font-medium text-dl-muted hover:bg-dl-surface hover:text-dl-text transition-all duration-150 dark:hover:bg-dl-surface',
+            'flex items-center gap-2.5 rounded-xl py-2 text-[12px] font-medium text-dl-muted hover:bg-dl-surface hover:text-dl-text transition-all duration-150',
             isCollapsed ? 'md:justify-center md:px-0' : 'px-2.5'
           )}
         >
@@ -394,7 +391,7 @@ export function NavSidebar({
                   <button
                     type="button"
                     onClick={() => { setProfileOpen(false); onClose(); signOut() }}
-                    className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-[12px] font-medium text-red-500 hover:bg-red-50 transition-colors"
+                    className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-[12px] font-medium text-red-500 hover:bg-red-500/10 transition-colors"
                   >
                     <LogOut className="h-3.5 w-3.5" />
                     Sign out

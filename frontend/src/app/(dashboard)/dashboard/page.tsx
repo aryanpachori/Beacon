@@ -20,9 +20,9 @@ function planLabel(plan: string) {
 }
 
 function planColor(plan: string) {
-  if (plan === 'pro') return { bg: '#eaf2fd', text: '#2f7eda', dot: '#2f7eda' }
-  if (plan === 'team') return { bg: '#f0fdf4', text: '#16a34a', dot: '#16a34a' }
-  return { bg: '#f5f7fa', text: '#9fa0b5', dot: '#9fa0b5' }
+  if (plan === 'pro') return { bg: 'rgba(47,126,218,0.2)', text: '#93c5fd', dot: '#60a5fa' }
+  if (plan === 'team') return { bg: 'rgba(22,163,74,0.2)', text: '#86efac', dot: '#22c55e' }
+  return { bg: 'rgba(255,255,255,0.1)', text: 'rgba(255,255,255,0.7)', dot: 'rgba(255,255,255,0.5)' }
 }
 
 
@@ -43,8 +43,8 @@ export default function DashboardPage() {
     return (
       <div className="app-page flex min-h-[50vh] items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="h-8 w-8 rounded-full border-2 border-[#2f7eda] border-t-transparent animate-spin" />
-          <p className="text-sm text-[#9fa0b5]">Loading your stack…</p>
+          <div className="h-8 w-8 rounded-full border-2 border-dl-blue border-t-transparent animate-spin" />
+          <p className="text-sm text-dl-muted">Loading your stack…</p>
         </div>
       </div>
     )
@@ -132,11 +132,11 @@ export default function DashboardPage() {
 
       {packages.length === 0 ? (
         <div className="dash-card flex flex-col items-center justify-center px-6 py-16 text-center">
-          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#eaf2fd]">
-            <PackageIcon className="h-7 w-7 text-[#2f7eda]" />
+          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-dl-blue-pale">
+            <PackageIcon className="h-7 w-7 text-dl-blue" />
           </div>
-          <p className="text-[15px] font-semibold text-[#1e2a3c]">No packages yet</p>
-          <p className="mt-2 max-w-md text-sm text-[#9fa0b5]">
+          <p className="text-[15px] font-semibold text-dl-navy">No packages yet</p>
+          <p className="mt-2 max-w-md text-sm text-dl-muted">
             Complete GitHub onboarding to scan your repos. Packages appear here after signal
             collection — SPS scores arrive once the intelligence service finishes scoring.
           </p>

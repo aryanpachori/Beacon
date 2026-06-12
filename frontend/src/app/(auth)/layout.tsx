@@ -41,7 +41,7 @@ const STATS = [
 ]
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
-  const [theme, toggleTheme] = useTheme()
+  const [theme, toggleTheme, themeMounted] = useTheme()
   const { fact, loading, refresh } = useFunFact()
 
   return (
@@ -160,7 +160,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             className="flex h-8 w-8 items-center justify-center rounded-lg border border-dl-border bg-dl-surface text-dl-muted transition-all hover:border-dl-blue hover:text-dl-blue"
             aria-label="Toggle dark mode"
           >
-            {theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+            {themeMounted && theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
           </button>
         </header>
         <div className="flex flex-1 flex-col">{children}</div>

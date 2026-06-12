@@ -83,8 +83,8 @@ export default function PackagesPage() {
     return (
       <div className="app-page flex min-h-[50vh] items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="h-7 w-7 animate-spin rounded-full border-2 border-[#2f7eda] border-t-transparent" />
-          <p className="text-sm text-[#9fa0b5]">Loading packages…</p>
+          <div className="h-7 w-7 animate-spin rounded-full border-2 border-dl-blue border-t-transparent" />
+          <p className="text-sm text-dl-muted">Loading packages…</p>
         </div>
       </div>
     )
@@ -94,7 +94,7 @@ export default function PackagesPage() {
     return (
       <div className="app-page flex min-h-[50vh] flex-col items-center justify-center gap-3">
         <p className="text-sm text-red-500">Could not load packages.</p>
-        <button type="button" onClick={refresh} className="flex items-center gap-1.5 rounded-xl border border-[#e4e8ee] px-4 py-2 text-[13px] font-medium text-[#555663] hover:bg-[#f5f7fa]">
+        <button type="button" onClick={refresh} className="flex items-center gap-1.5 rounded-xl border border-dl-border px-4 py-2 text-[13px] font-medium text-dl-text hover:bg-dl-surface">
           <RefreshCw className="h-3.5 w-3.5" /> Try again
         </button>
       </div>
@@ -112,7 +112,7 @@ export default function PackagesPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <button type="button" onClick={refresh} className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#e4e8ee] text-[#9fa0b5] hover:bg-[#f5f7fa] hover:text-[#555663] transition-colors">
+          <button type="button" onClick={refresh} className="flex h-8 w-8 items-center justify-center rounded-xl border border-dl-border text-dl-muted hover:bg-dl-surface hover:text-dl-text transition-colors">
             <RefreshCw className="h-3.5 w-3.5" />
           </button>
           <NotificationBell />
@@ -120,13 +120,13 @@ export default function PackagesPage() {
       </div>
 
       {packages.length === 0 && repos.length === 0 ? (
-        <div className="flex flex-col items-center rounded-2xl border border-[#e4e8ee] bg-white px-6 py-20 text-center">
-          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#eaf2fd]">
-            <PackageIcon className="h-7 w-7 text-[#2f7eda]" />
+        <div className="flex flex-col items-center rounded-2xl border border-dl-border bg-dl-bg px-6 py-20 text-center">
+          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-dl-blue-pale">
+            <PackageIcon className="h-7 w-7 text-dl-blue" />
           </div>
-          <p className="text-[15px] font-semibold text-[#1e2a3c]">No packages monitored yet</p>
-          <p className="mt-1.5 max-w-sm text-sm text-[#9fa0b5]">Connect a repository to start monitoring your dependencies.</p>
-          <Link href="/repos" className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#2f7eda] px-5 py-2.5 text-[13px] font-semibold text-white hover:bg-[#1a5fb4] transition-colors">
+          <p className="text-[15px] font-semibold text-dl-navy">No packages monitored yet</p>
+          <p className="mt-1.5 max-w-sm text-sm text-dl-muted">Connect a repository to start monitoring your dependencies.</p>
+          <Link href="/repos" className="mt-5 inline-flex items-center gap-2 rounded-xl bg-dl-blue px-5 py-2.5 text-[13px] font-semibold text-white hover:bg-dl-blue-dark transition-colors">
             Connect a repository
           </Link>
         </div>
@@ -136,34 +136,34 @@ export default function PackagesPage() {
           <div className="mb-4 flex flex-wrap items-center gap-2">
             {tierCounts.critical > 0 && (
               <button onClick={() => setFilter(filter === 'critical' ? 'all' : 'critical')}
-                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'critical' ? 'bg-red-500 text-white' : 'bg-[#fef2f2] text-red-500 hover:bg-red-100'}`}>
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'critical' ? 'bg-red-500 text-white' : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'}`}>
                 <span className="h-1.5 w-1.5 rounded-full bg-current" />
                 {tierCounts.critical} critical
               </button>
             )}
             {tierCounts['at-risk'] > 0 && (
               <button onClick={() => setFilter(filter === 'at-risk' ? 'all' : 'at-risk')}
-                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'at-risk' ? 'bg-orange-500 text-white' : 'bg-[#fff7ed] text-orange-500 hover:bg-orange-100'}`}>
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'at-risk' ? 'bg-orange-500 text-white' : 'bg-orange-500/10 text-orange-500 hover:bg-orange-500/20'}`}>
                 <span className="h-1.5 w-1.5 rounded-full bg-current" />
                 {tierCounts['at-risk']} at-risk
               </button>
             )}
             {tierCounts.watch > 0 && (
               <button onClick={() => setFilter(filter === 'watch' ? 'all' : 'watch')}
-                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'watch' ? 'bg-yellow-500 text-white' : 'bg-[#fefce8] text-yellow-600 hover:bg-yellow-100'}`}>
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'watch' ? 'bg-yellow-500 text-white' : 'bg-yellow-500/10 text-yellow-600 hover:bg-yellow-500/20'}`}>
                 <span className="h-1.5 w-1.5 rounded-full bg-current" />
                 {tierCounts.watch} watch
               </button>
             )}
             {tierCounts.healthy > 0 && (
               <button onClick={() => setFilter(filter === 'healthy' ? 'all' : 'healthy')}
-                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'healthy' ? 'bg-green-500 text-white' : 'bg-[#f0fdf4] text-green-600 hover:bg-green-100'}`}>
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'healthy' ? 'bg-green-500 text-white' : 'bg-green-500/10 text-green-600 hover:bg-green-500/20'}`}>
                 <span className="h-1.5 w-1.5 rounded-full bg-current" />
                 {tierCounts.healthy} healthy
               </button>
             )}
             {avg !== null && (
-              <div className="flex items-center gap-1.5 rounded-xl bg-[#eaf2fd] px-3 py-1.5 text-[12px] font-semibold text-[#2f7eda]">
+              <div className="flex items-center gap-1.5 rounded-xl bg-dl-blue-pale px-3 py-1.5 text-[12px] font-semibold text-dl-blue">
                 Avg SPS: {avg}
               </div>
             )}
@@ -179,8 +179,8 @@ export default function PackagesPage() {
                   onClick={() => setFilter(t.value)}
                   className={`flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${
                     filter === t.value
-                      ? 'bg-[#1e2a3c] text-white'
-                      : 'bg-white border border-[#e4e8ee] text-[#9fa0b5] hover:text-[#555663]'
+                      ? 'bg-dl-navy text-dl-bg'
+                      : 'border border-dl-border bg-dl-bg text-dl-muted hover:text-dl-text'
                   }`}
                 >
                   {t.color && filter !== t.value && (
@@ -195,24 +195,24 @@ export default function PackagesPage() {
             <div className="flex items-center gap-2">
               {/* Search */}
               <div className="relative flex items-center">
-                <Search className="pointer-events-none absolute left-2.5 h-3.5 w-3.5 text-[#c6d1d7]" />
+                <Search className="pointer-events-none absolute left-2.5 h-3.5 w-3.5 text-dl-border" />
                 <input
                   ref={searchRef}
                   type="text"
                   placeholder="Search packages…"
                   value={search}
                   onChange={e => setSearch(e.target.value)}
-                  className="h-8 w-[180px] rounded-xl border border-[#e4e8ee] bg-white pl-8 pr-3 text-[12px] text-[#1e2a3c] placeholder-[#c6d1d7] outline-none transition-[width] focus:border-[#2f7eda]/40 focus:ring-2 focus:ring-[#2f7eda]/10 focus:w-[240px]"
+                  className="h-8 w-[180px] rounded-xl border border-dl-border bg-dl-bg pl-8 pr-3 text-[12px] text-dl-navy placeholder:text-dl-border outline-none transition-[width] focus:border-dl-blue/40 focus:ring-2 focus:ring-dl-blue/10 focus:w-[240px]"
                 />
               </div>
 
               {/* Sort */}
               <div className="relative flex items-center">
-                <ArrowUpDown className="pointer-events-none absolute left-2.5 h-3.5 w-3.5 text-[#c6d1d7]" />
+                <ArrowUpDown className="pointer-events-none absolute left-2.5 h-3.5 w-3.5 text-dl-border" />
                 <select
                   value={sort}
                   onChange={e => setSort(e.target.value as SortKey)}
-                  className="h-8 appearance-none rounded-xl border border-[#e4e8ee] bg-white pl-8 pr-6 text-[12px] text-[#555663] outline-none focus:border-[#2f7eda]/40"
+                  className="h-8 appearance-none rounded-xl border border-dl-border bg-dl-bg pl-8 pr-6 text-[12px] text-dl-text outline-none focus:border-dl-blue/40"
                 >
                   <option value="sps_asc">SPS ↑</option>
                   <option value="sps_desc">SPS ↓</option>
@@ -222,16 +222,16 @@ export default function PackagesPage() {
               </div>
 
               {/* View toggle */}
-              <div className="flex rounded-xl border border-[#e4e8ee] overflow-hidden">
+              <div className="flex overflow-hidden rounded-xl border border-dl-border">
                 <button
                   onClick={() => setView('list')}
-                  className={`flex h-8 w-8 items-center justify-center transition-colors ${view === 'list' ? 'bg-[#1e2a3c] text-white' : 'bg-white text-[#9fa0b5] hover:bg-[#f5f7fa]'}`}
+                  className={`flex h-8 w-8 items-center justify-center transition-colors ${view === 'list' ? 'bg-dl-navy text-dl-bg' : 'bg-dl-bg text-dl-muted hover:bg-dl-surface'}`}
                 >
                   <LayoutList className="h-3.5 w-3.5" />
                 </button>
                 <button
                   onClick={() => setView('grid')}
-                  className={`flex h-8 w-8 items-center justify-center transition-colors ${view === 'grid' ? 'bg-[#1e2a3c] text-white' : 'bg-white text-[#9fa0b5] hover:bg-[#f5f7fa]'}`}
+                  className={`flex h-8 w-8 items-center justify-center transition-colors ${view === 'grid' ? 'bg-dl-navy text-dl-bg' : 'bg-dl-bg text-dl-muted hover:bg-dl-surface'}`}
                 >
                   <LayoutGrid className="h-3.5 w-3.5" />
                 </button>
@@ -241,31 +241,31 @@ export default function PackagesPage() {
 
           {/* ── Column header (list view only) ── */}
           {view === 'list' && visible.length > 0 && (
-            <div className="mb-0 hidden items-center gap-4 rounded-t-2xl border border-b-0 border-[#e4e8ee] bg-[#f5f7fa] px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.1em] text-[#c6d1d7] md:flex">
+            <div className="dash-table-header mb-0 hidden items-center gap-4 rounded-t-2xl border border-b-0 border-dl-border px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.1em] text-dl-muted md:flex">
               <div className="w-[220px] shrink-0">Package</div>
               <div className="hidden w-[120px] shrink-0 sm:block">Repo</div>
               <div className="hidden w-[120px] shrink-0 md:block">Maintainer</div>
-              <div className="hidden shrink-0 lg:block">Signals</div>
-              <div className="flex-1" />
-              <div className="w-10 text-center">SPS</div>
-              <div className="hidden w-8 sm:block">Trend</div>
-              <div className="hidden w-20 md:block">Tier</div>
-              <div className="w-20 text-right">Updated</div>
+              <div className="hidden w-[72px] shrink-0 lg:block">Signals</div>
+              <div className="min-w-0 flex-1" />
+              <div className="w-10 shrink-0 text-center">SPS</div>
+              <div className="hidden w-10 shrink-0 text-center sm:block">Trend</div>
+              <div className="hidden w-20 shrink-0 md:block">Tier</div>
+              <div className="w-[88px] shrink-0 text-right">Updated</div>
             </div>
           )}
 
           {/* ── Package rows / cards ── */}
           {visible.length === 0 ? (
-            <div className="flex flex-col items-center rounded-2xl border border-[#e4e8ee] bg-white py-14 text-center">
-              <PackageIcon className="mb-3 h-8 w-8 text-[#c6d1d7]" />
-              <p className="text-[14px] font-semibold text-[#1e2a3c]">No packages found</p>
+            <div className="flex flex-col items-center rounded-2xl border border-dl-border bg-dl-bg py-14 text-center">
+              <PackageIcon className="mb-3 h-8 w-8 text-dl-border" />
+              <p className="text-[14px] font-semibold text-dl-navy">No packages found</p>
               <button onClick={() => { setFilter('all'); setSearch('') }}
-                className="mt-2 text-[12px] text-[#2f7eda] hover:underline">
+                className="mt-2 text-[12px] text-dl-blue hover:underline">
                 Clear filters
               </button>
             </div>
           ) : view === 'list' ? (
-            <div className="overflow-hidden rounded-b-2xl rounded-tr-2xl border border-[#e4e8ee] bg-white md:rounded-t-none">
+            <div className="overflow-hidden rounded-b-2xl rounded-tr-2xl border border-dl-border bg-dl-bg md:rounded-t-none">
               {visible.map((pkg, i) => (
                 <PackageListRow key={pkg.id} pkg={pkg} index={i} searchQuery={debouncedSearch} />
               ))}

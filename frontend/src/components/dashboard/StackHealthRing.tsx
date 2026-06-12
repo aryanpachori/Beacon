@@ -33,7 +33,7 @@ export function StackHealthRing({ percentage, strokeColor }: StackHealthRingProp
           cy={SIZE / 2}
           r={RADIUS}
           fill="none"
-          stroke="#e4e8ee"
+          stroke="var(--dl-border)"
           strokeWidth={STROKE}
         />
         <motion.circle
@@ -52,7 +52,7 @@ export function StackHealthRing({ percentage, strokeColor }: StackHealthRingProp
         <span className="text-[22px] font-medium tabular-nums" style={{ color: strokeColor }}>
           {percentage}%
         </span>
-        <span className="text-[11px] text-[#9fa0b5]">healthy</span>
+        <span className="text-[11px] text-dl-muted">healthy</span>
       </div>
     </div>
   )

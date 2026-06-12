@@ -7,7 +7,8 @@ import { EcosystemIcon } from '@/components/ui/EcosystemIcon'
 import { TierChip } from '@/components/ui/TierChip'
 import { HighlightMatch } from '@/components/ui/HighlightMatch'
 import { useRelativeTime } from '@/hooks/useRelativeTime'
-import { ArrowUpRight, ArrowDownRight, Minus, AlertTriangle, ChevronRight } from 'lucide-react'
+import { Minus, AlertTriangle, ChevronRight } from 'lucide-react'
+import { SparklineBar } from '@/components/ui/SparklineBar'
 import { cn } from '@/lib/utils'
 
 /* ── SPS color util ──────────────────────────────────────────────────── */
@@ -19,10 +20,10 @@ function spsColor(sps: number): string {
 }
 
 function spsBg(sps: number): string {
-  if (sps >= 75) return '#f0fdf4'
-  if (sps >= 60) return '#eaf2fd'
-  if (sps >= 40) return '#fefce8'
-  return '#fef2f2'
+  if (sps >= 75) return 'rgba(22, 163, 74, 0.15)'
+  if (sps >= 60) return 'rgba(47, 126, 218, 0.15)'
+  if (sps >= 40) return 'rgba(202, 138, 4, 0.15)'
+  return 'rgba(220, 38, 38, 0.15)'
 }
 
 /* ── Signal mini-bars ────────────────────────────────────────────────── */
@@ -71,15 +72,10 @@ function SignalMiniBar({ pkg }: { pkg: Package }) {
   )
 }
 
-/* ── Trend indicator ─────────────────────────────────────────────────── */
-function TrendIndicator({ history }: { history: number[] }) {
-  if (history.length < 2) return <Minus className="h-3.5 w-3.5 text-dl-border" />
-  const last = history[history.length - 1]!
-  const prev = history[history.length - 2]!
-  const delta = last - prev
-  if (delta > 2)  return <ArrowUpRight className="h-3.5 w-3.5 text-green-500" />
-  if (delta < -2) return <ArrowDownRight className="h-3.5 w-3.5 text-red-500" />
-  return <Minus className="h-3.5 w-3.5 text-dl-border" />
+function trendData(pkg: Package): number[] {
+  if (pkg.spsHistory.length > 0) return pkg.spsHistory.slice(-5)
+  if (!pkg.scoringPending && pkg.sps > 0) return Array(5).fill(pkg.sps)
+  return []
 }
 
 /* ── Maintainer initials ─────────────────────────────────────────────── */
@@ -101,7 +97,7 @@ function MaintainerAvatar({ pkg }: { pkg: Package }) {
         <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-[#9fa0b5] to-[#555663] text-[9px] font-bold text-white">
           {initials}
         </div>
-        <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full border border-white" style={{ background: dotColor }} />
+        <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full border border-dl-bg" style={{ background: dotColor }} />
       </div>
       <span className="max-w-[80px] truncate text-[11px] text-dl-muted">{label}</span>
     </div>
@@ -118,6 +114,7 @@ export function PackageListRow({ pkg, index, searchQuery = '' }: PackageListRowP
   const relTime = useRelativeTime(pkg.lastUpdated)
   const color = spsColor(pkg.scoringPending ? 50 : pkg.sps)
   const bg    = spsBg(pkg.scoringPending ? 50 : pkg.sps)
+  const trend = trendData(pkg)
 
   return (
     <motion.div
@@ -141,7 +138,7 @@ export function PackageListRow({ pkg, index, searchQuery = '' }: PackageListRowP
           <div className="flex items-center gap-1.5 mt-0.5">
             <code className="text-[10px] text-dl-muted font-mono">{pkg.version}</code>
             {pkg.isDeprecated && (
-              <span className="flex items-center gap-0.5 rounded bg-red-50 px-1 py-0.5 text-[9px] font-bold uppercase text-red-500">
+              <span className="flex items-center gap-0.5 rounded bg-red-500/10 px-1 py-0.5 text-[9px] font-bold uppercase text-red-500">
                 <AlertTriangle className="h-2.5 w-2.5" /> deprecated
               </span>
             )}
@@ -160,7 +157,7 @@ export function PackageListRow({ pkg, index, searchQuery = '' }: PackageListRowP
       </div>
 
       {/* Signal bars */}
-      <div className="hidden shrink-0 lg:flex items-center">
+      <div className="hidden w-[72px] shrink-0 items-center lg:flex">
         {pkg.scoringPending ? (
           <span className="text-[11px] text-dl-border">Scoring…</span>
         ) : (
@@ -169,23 +166,29 @@ export function PackageListRow({ pkg, index, searchQuery = '' }: PackageListRowP
       </div>
 
       {/* Spacer */}
-      <div className="flex-1" />
+      <div className="min-w-0 flex-1" />
 
-      {/* SPS badge (prominent circle) */}
-      <div
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[13px] font-bold shadow-sm"
-        style={{ background: bg, color }}
-      >
-        {pkg.scoringPending ? '…' : pkg.sps}
+      {/* SPS badge */}
+      <div className="flex w-10 shrink-0 items-center justify-center">
+        <div
+          className="flex h-10 w-10 items-center justify-center rounded-full text-[13px] font-bold shadow-sm"
+          style={{ background: bg, color }}
+        >
+          {pkg.scoringPending ? '…' : pkg.sps}
+        </div>
       </div>
 
-      {/* Trend arrow */}
-      <div className="hidden shrink-0 sm:flex">
-        <TrendIndicator history={pkg.spsHistory} />
+      {/* Trend sparkline */}
+      <div className="hidden w-10 shrink-0 items-center justify-center sm:flex">
+        {trend.length > 0 ? (
+          <SparklineBar data={trend} tier={pkg.tier} />
+        ) : (
+          <Minus className="h-3.5 w-3.5 text-dl-border" />
+        )}
       </div>
 
       {/* Tier chip */}
-      <div className="hidden shrink-0 md:block">
+      <div className="hidden w-20 shrink-0 items-center md:flex">
         {pkg.scoringPending ? (
           <span className="rounded-full bg-dl-surface px-2 py-1 text-[10px] font-semibold text-dl-muted">Pending</span>
         ) : (
@@ -193,13 +196,13 @@ export function PackageListRow({ pkg, index, searchQuery = '' }: PackageListRowP
         )}
       </div>
 
-      {/* Time + link */}
-      <div className="flex shrink-0 items-center gap-2">
-        <span className="hidden text-[11px] text-dl-muted sm:block">{relTime}</span>
+      {/* Updated + hover link */}
+      <div className="relative w-[88px] shrink-0">
+        <span className="block truncate pr-7 text-right text-[11px] text-dl-muted">{relTime}</span>
         <Link
           href={`/packages/${pkg.id}`}
           className={cn(
-            'flex h-7 w-7 items-center justify-center rounded-lg border border-dl-border text-dl-muted',
+            'absolute right-0 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-lg border border-dl-border text-dl-muted',
             'opacity-0 transition-all group-hover:opacity-100 hover:border-dl-blue/30 hover:bg-dl-blue-pale hover:text-dl-blue'
           )}
         >

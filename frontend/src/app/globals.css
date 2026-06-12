@@ -47,17 +47,20 @@
   --dl-m-watch:     #ca8a04;
   --dl-m-risk:      #ea580c;
   --dl-m-critical:  #dc2626;
+  --dl-chart-grid:  #f0f2f5;
 }
 
 /* ═══════════════════════════════════════════════════════
    Dark mode overrides
    ═══════════════════════════════════════════════════════ */
 .dark {
+  color-scheme: dark;
   --dl-bg:         #0f1117;
   --dl-surface:    #1a1d27;
   --dl-border:     #2a2d3e;
-  --dl-muted:      #6b7280;
+  --dl-muted:      #9ca3af;
   --dl-text:       #d1d5db;
+  --dl-chart-grid: #2a2d3e;
   --dl-navy:       #e2e8f0;
 
   --dl-blue:       #60a5fa;
@@ -70,8 +73,8 @@
   --dl-card:       #1a1d27;
   --dl-nav:        #e2e8f0;
   --dl-forest:     #d1d5db;
-  --dl-hint:       #6b7280;
-  --dl-sage:       #6b7280;
+  --dl-hint:       #9ca3af;
+  --dl-sage:       #9ca3af;
   --dl-sage-light: #2a2d3e;
   --dl-border-mid: #2a2d3e;
   --dl-m-border:   #2a2d3e;
@@ -327,6 +330,18 @@ body {
   .dash-table-header {
     background: var(--dl-surface);
     border-bottom: 1px solid var(--dl-border);
+  }
+
+  .dash-panel {
+    @apply overflow-hidden rounded-2xl border border-dl-border bg-dl-bg shadow-sm;
+  }
+
+  .dash-stat-card {
+    @apply rounded-2xl border border-dl-border bg-dl-bg p-4 transition-shadow hover:shadow-md;
+  }
+
+  .chart-tooltip {
+    @apply rounded-xl border border-dl-border bg-dl-bg px-3 py-2 shadow-xl;
   }
 
   /* ── Typography helpers ── */

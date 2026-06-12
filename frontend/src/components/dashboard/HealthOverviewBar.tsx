@@ -10,8 +10,8 @@ import { useAppData } from '@/context/AppDataContext'
 function CustomTooltip({ active, payload }: { active?: boolean; payload?: { value: number }[] }) {
   if (!active || !payload?.length) return null
   return (
-    <div className="rounded-lg border border-[#e4e8ee] bg-white px-3 py-2 shadow-lg">
-      <p className="text-[11px] font-semibold text-[#2f7eda]">SPS {payload[0].value.toFixed(1)}</p>
+    <div className="chart-tooltip">
+      <p className="text-[11px] font-semibold text-dl-blue">SPS {payload[0].value.toFixed(1)}</p>
     </div>
   )
 }
@@ -56,24 +56,24 @@ export function HealthOverviewBar() {
         : 'Connect GitHub to start monitoring your dependency health.'
 
   const tierBars = [
-    { label: 'Healthy',   count: healthy,  color: '#16a34a', bg: '#f0fdf4', pct: totalPackages > 0 ? (healthy / totalPackages) * 100 : 0 },
-    { label: 'Watch',     count: watch,    color: '#ca8a04', bg: '#fefce8', pct: totalPackages > 0 ? (watch / totalPackages) * 100 : 0 },
-    { label: 'At-risk',   count: atRisk,   color: '#ea580c', bg: '#fff7ed', pct: totalPackages > 0 ? (atRisk / totalPackages) * 100 : 0 },
-    { label: 'Critical',  count: critical, color: '#dc2626', bg: '#fef2f2', pct: totalPackages > 0 ? (critical / totalPackages) * 100 : 0 },
+    { label: 'Healthy',  count: healthy, color: '#16a34a', bg: 'rgba(22,163,74,0.15)',  pct: totalPackages > 0 ? (healthy / totalPackages) * 100 : 0 },
+    { label: 'Watch',    count: watch,   color: '#ca8a04', bg: 'rgba(202,138,4,0.15)',  pct: totalPackages > 0 ? (watch / totalPackages) * 100 : 0 },
+    { label: 'At-risk',  count: atRisk,  color: '#ea580c', bg: 'rgba(234,88,12,0.15)',  pct: totalPackages > 0 ? (atRisk / totalPackages) * 100 : 0 },
+    { label: 'Critical', count: critical, color: '#dc2626', bg: 'rgba(220,38,38,0.15)', pct: totalPackages > 0 ? (critical / totalPackages) * 100 : 0 },
   ]
 
   return (
-    <div className="mb-6 overflow-hidden rounded-2xl border border-[#e4e8ee] bg-white shadow-sm">
+    <div className="dash-panel mb-6">
       <div className="flex flex-col gap-0 lg:flex-row lg:items-stretch">
 
         {/* ── Health ring ── */}
-        <div className="flex shrink-0 flex-col items-center justify-center gap-3 border-b border-[#e4e8ee] px-8 py-6 lg:border-b-0 lg:border-r">
+        <div className="flex shrink-0 flex-col items-center justify-center gap-3 border-b border-dl-border px-8 py-6 lg:border-b-0 lg:border-r">
           <StackHealthRing percentage={healthyPct} strokeColor={ringColor} />
-          <p className="text-center text-[12px] font-medium text-[#9fa0b5]">Stack health</p>
+          <p className="text-center text-[12px] font-medium text-dl-muted">Stack health</p>
         </div>
 
         {/* ── Tier distribution ── */}
-        <div className="flex flex-col justify-center gap-3 border-b border-[#e4e8ee] px-6 py-5 lg:w-[220px] lg:border-b-0 lg:border-r">
+        <div className="flex flex-col justify-center gap-3 border-b border-dl-border px-6 py-5 lg:w-[220px] lg:border-b-0 lg:border-r">
           <p className="dash-section-label">Distribution</p>
           {tierBars.map(({ label, count, color, bg, pct }) => (
             <div key={label} className="flex items-center gap-3">
@@ -82,10 +82,10 @@ export function HealthOverviewBar() {
               </div>
               <div className="flex-1">
                 <div className="mb-0.5 flex items-center justify-between">
-                  <span className="text-[11px] font-medium text-[#555663]">{label}</span>
-                  <span className="text-[10px] text-[#9fa0b5]">{Math.round(pct)}%</span>
+                  <span className="text-[11px] font-medium text-dl-text">{label}</span>
+                  <span className="text-[10px] text-dl-muted">{Math.round(pct)}%</span>
                 </div>
-                <div className="h-1.5 overflow-hidden rounded-full bg-[#f0f2f5]">
+                <div className="progress-track">
                   <div
                     className="h-full rounded-full transition-[width] duration-700 ease-out"
                     style={{ width: `${pct}%`, background: color }}
@@ -97,18 +97,18 @@ export function HealthOverviewBar() {
         </div>
 
         {/* ── Assessment copy ── */}
-        <div className="flex flex-1 flex-col justify-center border-b border-[#e4e8ee] px-6 py-5 lg:border-b-0 lg:border-r">
+        <div className="flex flex-1 flex-col justify-center border-b border-dl-border px-6 py-5 lg:border-b-0 lg:border-r">
           <p className="dash-section-label mb-2">Stack status</p>
-          <p className="text-[13px] leading-relaxed text-[#555663]">{assessmentCopy}</p>
+          <p className="text-[13px] leading-relaxed text-dl-text">{assessmentCopy}</p>
           <div className="mt-4 flex flex-wrap gap-3">
             {[
-              { label: 'Packages', value: totalPackages, color: '#2f7eda', bg: '#eaf2fd' },
-              { label: 'Repos',    value: repos.length,  color: '#8b5cf6', bg: '#f5f0ff' },
-              { label: 'Alerts',   value: alertsThisWeek, color: '#ca8a04', bg: '#fefce8' },
+              { label: 'Packages', value: totalPackages, color: 'var(--dl-blue)', bg: 'rgba(47,126,218,0.15)' },
+              { label: 'Repos',    value: repos.length,  color: '#8b5cf6', bg: 'rgba(139,92,246,0.15)' },
+              { label: 'Alerts',   value: alertsThisWeek, color: 'var(--dl-watch)', bg: 'rgba(202,138,4,0.15)' },
             ].map(({ label, value, color, bg }) => (
               <div key={label} className="flex items-center gap-1.5 rounded-lg px-3 py-1.5" style={{ background: bg }}>
                 <span className="text-[13px] font-bold" style={{ color }}>{value}</span>
-                <span className="text-[11px] font-medium" style={{ color: `${color}aa` }}>{label}</span>
+                <span className="text-[11px] font-medium opacity-70" style={{ color }}>{label}</span>
               </div>
             ))}
           </div>
@@ -122,27 +122,27 @@ export function HealthOverviewBar() {
               <AreaChart data={trendData} margin={{ top: 4, right: 4, left: -24, bottom: 0 }}>
                 <defs>
                   <linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#2f7eda" stopOpacity={0.2} />
-                    <stop offset="100%" stopColor="#2f7eda" stopOpacity={0} />
+                    <stop offset="0%" stopColor="var(--dl-blue)" stopOpacity={0.2} />
+                    <stop offset="100%" stopColor="var(--dl-blue)" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f2f5" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--dl-chart-grid)" vertical={false} />
                 <XAxis dataKey="day" hide />
-                <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#2f7eda', strokeWidth: 1, strokeDasharray: '4 2' }} />
+                <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'var(--dl-blue)', strokeWidth: 1, strokeDasharray: '4 2' }} />
                 <Area
                   type="monotone"
                   dataKey="avg"
-                  stroke="#2f7eda"
+                  stroke="var(--dl-blue)"
                   strokeWidth={2}
                   fill="url(#trendFill)"
                   dot={false}
-                  activeDot={{ r: 4, fill: '#2f7eda', strokeWidth: 2, stroke: 'white' }}
+                  activeDot={{ r: 4, fill: 'var(--dl-blue)', strokeWidth: 2, stroke: 'var(--dl-bg)' }}
                 />
               </AreaChart>
             </ResponsiveContainer>
           ) : (
-            <div className="flex h-[90px] items-center justify-center rounded-xl bg-[#f5f7fa]">
-              <p className="text-[12px] text-[#9fa0b5]">Trend available after scoring</p>
+            <div className="flex h-[90px] items-center justify-center rounded-xl bg-dl-surface">
+              <p className="text-[12px] text-dl-muted">Trend available after scoring</p>
             </div>
           )}
         </div>

@@ -19,11 +19,11 @@ const ECO_COLORS: Record<string, string> = {
 /* ── Alert type config ───────────────────────────────────────────────── */
 function eventConfig(type: string) {
   switch (type) {
-    case 'tier_change':   return { icon: TrendingDown, color: '#dc2626', bg: '#fef2f2', label: 'Tier change' }
-    case 'threshold':     return { icon: AlertTriangle, color: '#ea580c', bg: '#fff7ed', label: 'Threshold crossed' }
-    case 'recovery':      return { icon: TrendingUp,   color: '#16a34a', bg: '#f0fdf4', label: 'Recovery' }
-    case 'supply_chain':  return { icon: ShieldAlert,  color: '#8b5cf6', bg: '#f5f0ff', label: 'Supply chain' }
-    default:              return { icon: Activity,     color: '#9fa0b5', bg: '#f5f7fa', label: type }
+    case 'tier_change':   return { icon: TrendingDown, color: '#dc2626', bg: 'rgba(220,38,38,0.15)', label: 'Tier change' }
+    case 'threshold':     return { icon: AlertTriangle, color: '#ea580c', bg: 'rgba(234,88,12,0.15)', label: 'Threshold crossed' }
+    case 'recovery':      return { icon: TrendingUp,   color: '#16a34a', bg: 'rgba(22,163,74,0.15)', label: 'Recovery' }
+    case 'supply_chain':  return { icon: ShieldAlert,  color: '#8b5cf6', bg: 'rgba(139,92,246,0.15)', label: 'Supply chain' }
+    default:              return { icon: Activity,     color: 'var(--dl-muted)', bg: 'var(--dl-surface)', label: type }
   }
 }
 

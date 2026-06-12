@@ -19,7 +19,7 @@ const NAV_LINKS = [
 export function Nav() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
-  const [theme, toggleTheme] = useTheme()
+  const [theme, toggleTheme, themeMounted] = useTheme()
 
   const isActive = (href: string) => href === '/pricing' && pathname === '/pricing'
 
@@ -60,7 +60,7 @@ export function Nav() {
             className="flex h-9 w-9 items-center justify-center rounded-lg text-dl-sage-light/55 transition-colors hover:bg-white/5 hover:text-dl-cream"
             aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
           >
-            {theme === 'dark' ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
+            {themeMounted && theme === 'dark' ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
           </button>
           <Link
             href="/login"
@@ -115,7 +115,7 @@ export function Nav() {
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-dl-sage-light/55 transition-colors hover:text-dl-cream"
                   aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
                 >
-                  {theme === 'dark' ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
+                  {themeMounted && theme === 'dark' ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
                 </button>
               </div>
               <Link
