@@ -117,10 +117,10 @@ function LoginForm() {
       <div className="w-full max-w-[400px]">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-[26px] font-bold tracking-tight text-[#1e2a3c]">
+          <h1 className="text-[26px] font-bold tracking-tight text-dl-navy">
             Welcome back
           </h1>
-          <p className="mt-1.5 text-[14px] text-[#9fa0b5]">
+          <p className="mt-1.5 text-[14px] text-dl-muted">
             {redirectTo
               ? 'Sign in to continue'
               : 'Monitor your dependency health.'}
@@ -158,7 +158,7 @@ function LoginForm() {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1.5 block text-[12px] font-semibold text-[#555663]" htmlFor="email">
+            <label className="mb-1.5 block text-[12px] font-semibold text-dl-text" htmlFor="email">
               Email address
             </label>
             <input
@@ -172,7 +172,7 @@ function LoginForm() {
               onBlur={() => { setEmailTouched(true); setEmailError(validateEmail(email)) }}
               placeholder="you@company.com"
               className={cn(
-                'w-full rounded-xl border bg-white px-4 py-3 text-[14px] text-[#1e2a3c] placeholder:text-[#9fa0b5] outline-none transition-all duration-150',
+                'w-full rounded-xl border bg-dl-bg px-4 py-3 text-[14px] text-dl-navy placeholder:text-dl-muted outline-none transition-all duration-150',
                 emailTouched && emailError
                   ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100'
                   : emailTouched && !emailError && email
@@ -186,7 +186,7 @@ function LoginForm() {
 
           <div>
             <div className="mb-1.5 flex items-center justify-between">
-              <label className="text-[12px] font-semibold text-[#555663]" htmlFor="password">
+              <label className="text-[12px] font-semibold text-dl-text" htmlFor="password">
                 Password
               </label>
             </div>
@@ -202,7 +202,7 @@ function LoginForm() {
                 onBlur={() => { setPasswordTouched(true); setPasswordError(validatePassword(password)) }}
                 placeholder="Your password"
                 className={cn(
-                  'w-full rounded-xl border bg-white px-4 py-3 pr-11 text-[14px] text-[#1e2a3c] placeholder:text-[#9fa0b5] outline-none transition-all duration-150',
+                  'w-full rounded-xl border bg-white px-4 py-3 pr-11 text-[14px] text-dl-navy placeholder:text-dl-muted outline-none transition-all duration-150',
                   passwordTouched && passwordError
                     ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100'
                     : 'border-[#c6d1d7] focus:border-[#2f7eda] focus:ring-2 focus:ring-[#2f7eda]/15'
@@ -212,7 +212,7 @@ function LoginForm() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#9fa0b5] hover:text-[#555663] transition-colors"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-dl-muted hover:text-dl-text transition-colors"
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -246,11 +246,11 @@ function LoginForm() {
 
         <div className="mt-6 flex items-center gap-4">
           <div className="flex-1 border-t border-[#e4e8ee]" />
-          <span className="text-[11px] font-medium text-[#9fa0b5]">NEW HERE?</span>
+          <span className="text-[11px] font-medium text-dl-muted">NEW HERE?</span>
           <div className="flex-1 border-t border-[#e4e8ee]" />
         </div>
 
-        <p className="mt-4 text-center text-[13px] text-[#9fa0b5]">
+        <p className="mt-4 text-center text-[13px] text-dl-muted">
           No account?{' '}
           <Link href={registerHref} className="font-semibold text-[#2f7eda] hover:underline">
             Create one for free

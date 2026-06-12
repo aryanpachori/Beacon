@@ -1,7 +1,8 @@
 'use client'
 
-import { Shield, TrendingDown, Bell, Zap, Package } from 'lucide-react'
+import { Shield, TrendingDown, Bell, Zap, Package, Sun, Moon } from 'lucide-react'
 import { SiteLogo } from '@/components/layout/SiteLogo'
+import { useTheme } from '@/hooks/useTheme'
 
 const FEATURES = [
   { icon: TrendingDown, text: 'Predict package death up to 60 days early' },
@@ -17,8 +18,10 @@ const STATS = [
 ]
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
+  const [theme, toggleTheme] = useTheme()
+
   return (
-    <div className="flex min-h-screen bg-white">
+    <div className="flex min-h-screen bg-dl-bg">
       {/* ── Left brand panel ── */}
       <div className="relative hidden w-[480px] shrink-0 flex-col gap-12 overflow-hidden bg-[#0f1e3a] p-12 lg:flex xl:w-[520px]">
         {/* Background decorations */}
@@ -91,9 +94,18 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
       {/* ── Right form panel ── */}
       <div className="flex flex-1 flex-col">
-        {/* Mobile header */}
-        <header className="flex h-[60px] items-center border-b border-[#e4e8ee] px-6 lg:hidden">
-          <SiteLogo className="text-[16px] font-bold text-[#1e2a3c]" />
+        {/* Header: mobile logo + theme toggle (desktop too) */}
+        <header className="flex h-[60px] items-center justify-between border-b border-dl-border px-6">
+          <SiteLogo className="text-[16px] font-bold text-dl-navy lg:hidden" />
+          <span className="hidden lg:block" />
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-dl-border bg-dl-surface text-dl-muted transition-all hover:border-dl-blue hover:text-dl-blue"
+            aria-label="Toggle dark mode"
+          >
+            {theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+          </button>
         </header>
         <div className="flex flex-1 flex-col">{children}</div>
       </div>

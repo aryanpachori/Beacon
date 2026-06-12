@@ -39,7 +39,7 @@ function PasswordStrength({ password }: { password: string }) {
       {checks.map(({ label, pass }) => (
         <span key={label} className={cn(
           'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold transition-colors',
-          pass ? 'bg-green-50 text-green-600' : 'bg-[#f5f7fa] text-[#9fa0b5]'
+          pass ? 'bg-green-50 text-green-600' : 'bg-dl-surface text-dl-muted'
         )}>
           <CheckCircle2 className={cn('h-2.5 w-2.5', pass ? 'text-green-500' : 'text-[#c6d1d7]')} />
           {label}
@@ -141,10 +141,10 @@ function RegisterForm() {
       <div className="w-full max-w-[400px]">
         {/* Header */}
         <div className="mb-7">
-          <h1 className="text-[26px] font-bold tracking-tight text-[#1e2a3c]">
+          <h1 className="text-[26px] font-bold tracking-tight text-dl-navy">
             Create account
           </h1>
-          <p className="mt-1.5 text-[14px] text-[#9fa0b5]">
+          <p className="mt-1.5 text-[14px] text-dl-muted">
             Start monitoring your package health in minutes.
           </p>
         </div>
@@ -176,7 +176,7 @@ function RegisterForm() {
           <div className="grid grid-cols-2 gap-3">
             <div>
               <div className="mb-1.5 flex items-center justify-between">
-                <label className="text-[12px] font-semibold text-[#555663]" htmlFor="fullName">
+                <label className="text-[12px] font-semibold text-dl-text" htmlFor="fullName">
                   Full name
                 </label>
                 <span className={cn('text-[10px] tabular-nums',
@@ -191,13 +191,13 @@ function RegisterForm() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value.slice(0, FULL_NAME_MAX))}
                 placeholder="John Doe"
-                className="w-full rounded-xl border border-[#c6d1d7] bg-white px-3.5 py-3 text-[14px] text-[#1e2a3c] placeholder:text-[#9fa0b5] outline-none transition-all focus:border-[#2f7eda] focus:ring-2 focus:ring-[#2f7eda]/15"
+                className="w-full rounded-xl border border-dl-border bg-dl-bg px-3.5 py-3 text-[14px] text-dl-navy placeholder:text-dl-muted outline-none transition-all focus:border-dl-blue focus:ring-2 focus:ring-dl-blue/15"
                 autoComplete="name"
                 maxLength={FULL_NAME_MAX}
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-[12px] font-semibold text-[#555663]" htmlFor="nickname">
+              <label className="mb-1.5 block text-[12px] font-semibold text-dl-text" htmlFor="nickname">
                 Handle
               </label>
               <input
@@ -206,7 +206,7 @@ function RegisterForm() {
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
                 placeholder="dev-handle"
-                className="w-full rounded-xl border border-[#c6d1d7] bg-white px-3.5 py-3 text-[14px] text-[#1e2a3c] placeholder:text-[#9fa0b5] outline-none transition-all focus:border-[#2f7eda] focus:ring-2 focus:ring-[#2f7eda]/15"
+                className="w-full rounded-xl border border-dl-border bg-dl-bg px-3.5 py-3 text-[14px] text-dl-navy placeholder:text-dl-muted outline-none transition-all focus:border-dl-blue focus:ring-2 focus:ring-dl-blue/15"
                 pattern="[a-zA-Z0-9._-]*"
                 autoComplete="nickname"
               />
@@ -214,7 +214,7 @@ function RegisterForm() {
           </div>
 
           <div>
-            <label className="mb-1.5 block text-[12px] font-semibold text-[#555663]" htmlFor="email">
+            <label className="mb-1.5 block text-[12px] font-semibold text-dl-text" htmlFor="email">
               Email address
             </label>
             <input
@@ -228,12 +228,12 @@ function RegisterForm() {
               onBlur={() => { setEmailTouched(true); setEmailError(validateEmail(email)) }}
               placeholder="you@company.com"
               className={cn(
-                'w-full rounded-xl border bg-white px-4 py-3 text-[14px] text-[#1e2a3c] placeholder:text-[#9fa0b5] outline-none transition-all duration-150',
+                'w-full rounded-xl border bg-dl-bg px-4 py-3 text-[14px] text-dl-navy placeholder:text-dl-muted outline-none transition-all duration-150',
                 emailTouched && emailError
                   ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100'
                   : emailTouched && !emailError && email
                     ? 'border-[#2f7eda] focus:ring-2 focus:ring-[#2f7eda]/15'
-                    : 'border-[#c6d1d7] focus:border-[#2f7eda] focus:ring-2 focus:ring-[#2f7eda]/15'
+                    : 'border-dl-border focus:border-dl-blue focus:ring-2 focus:ring-dl-blue/15'
               )}
               autoComplete="email"
             />
@@ -241,7 +241,7 @@ function RegisterForm() {
           </div>
 
           <div>
-            <label className="mb-1.5 block text-[12px] font-semibold text-[#555663]" htmlFor="password">
+            <label className="mb-1.5 block text-[12px] font-semibold text-dl-text" htmlFor="password">
               Password
             </label>
             <div className="relative">
@@ -256,12 +256,12 @@ function RegisterForm() {
                 onBlur={() => { setPasswordTouched(true); setPasswordError(validatePassword(password)) }}
                 placeholder="Create a strong password"
                 className={cn(
-                  'w-full rounded-xl border bg-white px-4 py-3 pr-11 text-[14px] text-[#1e2a3c] placeholder:text-[#9fa0b5] outline-none transition-all duration-150',
+                  'w-full rounded-xl border bg-dl-bg px-4 py-3 pr-11 text-[14px] text-dl-navy placeholder:text-dl-muted outline-none transition-all duration-150',
                   passwordTouched && passwordError
                     ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100'
                     : passwordTouched && !passwordError && password
                       ? 'border-[#2f7eda] focus:ring-2 focus:ring-[#2f7eda]/15'
-                      : 'border-[#c6d1d7] focus:border-[#2f7eda] focus:ring-2 focus:ring-[#2f7eda]/15'
+                      : 'border-dl-border focus:border-dl-blue focus:ring-2 focus:ring-dl-blue/15'
                 )}
                 autoComplete="new-password"
                 minLength={8}
@@ -269,7 +269,7 @@ function RegisterForm() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#9fa0b5] hover:text-[#555663] transition-colors"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-dl-muted hover:text-dl-text transition-colors"
                 aria-label={showPassword ? 'Hide' : 'Show'}
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -304,20 +304,20 @@ function RegisterForm() {
           </button>
         </form>
 
-        <p className="mt-5 text-center text-[11px] leading-relaxed text-[#9fa0b5]">
+        <p className="mt-5 text-center text-[11px] leading-relaxed text-dl-muted">
           By creating an account you agree to our{' '}
-          <Link href="/terms" className="font-medium text-[#555663] hover:underline">Terms</Link>
+          <Link href="/terms" className="font-medium text-dl-text hover:underline">Terms</Link>
           {' '}and{' '}
-          <Link href="/privacy" className="font-medium text-[#555663] hover:underline">Privacy Policy</Link>.
+          <Link href="/privacy" className="font-medium text-dl-text hover:underline">Privacy Policy</Link>.
         </p>
 
         <div className="mt-5 flex items-center gap-4">
           <div className="flex-1 border-t border-[#e4e8ee]" />
-          <span className="text-[11px] font-medium text-[#9fa0b5]">HAVE AN ACCOUNT?</span>
+          <span className="text-[11px] font-medium text-dl-muted">HAVE AN ACCOUNT?</span>
           <div className="flex-1 border-t border-[#e4e8ee]" />
         </div>
 
-        <p className="mt-4 text-center text-[13px] text-[#9fa0b5]">
+        <p className="mt-4 text-center text-[13px] text-dl-muted">
           <Link href={loginHref} className="font-semibold text-[#2f7eda] hover:underline">
             Sign in instead
           </Link>
