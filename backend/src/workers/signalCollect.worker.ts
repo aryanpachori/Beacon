@@ -18,14 +18,22 @@ import { bumpScanProgress, notifyScanProgress } from '../services/scanProgress.s
 import { markScanFailed } from '../services/githubInstallation.service'
 
 const MANIFEST_CONCURRENCY = 20
+/** Full-repo scans can run many minutes (GitHub + DB). Default BullMQ lock is 30s → false stalls. */
+const SCAN_LOCK_MS = 20 * 60 * 1000
 
 export function startWorkers(): void {
   const worker = new Worker<SignalCollectJobData>(
     Queues.SIGNAL_COLLECT,
     async (job: Job<SignalCollectJobData>) => {
-      await processScanJob(job.data)
+      await processScanJob(job)
     },
-    { connection: queueConnection, concurrency: 3 }
+    {
+      connection: queueConnection,
+      concurrency: 1,
+      lockDuration: SCAN_LOCK_MS,
+      stalledInterval: 60_000,
+      maxStalledCount: 5,
+    }
   )
 
   worker.on('failed', async (job, err) => {
@@ -39,7 +47,8 @@ export function startWorkers(): void {
   console.log('Signal collect worker started')
 }
 
-async function processScanJob(data: SignalCollectJobData): Promise<void> {
+async function processScanJob(job: Job<SignalCollectJobData>): Promise<void> {
+  const data = job.data
   const { installation_id, installationDbId } = data
 
   console.log(
@@ -108,12 +117,15 @@ async function processScanJob(data: SignalCollectJobData): Promise<void> {
   })
   await notifyScanProgress(installation.id)
 
-  const packageRecords: Array<{
-    packageId: string
-    dep: ParsedDependency & { manifestPath: string; repoId: string }
-  }> = []
-
+  type DepWithRepo = ParsedDependency & { manifestPath: string; repoId: string }
+  const uniquePackageDeps = new Map<string, DepWithRepo>()
   for (const dep of allDeps) {
+    const key = `${dep.ecosystem}:${dep.name}`
+    if (!uniquePackageDeps.has(key)) uniquePackageDeps.set(key, dep)
+  }
+
+  const packageIdByKey = new Map<string, string>()
+  for (const dep of uniquePackageDeps.values()) {
     const pkg = await prisma.package.upsert({
       where: {
         name_ecosystem: {
@@ -127,34 +139,45 @@ async function processScanJob(data: SignalCollectJobData): Promise<void> {
       },
       update: {},
     })
-
-    const manifestFile = dep.manifestPath.split('/').pop() ?? dep.manifestPath
-    await prisma.repoPackage.upsert({
-      where: {
-        repoId_packageId_manifestPath: {
-          repoId: dep.repoId,
-          packageId: pkg.id,
-          manifestPath: dep.manifestPath,
-        },
-      },
-      create: {
-        repoId: dep.repoId,
-        packageId: pkg.id,
-        manifestPath: dep.manifestPath,
-        manifestFile,
-        declaredVersion: dep.version,
-      },
-      update: { declaredVersion: dep.version },
-    })
-
-    if (!packageRecords.find((p) => p.packageId === pkg.id)) {
-      packageRecords.push({ packageId: pkg.id, dep })
-    }
+    packageIdByKey.set(`${dep.ecosystem}:${dep.name}`, pkg.id)
   }
 
+  await Promise.all(
+    allDeps.map(async (dep) => {
+      const packageId = packageIdByKey.get(`${dep.ecosystem}:${dep.name}`)
+      if (!packageId) return
+
+      const manifestFile = dep.manifestPath.split('/').pop() ?? dep.manifestPath
+      await prisma.repoPackage.upsert({
+        where: {
+          repoId_packageId_manifestPath: {
+            repoId: dep.repoId,
+            packageId,
+            manifestPath: dep.manifestPath,
+          },
+        },
+        create: {
+          repoId: dep.repoId,
+          packageId,
+          manifestPath: dep.manifestPath,
+          manifestFile,
+          declaredVersion: dep.version,
+        },
+        update: { declaredVersion: dep.version },
+      })
+    })
+  )
+
+  const packageRecords = [...uniquePackageDeps.values()].map((dep) => ({
+    packageId: packageIdByKey.get(`${dep.ecosystem}:${dep.name}`)!,
+    dep,
+  }))
+
   const totalPackages = packageRecords.length
+  await job.updateProgress({ phase: 'upserted', total: totalPackages, scanned: 0 })
 
   const chunks = chunkArray(packageRecords, MANIFEST_CONCURRENCY)
+  let scannedSoFar = 0
   for (const chunk of chunks) {
     await Promise.allSettled(
       chunk.map(async ({ packageId, dep }) => {
@@ -245,6 +268,12 @@ async function processScanJob(data: SignalCollectJobData): Promise<void> {
         }
       })
     )
+    scannedSoFar += chunk.length
+    await job.updateProgress({
+      phase: 'scanning',
+      total: totalPackages,
+      scanned: Math.min(scannedSoFar, totalPackages),
+    })
   }
 
   const afterScan = await prisma.githubInstallation.findUnique({

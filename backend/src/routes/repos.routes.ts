@@ -151,13 +151,17 @@ reposRouter.post('/rescan', async (req: AuthRequest, res, next) => {
       },
     })
 
-    await signalCollectQueue.add(SignalCollectJobName.SCAN, {
-      installation_id: Number(installation.installationId),
-      installationDbId: ctx.installation.id,
-      userId: req.user!.userId,
-      repos: repos.map((r) => ({ owner: r.org, repo: r.name })),
-      triggered_by: 'manual',
-    })
+    await signalCollectQueue.add(
+      SignalCollectJobName.SCAN,
+      {
+        installation_id: Number(installation.installationId),
+        installationDbId: ctx.installation.id,
+        userId: req.user!.userId,
+        repos: repos.map((r) => ({ owner: r.org, repo: r.name })),
+        triggered_by: 'manual',
+      },
+      { attempts: 1 }
+    )
 
     await notifyScanProgress(ctx.installation.id)
     res.json({ success: true })

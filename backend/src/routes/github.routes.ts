@@ -391,13 +391,17 @@ githubRouter.post(
         data: { onboardingStep: 3, onboardingCompletedAt: null },
       });
 
-      await signalCollectQueue.add(SignalCollectJobName.SCAN, {
-        installation_id: Number(installation.installationId),
-        installationDbId: installation.id,
-        userId: req.user!.userId,
-        repos: repos.map((r) => ({ owner: r.org, repo: r.name })),
-        triggered_by: "onboarding",
-      });
+      await signalCollectQueue.add(
+        SignalCollectJobName.SCAN,
+        {
+          installation_id: Number(installation.installationId),
+          installationDbId: installation.id,
+          userId: req.user!.userId,
+          repos: repos.map((r) => ({ owner: r.org, repo: r.name })),
+          triggered_by: "onboarding",
+        },
+        { attempts: 1 }
+      );
 
       await notifyScanProgress(installation.id);
 
