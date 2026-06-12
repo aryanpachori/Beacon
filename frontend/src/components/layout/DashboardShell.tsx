@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Menu } from 'lucide-react'
 import { NavSidebar } from '@/components/layout/NavSidebar'
+import { CommandPalette } from '@/components/command/CommandPalette'
 import { useScrollMemory } from '@/hooks/useScrollMemory'
 import { cn } from '@/lib/utils'
 
@@ -52,6 +53,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         isCollapsed={isCollapsed}
         onToggleCollapse={handleToggleCollapse}
       />
+
+      <CommandPalette />
 
       <main
         className={cn(

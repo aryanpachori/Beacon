@@ -19,6 +19,8 @@ export function useScanProgressStream(enabled: boolean) {
   const [connected, setConnected] = useState(false)
   const [error, setError] = useState(false)
   const [reconnectStatus, setReconnectStatus] = useState<'idle' | 'reconnecting' | 'polling'>('idle')
+  // Track whether the very first event was already complete (avoids false 0→100 flash)
+  const firstEventWasCompleteRef = useRef(false)
   const reconnectAttemptsRef = useRef(0)
   const closeRef = useRef<(() => void) | null>(null)
 
@@ -28,6 +30,9 @@ export function useScanProgressStream(enabled: boolean) {
     setError(false)
     setReconnectStatus('idle')
     reconnectAttemptsRef.current = 0
+    firstEventWasCompleteRef.current = false
+
+    let isFirstEvent = true
 
     function connect() {
       closeRef.current = openScanProgressStream(
@@ -35,11 +40,24 @@ export function useScanProgressStream(enabled: boolean) {
           setConnected(true)
           setReconnectStatus('idle')
           reconnectAttemptsRef.current = 0
-          // Never let counter go backwards
+
+          // If the very first event says complete/failed, mark that so the UI
+          // can skip the progress animation (it would be a stale completed scan).
+          if (isFirstEvent && (event.status === 'complete' || event.status === 'failed')) {
+            firstEventWasCompleteRef.current = true
+          }
+          isFirstEvent = false
+
           setProgress(prev => ({
             ...event,
-            scanned: Math.max(prev.scanned, event.scanned),
-            scored: Math.max(prev.scored, event.scored),
+            // Never allow counters to go backwards during live streaming
+            // BUT if first event is already complete, just accept the values as-is
+            scanned: firstEventWasCompleteRef.current
+              ? event.scanned
+              : Math.max(prev.scanned, event.scanned),
+            scored: firstEventWasCompleteRef.current
+              ? event.scored
+              : Math.max(prev.scored, event.scored),
           }))
         },
         () => {
@@ -60,7 +78,6 @@ export function useScanProgressStream(enabled: boolean) {
       } else {
         setError(true)
         setReconnectStatus('polling')
-        // Fall back to polling
         const pollInterval = setInterval(() => {
           openScanProgressStream(
             (event) => {
@@ -104,5 +121,7 @@ export function useScanProgressStream(enabled: boolean) {
     percent,
     isComplete: progress.status === 'complete',
     isFailed: progress.status === 'failed',
+    /** True when the stream opened and scan was already done (stale completed scan) */
+    wasAlreadyComplete: firstEventWasCompleteRef.current,
   }
 }

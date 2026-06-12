@@ -1,12 +1,10 @@
 'use client'
 
-import { Zap, TrendingUp, AlertTriangle, CheckCircle2, Package as PackageIcon, GitBranch, Clock } from 'lucide-react'
+import { Zap, Package as PackageIcon } from 'lucide-react'
 import { useAppData } from '@/context/AppDataContext'
 import { HealthOverviewBar } from '@/components/dashboard/HealthOverviewBar'
-import { CriticalPackagesFeed } from '@/components/dashboard/CriticalPackagesFeed'
-import { AiSignalPanel } from '@/components/dashboard/AiSignalPanel'
-import { PackageTable } from '@/components/packages/PackageTable'
 import { NotificationBell } from '@/components/dashboard/NotificationBell'
+import { InsightsDashboard } from '@/components/dashboard/InsightsDashboard'
 
 function getGreeting() {
   const hour = new Date().getHours()
@@ -27,32 +25,9 @@ function planColor(plan: string) {
   return { bg: '#f5f7fa', text: '#9fa0b5', dot: '#9fa0b5' }
 }
 
-interface QuickStatProps {
-  icon: React.ElementType
-  label: string
-  value: string | number
-  sub?: string
-  color: string
-  bg: string
-}
-
-function QuickStat({ icon: Icon, label, value, sub, color, bg }: QuickStatProps) {
-  return (
-    <div className="insight-card flex items-start gap-4">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: bg }}>
-        <Icon className="h-5 w-5" style={{ color }} />
-      </div>
-      <div className="min-w-0">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#9fa0b5]">{label}</p>
-        <p className="text-[22px] font-bold leading-tight tracking-tight text-[#1e2a3c]">{value}</p>
-        {sub && <p className="mt-0.5 text-[11px] text-[#9fa0b5]">{sub}</p>}
-      </div>
-    </div>
-  )
-}
 
 export default function DashboardPage() {
-  const { user, packages, loading, error, dashboard, repos, alerts } = useAppData()
+  const { user, packages, loading, error, dashboard } = useAppData()
   const greeting = getGreeting()
   const displayName = user?.fullName || user?.email?.split('@')[0] || 'there'
   const firstName = displayName.split(' ')[0]
@@ -63,17 +38,6 @@ export default function DashboardPage() {
     dashboard?.scanStatus === 'complete' ||
     dashboard?.scanStatus === 'scoring' ||
     (dashboard?.scanProgress?.scanned ?? 0) > 0
-
-  const totalPackages = dashboard?.totalPackages ?? packages.length
-  const critical = dashboard?.healthCounts?.critical ?? 0
-  const atRisk = dashboard?.healthCounts?.atRisk ?? 0
-  const scoredPackages = packages.filter(p => !p.scoringPending)
-  const healthyPct = scoredPackages.length > 0
-    ? Math.round((scoredPackages.filter(p => p.tier === 'healthy').length / scoredPackages.length) * 100)
-    : 0
-
-  const weekAgo = Date.now() - 7 * 86_400_000
-  const alertsThisWeek = alerts.filter(a => new Date(a.firedAt).getTime() >= weekAgo).length
 
   if (loading) {
     return (
@@ -179,101 +143,13 @@ export default function DashboardPage() {
         </div>
       ) : (
         <>
-          {/* ── Quick stats row ── */}
-          <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
-            <QuickStat
-              icon={PackageIcon}
-              label="Packages"
-              value={totalPackages}
-              sub="monitored"
-              color="#2f7eda"
-              bg="#eaf2fd"
-            />
-            <QuickStat
-              icon={CheckCircle2}
-              label="Stack health"
-              value={`${healthyPct}%`}
-              sub="packages healthy"
-              color="#16a34a"
-              bg="#f0fdf4"
-            />
-            <QuickStat
-              icon={AlertTriangle}
-              label="Needs attention"
-              value={critical + atRisk}
-              sub={`${critical} critical · ${atRisk} at-risk`}
-              color={critical > 0 ? '#dc2626' : '#ea580c'}
-              bg={critical > 0 ? '#fef2f2' : '#fff7ed'}
-            />
-            <QuickStat
-              icon={Clock}
-              label="Alerts"
-              value={alertsThisWeek}
-              sub="this week"
-              color="#ca8a04"
-              bg="#fefce8"
-            />
-          </div>
-
           {/* ── Health overview (ring + trend + stats) ── */}
-          <HealthOverviewBar />
-
-          {/* ── Insights + AI signals ── */}
-          <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-[62fr_38fr]">
-            <CriticalPackagesFeed />
-            <AiSignalPanel />
+          <div className="mb-6">
+            <HealthOverviewBar />
           </div>
 
-          {/* ── Repo + scan status quick strip ── */}
-          <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div className="insight-card flex items-center gap-4">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f5f0ff]">
-                <GitBranch className="h-5 w-5 text-[#8b5cf6]" />
-              </div>
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#9fa0b5]">Repositories</p>
-                <p className="text-xl font-bold text-[#1e2a3c]">{repos.length}</p>
-                <p className="text-[11px] text-[#9fa0b5]">connected</p>
-              </div>
-            </div>
-            <div className="insight-card flex items-center gap-4">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#fff7ed]">
-                <TrendingUp className="h-5 w-5 text-[#ea580c]" />
-              </div>
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#9fa0b5]">Avg SPS Score</p>
-                <p className="text-xl font-bold text-[#1e2a3c]">
-                  {dashboard?.avgSps ? Math.round(dashboard.avgSps) : '—'}
-                </p>
-                <p className="text-[11px] text-[#9fa0b5]">across stack</p>
-              </div>
-            </div>
-            <div className="insight-card flex items-center gap-4">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f0fdf4]">
-                <Zap className="h-5 w-5 text-[#16a34a]" />
-              </div>
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#9fa0b5]">Scan status</p>
-                <p className="text-[14px] font-bold text-[#1e2a3c] capitalize">
-                  {dashboard?.scanStatus ?? 'Pending'}
-                </p>
-                <p className="text-[11px] text-[#9fa0b5]">
-                  {dashboard?.scanProgress?.scanned ?? 0} of {totalPackages} scanned
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* ── All packages table ── */}
-          <section>
-            <div className="mb-4 flex items-center justify-between">
-              <p className="dash-section-label">All Packages</p>
-              <span className="rounded-full bg-[#eaf2fd] px-2.5 py-1 text-[11px] font-semibold text-[#2f7eda]">
-                {totalPackages} total
-              </span>
-            </div>
-            <PackageTable packages={packages} variant="dashboard" />
-          </section>
+          {/* ── Full analytics dashboard ── */}
+          <InsightsDashboard />
         </>
       )}
     </div>

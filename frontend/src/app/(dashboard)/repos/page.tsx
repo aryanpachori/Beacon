@@ -2,10 +2,10 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Plus, GitBranch, RefreshCw } from 'lucide-react'
+import { Plus, RefreshCw, ExternalLink, GitBranch } from 'lucide-react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { useAppData } from '@/context/AppDataContext'
-import { fetchGithubInstallUrl, fetchGithubOAuthUrl } from '@/lib/api'
+import { fetchGithubInstallUrl } from '@/lib/api'
 import { RepoCard } from '@/components/repos/RepoCard'
 import { ReposEmptyState } from '@/components/repos/ReposEmptyState'
 
@@ -14,16 +14,6 @@ export default function ReposPage() {
   const { repos, repoLimit, loading, error, refresh } = useAppData()
   const [open, setOpen] = useState(false)
   const [installing, setInstalling] = useState(false)
-
-  async function handleConnectGithub() {
-    setInstalling(true)
-    try {
-      const url = await fetchGithubOAuthUrl()
-      window.location.href = url
-    } catch {
-      setInstalling(false)
-    }
-  }
 
   function handleSelectRepo() {
     setOpen(false)
@@ -88,51 +78,46 @@ export default function ReposPage() {
           </Dialog.Trigger>
 
           <Dialog.Portal>
-            <Dialog.Overlay className="fixed inset-0 z-40 bg-dl-forest/40 backdrop-blur-sm" />
-            <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl border border-dl-m-border bg-dl-card p-6 shadow-xl">
-              <Dialog.Title className="page-heading mb-1">
-                {atRepoLimit ? 'Change monitored repo' : 'Connect a new repo'}
+            <Dialog.Overlay className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm" />
+            <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-[#e4e8ee] bg-white p-6 shadow-2xl">
+              <Dialog.Title className="mb-1 text-[17px] font-bold text-[#1e2a3c]">
+                {atRepoLimit ? 'Change monitored repo' : 'Connect a repository'}
               </Dialog.Title>
-              <Dialog.Description className="page-description mb-6">
+              <Dialog.Description className="mb-6 text-[13px] text-[#9fa0b5]">
                 {atRepoLimit
-                  ? 'Choose a different repository to monitor. DriftLogg will only scan the repo you select.'
-                  : 'Select a repository to scan, or link GitHub if you have not connected yet.'}
+                  ? 'Switch to a different repository. DriftLogg scans the repo you select.'
+                  : 'Install the GitHub App to let DriftLogg scan your dependencies.'}
               </Dialog.Description>
 
-              <button
-                type="button"
-                className="btn-dash-primary mb-3 w-full"
-                onClick={handleSelectRepo}
-              >
-                Select repo to scan
-              </button>
+              {repos.length > 0 && (
+                <button
+                  type="button"
+                  className="mb-3 flex w-full items-center justify-center gap-2 rounded-xl border border-[#2f7eda] bg-[#eaf2fd] py-2.5 text-[13px] font-semibold text-[#2f7eda] transition-colors hover:bg-[#2f7eda] hover:text-white"
+                  onClick={handleSelectRepo}
+                >
+                  Select a different repo to scan
+                </button>
+              )}
 
               <button
                 type="button"
-                className="btn-dash-primary mb-3 w-full disabled:opacity-60"
-                disabled={installing}
-                onClick={handleConnectGithub}
-              >
-                <GitBranch className="h-4 w-4" />
-                {installing ? 'Redirecting…' : 'Link GitHub account'}
-              </button>
-
-              <button
-                type="button"
-                className="mb-4 w-full py-2 text-[13px] text-dl-teal underline disabled:opacity-60"
+                className="flex w-full items-center justify-center gap-2.5 rounded-xl bg-[#1e2a3c] py-3 text-[13px] font-semibold text-white transition-all hover:bg-[#0f1e3a] disabled:opacity-60"
                 disabled={installing}
                 onClick={handleInstallGithub}
+                style={{ boxShadow: '0 2px 8px rgba(30,42,60,0.25)' }}
               >
-                Install GitHub App
+                <GitBranch className="h-4 w-4" />
+                {installing ? 'Redirecting to GitHub…' : 'Install GitHub App'}
+                {!installing && <ExternalLink className="h-3.5 w-3.5 opacity-60" />}
               </button>
 
-              <p className="text-center text-[13px] text-dl-muted">
-                Read-only access — DriftLogg never writes to your repos.
+              <p className="mt-4 text-center text-[12px] text-[#9fa0b5]">
+                🔒 Read-only access — DriftLogg never writes to your repos.
               </p>
               <Dialog.Close asChild>
                 <button
                   type="button"
-                  className="absolute right-4 top-4 text-lg leading-none text-dl-muted transition-colors hover:text-dl-forest"
+                  className="absolute right-4 top-4 flex h-7 w-7 items-center justify-center rounded-lg text-[#9fa0b5] transition-colors hover:bg-[#f5f7fa] hover:text-[#555663]"
                   aria-label="Close"
                 >
                   ×

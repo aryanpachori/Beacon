@@ -210,6 +210,35 @@ githubRouter.get("/callback", async (req, res, next) => {
     const accountLogin =
       await resolveInstallationAccountLogin(installationIdNum);
 
+    // One GitHub installation per DriftLogg user — if this installationId is
+    // already claimed by a DIFFERENT user, redirect with an error rather than
+    // silently re-assigning it (which would break the original user's scans).
+    const existing = await prisma.githubInstallation.findUnique({
+      where: { installationId: BigInt(installationId) },
+      select: { userId: true },
+    });
+    if (existing && existing.userId !== userId) {
+      console.warn(
+        `Installation ${installationId} already claimed by user ${existing.userId}; ` +
+        `rejecting claim from user ${userId}`
+      );
+      return res.redirect(`${frontendUrl}/onboarding?step=1&error=installation_claimed`);
+    }
+
+    // Also enforce: one GitHub account per DriftLogg user.
+    // If this user already has a DIFFERENT installation linked, block the new one.
+    const userInstallation = await prisma.githubInstallation.findFirst({
+      where: { userId, NOT: { installationId: BigInt(installationId) } },
+      select: { installationId: true, accountLogin: true },
+    });
+    if (userInstallation) {
+      console.warn(
+        `User ${userId} already has installation ${userInstallation.installationId} (${userInstallation.accountLogin}); ` +
+        `blocking duplicate install ${installationId}`
+      );
+      return res.redirect(`${frontendUrl}/onboarding?step=1&error=already_connected`);
+    }
+
     const installation = await prisma.githubInstallation.upsert({
       where: { installationId: BigInt(installationId) },
       create: {

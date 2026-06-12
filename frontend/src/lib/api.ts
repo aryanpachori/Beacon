@@ -279,6 +279,23 @@ export type ScanProgressEvent = {
   scored: number
 }
 
+// ── Analytics ────────────────────────────────────────────────────────────────
+
+export type AnalyticsData = {
+  alertTrend:      { date: string; count: number }[]
+  ecosystemDist:   { ecosystem: string; count: number }[]
+  spsHistogram:    { bucket: string; min: number; max: number; count: number }[]
+  signalAverages:  { signal: string; avg: number }[]
+  topDeclining:    { id: string; name: string; spsDrop: number; currentSps: number; tier: string }[]
+  topImproving:    { id: string; name: string; spsGain: number; currentSps: number; tier: string }[]
+  alertsByType:    Record<string, number>
+  weeklyAlertCount: number
+}
+
+export async function fetchAnalytics(): Promise<AnalyticsData> {
+  return apiFetch<AnalyticsData>('/api/analytics')
+}
+
 export function openScanProgressStream(
   onEvent: (event: ScanProgressEvent) => void,
   onError?: () => void

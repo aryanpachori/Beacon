@@ -4,10 +4,9 @@ import { Suspense, useState } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { AlertCircle } from 'lucide-react'
+import { AlertCircle, Eye, EyeOff, ArrowRight, CheckCircle2 } from 'lucide-react'
 import { ApiError, apiFetch, setAuthTokens } from '@/lib/api'
 import { cn } from '@/lib/utils'
-import { Eye, EyeOff } from 'lucide-react'
 
 const FULL_NAME_MAX = 50
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -20,10 +19,33 @@ function useRedirectParam(): string | null {
 
 function FieldError({ message }: { message: string }) {
   return (
-    <p className="mt-1 flex items-center gap-1 text-[11px] text-dl-danger">
+    <p className="mt-1.5 flex items-center gap-1.5 text-[11px] font-medium text-red-500">
       <AlertCircle className="h-3 w-3 shrink-0" />
       {message}
     </p>
+  )
+}
+
+function PasswordStrength({ password }: { password: string }) {
+  const checks = [
+    { label: '8+ characters', pass: password.length >= 8 },
+    { label: 'Capital letter', pass: /[A-Z]/.test(password) },
+    { label: 'Number', pass: /[0-9]/.test(password) },
+    { label: 'Symbol', pass: /[^A-Za-z0-9]/.test(password) },
+  ]
+  if (!password) return null
+  return (
+    <div className="mt-2 flex flex-wrap gap-1.5">
+      {checks.map(({ label, pass }) => (
+        <span key={label} className={cn(
+          'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold transition-colors',
+          pass ? 'bg-green-50 text-green-600' : 'bg-[#f5f7fa] text-[#9fa0b5]'
+        )}>
+          <CheckCircle2 className={cn('h-2.5 w-2.5', pass ? 'text-green-500' : 'text-[#c6d1d7]')} />
+          {label}
+        </span>
+      ))}
+    </div>
   )
 }
 
@@ -59,18 +81,11 @@ function RegisterForm() {
   const validatePassword = (val: string) => {
     if (!val) return 'Password is required'
     if (val.length < 8) return 'Password must be at least 8 characters'
-    
-    const hasCapital = /[A-Z]/.test(val)
-    const hasNumber = /[0-9]/.test(val)
-    const hasSymbol = /[^A-Za-z0-9]/.test(val)
-    
-    if (!hasCapital || !hasNumber || !hasSymbol) {
-      const missing = []
-      if (!hasCapital) missing.push('a capital letter')
-      if (!hasNumber) missing.push('a number')
-      if (!hasSymbol) missing.push('a symbol')
-      return `Password must contain at least ${missing.join(', ')}`
-    }
+    const missing = []
+    if (!/[A-Z]/.test(val)) missing.push('a capital letter')
+    if (!/[0-9]/.test(val)) missing.push('a number')
+    if (!/[^A-Za-z0-9]/.test(val)) missing.push('a symbol')
+    if (missing.length) return `Add ${missing.join(', ')}`
     return ''
   }
 
@@ -102,13 +117,7 @@ function RegisterForm() {
         }),
       })
       setAuthTokens(data.accessToken, data.refreshToken)
-
-      if (redirectTo) {
-        router.push(redirectTo)
-        return
-      }
-
-      router.push('/onboarding')
+      router.push(redirectTo || '/onboarding')
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message)
@@ -121,58 +130,59 @@ function RegisterForm() {
   }
 
   const nameCount = fullName.length
-  const nameCountColor =
-    nameCount >= FULL_NAME_MAX
-      ? 'text-dl-danger'
-      : nameCount >= 40
-        ? 'text-dl-warning'
-        : 'text-dl-hint'
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="flex flex-1 items-center justify-center px-4 py-10"
+      transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+      className="flex flex-1 items-center justify-center px-6 py-10"
     >
-      <div className="w-full max-w-sm">
-        <div className="dl-card p-6 shadow-sm md:p-8">
-          <h1 className="marketing-title mb-1 text-[22px] md:text-[24px]">Create account</h1>
-          <p className="marketing-subtitle mb-6">
+      <div className="w-full max-w-[400px]">
+        {/* Header */}
+        <div className="mb-7">
+          <h1 className="text-[26px] font-bold tracking-tight text-[#1e2a3c]">
+            Create account
+          </h1>
+          <p className="mt-1.5 text-[14px] text-[#9fa0b5]">
             Start monitoring your package health in minutes.
           </p>
+        </div>
 
-          {planParam === 'pro' && (
-            <div className="mb-4 rounded-lg border border-dl-teal/30 bg-dl-teal/5 px-3 py-2.5 text-[13px] text-dl-teal">
-              You&apos;re signing up for <strong>Pro</strong> — you&apos;ll pick up billing after onboarding.
+        {planParam === 'pro' && (
+          <div className="mb-5 rounded-xl border border-[#2f7eda]/25 bg-[#eaf2fd] px-4 py-3 text-[13px] font-medium text-[#2f7eda]">
+            You&apos;re signing up for <strong>Pro</strong> — billing starts after onboarding.
+          </div>
+        )}
+
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
+            className="mb-5 flex items-start gap-2.5 rounded-xl border border-red-200 bg-red-50 p-3.5 text-[13px] text-red-600"
+          >
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+            <div>
+              <p>{error}</p>
+              {errorCode === 'EMAIL_EXISTS' && (
+                <Link href={loginHref} className="mt-1 inline-flex items-center gap-1 font-semibold text-[#2f7eda] hover:underline">
+                  Sign in instead <ArrowRight className="h-3 w-3" />
+                </Link>
+              )}
             </div>
-          )}
+          </motion.div>
+        )}
 
-          {error && (
-            <div className="mb-4 flex items-start gap-2 rounded-lg border border-dl-danger/30 bg-dl-danger/10 p-3 text-[13px] text-dl-danger">
-              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-              <div>
-                <p>{error}</p>
-                {errorCode === 'EMAIL_EXISTS' && (
-                  <Link
-                    href={loginHref}
-                    className="mt-1 inline-block font-medium text-dl-teal hover:underline"
-                  >
-                    Sign in instead →
-                  </Link>
-                )}
-              </div>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
             <div>
               <div className="mb-1.5 flex items-center justify-between">
-                <label className="text-xs font-medium text-dl-m-muted" htmlFor="fullName">
+                <label className="text-[12px] font-semibold text-[#555663]" htmlFor="fullName">
                   Full name
                 </label>
-                <span className={cn('text-[11px] tabular-nums', nameCountColor)}>
-                  {nameCount} / {FULL_NAME_MAX}
+                <span className={cn('text-[10px] tabular-nums',
+                  nameCount >= FULL_NAME_MAX ? 'text-red-500' : nameCount >= 40 ? 'text-orange-500' : 'text-[#c6d1d7]'
+                )}>
+                  {nameCount}/{FULL_NAME_MAX}
                 </span>
               </div>
               <input
@@ -181,15 +191,14 @@ function RegisterForm() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value.slice(0, FULL_NAME_MAX))}
                 placeholder="John Doe"
-                className="form-input"
+                className="w-full rounded-xl border border-[#c6d1d7] bg-white px-3.5 py-3 text-[14px] text-[#1e2a3c] placeholder:text-[#9fa0b5] outline-none transition-all focus:border-[#2f7eda] focus:ring-2 focus:ring-[#2f7eda]/15"
                 autoComplete="name"
                 maxLength={FULL_NAME_MAX}
               />
             </div>
-
             <div>
-              <label className="form-label" htmlFor="nickname">
-                Nickname / handle
+              <label className="mb-1.5 block text-[12px] font-semibold text-[#555663]" htmlFor="nickname">
+                Handle
               </label>
               <input
                 id="nickname"
@@ -197,117 +206,120 @@ function RegisterForm() {
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
                 placeholder="dev-handle"
-                className="form-input"
+                className="w-full rounded-xl border border-[#c6d1d7] bg-white px-3.5 py-3 text-[14px] text-[#1e2a3c] placeholder:text-[#9fa0b5] outline-none transition-all focus:border-[#2f7eda] focus:ring-2 focus:ring-[#2f7eda]/15"
                 pattern="[a-zA-Z0-9._-]*"
                 autoComplete="nickname"
               />
             </div>
+          </div>
 
-            <div>
-              <label className="form-label" htmlFor="email">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value)
-                  if (emailTouched) setEmailError(validateEmail(e.target.value))
-                }}
-                onBlur={() => {
-                  setEmailTouched(true)
-                  setEmailError(validateEmail(email))
-                }}
-                placeholder="you@company.com"
-                className={cn(
-                  'form-input',
-                  emailTouched && emailError && 'border-dl-danger focus:ring-dl-danger/20',
-                  emailTouched && !emailError && email && 'border-dl-teal',
-                )}
-                required
-                autoComplete="email"
-              />
-              {emailTouched && emailError ? (
-                <FieldError message={emailError} />
-              ) : !emailTouched ? (
-                <p className="mt-1 text-[11px] text-dl-hint">
-                  We&apos;ll send a confirmation to this address
-                </p>
-              ) : null}
-            </div>
-
-            <div>
-              <label className="form-label" htmlFor="password">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value)
-                    if (passwordTouched) setPasswordError(validatePassword(e.target.value))
-                  }}
-                  onBlur={() => {
-                    setPasswordTouched(true)
-                    setPasswordError(validatePassword(password))
-                  }}
-                  placeholder="Min. 8 characters"
-                  className={cn(
-                    'form-input pr-10',
-                    passwordTouched && passwordError && 'border-dl-danger focus:ring-dl-danger/20',
-                    passwordTouched && !passwordError && password && 'border-dl-teal',
-                  )}
-                  required
-                  minLength={8}
-                  autoComplete="new-password"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-dl-hint hover:text-dl-forest"
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-[18px] w-[18px]" />
-                  ) : (
-                    <Eye className="h-[18px] w-[18px]" />
-                  )}
-                </button>
-              </div>
-              {passwordTouched && passwordError ? (
-                <FieldError message={passwordError} />
-              ) : (
-                <p className="mt-1 text-[11px] text-dl-hint">
-                  Min. 8 characters with a capital letter, a number, and a symbol
-                </p>
-              )}
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
+          <div>
+            <label className="mb-1.5 block text-[12px] font-semibold text-[#555663]" htmlFor="email">
+              Email address
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value)
+                if (emailTouched) setEmailError(validateEmail(e.target.value))
+              }}
+              onBlur={() => { setEmailTouched(true); setEmailError(validateEmail(email)) }}
+              placeholder="you@company.com"
               className={cn(
-                'btn-primary mt-1 w-full min-w-[160px] justify-center py-2.5',
-                loading && 'cursor-not-allowed opacity-70'
+                'w-full rounded-xl border bg-white px-4 py-3 text-[14px] text-[#1e2a3c] placeholder:text-[#9fa0b5] outline-none transition-all duration-150',
+                emailTouched && emailError
+                  ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100'
+                  : emailTouched && !emailError && email
+                    ? 'border-[#2f7eda] focus:ring-2 focus:ring-[#2f7eda]/15'
+                    : 'border-[#c6d1d7] focus:border-[#2f7eda] focus:ring-2 focus:ring-[#2f7eda]/15'
               )}
-            >
-              {loading ? (
-                <span className="flex items-center gap-2">
-                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                  Creating account…
-                </span>
-              ) : 'Create account'}
-            </button>
-          </form>
+              autoComplete="email"
+            />
+            {emailTouched && emailError && <FieldError message={emailError} />}
+          </div>
+
+          <div>
+            <label className="mb-1.5 block text-[12px] font-semibold text-[#555663]" htmlFor="password">
+              Password
+            </label>
+            <div className="relative">
+              <input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value)
+                  if (passwordTouched) setPasswordError(validatePassword(e.target.value))
+                }}
+                onBlur={() => { setPasswordTouched(true); setPasswordError(validatePassword(password)) }}
+                placeholder="Create a strong password"
+                className={cn(
+                  'w-full rounded-xl border bg-white px-4 py-3 pr-11 text-[14px] text-[#1e2a3c] placeholder:text-[#9fa0b5] outline-none transition-all duration-150',
+                  passwordTouched && passwordError
+                    ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100'
+                    : passwordTouched && !passwordError && password
+                      ? 'border-[#2f7eda] focus:ring-2 focus:ring-[#2f7eda]/15'
+                      : 'border-[#c6d1d7] focus:border-[#2f7eda] focus:ring-2 focus:ring-[#2f7eda]/15'
+                )}
+                autoComplete="new-password"
+                minLength={8}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#9fa0b5] hover:text-[#555663] transition-colors"
+                aria-label={showPassword ? 'Hide' : 'Show'}
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
+            {passwordTouched && passwordError
+              ? <FieldError message={passwordError} />
+              : <PasswordStrength password={password} />
+            }
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className={cn(
+              'mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-[#2f7eda] py-3 text-[14px] font-semibold text-white transition-all duration-150',
+              loading ? 'cursor-not-allowed opacity-70' : 'hover:bg-[#1a5fb4] hover:shadow-md active:scale-[0.99]'
+            )}
+            style={{ boxShadow: '0 2px 12px rgba(47,126,218,0.35)' }}
+          >
+            {loading ? (
+              <>
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                Creating account…
+              </>
+            ) : (
+              <>
+                Create account
+                <ArrowRight className="h-4 w-4" />
+              </>
+            )}
+          </button>
+        </form>
+
+        <p className="mt-5 text-center text-[11px] leading-relaxed text-[#9fa0b5]">
+          By creating an account you agree to our{' '}
+          <Link href="/terms" className="font-medium text-[#555663] hover:underline">Terms</Link>
+          {' '}and{' '}
+          <Link href="/privacy" className="font-medium text-[#555663] hover:underline">Privacy Policy</Link>.
+        </p>
+
+        <div className="mt-5 flex items-center gap-4">
+          <div className="flex-1 border-t border-[#e4e8ee]" />
+          <span className="text-[11px] font-medium text-[#9fa0b5]">HAVE AN ACCOUNT?</span>
+          <div className="flex-1 border-t border-[#e4e8ee]" />
         </div>
 
-        <p className="mt-5 text-center text-xs text-dl-m-muted">
-          Already have an account?{' '}
-          <Link href={loginHref} className="font-medium text-dl-teal hover:underline">
-            Sign in
+        <p className="mt-4 text-center text-[13px] text-[#9fa0b5]">
+          <Link href={loginHref} className="font-semibold text-[#2f7eda] hover:underline">
+            Sign in instead
           </Link>
         </p>
       </div>
@@ -317,13 +329,11 @@ function RegisterForm() {
 
 export default function RegisterPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="flex flex-1 items-center justify-center px-4 py-10 text-sm text-dl-muted">
-          Loading…
-        </div>
-      }
-    >
+    <Suspense fallback={
+      <div className="flex flex-1 items-center justify-center">
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#2f7eda] border-t-transparent" />
+      </div>
+    }>
       <RegisterForm />
     </Suspense>
   )

@@ -148,6 +148,16 @@ export function OnboardingFlow() {
     if (err === 'github_oauth') {
       setRepoError('GitHub authorization failed. Please try again.')
     }
+    if (err === 'installation_claimed') {
+      setRepoError(
+        'This GitHub App installation is already connected to another DriftLogg account. Please install the GitHub App under a different account.'
+      )
+    }
+    if (err === 'already_connected') {
+      setRepoError(
+        'Your account already has a GitHub installation connected. Each DriftLogg account supports one GitHub connection. Visit Repos to manage it.'
+      )
+    }
   }, [searchParams])
 
   useEffect(() => {

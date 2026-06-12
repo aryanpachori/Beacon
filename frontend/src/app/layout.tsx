@@ -1,11 +1,22 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Toaster } from 'sonner'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-inter',   // keep same CSS var so existing classes work
+  weight: ['400', '500', '600', '700', '800'],
+  display: 'swap',
+})
+
+const geistMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   icons: {
@@ -32,7 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head />
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${plusJakarta.variable} ${geistMono.variable} font-sans antialiased`}>
         {children}
         <Toaster
           position="bottom-right"
@@ -43,6 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               background: '#ffffff',
               border: '1px solid #c6d1d7',
               color: '#555663',
+              fontFamily: 'var(--font-inter)',
             },
           }}
         />

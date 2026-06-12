@@ -20,6 +20,7 @@ import { billingRouter } from './routes/billing.routes'
 import { publicRouter } from './routes/public.routes'
 import { webhooksRouter } from './routes/webhooks.routes'
 import { internalRouter } from './routes/internal.routes'
+import { analyticsRouter } from './routes/analytics.routes'
 import { errorMiddleware } from './middleware/error.middleware'
 import { startWorkers } from './workers/signalCollect.worker'
 import { startIntelligenceWorker } from './workers/intelligenceScore.worker'
@@ -72,6 +73,7 @@ app.use('/api/notifications', notificationsRouter)
 app.use('/api/billing', billingRouter)
 app.use('/api/public', publicRouter)
 app.use('/api/internal', internalRouter)
+app.use('/api/analytics', analyticsRouter)
 
 app.get('/health', (_req, res) => res.json({ status: 'ok' }))
 
