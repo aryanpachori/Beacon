@@ -1,0 +1,6 @@
+bullmq
+httpx
+python-dotenv
+xgboost
+numpy
+scikit-learn

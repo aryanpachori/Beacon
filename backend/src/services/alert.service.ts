@@ -1,53 +1,58 @@
-import { AlertType, ScanStatus } from '@prisma/client'
-import { prisma, fromApiTier, tierRank, toApiTier } from '../db/client'
-import { redis } from '../lib/redis'
+import { AlertType, ScanStatus } from "@prisma/client";
+import { prisma, fromApiTier, tierRank, toApiTier } from "../db/client";
+import { redis } from "../lib/redis";
+import { markOnboardingComplete } from "./githubInstallation.service";
 import {
   dispatchChannels,
   generateNotificationMessage,
-} from './notification.service'
-import { notifyScanProgress } from './scanProgress.service'
+} from "./notification.service";
+import { bumpScanProgress } from "./scanProgress.service";
 
 export interface CheckAlertParams {
-  installationId: string
-  packageId: string
-  packageName: string
-  prevSps: number | null
-  newSps: number
-  tier: string
-  prevTier: string | null
-  signals: Record<string, number>
-  reason: string
+  installationId: string;
+  packageId: string;
+  packageName: string;
+  prevSps: number | null;
+  newSps: number;
+  tier: string;
+  prevTier: string | null;
+  signals: Record<string, number>;
+  reason: string;
 }
 
 function buildSignalPills(signals: Record<string, number>): string[] {
   return Object.entries(signals)
     .filter(([, score]) => score < 50)
-    .map(([key]) => key.replace(/([A-Z])/g, ' $1').trim())
-    .slice(0, 5)
+    .map(([key]) => key.replace(/([A-Z])/g, " $1").trim())
+    .slice(0, 5);
 }
 
-export async function checkAndFireAlert(params: CheckAlertParams): Promise<void> {
-  if (params.prevSps === null) return
+export async function checkAndFireAlert(
+  params: CheckAlertParams,
+): Promise<void> {
+  if (params.prevSps === null) return;
 
   const integration = await prisma.orgIntegration.findUnique({
     where: { installationId: params.installationId },
-  })
-  const threshold = integration?.alertThreshold ?? 40
+  });
+  const threshold = integration?.alertThreshold ?? 40;
 
-  const tierAfter = fromApiTier(params.tier)
-  const tierBefore = params.prevTier ? fromApiTier(params.prevTier) : null
+  const tierAfter = fromApiTier(params.tier);
+  const tierBefore = params.prevTier ? fromApiTier(params.prevTier) : null;
 
   const crossedThreshold =
-    params.newSps < threshold && params.prevSps >= threshold
-  const tierWorsened = tierRank(tierAfter) < tierRank(tierBefore)
-  const tierImproved = tierRank(tierAfter) > tierRank(tierBefore)
+    params.newSps < threshold && params.prevSps >= threshold;
+  const tierWorsened = tierRank(tierAfter) < tierRank(tierBefore);
+  const tierImproved = tierRank(tierAfter) > tierRank(tierBefore);
 
-  if (!crossedThreshold && !tierWorsened && !tierImproved) return
+  if (!crossedThreshold && !tierWorsened && !tierImproved) return;
 
-  const alertType: AlertType = tierImproved ? AlertType.recovery : AlertType.threshold
-  const dedupKey = `alert:dedup:${alertType}:${params.installationId}:${params.packageId}`
-  if (await redis.get(dedupKey)) return
-  await redis.setex(dedupKey, 86400, '1')
+  const alertType: AlertType = tierImproved
+    ? AlertType.recovery
+    : AlertType.threshold;
+  const dedupKey = `alert:dedup:${alertType}:${params.installationId}:${params.packageId}`;
+  if (await redis.get(dedupKey)) return;
+  await redis.setex(dedupKey, 86400, "1");
 
   await prisma.alert.create({
     data: {
@@ -61,13 +66,13 @@ export async function checkAndFireAlert(params: CheckAlertParams): Promise<void>
       alertType,
       signalPills: buildSignalPills(params.signals),
     },
-  })
+  });
 
   const installation = await prisma.githubInstallation.findUnique({
     where: { id: params.installationId },
     select: { userId: true },
-  })
-  if (!installation) return
+  });
+  if (!installation) return;
 
   await prisma.notification.create({
     data: {
@@ -79,7 +84,7 @@ export async function checkAndFireAlert(params: CheckAlertParams): Promise<void>
       tier: tierAfter,
       actionUrl: `/packages/${params.packageId}`,
     },
-  })
+  });
 
   await dispatchChannels(integration, {
     packageId: params.packageId,
@@ -89,7 +94,7 @@ export async function checkAndFireAlert(params: CheckAlertParams): Promise<void>
     tier: params.tier,
     prevTier: params.prevTier,
     reason: params.reason,
-  })
+  });
 }
 
 export async function incrementScanScored(
@@ -100,15 +105,41 @@ export async function incrementScanScored(
   prevSps: number | null,
   prevTier: string | null,
   reason: string,
-  signals: Record<string, number>
+  signals: Record<string, number>,
 ): Promise<void> {
-  const tierEnum = fromApiTier(tier)
-  const prevTierEnum = prevTier ? fromApiTier(prevTier) : null
-
   const pkg = await prisma.package.findUnique({
     where: { id: packageId },
     select: { name: true },
-  })
+  });
+  if (!pkg) {
+    console.warn(
+      JSON.stringify({
+        event: "score_complete_skipped",
+        reason: "package_not_found",
+        packageId,
+      }),
+    );
+    return;
+  }
+
+  const installationExists = await prisma.githubInstallation.findUnique({
+    where: { id: installationId },
+    select: { id: true },
+  });
+  if (!installationExists) {
+    console.warn(
+      JSON.stringify({
+        event: "score_complete_skipped",
+        reason: "installation_not_found",
+        installationId,
+        packageId,
+      }),
+    );
+    return;
+  }
+
+  const tierEnum = fromApiTier(tier);
+  const prevTierEnum = prevTier ? fromApiTier(prevTier) : null;
 
   await prisma.package.update({
     where: { id: packageId },
@@ -118,7 +149,7 @@ export async function incrementScanScored(
       lastScoredAt: new Date(),
       predictionReason: reason,
     },
-  })
+  });
 
   await prisma.packageScore.create({
     data: {
@@ -127,31 +158,9 @@ export async function incrementScanScored(
       tier: tierEnum,
       featureVector: signals,
     },
-  })
+  });
 
-  const installation = await prisma.githubInstallation.findUnique({
-    where: { id: installationId },
-    select: { scanProgress: true },
-  })
-
-  const progress = (installation?.scanProgress ?? {}) as {
-    total?: number
-    scanned?: number
-    scored?: number
-  }
-  const scored = (progress.scored ?? 0) + 1
-  const newProgress = { ...progress, scored }
-
-  await prisma.githubInstallation.update({
-    where: { id: installationId },
-    data: {
-      scanProgress: newProgress,
-      ...(newProgress.total !== undefined && scored >= newProgress.total
-        ? { scanStatus: ScanStatus.complete }
-        : {}),
-    },
-  })
-  await notifyScanProgress(installationId)
+  const progress = await bumpScanProgress(installationId, "scored");
 
   await checkAndFireAlert({
     installationId,
@@ -163,5 +172,9 @@ export async function incrementScanScored(
     prevTier: prevTierEnum ? toApiTier(prevTierEnum) : null,
     signals,
     reason,
-  })
+  });
+
+  if (progress?.status === ScanStatus.complete) {
+    await markOnboardingComplete(installationId);
+  }
 }

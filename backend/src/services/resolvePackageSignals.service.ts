@@ -20,6 +20,8 @@ export type SignalFacts = {
   ossfScore: number
   daysSinceRelease: number
   cveCount: number
+  isDeprecated: boolean
+  deprecatedMessage: string | null
   signalSourceRepo: string
 }
 
