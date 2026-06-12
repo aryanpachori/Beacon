@@ -1,8 +1,31 @@
 'use client'
 
-import { Shield, TrendingDown, Bell, Zap, Package, Sun, Moon } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
+import { Shield, TrendingDown, Bell, Zap, Package, Sun, Moon, Lightbulb, RefreshCw } from 'lucide-react'
 import { SiteLogo } from '@/components/layout/SiteLogo'
 import { useTheme } from '@/hooks/useTheme'
+
+function useFunFact() {
+  const [fact, setFact] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+
+  const fetch_ = useCallback(async () => {
+    setLoading(true)
+    try {
+      const res = await fetch('https://uselessfacts.jsph.pl/api/v2/facts/random')
+      const data = await res.json()
+      setFact(data.text ?? null)
+    } catch {
+      setFact(null)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => { fetch_() }, [fetch_])
+
+  return { fact, loading, refresh: fetch_ }
+}
 
 const FEATURES = [
   { icon: TrendingDown, text: 'Predict package death up to 60 days early' },
@@ -19,6 +42,7 @@ const STATS = [
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   const [theme, toggleTheme] = useTheme()
+  const { fact, loading, refresh } = useFunFact()
 
   return (
     <div className="flex min-h-screen bg-dl-bg">
@@ -88,6 +112,38 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               ))}
             </div>
           </div>
+        </div>
+
+        {/* Fun fact */}
+        <div className="relative z-10 mt-auto rounded-xl border border-white/8 bg-white/5 p-4">
+          <div className="mb-2.5 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Lightbulb className="h-3.5 w-3.5 text-[#f59e0b]" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-white/40">Fun fact</span>
+            </div>
+            <button
+              type="button"
+              onClick={refresh}
+              disabled={loading}
+              className="flex h-5 w-5 items-center justify-center rounded text-white/30 transition-colors hover:text-white/60 disabled:opacity-40"
+              aria-label="New fact"
+            >
+              <RefreshCw className={`h-3 w-3 ${loading ? 'animate-spin' : ''}`} />
+            </button>
+          </div>
+          {loading && !fact ? (
+            <div className="space-y-1.5">
+              <div className="h-2.5 w-full rounded-full bg-white/10 animate-pulse" />
+              <div className="h-2.5 w-4/5 rounded-full bg-white/10 animate-pulse" />
+              <div className="h-2.5 w-3/5 rounded-full bg-white/10 animate-pulse" />
+            </div>
+          ) : fact ? (
+            <p className={`text-[12px] leading-relaxed text-white/60 transition-opacity duration-300 ${loading ? 'opacity-40' : 'opacity-100'}`}>
+              {fact}
+            </p>
+          ) : (
+            <p className="text-[12px] text-white/30">Could not load a fact right now.</p>
+          )}
         </div>
 
       </div>
