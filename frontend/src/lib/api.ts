@@ -296,6 +296,75 @@ export async function fetchAnalytics(): Promise<AnalyticsData> {
   return apiFetch<AnalyticsData>('/api/analytics')
 }
 
+// ── Activity Feed ─────────────────────────────────────────────────────────────
+
+export type ActivityEvent = {
+  id: string
+  type: 'tier_change' | 'threshold' | 'recovery' | 'supply_chain' | string
+  packageId: string
+  packageName: string
+  ecosystem: string
+  tier: string
+  spsBefore?: number
+  spsAfter?: number
+  aiReason?: string
+  signalPills?: unknown
+  primarySignal?: string
+  cveId?: string
+  affectedVersions?: string[]
+  safeVersions?: string[]
+  resolved: boolean
+  firedAt: string
+}
+
+export async function fetchActivity(limit = 100): Promise<ActivityEvent[]> {
+  const data = await apiFetch<{ events: ActivityEvent[] }>(`/api/activity?limit=${limit}`)
+  return data.events
+}
+
+// ── Maintainers ───────────────────────────────────────────────────────────────
+
+export type MaintainerOverview = {
+  id: string
+  login: string
+  displayName: string
+  avatarUrl?: string
+  company?: string
+  publicReposCount: number
+  followersCount: number
+  daysInactive: number
+  isSponsorEnabled: boolean
+  lastPushAt?: string
+  packages: { id: string; name: string; tier: string | null }[]
+  riskLevel: 'low' | 'medium' | 'high'
+}
+
+export async function fetchMaintainers(): Promise<MaintainerOverview[]> {
+  const data = await apiFetch<{ maintainers: MaintainerOverview[] }>('/api/maintainers')
+  return data.maintainers
+}
+
+// ── Package Recommendations ───────────────────────────────────────────────────
+
+export type PackageRecommendation = {
+  toPackageId: string
+  name: string
+  sps: number
+  weeklyDownloads: number
+  ecosystem: string
+  reason?: string
+  effortLines?: number
+  effortFiles?: number
+  effortWeeks?: number
+  confidence: number
+  isOfficial: boolean
+}
+
+export async function fetchPackageRecommendations(packageId: string): Promise<PackageRecommendation[]> {
+  const data = await apiFetch<{ recommendations: PackageRecommendation[] }>(`/api/packages/${packageId}/recommendations`)
+  return data.recommendations
+}
+
 export function openScanProgressStream(
   onEvent: (event: ScanProgressEvent) => void,
   onError?: () => void

@@ -69,6 +69,9 @@ export async function resolveInstallationAccountLogin(
 }
 
 export async function markScanFailed(installationDbId: string): Promise<void> {
+  // Guard: installation may have been deleted between job enqueue and execution
+  const exists = await prisma.githubInstallation.findUnique({ where: { id: installationDbId }, select: { id: true } })
+  if (!exists) return
   await prisma.githubInstallation.update({
     where: { id: installationDbId },
     data: { scanStatus: ScanStatus.failed },

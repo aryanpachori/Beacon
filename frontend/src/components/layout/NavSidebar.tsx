@@ -6,24 +6,43 @@ import { useState, useEffect, useRef } from 'react'
 import {
   LayoutDashboard, Package, Bell, GitBranch, Settings2,
   CreditCard, User, LogOut, ChevronLeft, ChevronRight,
-  BarChart2, Activity, HelpCircle, Zap, Shield,
+  BarChart2, Activity, HelpCircle, Zap, Shield, Users,
+  Command, ChevronDown,
 } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { SiteLogo } from '@/components/layout/SiteLogo'
 import { useAppData } from '@/context/AppDataContext'
 import { getUnreadCount } from '@/lib/alertsData'
 import { cn } from '@/lib/utils'
 
+/* ── Section icon color map ──────────────────────────────────────────── */
+const SECTION_COLORS: Record<string, { icon: string; bg: string }> = {
+  Overview:   { icon: '#2f7eda', bg: '#eaf2fd' },
+  Monitoring: { icon: '#8b5cf6', bg: '#f5f0ff' },
+  People:     { icon: '#0ea5e9', bg: '#f0f9ff' },
+  System:     { icon: '#555663', bg: '#f0f2f5' },
+}
+
+/* ── Plan label/color ────────────────────────────────────────────────── */
+function planChip(plan: string) {
+  if (plan === 'pro')  return { label: 'Pro',  bg: '#eaf2fd', text: '#2f7eda' }
+  if (plan === 'team') return { label: 'Team', bg: '#f0fdf4', text: '#16a34a' }
+  return                      { label: 'Free', bg: '#f0f2f5', text: '#9fa0b5' }
+}
+
 const NAV_SECTIONS = [
   {
     label: 'Overview',
+    defaultOpen: true,
     items: [
       { label: 'Dashboard',  href: '/dashboard',    icon: LayoutDashboard },
       { label: 'Analytics',  href: '/analytics',    icon: BarChart2 },
-      { label: 'Activity',   href: '/activity',     icon: Activity },
+      { label: 'Activity',   href: '/activity',     icon: Activity, showActivityBadge: true },
     ],
   },
   {
     label: 'Monitoring',
+    defaultOpen: true,
     items: [
       { label: 'Packages',     href: '/packages',     icon: Package },
       { label: 'Alerts',       href: '/alerts',       icon: Bell, showBadge: true },
@@ -31,12 +50,20 @@ const NAV_SECTIONS = [
     ],
   },
   {
+    label: 'People',
+    defaultOpen: true,
+    items: [
+      { label: 'Maintainers',  href: '/maintainers',  icon: Users },
+    ],
+  },
+  {
     label: 'System',
+    defaultOpen: false,
     items: [
       { label: 'Integrations', href: '/integrations', icon: Zap },
-      { label: 'Security',     href: '/security',     icon: Shield },
+      { label: 'Security',     href: '/security',     icon: Shield,    soon: true },
       { label: 'Billing',      href: '/billing',      icon: CreditCard },
-      { label: 'Settings',     href: '/settings',     icon: Settings2 },
+      { label: 'Settings',     href: '/settings',     icon: Settings2, soon: true },
     ],
   },
 ]
@@ -61,6 +88,23 @@ export function NavSidebar({
   const [profileOpen, setProfileOpen] = useState(false)
   const profileRef = useRef<HTMLDivElement>(null)
 
+  // Track which sections are open (persisted to localStorage)
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>(() => {
+    const saved = typeof window !== 'undefined' ? localStorage.getItem('dl_nav_sections') : null
+    if (saved) {
+      try { return JSON.parse(saved) } catch { /* ignore */ }
+    }
+    return Object.fromEntries(NAV_SECTIONS.map(s => [s.label, s.defaultOpen]))
+  })
+
+  function toggleSection(label: string) {
+    setOpenSections(prev => {
+      const next = { ...prev, [label]: !prev[label] }
+      localStorage.setItem('dl_nav_sections', JSON.stringify(next))
+      return next
+    })
+  }
+
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (profileRef.current && !profileRef.current.contains(e.target as Node)) setProfileOpen(false)
@@ -74,6 +118,9 @@ export function NavSidebar({
     : (user?.email ?? 'U').slice(0, 2)
   ).toUpperCase()
 
+  const plan = user?.plan ?? 'free'
+  const chip = planChip(plan)
+
   return (
     <aside
       className={cn(
@@ -84,7 +131,7 @@ export function NavSidebar({
     >
       {/* ── Logo row ── */}
       <div className={cn(
-        'flex h-[60px] shrink-0 items-center justify-between border-b border-[#e4e8ee] px-5',
+        'flex h-[60px] shrink-0 items-center justify-between border-b border-[#e4e8ee] px-4',
         isCollapsed ? 'md:justify-center md:px-3' : ''
       )}>
         <SiteLogo
@@ -114,89 +161,158 @@ export function NavSidebar({
 
       {/* ── Nav sections ── */}
       <nav className={cn(
-        'flex flex-1 flex-col gap-5 overflow-y-auto py-5 transition-all duration-200',
-        isCollapsed ? 'px-2 md:px-2' : 'px-3'
+        'flex flex-1 flex-col overflow-y-auto py-4 transition-all duration-200',
+        isCollapsed ? 'px-2 md:px-2 gap-1' : 'px-3 gap-4'
       )}>
-        {NAV_SECTIONS.map(({ label, items }) => (
-          <div key={label} className="flex flex-col gap-0.5">
-            {!isCollapsed && (
-              <p className={cn(
-                'mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#9fa0b5] transition-all duration-200',
-                isCollapsed ? 'md:hidden' : ''
-              )}>
-                {label}
-              </p>
-            )}
-            {items.map(({ label: itemLabel, href, icon: Icon, showBadge }) => {
-              const active = pathname === href || pathname.startsWith(href + '/')
-              const isDisabled = href === '/analytics' || href === '/activity' || href === '/security' || href === '/settings'
-              return (
-                <Link
-                  key={href}
-                  href={isDisabled ? '/dashboard' : href}
-                  onClick={onClose}
-                  title={isCollapsed ? itemLabel : undefined}
-                  className={cn(
-                    'relative flex items-center gap-3 rounded-lg py-2 text-[13px] font-medium transition-all duration-150',
-                    active
-                      ? 'bg-[#eaf2fd] text-[#2f7eda]'
-                      : 'text-[#9fa0b5] hover:bg-[#f5f7fa] hover:text-[#555663]',
-                    isCollapsed ? 'md:justify-center md:px-0 md:py-2.5' : 'px-2.5',
-                    isDisabled && !active ? 'opacity-50 cursor-not-allowed' : ''
-                  )}
+        {NAV_SECTIONS.map(({ label, items }) => {
+          const sectionOpen = openSections[label] !== false
+          const colors = SECTION_COLORS[label] ?? SECTION_COLORS.System
+
+          return (
+            <div key={label} className="flex flex-col gap-0.5">
+              {/* Section header */}
+              {!isCollapsed && (
+                <button
+                  type="button"
+                  onClick={() => toggleSection(label)}
+                  className="group mb-1 flex w-full items-center justify-between px-2 py-0.5 focus:outline-none"
                 >
-                  {active && !isCollapsed && (
-                    <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r bg-[#2f7eda]" />
-                  )}
-                  <div className="relative flex shrink-0 items-center justify-center">
-                    <Icon className={cn(
-                      'h-4 w-4 transition-colors',
-                      active ? 'text-[#2f7eda]' : 'text-[#9fa0b5]'
-                    )} />
-                    {showBadge && alertCount > 0 && isCollapsed && (
-                      <span className="absolute -top-1 -right-1 hidden h-2 w-2 rounded-full bg-red-500 md:block ring-2 ring-white" />
-                    )}
-                  </div>
-                  <span className={cn(
-                    'transition-all duration-200',
-                    isCollapsed ? 'md:hidden' : ''
-                  )}>
-                    {itemLabel}
+                  <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#c6d1d7] group-hover:text-[#9fa0b5] transition-colors">
+                    {label}
                   </span>
-                  {showBadge && alertCount > 0 && (
-                    <span className={cn(
-                      'ml-auto flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold text-white transition-all duration-200',
-                      isCollapsed ? 'md:hidden' : ''
-                    )}>
-                      {alertCount}
-                    </span>
-                  )}
-                  {isDisabled && !isCollapsed && (
-                    <span className="ml-auto rounded px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide bg-[#edeff3] text-[#9fa0b5]">
-                      Soon
-                    </span>
-                  )}
-                </Link>
-              )
-            })}
-          </div>
-        ))}
+                  <ChevronDown className={cn(
+                    'h-3 w-3 text-[#c6d1d7] transition-transform duration-200 group-hover:text-[#9fa0b5]',
+                    sectionOpen ? 'rotate-0' : '-rotate-90'
+                  )} />
+                </button>
+              )}
+
+              {/* Section items */}
+              <AnimatePresence initial={false}>
+                {(sectionOpen || isCollapsed) && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.18, ease: 'easeInOut' }}
+                    className="flex flex-col gap-0.5 overflow-hidden"
+                  >
+                    {items.map(({ label: itemLabel, href, icon: Icon, showBadge, showActivityBadge, soon }: {
+                      label: string; href: string; icon: React.ElementType
+                      showBadge?: boolean; showActivityBadge?: boolean; soon?: boolean
+                    }) => {
+                      const active = pathname === href || pathname.startsWith(href + '/')
+
+                      return (
+                        <Link
+                          key={href}
+                          href={soon ? '/dashboard' : href}
+                          onClick={!soon ? onClose : undefined}
+                          title={isCollapsed ? itemLabel : undefined}
+                          className={cn(
+                            'group relative flex items-center gap-2.5 rounded-xl py-2 text-[13px] font-medium transition-all duration-150',
+                            active
+                              ? 'bg-[#eaf2fd] text-[#2f7eda]'
+                              : 'text-[#9fa0b5] hover:bg-[#f5f7fa] hover:text-[#555663]',
+                            isCollapsed ? 'md:justify-center md:px-0 md:py-2.5' : 'px-2.5',
+                            soon ? 'cursor-not-allowed' : ''
+                          )}
+                        >
+                          {/* Active left bar */}
+                          {active && !isCollapsed && (
+                            <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r bg-[#2f7eda]" />
+                          )}
+
+                          {/* Icon container */}
+                          <div className={cn(
+                            'relative flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-all duration-150',
+                            active
+                              ? 'bg-[#2f7eda]/12'
+                              : `group-hover:bg-[${colors.bg}]`
+                          )}
+                            style={!active ? undefined : { background: `${colors.bg}` }}
+                          >
+                            <Icon className={cn(
+                              'h-3.5 w-3.5 transition-colors',
+                              active ? 'text-[#2f7eda]' : 'text-[#9fa0b5] group-hover:text-[#555663]'
+                            )}
+                              style={active ? { color: colors.icon } : undefined}
+                            />
+                            {/* Collapsed alert dot */}
+                            {showBadge && alertCount > 0 && isCollapsed && (
+                              <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white" />
+                            )}
+                            {showActivityBadge && alertCount > 0 && isCollapsed && (
+                              <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-[#2f7eda] ring-2 ring-white" />
+                            )}
+                          </div>
+
+                          {/* Label */}
+                          <span className={cn(
+                            'flex-1 transition-all duration-200',
+                            isCollapsed ? 'md:hidden' : ''
+                          )}>
+                            {itemLabel}
+                          </span>
+
+                          {/* Alert count badge */}
+                          {showBadge && alertCount > 0 && !isCollapsed && (
+                            <span className="flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold text-white">
+                              {alertCount > 99 ? '99+' : alertCount}
+                            </span>
+                          )}
+
+                          {/* Activity dot for new events */}
+                          {showActivityBadge && alertCount > 0 && !isCollapsed && (
+                            <span className="h-2 w-2 rounded-full bg-[#2f7eda] animate-pulse" />
+                          )}
+
+                          {/* Soon badge */}
+                          {soon && !isCollapsed && (
+                            <span className="rounded-md bg-[#edeff3] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-[#9fa0b5]">
+                              Soon
+                            </span>
+                          )}
+                        </Link>
+                      )
+                    })}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )
+        })}
       </nav>
+
+      {/* ── ⌘K hint ── */}
+      {!isCollapsed && (
+        <div className="px-4 pb-2">
+          <div className="flex items-center gap-2 rounded-lg border border-[#e4e8ee] bg-[#f5f7fa] px-3 py-2">
+            <Command className="h-3 w-3 shrink-0 text-[#c6d1d7]" />
+            <span className="flex-1 text-[11px] text-[#c6d1d7]">Quick search</span>
+            <span className="flex items-center gap-0.5 rounded bg-white px-1 py-0.5 text-[10px] font-bold text-[#9fa0b5] shadow-sm border border-[#e4e8ee]">
+              ⌘K
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* ── Help link ── */}
       <div className={cn(
-        'border-t border-[#e4e8ee] px-3 py-3',
+        'border-t border-[#e4e8ee] px-3 py-2',
         isCollapsed ? 'md:px-2' : ''
       )}>
         <a
           href="mailto:support@driftlogg.com"
           title={isCollapsed ? 'Help & Support' : undefined}
           className={cn(
-            'flex items-center gap-3 rounded-lg py-2 text-[13px] font-medium text-[#9fa0b5] hover:bg-[#f5f7fa] hover:text-[#555663] transition-all duration-150',
+            'flex items-center gap-2.5 rounded-xl py-2 text-[12px] font-medium text-[#9fa0b5] hover:bg-[#f5f7fa] hover:text-[#555663] transition-all duration-150',
             isCollapsed ? 'md:justify-center md:px-0' : 'px-2.5'
           )}
         >
-          <HelpCircle className="h-4 w-4 shrink-0" />
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg">
+            <HelpCircle className="h-3.5 w-3.5" />
+          </div>
           <span className={cn('transition-all duration-200', isCollapsed ? 'md:hidden' : '')}>
             Help &amp; Support
           </span>
@@ -209,54 +325,80 @@ export function NavSidebar({
         isCollapsed ? 'md:px-2' : ''
       )}>
         <div ref={profileRef} className="relative w-full">
-          {profileOpen && (
-            <div className={cn(
-              'absolute bottom-14 left-0 z-50 flex flex-col gap-0.5 rounded-xl border border-[#e4e8ee] bg-white p-2 shadow-xl',
-              isCollapsed ? 'md:left-0 md:w-52' : 'right-0'
-            )}>
-              <div className="px-3 py-2 mb-1">
-                <p className="text-[12px] font-semibold text-[#1e2a3c] truncate">
-                  {user?.fullName ?? user?.nickname ?? 'User'}
-                </p>
-                <p className="text-[11px] text-[#9fa0b5] truncate">{user?.email}</p>
-              </div>
-              <div className="border-t border-[#e4e8ee] pt-1">
-                <Link
-                  href="/profile"
-                  onClick={() => { setProfileOpen(false); onClose() }}
-                  className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-[12px] font-medium text-[#555663] hover:bg-[#f5f7fa] hover:text-[#2f7eda] transition-colors duration-150"
-                >
-                  <User className="h-3.5 w-3.5" />
-                  Profile settings
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => { setProfileOpen(false); onClose(); signOut() }}
-                  className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-[12px] font-medium text-red-500 hover:bg-red-50 transition-colors duration-150"
-                >
-                  <LogOut className="h-3.5 w-3.5" />
-                  Sign out
-                </button>
-              </div>
-            </div>
-          )}
+          {/* Profile popover */}
+          <AnimatePresence>
+            {profileOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 6, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 6, scale: 0.97 }}
+                transition={{ duration: 0.14, ease: [0.22, 1, 0.36, 1] }}
+                className={cn(
+                  'absolute bottom-16 left-0 z-50 flex flex-col rounded-2xl border border-[#e4e8ee] bg-white shadow-2xl overflow-hidden',
+                  isCollapsed ? 'md:left-full md:ml-2 md:bottom-0 w-52' : 'w-full'
+                )}
+              >
+                {/* Profile header */}
+                <div className="px-4 py-3 bg-gradient-to-b from-[#f5f7fa] to-white border-b border-[#f0f2f5]">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#2f7eda] to-[#1a5fb4] text-[11px] font-bold text-white shadow-sm">
+                      {initials}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="truncate text-[13px] font-semibold text-[#1e2a3c]">
+                        {user?.fullName ?? user?.nickname ?? 'User'}
+                      </p>
+                      <p className="truncate text-[11px] text-[#9fa0b5]">{user?.email}</p>
+                    </div>
+                  </div>
+                  <span
+                    className="mt-2.5 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-semibold"
+                    style={{ background: chip.bg, color: chip.text }}
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full" style={{ background: chip.text }} />
+                    {chip.label} Plan
+                  </span>
+                </div>
+                {/* Actions */}
+                <div className="p-1.5">
+                  <Link
+                    href="/profile"
+                    onClick={() => { setProfileOpen(false); onClose() }}
+                    className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-[12px] font-medium text-[#555663] hover:bg-[#f5f7fa] hover:text-[#2f7eda] transition-colors"
+                  >
+                    <User className="h-3.5 w-3.5" />
+                    Profile settings
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => { setProfileOpen(false); onClose(); signOut() }}
+                    className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-[12px] font-medium text-red-500 hover:bg-red-50 transition-colors"
+                  >
+                    <LogOut className="h-3.5 w-3.5" />
+                    Sign out
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
+          {/* Profile trigger button */}
           <button
             type="button"
             onClick={() => setProfileOpen(p => !p)}
             className={cn(
-              'flex w-full items-center gap-3 rounded-xl p-2 text-left transition-all duration-150 hover:bg-[#f5f7fa] focus:outline-none',
+              'flex w-full items-center gap-2.5 rounded-xl p-2 text-left transition-all duration-150 hover:bg-[#f5f7fa] focus:outline-none',
               isCollapsed ? 'md:justify-center' : ''
             )}
           >
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#2f7eda] to-[#1a5fb4] text-[11px] font-bold text-white shadow-sm">
               {initials}
             </div>
-            <div className={cn('flex-1 min-w-0 transition-all duration-200', isCollapsed ? 'md:hidden' : '')}>
+            <div className={cn('flex-1 min-w-0', isCollapsed ? 'md:hidden' : '')}>
               <p className="truncate text-[12px] font-semibold text-[#1e2a3c]">
                 {user?.nickname ?? user?.fullName ?? user?.email ?? '…'}
               </p>
-              <p className="text-[10px] text-[#9fa0b5] truncate">{user?.email}</p>
+              <p className="truncate text-[11px] text-[#9fa0b5]">{user?.email}</p>
             </div>
             <ChevronRight className={cn(
               'h-3.5 w-3.5 text-[#9fa0b5] transition-transform duration-150',

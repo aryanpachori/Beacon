@@ -151,6 +151,37 @@ packagesRouter.get('/:id', async (req: AuthRequest, res, next) => {
         filesAffected: repos.length,
         sprintWeeks: 1,
       },
+      weeklyDownloads: pkg.weeklyDownloads ? Number(pkg.weeklyDownloads) : null,
+    })
+  } catch (err) {
+    next(err)
+  }
+})
+
+packagesRouter.get('/:id/recommendations', async (req: AuthRequest, res, next) => {
+  try {
+    const { id } = req.params
+    const packageId = Array.isArray(id) ? id[0]! : id
+
+    const recs = await prisma.recommendation.findMany({
+      where: { fromPackageId: packageId },
+      include: { toPackage: { select: { name: true, ecosystem: true, currentSps: true, weeklyDownloads: true } } },
+    })
+
+    res.json({
+      recommendations: recs.map(r => ({
+        toPackageId: r.toPackageId,
+        name: r.toPackage.name,
+        sps: r.toPackage.currentSps ?? 0,
+        weeklyDownloads: r.toPackage.weeklyDownloads ? Number(r.toPackage.weeklyDownloads) : 0,
+        ecosystem: r.toPackage.ecosystem,
+        reason: r.reason ?? undefined,
+        effortLines: r.effortLines ?? undefined,
+        effortFiles: r.effortFiles ?? undefined,
+        effortWeeks: r.effortWeeks ?? undefined,
+        confidence: r.confidence ?? 0,
+        isOfficial: r.isOfficial,
+      })),
     })
   } catch (err) {
     next(err)

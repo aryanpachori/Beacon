@@ -77,6 +77,15 @@ export interface Package {
   };
   signalFacts?: SignalFacts | null;
   maintainers?: MaintainerSnapshot[];
+  // Extended detail fields (populated on package detail page only)
+  weeklyDownloads?: number;
+  totalStars?: number;
+  totalForks?: number;
+  license?: string;
+  isDeprecated?: boolean;
+  successorPackage?: string;
+  homepageUrl?: string;
+  githubRepoUrl?: string;
 }
 
 export interface Alert {

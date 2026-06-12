@@ -28,6 +28,14 @@ export type ApiPackageDetail = ApiPackageListItem & {
   spsHistory?: number[]
   recommendations?: Package['recommendations']
   effortEstimate?: Package['effortEstimate']
+  weeklyDownloads?: number | null
+  totalStars?: number | null
+  totalForks?: number | null
+  license?: string | null
+  isDeprecated?: boolean
+  successorPackage?: string | null
+  homepageUrl?: string | null
+  githubRepoUrl?: string | null
 }
 
 export type NormalizedSignals = {
@@ -235,6 +243,14 @@ export function adaptPackageDetail(p: ApiPackageDetail): Package {
     spsHistory: p.spsHistory ?? [],
     recommendations: p.recommendations ?? [],
     effortEstimate: p.effortEstimate ?? base.effortEstimate,
+    weeklyDownloads: p.weeklyDownloads ?? undefined,
+    totalStars: p.totalStars ?? undefined,
+    totalForks: p.totalForks ?? undefined,
+    license: p.license ?? undefined,
+    isDeprecated: p.isDeprecated ?? false,
+    successorPackage: p.successorPackage ?? undefined,
+    homepageUrl: p.homepageUrl ?? undefined,
+    githubRepoUrl: p.githubRepoUrl ?? undefined,
   }
 }
 

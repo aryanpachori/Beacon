@@ -21,6 +21,8 @@ import { publicRouter } from './routes/public.routes'
 import { webhooksRouter } from './routes/webhooks.routes'
 import { internalRouter } from './routes/internal.routes'
 import { analyticsRouter } from './routes/analytics.routes'
+import { activityRouter } from './routes/activity.routes'
+import { maintainersRouter } from './routes/maintainers.routes'
 import { errorMiddleware } from './middleware/error.middleware'
 import { startWorkers } from './workers/signalCollect.worker'
 import { startIntelligenceWorker } from './workers/intelligenceScore.worker'
@@ -74,6 +76,8 @@ app.use('/api/billing', billingRouter)
 app.use('/api/public', publicRouter)
 app.use('/api/internal', internalRouter)
 app.use('/api/analytics', analyticsRouter)
+app.use('/api/activity', activityRouter)
+app.use('/api/maintainers', maintainersRouter)
 
 app.get('/health', (_req, res) => res.json({ status: 'ok' }))
 
