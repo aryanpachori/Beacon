@@ -33,10 +33,12 @@ export async function sendOrgDigest(installationId: string): Promise<void> {
     )
     .join('')
 
+  const frequencyName = integration.digestFrequency === 'weekly' ? 'Weekly' : 'Daily'
+
   await resend.emails.send({
     from: process.env.DIGEST_FROM || 'digest@driftlogg.com',
     to: integration.digestEmail,
-    subject: 'DriftLogg Daily Dependency Health Digest',
+    subject: `DriftLogg ${frequencyName} Dependency Health Digest`,
     html: `<h2>Dependency health summary</h2><ul>${items || '<li>No critical packages</li>'}</ul>`,
   })
 }
