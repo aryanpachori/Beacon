@@ -64,7 +64,7 @@ export function Testimonials() {
         viewport={inViewOptions}
         variants={staggerContainer}
       >
-        <motion.p variants={sectionReveal} className="label-overline text-dl-sage">
+        <motion.p variants={sectionReveal} className="label-overline">
           What engineers say
         </motion.p>
         <motion.h2
@@ -93,7 +93,7 @@ export function Testimonials() {
               key={`${t.name}-${idx}`}
               className="w-[290px] sm:w-[360px] shrink-0 rounded-[14px] border border-dl-border bg-dl-page p-7 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1"
             >
-              <span className="text-5xl font-light leading-none text-dl-sage-light select-none">&ldquo;</span>
+              <span className="text-5xl font-light leading-none text-neutral-300 select-none">&ldquo;</span>
               <p className="mt-2 text-[15px] italic leading-relaxed text-dl-forest">{t.quote}</p>
               <div className="mt-6 flex items-center gap-3">
                 <div className={`flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br ${t.gradient} text-[13px] font-medium text-white`}>
@@ -101,7 +101,7 @@ export function Testimonials() {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-dl-text">{t.name}</p>
-                  <p className="text-xs text-dl-muted">{t.role}</p>
+                  <p className="text-xs text-neutral-600">{t.role}</p>
                 </div>
               </div>
             </div>

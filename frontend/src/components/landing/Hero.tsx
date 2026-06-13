@@ -101,15 +101,15 @@ function PackageRow({
   return (
     <div>
       <div
-        className="flex items-center gap-3 border-t border-dl-sage-light/10 py-3 first:border-t-0 first:pt-0 cursor-pointer transition-colors hover:bg-white/[0.03] rounded-lg px-2 -mx-2"
+        className="flex items-center gap-3 border-t border-white/10 py-3 first:border-t-0 first:pt-0 cursor-pointer transition-colors hover:bg-white/[0.03] rounded-lg px-2 -mx-2"
         onClick={onToggle}
       >
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-dl-sage-light/15 font-mono text-[11px] font-medium text-dl-sage-light">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white/10 font-mono text-[11px] font-medium text-white/80">
           {abbr}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium text-dl-cream">{name}</p>
-          <p className="text-xs text-dl-sage-light/50">{version}</p>
+          <p className="truncate text-sm font-medium text-white">{name}</p>
+          <p className="text-xs text-white/60">{version}</p>
         </div>
         <SparklineBars trend={trend} color={SPARK_COLOR[tier]} />
         <span className={`w-8 text-right font-mono text-sm font-medium ${SPS_COLOR[tier]}`}>{sps}</span>
@@ -126,13 +126,13 @@ function PackageRow({
             className="overflow-hidden"
           >
             <div className="ml-12 mr-2 mb-2 rounded-lg bg-white/[0.04] p-3">
-              <p className="mb-2.5 text-[10px] font-semibold uppercase tracking-wider text-dl-sage-light/35">
+              <p className="mb-2.5 text-[10px] font-semibold uppercase tracking-wider text-white/50">
                 Signal Breakdown
               </p>
               <div className="flex flex-col gap-2">
                 {signals.map((signal) => (
                   <div key={signal.label} className="flex items-center gap-2">
-                    <span className="w-[60px] text-right text-[10px] text-dl-sage-light/45">
+                    <span className="w-[60px] text-right text-[10px] text-white/60">
                       {signal.label}
                     </span>
                     <div className="flex-1 h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
@@ -143,7 +143,7 @@ function PackageRow({
                         transition={{ duration: 0.6, ease: 'easeOut' }}
                       />
                     </div>
-                    <span className="w-[20px] text-right font-mono text-[10px] text-dl-sage-light/50">
+                    <span className="w-[20px] text-right font-mono text-[10px] text-white/60">
                       {signal.value}
                     </span>
                   </div>
@@ -172,18 +172,18 @@ export function Hero() {
           whileInView="visible"
           viewport={inViewOptions}
         >
-          <motion.p variants={textItem} className="label-overline border-l border-dl-sage pl-3 text-dl-sage">
+          <motion.p variants={textItem} className="label-overline border-l border-white/40 pl-3 text-white/80">
             Predictive dependency intelligence
           </motion.p>
           <motion.h1
             variants={textItem}
-            className="mt-6 text-hero-mobile text-dl-cream lg:text-hero"
+            className="mt-6 text-hero-mobile text-white lg:text-hero"
           >
             Know which packages are dying — 60 days before they do.
           </motion.h1>
           <motion.p
             variants={textItem}
-            className="mt-5 max-w-[480px] text-base text-dl-sage-light/70"
+            className="mt-5 max-w-[480px] text-base text-white/85"
           >
             DriftLogg monitors every open source dependency in your codebase and predicts abandonment
             before it becomes a production incident. Stop firefighting. Start planning.
@@ -196,7 +196,7 @@ export function Hero() {
               See how it works →
             </a>
           </motion.div>
-          <motion.div variants={textItem} className="mt-6 flex flex-wrap gap-5 text-xs text-dl-sage-light/50">
+          <motion.div variants={textItem} className="mt-6 flex flex-wrap gap-5 text-xs text-white/65">
             <span className="flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-dl-healthy" />
               SOC 2 in progress
@@ -217,10 +217,10 @@ export function Hero() {
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4, delay: 0.4, ease: 'easeOut' }}
           viewport={inViewOptions}
-          className="rounded-2xl border border-dl-sage-light/20 bg-white/5 p-5 shadow-[0_0_60px_rgba(53,133,142,0.15)] backdrop-blur-sm"
+          className="rounded-2xl border border-white/15 bg-white/5 p-5 shadow-[0_0_60px_rgba(53,133,142,0.15)] backdrop-blur-sm"
         >
           <div className="mb-4 flex items-center justify-between">
-            <span className="text-sm font-medium text-dl-cream">Dependency health</span>
+            <span className="text-sm font-medium text-white">Dependency health</span>
           </div>
           {MOCK_PACKAGES.map((pkg) => (
             <PackageRow
@@ -230,7 +230,7 @@ export function Hero() {
               onToggle={() => setExpandedPkg(expandedPkg === pkg.name ? '' : pkg.name)}
             />
           ))}
-          <p className="mt-3 text-center text-[10px] text-dl-sage-light/30">Click a row to see signal breakdown</p>
+          <p className="mt-3 text-center text-[10px] text-white/45">Click a row to see signal breakdown</p>
         </motion.div>
       </div>
     </section>

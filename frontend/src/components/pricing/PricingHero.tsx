@@ -13,11 +13,11 @@ export function PricingHero() {
         viewport={inViewOptions}
         variants={sectionReveal}
       >
-        <p className="label-overline text-dl-sage">Pricing</p>
-        <h1 className="mt-4 text-[36px] font-medium text-dl-cream md:text-[44px]">
+        <p className="label-overline">Pricing</p>
+        <h1 className="mt-4 text-[36px] font-medium text-white md:text-[44px]">
           Simple pricing. No surprises.
         </h1>
-        <p className="mx-auto mt-4 max-w-[520px] text-base text-dl-sage-light/65">
+        <p className="mx-auto mt-4 max-w-[520px] text-base text-white/75">
           Start free on one repo. Upgrade when your team is ready. Cancel anytime.
         </p>
       </motion.div>

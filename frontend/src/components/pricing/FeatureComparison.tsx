@@ -92,7 +92,7 @@ export function FeatureComparison() {
             <tbody>
               {GROUPS.map((group) => (
                 <Fragment key={group.label}>
-                  <tr className="bg-dl-cream">
+                  <tr className="bg-dl-bg">
                     <td colSpan={3} className="px-4 py-2 text-left text-[11px] font-medium uppercase tracking-wide text-dl-teal">
                       {group.label}
                     </td>

@@ -37,7 +37,7 @@ export function ProblemSection() {
         whileInView="visible"
         viewport={inViewOptions}
       >
-        <motion.p variants={sectionReveal} className="label-overline text-dl-sage">
+        <motion.p variants={sectionReveal} className="label-overline">
           The problem
         </motion.p>
         <motion.h2
@@ -46,7 +46,7 @@ export function ProblemSection() {
         >
           Your dependencies are decaying. You just don&apos;t know it yet.
         </motion.h2>
-        <motion.p variants={sectionReveal} className="mx-auto mt-5 max-w-[640px] text-base text-dl-muted">
+        <motion.p variants={sectionReveal} className="mx-auto mt-5 max-w-[640px] text-base text-neutral-600">
           90% of modern software runs on open source. A meaningful fraction of those packages will lose
           their maintainers this year — silently. By the time your build breaks or your security scanner
           fires, the optimal window for low-cost migration has already closed.
@@ -69,7 +69,7 @@ export function ProblemSection() {
                 <Icon className="h-6 w-6 text-dl-danger" />
               </motion.div>
               <h3 className="text-[17px] font-medium text-dl-text">{title}</h3>
-              <p className="mt-2 text-sm text-dl-muted">{copy}</p>
+              <p className="mt-2 text-sm text-neutral-600">{copy}</p>
             </motion.div>
           ))}
         </motion.div>

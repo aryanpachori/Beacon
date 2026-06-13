@@ -64,7 +64,7 @@ export function PricingCards({ billingPeriod, onBillingChange }: PricingCardsPro
       >
         <motion.div variants={sectionReveal} className="flex justify-center">
           <div
-            className="inline-flex rounded-lg border border-dl-border bg-dl-cream p-1 shadow-sm"
+            className="inline-flex rounded-lg border border-dl-border bg-dl-surface p-1 shadow-sm"
             role="group"
             aria-label="Billing period"
           >
@@ -74,7 +74,7 @@ export function PricingCards({ billingPeriod, onBillingChange }: PricingCardsPro
               className={`rounded-md px-5 py-2 text-sm font-medium transition-colors ${
                 billingPeriod === 'monthly'
                   ? 'bg-dl-teal text-white'
-                  : 'text-dl-muted hover:text-dl-text'
+                  : 'text-neutral-600 hover:text-dl-text'
               }`}
             >
               Monthly
@@ -85,7 +85,7 @@ export function PricingCards({ billingPeriod, onBillingChange }: PricingCardsPro
               className={`flex items-center gap-2 rounded-md px-5 py-2 text-sm font-medium transition-colors ${
                 billingPeriod === 'annual'
                   ? 'bg-dl-teal text-white'
-                  : 'text-dl-muted hover:text-dl-text'
+                  : 'text-neutral-600 hover:text-dl-text'
               }`}
             >
               Annual
@@ -137,9 +137,9 @@ export function PricingCards({ billingPeriod, onBillingChange }: PricingCardsPro
                       {monthlyDisplay}
                     </motion.span>
                   </AnimatePresence>
-                  <span className="text-sm text-dl-muted">/month</span>
+                  <span className="text-sm text-neutral-600">/month</span>
                 </div>
-                <p className="mt-2 text-[13px] text-dl-hint">{plan.tagline}</p>
+                <p className="mt-2 text-[13px] text-neutral-600">{plan.tagline}</p>
                 {plan.id === 'pro' ? (
                   <ProCheckoutLink className={`mt-6 ${plan.ctaClass}`}>
                     {plan.cta}
@@ -149,7 +149,7 @@ export function PricingCards({ billingPeriod, onBillingChange }: PricingCardsPro
                     {plan.cta}
                   </Link>
                 )}
-                <p className="mt-2 text-center text-[11px] text-dl-hint">
+                <p className="mt-2 text-center text-[11px] text-neutral-500">
                   {plan.id === 'pro' ? 'Sign in required to complete payment' : null}
                 </p>
                 <ul className="mt-4 space-y-2.5">

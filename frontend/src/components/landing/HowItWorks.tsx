@@ -56,7 +56,7 @@ export function HowItWorks() {
         viewport={inViewOptions}
         variants={staggerContainer}
       >
-        <motion.p variants={sectionReveal} className="label-overline text-dl-sage">
+        <motion.p variants={sectionReveal} className="label-overline">
           How it works
         </motion.p>
         <motion.h2
@@ -97,7 +97,7 @@ export function HowItWorks() {
               <motion.h3 variants={stepText} className="mt-4 text-base font-medium text-dl-text">
                 {step.title}
               </motion.h3>
-              <motion.p variants={stepText} className="mt-2 text-[13px] text-dl-muted">
+              <motion.p variants={stepText} className="mt-2 text-[13px] text-neutral-600">
                 {step.copy}
               </motion.p>
             </motion.div>

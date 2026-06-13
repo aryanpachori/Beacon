@@ -22,12 +22,12 @@ export function SocialProof() {
         viewport={inViewOptions}
         transition={{ duration: 0.4 }}
       >
-        <p className="shrink-0 text-[13px] text-dl-hint">Trusted by engineering teams at</p>
+        <p className="shrink-0 text-[13px] text-neutral-600">Trusted by engineering teams at</p>
         <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
           {COMPANIES.map(({ name, style }) => (
             <span
               key={name}
-              className={`text-dl-forest/25 transition-all duration-300 hover:text-dl-forest/50 ${style}`}
+              className={`text-neutral-400 transition-all duration-300 hover:text-neutral-600 ${style}`}
             >
               {name}
             </span>

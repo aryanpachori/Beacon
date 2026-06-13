@@ -15,10 +15,10 @@ export function FinalCTA() {
         viewport={inViewOptions}
         variants={sectionReveal}
       >
-        <h2 className="text-[36px] font-medium leading-tight text-dl-cream md:text-[40px]">
+        <h2 className="text-[36px] font-medium leading-tight text-white md:text-[40px]">
           Start protecting your stack today.
         </h2>
-        <p className="mx-auto mt-5 max-w-[480px] text-base text-dl-sage-light/65">
+        <p className="mx-auto mt-5 max-w-[480px] text-base text-white/75">
           Free for one repo. No credit card. GitHub App installs in 60 seconds.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -29,7 +29,7 @@ export function FinalCTA() {
             Talk to us
           </a>
         </div>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-xs text-dl-sage-light/50">
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-xs text-white/60">
           <span className="flex items-center gap-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-dl-healthy" />
             SOC 2 in progress

@@ -84,6 +84,95 @@
   --dl-teal:       #60a5fa;
 }
 
+/* Landing / marketing — own palette (separate from dashboard .dark tokens) */
+.site-shell {
+  --dl-blue:        #2f7eda;
+  --dl-blue-light:  #5b9fe8;
+  --dl-blue-dark:   #1a5fb4;
+  --dl-blue-pale:   #eaf2fd;
+
+  --dl-bg:          #fcfdfd;
+  --dl-surface:     #edeff3;
+  --dl-border:      #c6d1d7;
+  --dl-text:        #555663;
+  --dl-navy:        #1e2a3c;
+
+  /* Readable secondary text on light backgrounds */
+  --dl-muted:       #6b7280;
+  --dl-sage:        #555663;
+  --dl-hint:        #6b7280;
+  --dl-forest:      #555663;
+
+  --dl-teal:        #2f7eda;
+  --dl-page:        #fcfdfd;
+  --dl-card:        #edeff3;
+  --dl-cream:       #f8fafc;
+  --dl-nav:         #1e2a3c;
+  --dl-sage-light:  #9fa0b5;
+  --dl-border-mid:  #c6d1d7;
+  --dl-m-border:    #c6d1d7;
+  --dl-m-text:      #555663;
+  --dl-m-muted:     #6b7280;
+
+  color-scheme: light;
+}
+
+/* Dark marketing surfaces — nav, hero, footer, section-dark */
+.site-shell .section-dark,
+.site-shell .bg-dl-nav {
+  --dl-cream:       #ffffff;
+  --dl-sage:        #ffffff;
+  --dl-sage-light:  #ffffff;
+  --dl-hint:        #ffffff;
+  --dl-muted:       #ffffff;
+}
+
+/* Light marketing sections — stronger secondary text */
+.site-shell .section-light,
+.site-shell .section-cream,
+.site-shell .bg-dl-card,
+.site-shell .bg-dl-page {
+  --dl-muted:       #555663;
+  --dl-sage:        #555663;
+  --dl-hint:        #555663;
+  --dl-sage-light:  #9fa0b5;
+}
+
+.dark .site-shell {
+  color-scheme: dark;
+
+  /* Light sections → dark surfaces */
+  --dl-bg:          #0f1117;
+  --dl-surface:     #1a1d27;
+  --dl-page:        #0f1117;
+  --dl-card:        #1a1d27;
+  --dl-border:      #2a2d3e;
+  --dl-border-mid:  #2a2d3e;
+  --dl-m-border:    #2a2d3e;
+
+  --dl-text:        #d1d5db;
+  --dl-forest:      #d1d5db;
+  --dl-muted:       #9ca3af;
+  --dl-hint:        #9ca3af;
+  --dl-sage:        #9ca3af;
+  --dl-m-text:      #d1d5db;
+  --dl-m-muted:     #9ca3af;
+
+  /* Dark sections (nav, hero, footer) — stay dark */
+  --dl-nav:         #0a1220;
+  --dl-navy:        #0a1220;
+
+  /* Text on dark sections — stay light */
+  --dl-cream:       #f5f7fa;
+  --dl-sage-light:  #c6d1d7;
+
+  --dl-blue:        #60a5fa;
+  --dl-blue-light:  #93c5fd;
+  --dl-blue-dark:   #3b82f6;
+  --dl-blue-pale:   #1e3a5f;
+  --dl-teal:        #60a5fa;
+}
+
 /* ─── Base reset ─── */
 * { box-sizing: border-box; }
 
@@ -113,7 +202,12 @@ body {
 }
 
 /* ─── Shell ─── */
-.site-shell,
+.site-shell {
+  background: var(--dl-bg);
+  color: var(--dl-text);
+  overflow-x: hidden;
+}
+
 .dashboard-site {
   background: var(--dl-bg);
   color: var(--dl-text);
@@ -212,6 +306,12 @@ body {
     @apply inline-flex items-center gap-2 rounded-lg border border-dl-border bg-dl-surface px-[22px] py-[11px] text-sm font-medium text-dl-text transition-colors duration-150;
   }
   .btn-ghost:hover { @apply bg-dl-surface border-dl-muted; }
+
+  /* Ghost button on dark marketing sections */
+  .site-shell .section-dark .btn-ghost,
+  .site-shell .bg-dl-nav .btn-ghost {
+    @apply border-white/25 bg-white/10 text-white hover:border-white/40 hover:bg-white/15;
+  }
 
   .btn-dash-primary {
     @apply inline-flex items-center justify-center gap-2 rounded-lg bg-dl-blue px-4 py-2.5 text-sm font-medium text-white transition-all duration-150 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40;
@@ -347,6 +447,16 @@ body {
   /* ── Typography helpers ── */
   .label-overline {
     @apply text-[11px] font-semibold uppercase tracking-[0.09em] text-dl-muted;
+  }
+
+  /* Marketing: readable overline on dark vs light sections */
+  .site-shell .section-dark .label-overline,
+  .site-shell .bg-dl-nav .label-overline {
+    @apply text-white/70;
+  }
+  .site-shell .section-light .label-overline,
+  .site-shell .section-cream .label-overline {
+    @apply text-dl-forest;
   }
   .page-heading {
     font-size: 1.25rem;

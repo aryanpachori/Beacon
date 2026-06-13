@@ -35,7 +35,7 @@ function FounderSocialLinks({ className }: { className?: string }) {
         target="_blank"
         rel="noopener noreferrer"
         aria-label={`${FOUNDER.name} on X`}
-        className="text-dl-sage-light/50 transition-colors hover:text-dl-sage-light"
+        className="text-white/50 transition-colors hover:text-white"
       >
         <XIcon className="h-[18px] w-[18px]" />
       </a>
@@ -44,7 +44,7 @@ function FounderSocialLinks({ className }: { className?: string }) {
         target="_blank"
         rel="noopener noreferrer"
         aria-label={`${FOUNDER.name} on GitHub`}
-        className="text-dl-sage-light/50 transition-colors hover:text-dl-sage-light"
+        className="text-white/50 transition-colors hover:text-white"
       >
         <GitHubIcon className="h-[18px] w-[18px]" />
       </a>
@@ -81,7 +81,7 @@ const FOOTER_COLUMNS: { title: string; links: { label: string; href: string }[] 
 function FooterColumn({ title, links }: { title: string; links: { label: string; href: string }[] }) {
   return (
     <div>
-      <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.08em] text-dl-hint">
+      <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.08em] text-white/45">
         {title}
       </p>
       <ul className="space-y-2.5">
@@ -89,7 +89,7 @@ function FooterColumn({ title, links }: { title: string; links: { label: string;
           <li key={label}>
             <Link
               href={href}
-              className="text-[13px] text-dl-sage-light/55 transition-colors hover:text-dl-cream"
+              className="text-[13px] text-white/65 transition-colors hover:text-white"
             >
               {label}
             </Link>
@@ -113,12 +113,12 @@ function NewsletterSignup() {
   }
 
   return (
-    <div className="rounded-xl border border-dl-sage-light/10 bg-white/[0.03] p-6">
+    <div className="rounded-xl border border-white/10 bg-white/[0.03] p-6">
       <div className="flex items-center gap-2.5 mb-2">
         <Mail className="h-4 w-4 text-dl-teal" />
-        <p className="text-[15px] font-medium text-dl-cream">Weekly Dependency Digest</p>
+        <p className="text-[15px] font-medium text-white">Weekly Dependency Digest</p>
       </div>
-      <p className="text-[13px] text-dl-sage-light/50 mb-4">
+      <p className="text-[13px] text-white/60 mb-4">
         Get a weekly summary of trending package risks. No spam, unsubscribe anytime.
       </p>
       {submitted ? (
@@ -131,7 +131,7 @@ function NewsletterSignup() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@company.com"
             required
-            className="flex-1 rounded-lg border border-dl-sage-light/15 bg-white/[0.04] px-3.5 py-2.5 text-sm text-dl-cream placeholder:text-dl-sage-light/30 outline-none transition-colors focus:border-dl-teal/50"
+            className="flex-1 rounded-lg border border-white/15 bg-white/[0.04] px-3.5 py-2.5 text-sm text-white placeholder:text-white/35 outline-none transition-colors focus:border-dl-teal/50"
           />
           <button
             type="submit"
@@ -164,16 +164,16 @@ export function Footer() {
                 height={32}
                 className="h-8 w-8 shrink-0 rounded-md"
               />
-              <span className="text-[17px] font-semibold text-dl-sage-light">DriftLogg</span>
+              <span className="text-[17px] font-semibold text-white">DriftLogg</span>
             </Link>
-            <p className="mt-3 max-w-[200px] text-[13px] leading-relaxed text-dl-sage-light/55">
+            <p className="mt-3 max-w-[200px] text-[13px] leading-relaxed text-white/65">
               Predict dependency rot before it hits production.
             </p>
             <div className="mt-5">
-              <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.08em] text-dl-hint">
+              <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.08em] text-white/45">
                 Founder
               </p>
-              <p className="text-[13px] text-dl-sage-light/70">{FOUNDER.name}</p>
+              <p className="text-[13px] text-white/75">{FOUNDER.name}</p>
               <FounderSocialLinks className="mt-3" />
             </div>
           </div>
@@ -183,39 +183,39 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 border-t border-dl-sage-light/10 pt-6">
+        <div className="mt-12 border-t border-white/10 pt-6">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs text-dl-hint">© 2026 DriftLogg. All rights reserved.</p>
-            <p className="text-xs text-dl-sage-light/55">
+            <p className="text-xs text-white/45">© 2026 DriftLogg. All rights reserved.</p>
+            <p className="text-xs text-white/55">
               Built by{' '}
               <a
                 href={FOUNDER.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-dl-sage-light/80 underline-offset-2 transition-colors hover:text-dl-sage-light hover:underline"
+                className="text-white/80 underline-offset-2 transition-colors hover:text-white hover:underline"
               >
                 {FOUNDER.name}
               </a>
-              <span className="mx-2 text-dl-sage-light/25">·</span>
+              <span className="mx-2 text-white/25">·</span>
               <a
                 href={FOUNDER.x}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline-offset-2 transition-colors hover:text-dl-sage-light hover:underline"
+                className="underline-offset-2 transition-colors hover:text-white hover:underline"
               >
                 X
               </a>
-              <span className="mx-2 text-dl-sage-light/25">·</span>
+              <span className="mx-2 text-white/25">·</span>
               <a
                 href={FOUNDER.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline-offset-2 transition-colors hover:text-dl-sage-light hover:underline"
+                className="underline-offset-2 transition-colors hover:text-white hover:underline"
               >
                 GitHub
               </a>
             </p>
-            <p className="text-xs italic text-dl-sage-light/40">Built for engineers who ship.</p>
+            <p className="text-xs italic text-white/40">Built for engineers who ship.</p>
           </div>
         </div>
       </div>

@@ -61,7 +61,7 @@ export function PricingFAQ() {
                 >
                   <span className="text-[15px] font-medium text-dl-text">{item.q}</span>
                   <motion.span animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                    <ChevronDown className="h-5 w-5 shrink-0 text-dl-muted" />
+                    <ChevronDown className="h-5 w-5 shrink-0 text-neutral-500" />
                   </motion.span>
                 </button>
                 <AnimatePresence initial={false}>
@@ -73,7 +73,7 @@ export function PricingFAQ() {
                       transition={{ duration: 0.25 }}
                       className="overflow-hidden"
                     >
-                      <p className="pt-3 text-sm leading-relaxed text-dl-muted">{item.a}</p>
+                      <p className="pt-3 text-sm leading-relaxed text-neutral-600">{item.a}</p>
                     </motion.div>
                   )}
                 </AnimatePresence>

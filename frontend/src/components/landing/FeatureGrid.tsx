@@ -66,7 +66,7 @@ export function FeatureGrid() {
         viewport={inViewOptions}
         variants={staggerContainer}
       >
-        <motion.p variants={sectionReveal} className="label-overline text-dl-sage">
+        <motion.p variants={sectionReveal} className="label-overline">
           Features
         </motion.p>
         <motion.h2
@@ -97,7 +97,7 @@ export function FeatureGrid() {
                   <Icon className="h-[22px] w-[22px] text-dl-teal" />
                 </motion.div>
                 <h3 className="mt-4 text-[15px] font-medium text-dl-text">{name}</h3>
-                <p className="mt-2 text-[13px] text-dl-muted">{description}</p>
+                <p className="mt-2 text-[13px] text-neutral-600">{description}</p>
               </div>
             </motion.div>
           ))}

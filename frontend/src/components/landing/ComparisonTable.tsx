@@ -24,7 +24,7 @@ function Cell({ value, isDriftLogg }: { value: CellValue; isDriftLogg?: boolean 
         className={`mx-auto ${isDriftLogg ? 'h-5 w-5 text-dl-teal' : 'h-4 w-4 text-dl-teal/70'}`}
       />
     )
-  if (value === 'partial') return <span className="text-dl-hint">partial</span>
+  if (value === 'partial') return <span className="text-neutral-500">partial</span>
   return <Minus className="mx-auto h-4 w-4 text-dl-border" />
 }
 
@@ -38,7 +38,7 @@ export function ComparisonTable() {
         viewport={inViewOptions}
         variants={sectionReveal}
       >
-        <p className="label-overline text-dl-sage">How we compare</p>
+        <p className="label-overline">How we compare</p>
         <h2 className="mt-4 text-section-mobile font-medium text-dl-text lg:text-section">
           Built for prediction, not reaction.
         </h2>
@@ -69,7 +69,7 @@ export function ComparisonTable() {
                   <tr
                     key={row.feature}
                     className={`transition-colors hover:bg-dl-teal/[0.04] ${
-                      i % 2 === 0 ? 'bg-dl-card' : 'bg-dl-cream'
+                      i % 2 === 0 ? 'bg-dl-card' : 'bg-dl-bg'
                     }`}
                   >
                     <td className="px-4 py-3 text-left font-medium text-dl-forest">{row.feature}</td>
@@ -92,7 +92,7 @@ export function ComparisonTable() {
           </div>
         </motion.div>
 
-        <p className="mt-4 text-center text-[11px] text-dl-hint">
+        <p className="mt-4 text-center text-[11px] text-neutral-500">
           Comparison based on publicly available feature documentation as of March 2026.
         </p>
       </motion.div>

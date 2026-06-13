@@ -38,7 +38,7 @@ export function BeforeAfter() {
         viewport={inViewOptions}
         variants={staggerContainer}
       >
-        <motion.p variants={sectionReveal} className="label-overline text-center text-dl-sage">
+        <motion.p variants={sectionReveal} className="label-overline text-center">
           The difference
         </motion.p>
         <motion.h2

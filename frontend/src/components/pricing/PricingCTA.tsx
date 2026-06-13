@@ -14,8 +14,8 @@ export function PricingCTA() {
         viewport={inViewOptions}
         variants={sectionReveal}
       >
-        <h2 className="text-[28px] font-medium text-dl-cream">Still have questions?</h2>
-        <p className="mt-3 text-dl-sage-light/70">
+        <h2 className="text-[28px] font-medium text-white">Still have questions?</h2>
+        <p className="mt-3 text-white/75">
           Our team responds within one business day. Or start free and explore on your own.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">

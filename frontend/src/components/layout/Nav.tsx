@@ -32,7 +32,7 @@ export function Nav() {
     >
       <div className="mx-auto flex h-full max-w-[1200px] items-center justify-between px-6">
         <SiteLogo
-          className="text-dl-sage-light"
+          className="text-white"
           onClick={() => setOpen(false)}
         />
 
@@ -44,8 +44,8 @@ export function Nav() {
               className={cn(
                 'text-sm transition-colors',
                 isActive(link.href)
-                  ? 'text-dl-cream'
-                  : 'text-dl-sage-light/55 hover:text-dl-cream'
+                  ? 'text-white'
+                  : 'text-white/70 hover:text-white'
               )}
             >
               {link.label}
@@ -57,14 +57,14 @@ export function Nav() {
           <button
             type="button"
             onClick={toggleTheme}
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-dl-sage-light/55 transition-colors hover:bg-white/5 hover:text-dl-cream"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-white/70 transition-colors hover:bg-white/5 hover:text-white"
             aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
           >
             {themeMounted && theme === 'dark' ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
           </button>
           <Link
             href="/login"
-            className="text-sm text-dl-sage-light/55 transition-colors hover:text-dl-cream"
+            className="text-sm text-white/70 transition-colors hover:text-white"
           >
             Sign in
           </Link>
@@ -80,9 +80,9 @@ export function Nav() {
           aria-label={open ? 'Close menu' : 'Open menu'}
         >
           {open ? (
-            <X className="h-5 w-5 text-dl-sage-light" />
+            <X className="h-5 w-5 text-white" />
           ) : (
-            <Menu className="h-5 w-5 text-dl-sage-light" />
+            <Menu className="h-5 w-5 text-white" />
           )}
         </button>
       </div>
@@ -94,25 +94,25 @@ export function Nav() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className="overflow-hidden border-t border-dl-sage-light/10 bg-dl-nav md:hidden"
+            className="overflow-hidden border-t border-white/10 bg-dl-nav md:hidden"
           >
             <nav className="flex flex-col px-6 py-4">
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="min-h-[44px] py-3 text-sm text-dl-sage-light/55 transition-colors hover:text-dl-cream"
+                  className="min-h-[44px] py-3 text-sm text-white/70 transition-colors hover:text-white"
                   onClick={() => setOpen(false)}
                 >
                   {link.label}
                 </Link>
               ))}
-              <div className="flex items-center justify-between min-h-[44px] py-3 text-sm text-dl-sage-light/55 border-b border-dl-sage-light/10">
+              <div className="flex items-center justify-between min-h-[44px] py-3 text-sm text-white/70 border-b border-white/10">
                 <span>Theme</span>
                 <button
                   type="button"
                   onClick={toggleTheme}
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-dl-sage-light/55 transition-colors hover:text-dl-cream"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-white/70 transition-colors hover:text-white"
                   aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
                 >
                   {themeMounted && theme === 'dark' ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
@@ -120,7 +120,7 @@ export function Nav() {
               </div>
               <Link
                 href="/login"
-                className="min-h-[44px] py-3 text-sm text-dl-sage-light/55"
+                className="min-h-[44px] py-3 text-sm text-white/70"
                 onClick={() => setOpen(false)}
               >
                 Sign in

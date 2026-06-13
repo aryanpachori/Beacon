@@ -64,7 +64,7 @@ export function StatsCounter() {
               <span className="text-[36px] font-semibold tracking-tight text-dl-teal md:text-[42px]">
                 <AnimatedNumber value={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
               </span>
-              <span className="mt-2 text-[13px] font-medium text-dl-muted">{stat.label}</span>
+              <span className="mt-2 text-[13px] font-medium text-neutral-600">{stat.label}</span>
             </div>
           ))}
         </motion.div>
