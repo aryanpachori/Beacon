@@ -295,7 +295,7 @@ export function OnboardingFlow() {
                 </div>
                 <div>
                   <p className="label-overline text-dl-sage">Get started</p>
-                  <h1 className="marketing-title mt-3">
+                  <h1 className="marketing-title mt-3 dark:text-white">
                     {githubConnected ? 'GitHub is connected' : 'Know before they die.'}
                   </h1>
                   <p className="marketing-subtitle mt-3">
@@ -417,12 +417,12 @@ export function OnboardingFlow() {
                     <Spinner size="md" label="Loading repositories…" />
                   </div>
                 ) : repos.length === 0 ? (
-                  <div className="rounded-lg border border-dl-m-border bg-white onboarding-repo-card p-4 text-sm text-dl-m-muted">
+                  <div className="rounded-lg border border-dl-m-border bg-white dark:bg-dl-surface onboarding-repo-card p-4 text-sm text-dl-m-muted">
                     No repositories found. Grant DriftLogg access to at least one repo on GitHub,
                     then refresh this page.
                   </div>
                 ) : filteredRepos.length === 0 ? (
-                  <div className="rounded-lg border border-dl-m-border bg-white onboarding-repo-card p-4 text-sm text-dl-m-muted text-center">
+                  <div className="rounded-lg border border-dl-m-border bg-white dark:bg-dl-surface onboarding-repo-card p-4 text-sm text-dl-m-muted text-center">
                     No repositories match &quot;{searchQuery}&quot;
                   </div>
                 ) : (
@@ -433,17 +433,17 @@ export function OnboardingFlow() {
                       return (
                         <label
                           key={repo.id}
-                          className={`flex items-center gap-3 rounded-lg border border-dl-m-border bg-white onboarding-repo-card p-3 transition-colors ${
+                          className={`flex items-center gap-3 rounded-lg border border-dl-m-border bg-white dark:bg-dl-surface onboarding-repo-card p-3 transition-colors ${
                             atLimit
                               ? 'cursor-not-allowed opacity-50'
-                              : 'cursor-pointer hover:border-dl-teal/40'
+                              : 'cursor-pointer hover:border-blue-500/40'
                           }`}
                         >
                           <Checkbox.Root
                             checked={checked}
                             disabled={atLimit}
                             onCheckedChange={() => toggleRepo(repo.id)}
-                            className="flex h-4 w-4 items-center justify-center rounded border border-dl-m-border bg-white onboarding-checkbox data-[state=checked]:border-dl-teal data-[state=checked]:bg-dl-teal"
+                            className="flex h-4 w-4 items-center justify-center rounded border border-dl-m-border bg-white dark:bg-dl-bg onboarding-checkbox data-[state=checked]:border-dl-teal data-[state=checked]:bg-dl-teal"
                           >
                             <Checkbox.Indicator>
                               <Check className="h-3 w-3 text-white" />
@@ -479,7 +479,10 @@ export function OnboardingFlow() {
                 transition={{ duration: 0.25 }}
                 className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-8 py-2 items-center animate-fade-in"
               >
-                <div className="flex flex-col items-center gap-5 text-center md:border-r border-dl-m-border/40 pb-6 md:pb-0 md:pr-8">
+                <div
+                  className="flex flex-col items-center gap-5 text-center md:border-r pb-6 md:pb-0 md:pr-8"
+                  style={{ borderColor: 'color-mix(in srgb, var(--dl-m-border) 40%, transparent)' }}
+                >
                   <Spinner size="lg" label={statusLabel} className="[&_p]:text-dl-m-muted" />
                   <div>
                     <p className="text-3xl font-medium font-mono tabular-nums text-dl-forest">
@@ -551,15 +554,21 @@ export function OnboardingFlow() {
               >
                 {summaryPackageCount > 0 ? (
                   <>
-                    <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-dl-teal/30 bg-dl-teal/10">
+                    <div
+                      className="flex h-14 w-14 items-center justify-center rounded-xl border"
+                      style={{
+                        borderColor: 'color-mix(in srgb, var(--dl-teal) 30%, transparent)',
+                        backgroundColor: 'color-mix(in srgb, var(--dl-teal) 10%, transparent)',
+                      }}
+                    >
                       <CheckCircle2 className="h-7 w-7 text-dl-teal" />
                     </div>
                     <div className="w-full">
                       <p className="label-overline text-dl-sage">Complete</p>
-                      <h2 className="marketing-title mt-3 text-[24px] md:text-[28px]">
+                      <h2 className="marketing-title mt-3 text-[24px] md:text-[28px] dark:text-white">
                         Your stack is ready.
                       </h2>
-                      <div className="mt-5 rounded-lg border border-dl-m-border bg-white onboarding-repo-card p-5 text-left">
+                      <div className="mt-5 rounded-lg border border-dl-m-border bg-white dark:bg-dl-surface onboarding-repo-card p-5 text-left">
                         <div className="grid grid-cols-2 gap-4 text-sm">
                           <div>
                             <p className="text-xs text-dl-m-muted">Packages scanned</p>
@@ -596,7 +605,7 @@ export function OnboardingFlow() {
                     </div>
                     <div>
                       <p className="label-overline text-dl-sage">Almost there</p>
-                      <h2 className="marketing-title mt-3 text-[24px] md:text-[28px]">
+                      <h2 className="marketing-title mt-3 text-[24px] md:text-[28px] dark:text-white">
                         Select a repo to scan
                       </h2>
                       <p className="marketing-subtitle mt-3">
