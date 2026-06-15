@@ -52,10 +52,17 @@ export function BeforeAfter() {
           {/* Without */}
           <motion.div
             variants={slideLeft}
-            className="rounded-2xl border border-dl-critical/20 bg-gradient-to-br from-dl-critical/[0.04] to-transparent p-7"
+            className="rounded-2xl border p-7"
+            style={{
+              borderColor: 'color-mix(in srgb, var(--dl-critical) 20%, transparent)',
+              background: 'linear-gradient(135deg, color-mix(in srgb, var(--dl-critical) 4%, transparent) 0%, transparent 100%)'
+            }}
           >
             <div className="mb-5 flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-dl-critical/15">
+              <div
+                className="flex h-8 w-8 items-center justify-center rounded-lg"
+                style={{ backgroundColor: 'color-mix(in srgb, var(--dl-critical) 15%, transparent)' }}
+              >
                 <AlertTriangle className="h-4 w-4 text-dl-critical" />
               </div>
               <span className="text-[15px] font-semibold text-dl-critical">Without DriftLogg</span>
@@ -63,7 +70,10 @@ export function BeforeAfter() {
             <ul className="flex flex-col gap-3.5">
               {WITHOUT.map(({ icon: Icon, text }) => (
                 <li key={text} className="flex items-start gap-3 text-[13px] text-dl-forest">
-                  <Icon className="mt-0.5 h-4 w-4 shrink-0 text-dl-critical/60" />
+                  <Icon
+                    className="mt-0.5 h-4 w-4 shrink-0"
+                    style={{ color: 'color-mix(in srgb, var(--dl-critical) 60%, transparent)' }}
+                  />
                   {text}
                 </li>
               ))}
@@ -73,10 +83,17 @@ export function BeforeAfter() {
           {/* With */}
           <motion.div
             variants={slideRight}
-            className="rounded-2xl border border-dl-teal/20 bg-gradient-to-br from-dl-teal/[0.04] to-transparent p-7"
+            className="rounded-2xl border p-7"
+            style={{
+              borderColor: 'color-mix(in srgb, var(--dl-teal) 20%, transparent)',
+              background: 'linear-gradient(135deg, color-mix(in srgb, var(--dl-teal) 4%, transparent) 0%, transparent 100%)'
+            }}
           >
             <div className="mb-5 flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-dl-teal/15">
+              <div
+                className="flex h-8 w-8 items-center justify-center rounded-lg"
+                style={{ backgroundColor: 'color-mix(in srgb, var(--dl-teal) 15%, transparent)' }}
+              >
                 <CheckCircle className="h-4 w-4 text-dl-teal" />
               </div>
               <span className="text-[15px] font-semibold text-dl-teal">With DriftLogg</span>
@@ -84,7 +101,10 @@ export function BeforeAfter() {
             <ul className="flex flex-col gap-3.5">
               {WITH.map(({ icon: Icon, text }) => (
                 <li key={text} className="flex items-start gap-3 text-[13px] text-dl-forest">
-                  <Icon className="mt-0.5 h-4 w-4 shrink-0 text-dl-teal/60" />
+                  <Icon
+                    className="mt-0.5 h-4 w-4 shrink-0"
+                    style={{ color: 'color-mix(in srgb, var(--dl-teal) 60%, transparent)' }}
+                  />
                   {text}
                 </li>
               ))}
