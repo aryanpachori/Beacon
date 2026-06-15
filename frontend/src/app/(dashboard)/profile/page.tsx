@@ -44,10 +44,10 @@ function CreditCardUi({
   brand?: string
 }) {
   return (
-    <div className="relative aspect-[1.586/1] w-full rounded-xl bg-gradient-to-br from-[#1c3b38] via-[#244b47] to-[#0e1e1c] p-5 text-white shadow-lg border border-white/10 overflow-hidden flex flex-col justify-between">
+    <div className="relative aspect-[1.586/1] w-full rounded-xl bg-gradient-to-br from-[#0e1f38] via-[#1a2f4c] to-[#0a1628] p-5 text-white shadow-lg border border-white/10 overflow-hidden flex flex-col justify-between">
       {/* Glow Effects */}
       <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-dl-teal/20 blur-2xl pointer-events-none" />
-      <div className="absolute -left-10 -bottom-10 h-32 w-32 rounded-full bg-dl-sage-light/10 blur-2xl pointer-events-none" />
+      <div className="absolute -left-10 -bottom-10 h-32 w-32 rounded-full bg-dl-teal/10 blur-2xl pointer-events-none" />
       
       {/* Top row: Chip and Card Brand */}
       <div className="relative z-10 flex items-center justify-between">
@@ -375,11 +375,11 @@ export default function ProfilePage() {
           </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            <div className="relative flex flex-col gap-3 overflow-hidden rounded-xl border border-emerald-500/30 bg-gradient-to-br from-[#1c3b38] via-[#243f3c] to-[#142e2b] p-5 shadow-lg text-white md:col-span-1">
+            <div className="relative flex flex-col gap-3 overflow-hidden rounded-xl border border-blue-500/30 bg-gradient-to-br from-[#0e1f38] via-[#1a2f4c] to-[#0a1628] p-5 shadow-lg text-white md:col-span-1">
               <div className="pointer-events-none absolute inset-0 bg-white/[0.02]" />
               <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-dl-teal/10 blur-xl" />
 
-              <span className="relative z-10 text-xs font-semibold uppercase tracking-wider text-emerald-300/80">
+              <span className="relative z-10 text-xs font-semibold uppercase tracking-wider text-sky-300/80">
                 Slot Capacity
               </span>
 
@@ -391,13 +391,13 @@ export default function ProfilePage() {
                 </div>
                 <div className="text-xs text-white/70">
                   Free slots remaining:{' '}
-                  <span className="font-semibold text-emerald-300">{freeSlots}</span>
+                  <span className="font-semibold text-sky-300">{freeSlots}</span>
                 </div>
               </div>
 
               <div className="relative z-10 mt-2 h-2 w-full overflow-hidden rounded-full bg-white/10">
                 <div
-                  className="h-full rounded-full bg-gradient-to-r from-dl-teal to-emerald-300 transition-all duration-500 ease-out"
+                  className="h-full rounded-full bg-gradient-to-r from-dl-teal to-sky-300 transition-all duration-500 ease-out"
                   style={{ width: `${slotsPercentage}%` }}
                 />
               </div>
@@ -442,7 +442,7 @@ export default function ProfilePage() {
                   {repos.map((repo) => (
                     <div
                       key={repo.id}
-                      className="relative flex items-center justify-between overflow-hidden rounded-xl border border-emerald-500/30 bg-gradient-to-br from-[#1c3b38] via-[#243f3c] to-[#142e2b] px-4 py-3.5 text-white shadow-md transition-all duration-150 hover:opacity-95"
+                      className="relative flex items-center justify-between overflow-hidden rounded-xl border border-blue-500/30 bg-gradient-to-br from-[#0e1f38] via-[#1a2f4c] to-[#0a1628] px-4 py-3.5 text-white shadow-md transition-all duration-150 hover:opacity-95"
                     >
                       <div className="pointer-events-none absolute inset-0 bg-white/[0.02]" />
                       <div className="pointer-events-none absolute -right-8 -top-8 h-16 w-16 rounded-full bg-dl-teal/5 blur-lg" />
@@ -450,7 +450,7 @@ export default function ProfilePage() {
                       <div className="relative z-10">
                         <div className="text-sm font-semibold text-white">{repo.name}</div>
                         <div className="mt-0.5 text-xs text-white/60">
-                          Org: <span className="text-emerald-300">{repo.org}</span> · Scanned:{' '}
+                          Org: <span className="text-sky-300">{repo.org}</span> · Scanned:{' '}
                           {repo.packageCount} dependencies
                         </div>
                       </div>
