@@ -85,20 +85,13 @@ export function NotificationBell() {
 
       {notifOpen && (
         <div
-          className="absolute top-12 right-0 z-50 flex flex-col overflow-hidden rounded-xl shadow-2xl"
-          style={{
-            width: '340px',
-            background: '#080f0e',
-            border: '1px solid rgba(53,133,142,0.18)',
-          }}
+          className="absolute top-12 right-0 z-50 flex flex-col overflow-hidden rounded-xl shadow-2xl border border-dl-border dark:border-blue-500/20 bg-white dark:bg-[#0d131f]"
+          style={{ width: '340px' }}
         >
-          <div
-            className="flex items-center justify-between px-3 py-2"
-            style={{ background: '#0d1a18', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
-          >
+          <div className="flex items-center justify-between px-3 py-2 bg-dl-surface dark:bg-[#121b2d] border-b border-dl-border dark:border-white/5">
             <div className="flex items-center gap-1.5">
-              <Bell className="h-3 w-3 text-[#35858E]" />
-              <span style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', color: '#C2D099', textTransform: 'uppercase' }}>
+              <Bell className="h-3 w-3 text-dl-blue" />
+              <span className="text-[10px] font-bold tracking-[0.08em] text-dl-blue uppercase">
                 Notifications
               </span>
               {alertCount > 0 && (
@@ -117,8 +110,7 @@ export function NotificationBell() {
             </div>
             <button
               onClick={() => setNotifOpen(false)}
-              className="rounded p-0.5 transition-colors hover:bg-white/5"
-              style={{ color: '#4a7a72' }}
+              className="rounded p-0.5 text-dl-muted hover:text-dl-text transition-colors hover:bg-white/5"
             >
               <X className="h-3 w-3" />
             </button>
@@ -142,9 +134,9 @@ export function NotificationBell() {
                     key={alert.id}
                     type="button"
                     onClick={() => handleAlertClick(alert.packageId)}
-                    className="w-full text-left group hover:bg-white/[0.03] transition-colors duration-150"
+                    className="w-full text-left group hover:bg-black/[0.02] dark:hover:bg-white/[0.03] transition-colors duration-150"
                     style={{
-                      borderBottom: idx !== recentAlerts.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
+                      borderBottom: idx !== recentAlerts.length - 1 ? '1px solid var(--dl-border)' : 'none',
                       borderLeft: `2px solid ${tier.accentBar}`,
                       padding: '10px 12px',
                     }}
@@ -152,13 +144,13 @@ export function NotificationBell() {
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-1.5 min-w-0">
                         {isUnread && (
-                          <span className="mt-[3px] h-1.5 w-1.5 rounded-full shrink-0" style={{ background: '#35858E' }} />
+                          <span className="mt-[3px] h-1.5 w-1.5 rounded-full shrink-0" style={{ background: 'var(--dl-blue)' }} />
                         )}
-                        <span style={{ fontSize: '11px', fontWeight: 600, color: '#d4ede8', lineHeight: '1.4' }}>
+                        <span className="text-[11px] font-semibold text-dl-text leading-relaxed">
                           {headline}
                         </span>
                       </div>
-                      <span style={{ fontSize: '9px', color: '#3d6b63', whiteSpace: 'nowrap', marginTop: '2px', flexShrink: 0 }}>
+                      <span className="text-[9px] text-dl-muted whitespace-nowrap mt-2 shrink-0">
                         {timeAgo(alert.firedAt)}
                       </span>
                     </div>
@@ -170,10 +162,7 @@ export function NotificationBell() {
                       >
                         {alert.tier === 'at-risk' ? 'at-risk' : alert.tier}
                       </span>
-                      <span
-                        className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                        style={{ fontSize: '10px', fontWeight: 600, color: '#35858E' }}
-                      >
+                      <span className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-semibold text-dl-blue">
                         Take a look <ArrowRight className="h-2.5 w-2.5" />
                       </span>
                     </div>
@@ -183,18 +172,14 @@ export function NotificationBell() {
             )}
           </div>
 
-          <div
-            className="flex items-center justify-between px-4 py-2.5"
-            style={{ background: '#0d1a18', borderTop: '1px solid rgba(255,255,255,0.06)' }}
-          >
-            <span style={{ fontSize: '10px', color: '#3d6b63' }}>
+          <div className="flex items-center justify-between px-4 py-2.5 bg-dl-surface dark:bg-[#121b2d] border-t border-dl-border dark:border-white/5">
+            <span className="text-[10px] text-dl-muted">
               alerts@driftlogg.io
             </span>
             <Link
               href="/alerts"
               onClick={() => setNotifOpen(false)}
-              style={{ fontSize: '11px', fontWeight: 600, color: '#35858E' }}
-              className="hover:text-[#C2D099] transition-colors flex items-center gap-1"
+              className="text-[11px] font-semibold text-dl-blue hover:opacity-80 transition-all flex items-center gap-1"
             >
               View all alerts <ArrowRight className="h-3 w-3" />
             </Link>
