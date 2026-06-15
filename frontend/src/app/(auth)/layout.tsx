@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Shield, TrendingDown, Bell, Zap, Package, Sun, Moon, Lightbulb, RefreshCw } from 'lucide-react'
+import { Shield, TrendingDown, Bell, Zap, Sun, Moon, Lightbulb, RefreshCw } from 'lucide-react'
 import { SiteLogo } from '@/components/layout/SiteLogo'
 import { useTheme } from '@/hooks/useTheme'
 
@@ -68,7 +68,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </div>
 
         {/* Center content */}
-        <div className="relative z-10 space-y-8">
+        <div className="relative z-10 space-y-8 my-auto">
           {/* Stats row */}
           <div className="flex gap-6">
             {STATS.map(({ value, label }) => (
@@ -91,31 +91,10 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             ))}
           </div>
 
-          {/* Mini chart decoration */}
-          <div className="rounded-xl border border-white/8 bg-white/5 p-4">
-            <div className="mb-3 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Package className="h-3.5 w-3.5 text-[#5b9fe8]" />
-                <span className="text-[11px] font-medium text-white/60">Stack SPS trend</span>
-              </div>
-              <span className="text-[11px] font-bold text-[#22c55e]">↑ +12.4</span>
-            </div>
-            <div className="flex items-end gap-1 h-10">
-              {[40,55,45,60,52,70,65,80,75,88,82,95].map((h, i) => (
-                <div key={i}
-                  className="flex-1 rounded-sm"
-                  style={{
-                    height: `${h}%`,
-                    background: i >= 9 ? '#2f7eda' : 'rgba(47,126,218,0.25)',
-                  }}
-                />
-              ))}
-            </div>
-          </div>
         </div>
 
         {/* Fun fact */}
-        <div className="relative z-10 mt-auto rounded-xl border border-white/8 bg-white/5 p-4">
+        <div className="relative z-10 mt-auto rounded-xl border border-white/10 bg-white/5 p-4">
           <div className="mb-2.5 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Lightbulb className="h-3.5 w-3.5 text-[#f59e0b]" />
