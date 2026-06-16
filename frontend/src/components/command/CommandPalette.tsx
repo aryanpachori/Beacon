@@ -29,8 +29,17 @@ function useCommandPalette() {
       }
       if (e.key === 'Escape') setOpen(false)
     }
+
+    function onToggle() {
+      setOpen(prev => !prev)
+    }
+
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    window.addEventListener('toggle-command-palette', onToggle)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('toggle-command-palette', onToggle)
+    }
   }, [])
 
   return { open, setOpen }
@@ -156,14 +165,16 @@ export function CommandPalette() {
             onClick={() => setOpen(false)}
           />
 
-          {/* Dialog */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: -8 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: -8 }}
-            transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed left-1/2 top-[20%] z-50 w-full max-w-[560px] -translate-x-1/2 overflow-hidden rounded-2xl border border-dl-border bg-dl-bg shadow-2xl"
-          >
+          {/* Centering Wrapper */}
+          <div className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-8 pointer-events-none">
+            {/* Dialog */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: -8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -8 }}
+              transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
+              className="w-full max-w-[640px] overflow-hidden rounded-2xl border border-dl-border bg-dl-bg shadow-2xl pointer-events-auto"
+            >
             {/* Search input */}
             <div className="flex items-center gap-3 border-b border-dl-border px-4 py-3.5">
               <Search className="h-4 w-4 shrink-0 text-dl-muted" />
@@ -256,6 +267,7 @@ export function CommandPalette() {
               </div>
             </div>
           </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>
