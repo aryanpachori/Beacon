@@ -5,52 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Mail } from 'lucide-react'
 
-const FOUNDER = {
-  name: 'Aryan Pachori',
-  x: 'https://x.com/aryan42116',
-  github: 'https://github.com/aryanpachori',
-} as const
 
-function GitHubIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
-    </svg>
-  )
-}
-
-function XIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    </svg>
-  )
-}
-
-function FounderSocialLinks({ className }: { className?: string }) {
-  return (
-    <div className={`flex items-center gap-3 ${className ?? ''}`}>
-      <a
-        href={FOUNDER.x}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={`${FOUNDER.name} on X`}
-        className="text-white/50 transition-colors hover:text-white"
-      >
-        <XIcon className="h-[18px] w-[18px]" />
-      </a>
-      <a
-        href={FOUNDER.github}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={`${FOUNDER.name} on GitHub`}
-        className="text-white/50 transition-colors hover:text-white"
-      >
-        <GitHubIcon className="h-[18px] w-[18px]" />
-      </a>
-    </div>
-  )
-}
 
 const FOOTER_COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
   {
@@ -148,9 +103,9 @@ function NewsletterSignup() {
 export function Footer() {
   return (
     <footer className="bg-dl-nav">
-      <div className="mx-auto max-w-[1200px] px-6 pb-10 pt-16">
+      <div className="mx-auto max-w-[1200px] px-6 pb-6 pt-10">
         {/* Newsletter Signup Row */}
-        <div className="mb-12">
+        <div className="mb-8">
           <NewsletterSignup />
         </div>
 
@@ -169,13 +124,7 @@ export function Footer() {
             <p className="mt-3 max-w-[200px] text-[13px] leading-relaxed text-white/65">
               Predict dependency rot before it hits production.
             </p>
-            <div className="mt-5">
-              <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.08em] text-white/45">
-                Founder
-              </p>
-              <p className="text-[13px] text-white/75">{FOUNDER.name}</p>
-              <FounderSocialLinks className="mt-3" />
-            </div>
+
           </div>
 
           {FOOTER_COLUMNS.map((col) => (
@@ -183,39 +132,47 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 border-t border-white/10 pt-6">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs text-white/45">© 2026 DriftLogg. All rights reserved.</p>
-            <p className="text-xs text-white/55">
-              Built by{' '}
-              <a
-                href={FOUNDER.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white/80 underline-offset-2 transition-colors hover:text-white hover:underline"
-              >
-                {FOUNDER.name}
-              </a>
-              <span className="mx-2 text-white/25">·</span>
-              <a
-                href={FOUNDER.x}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline-offset-2 transition-colors hover:text-white hover:underline"
-              >
-                X
-              </a>
-              <span className="mx-2 text-white/25">·</span>
-              <a
-                href={FOUNDER.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline-offset-2 transition-colors hover:text-white hover:underline"
-              >
-                GitHub
-              </a>
-            </p>
-            <p className="text-xs italic text-white/40">Built for engineers who ship.</p>
+        <div className="mt-8 border-t border-white/10 pt-4 space-y-2">
+          {/* Row 1: copyright | Built by | tagline — all inline */}
+          <div className="flex flex-col items-center gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-xs text-white/45 shrink-0">© 2026 DriftLogg. All rights reserved.</p>
+            <span className="text-[10px] font-medium uppercase tracking-[0.08em] text-white/35">Built by</span>
+            <p className="text-xs italic text-white/40 shrink-0">Built for engineers who ship.</p>
+          </div>
+
+          {/* Row 2: founder names centred below */}
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+            {[
+              { name: 'Aryan Pachori',   github: 'https://github.com/aryanpachori',   x: 'https://x.com/aryan42116' },
+              { name: 'Samarth Kapoor',  github: 'https://github.com/samarthkapoor7', x: 'https://x.com/samarthtwt' },
+              { name: 'Aryan Madolkar',  github: 'https://github.com/AryanMadolkar',  x: 'https://x.com/aryanmadolkar10' },
+            ].map(({ name, github, x }) => (
+              <div key={name} className="flex items-center gap-1.5">
+                <span className="text-[12px] font-medium text-white/65">{name}</span>
+                <a
+                  href={x}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${name} on X`}
+                  className="text-white/40 transition-colors hover:text-white"
+                >
+                  <svg className="h-[13px] w-[13px]" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                  </svg>
+                </a>
+                <a
+                  href={github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${name} on GitHub`}
+                  className="text-white/40 transition-colors hover:text-white"
+                >
+                  <svg className="h-[13px] w-[13px]" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                    <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
+                  </svg>
+                </a>
+              </div>
+            ))}
           </div>
         </div>
       </div>
