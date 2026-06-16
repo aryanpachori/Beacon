@@ -37,6 +37,10 @@ export type ApiPackageDetail = ApiPackageListItem & {
   successorPackage?: string | null;
   homepageUrl?: string | null;
   githubRepoUrl?: string | null;
+  predictionReason?: string | null;
+  predictedCriticalAt?: string | null;
+  predictionConfidence?: number | null;
+  predictionSlope?: number | null;
 };
 
 export type NormalizedSignals = {
@@ -267,6 +271,12 @@ export function adaptPackageDetail(p: ApiPackageDetail): Package {
     successorPackage: p.successorPackage ?? undefined,
     homepageUrl: p.homepageUrl ?? undefined,
     githubRepoUrl: p.githubRepoUrl ?? undefined,
+    predictionReason: p.predictionReason ?? null,
+    predictedCriticalAt: p.predictedCriticalAt
+      ? toIsoDate(p.predictedCriticalAt)
+      : null,
+    predictionConfidence: p.predictionConfidence ?? null,
+    predictionSlope: p.predictionSlope ?? null,
   };
 }
 

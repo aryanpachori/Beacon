@@ -86,6 +86,10 @@ export interface Package {
   successorPackage?: string;
   homepageUrl?: string;
   githubRepoUrl?: string;
+  predictionReason?: string | null;
+  predictedCriticalAt?: string | null;
+  predictionConfidence?: number | null;
+  predictionSlope?: number | null;
 }
 
 export interface Alert {
