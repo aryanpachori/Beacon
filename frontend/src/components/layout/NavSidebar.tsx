@@ -286,13 +286,20 @@ export function NavSidebar({
       {/* ── ⌘K hint + theme toggle ── */}
       {!isCollapsed && (
         <div className="px-4 pb-2 flex items-center gap-2">
-          <div className="flex flex-1 items-center gap-2 rounded-lg border border-dl-border bg-dl-surface px-3 py-2">
-            <Command className="h-3 w-3 shrink-0 text-dl-muted" />
-            <span className="flex-1 text-[11px] text-dl-muted">Quick search</span>
+          <button
+            type="button"
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent('toggle-command-palette'))
+              onClose()
+            }}
+            className="flex flex-1 items-center gap-2 rounded-lg border border-dl-border bg-dl-surface px-3 py-2 hover:border-dl-blue/60 hover:text-dl-blue transition-all cursor-pointer text-left focus:outline-none focus:ring-1 focus:ring-dl-blue/30 group"
+          >
+            <Command className="h-3 w-3 shrink-0 text-dl-muted group-hover:text-dl-blue transition-colors" />
+            <span className="flex-1 text-[11px] text-dl-muted group-hover:text-dl-blue transition-colors">Quick search</span>
             <span className="flex items-center gap-0.5 rounded bg-dl-surface px-1 py-0.5 text-[10px] font-bold text-dl-text shadow-sm border border-dl-border">
               ⌘K
             </span>
-          </div>
+          </button>
           <button
             type="button"
             onClick={toggleTheme}
