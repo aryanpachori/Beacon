@@ -363,7 +363,7 @@ export function InsightsDashboard() {
               >
                 <Icon className="h-4.5 w-4.5" style={{ color }} />
               </div>
-              <p className="text-[22px] font-bold leading-none tracking-tight text-dl-navy">
+              <div className="text-[22px] font-bold leading-none tracking-tight text-dl-navy">
                 {analyticsLoading ? (
                   <Skeleton className="h-6 w-12" />
                 ) : (
@@ -372,7 +372,7 @@ export function InsightsDashboard() {
                     {suffix}
                   </>
                 )}
-              </p>
+              </div>
               <p className="mt-1 text-[11px] font-medium text-dl-muted">
                 {label}
               </p>

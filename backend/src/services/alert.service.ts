@@ -7,6 +7,8 @@ import {
   generateNotificationMessage,
 } from "./notification.service";
 import { bumpScanProgress } from "./scanProgress.service";
+import { computePrediction } from "./prediction.service";
+import type { IntelligenceSignalsPayload } from "../lib/queue";
 
 export interface CheckAlertParams {
   installationId: string;
@@ -23,6 +25,17 @@ export interface CheckAlertParams {
   cisaUrl?: string;
   affectedVersions?: string[];
   safeVersions?: string[];
+}
+
+function toSignalsPayload(signals: Record<string, number>): IntelligenceSignalsPayload {
+  return {
+    commit_velocity: signals.commit_velocity ?? 0,
+    maintainer_activity: signals.maintainer_activity ?? 0,
+    security_hygiene: signals.security_hygiene ?? 0,
+    issue_resolution: signals.issue_resolution ?? 0,
+    funding: signals.funding ?? 0,
+    community_health: signals.community_health ?? 0,
+  };
 }
 
 function buildSignalPills(signals: Record<string, number>): string[] {
@@ -173,13 +186,23 @@ export async function incrementScanScored(
   const tierEnum = fromApiTier(tier);
   const prevTierEnum = prevTier ? fromApiTier(prevTier) : null;
 
+  const prediction = await computePrediction(
+    packageId,
+    newSps,
+    toSignalsPayload(signals),
+  );
+  const finalReason = prediction?.predictionReason ?? reason;
+
   await prisma.package.update({
     where: { id: packageId },
     data: {
       currentSps: newSps,
       tier: tierEnum,
       lastScoredAt: new Date(),
-      predictionReason: reason,
+      predictionReason: finalReason,
+      predictedCriticalAt: prediction?.predictedCriticalAt ?? null,
+      predictionConfidence: prediction?.predictionConfidence ?? null,
+      predictionSlope: prediction?.predictionSlope ?? null,
     },
   });
 
@@ -203,7 +226,7 @@ export async function incrementScanScored(
     tier: toApiTier(tierEnum) ?? tier,
     prevTier: prevTierEnum ? toApiTier(prevTierEnum) : null,
     signals,
-    reason,
+    reason: finalReason,
     isAdvisory,
     cveId,
     cisaUrl,

@@ -127,16 +127,16 @@ analyticsRouter.get('/', async (req: AuthRequest, res, next) => {
 
     const signals = packageIds.length > 0
       ? await prisma.$queryRaw<{ signal_type: string; avg_value: number }[]>`
-          SELECT signal_type, ROUND(AVG(value::numeric), 1)::float AS avg_value
+          SELECT "signalType" AS signal_type, ROUND(AVG(value::numeric), 1)::float AS avg_value
           FROM (
-            SELECT DISTINCT ON (package_id, signal_type)
-              package_id, signal_type, value
-            FROM "PackageSignal"
-            WHERE package_id = ANY(${packageIds}::text[])
+            SELECT DISTINCT ON ("packageId", "signalType")
+              "packageId", "signalType", value
+            FROM package_signals
+            WHERE "packageId" = ANY(${packageIds}::text[])
               AND value IS NOT NULL
-            ORDER BY package_id, signal_type, captured_at DESC
+            ORDER BY "packageId", "signalType", "capturedAt" DESC
           ) latest
-          GROUP BY signal_type
+          GROUP BY "signalType"
           ORDER BY avg_value DESC
         `
       : []
@@ -154,16 +154,16 @@ analyticsRouter.get('/', async (req: AuthRequest, res, next) => {
           package_tier: string; rn: number
         }[]>`
           SELECT
-            ps.package_id,
+            ps."packageId" AS package_id,
             ps.sps,
-            ps.scored_at,
+            ps."scoredAt" AS scored_at,
             p.name AS package_name,
             p.tier AS package_tier,
-            ROW_NUMBER() OVER (PARTITION BY ps.package_id ORDER BY ps.scored_at DESC) AS rn
-          FROM "PackageScore" ps
-          JOIN "Package" p ON p.id = ps.package_id
-          WHERE ps.package_id = ANY(${packageIds}::text[])
-          ORDER BY ps.package_id, ps.scored_at DESC
+            ROW_NUMBER() OVER (PARTITION BY ps."packageId" ORDER BY ps."scoredAt" DESC) AS rn
+          FROM package_scores ps
+          JOIN packages p ON p.id = ps."packageId"
+          WHERE ps."packageId" = ANY(${packageIds}::text[])
+          ORDER BY ps."packageId", ps."scoredAt" DESC
         `
       : []
 

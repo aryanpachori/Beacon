@@ -113,6 +113,9 @@ packagesRouter.get("/:id", async (req: AuthRequest, res, next) => {
         latestVersion: true,
         weeklyDownloads: true,
         predictionReason: true,
+        predictedCriticalAt: true,
+        predictionConfidence: true,
+        predictionSlope: true,
       },
     });
     if (!pkg) throw new AppError(404, "Package not found");
@@ -173,6 +176,10 @@ packagesRouter.get("/:id", async (req: AuthRequest, res, next) => {
         sprintWeeks: 1,
       },
       weeklyDownloads: pkg.weeklyDownloads ? Number(pkg.weeklyDownloads) : null,
+      predictionReason: pkg.predictionReason,
+      predictedCriticalAt: pkg.predictedCriticalAt,
+      predictionConfidence: pkg.predictionConfidence,
+      predictionSlope: pkg.predictionSlope,
     });
   } catch (err) {
     next(err);
