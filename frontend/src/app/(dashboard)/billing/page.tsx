@@ -98,19 +98,23 @@ export default function BillingPage() {
 
       {successMessage && (
         <div
-          className="mb-6 rounded-xl px-5 py-3.5 text-[13px] font-medium text-dl-sage-light"
+          className="mb-6 rounded-xl px-5 py-3.5 text-[13px] font-semibold text-dl-text"
           style={{
-            background: 'rgba(74,122,48,0.15)',
-            border: '1px solid rgba(74,122,48,0.35)',
+            background: 'rgba(47,126,218,0.08)',
+            border: '1.5px solid rgba(47,126,218,0.35)',
           }}
         >
-          {successMessage}
+          ✓ {successMessage}
         </div>
       )}
 
       {/* Current plan */}
       <div
-        className="mb-6 rounded-xl px-6 py-5 bg-white dark:bg-[#0d131f] border border-dl-border dark:border-blue-500/20"
+        className="mb-6 rounded-xl px-6 py-5"
+        style={{
+          background: 'rgba(47,126,218,0.08)',
+          border: '1.5px solid rgba(47,126,218,0.35)',
+        }}
       >
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
