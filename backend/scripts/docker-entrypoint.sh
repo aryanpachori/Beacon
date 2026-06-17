@@ -7,5 +7,5 @@ bunx prisma db push
 echo "Generating Prisma client..."
 bunx prisma generate
 
-echo "Starting DriftLogg API..."
+echo "Starting Beacon API..."
 exec bun dist/index.js

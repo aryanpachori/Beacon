@@ -1,5 +1,5 @@
 {
-  "name": "driftlogg",
+  "name": "beacon",
   "private": true,
   "scripts": {
     "prepare": "husky",

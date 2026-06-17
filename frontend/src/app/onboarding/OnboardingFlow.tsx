@@ -142,7 +142,7 @@ export function OnboardingFlow() {
     if (err === 'no_installation') {
       setNeedsInstall(true)
       setRepoError(
-        'Install the DriftLogg GitHub App on your account first, then link again.'
+        'Install the Beacon GitHub App on your account first, then link again.'
       )
     }
     if (err === 'github_oauth') {
@@ -150,12 +150,12 @@ export function OnboardingFlow() {
     }
     if (err === 'installation_claimed') {
       setRepoError(
-        'This GitHub App installation is already connected to another DriftLogg account. Please install the GitHub App under a different account.'
+        'This GitHub App installation is already connected to another Beacon account. Please install the GitHub App under a different account.'
       )
     }
     if (err === 'already_connected') {
       setRepoError(
-        'Your account already has a GitHub installation connected. Each DriftLogg account supports one GitHub connection. Visit Repos to manage it.'
+        'Your account already has a GitHub installation connected. Each Beacon account supports one GitHub connection. Visit Repos to manage it.'
       )
     }
   }, [searchParams])
@@ -301,7 +301,7 @@ export function OnboardingFlow() {
                   <p className="marketing-subtitle mt-3">
                     {githubConnected ? (
                       <>
-                        DriftLogg is linked to{' '}
+                        Beacon is linked to{' '}
                         <span className="font-mono text-dl-forest">
                           {accountLogin ? `@${accountLogin}` : 'your GitHub account'}
                         </span>
@@ -309,7 +309,7 @@ export function OnboardingFlow() {
                       </>
                     ) : (
                       <>
-                        DriftLogg watches your dependencies and predicts abandonment 60–90 days
+                        Beacon watches your dependencies and predicts abandonment 60–90 days
                         before it happens. Link your GitHub account to continue.
                       </>
                     )}
@@ -343,7 +343,7 @@ export function OnboardingFlow() {
                         disabled={connecting}
                         className="w-full py-2.5 text-sm text-dl-teal underline"
                       >
-                        Install DriftLogg GitHub App
+                        Install Beacon GitHub App
                       </button>
                     )}
                     {!needsInstall && (
@@ -389,8 +389,8 @@ export function OnboardingFlow() {
                   </h2>
                   <p className="marketing-subtitle mt-1.5">
                     {repoLimit === 1
-                      ? 'Your starter plan monitors a single repo. Pick which project DriftLogg should scan — not every repo GitHub can access.'
-                      : `Choose up to ${repoLimit} repositories to monitor in DriftLogg.`}
+                      ? 'Your starter plan monitors a single repo. Pick which project Beacon should scan — not every repo GitHub can access.'
+                      : `Choose up to ${repoLimit} repositories to monitor in Beacon.`}
                   </p>
                   {accountLogin && (
                     <p className="mt-2 text-xs text-dl-m-muted">
@@ -418,7 +418,7 @@ export function OnboardingFlow() {
                   </div>
                 ) : repos.length === 0 ? (
                   <div className="rounded-lg border border-dl-m-border bg-white dark:bg-dl-surface onboarding-repo-card p-4 text-sm text-dl-m-muted">
-                    No repositories found. Grant DriftLogg access to at least one repo on GitHub,
+                    No repositories found. Grant Beacon access to at least one repo on GitHub,
                     then refresh this page.
                   </div>
                 ) : filteredRepos.length === 0 ? (

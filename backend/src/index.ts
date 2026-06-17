@@ -89,7 +89,7 @@ async function main() {
   await connectRedis()
 
   app.listen(PORT, () => {
-    console.log(`DriftLogg API running on port ${PORT}`)
+    console.log(`Beacon API running on port ${PORT}`)
     startWorkers()
     if (process.env.ENABLE_NODE_INTELLIGENCE_WORKER === 'true') {
       startIntelligenceWorker()

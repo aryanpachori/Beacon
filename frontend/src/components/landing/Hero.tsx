@@ -185,7 +185,7 @@ export function Hero() {
             variants={textItem}
             className="mt-5 max-w-[480px] text-base text-white/85"
           >
-            DriftLogg monitors every open source dependency in your codebase and predicts abandonment
+            Beacon monitors every open source dependency in your codebase and predicts abandonment
             before it becomes a production incident. Stop firefighting. Start planning.
           </motion.p>
           <motion.div variants={textItem} className="mt-8 flex flex-wrap gap-3">

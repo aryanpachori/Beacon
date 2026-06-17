@@ -21,7 +21,7 @@ const FOOTER_COLUMNS: { title: string; links: { label: string; href: string }[] 
     title: 'Company',
     links: [
       { label: 'About', href: '/#features' },
-      { label: 'Contact', href: 'mailto:hello@driftlogg.com' },
+      { label: 'Contact', href: 'mailto:hello@beacon.com' },
     ],
   },
   {
@@ -119,7 +119,7 @@ export function Footer() {
                 height={32}
                 className="h-8 w-8 shrink-0 rounded-md"
               />
-              <span className="text-[17px] font-semibold text-white">DriftLogg</span>
+              <span className="text-[17px] font-semibold text-white">Beacon</span>
             </Link>
             <p className="mt-3 max-w-[200px] text-[13px] leading-relaxed text-white/65">
               Predict dependency rot before it hits production.
@@ -135,7 +135,7 @@ export function Footer() {
         <div className="mt-8 border-t border-white/10 pt-4 space-y-2">
           {/* Row 1: copyright | Built by | tagline — all inline */}
           <div className="flex flex-col items-center gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs text-white/45 shrink-0">© 2026 DriftLogg. All rights reserved.</p>
+            <p className="text-xs text-white/45 shrink-0">© 2026 Beacon. All rights reserved.</p>
             <span className="text-[10px] font-medium uppercase tracking-[0.08em] text-white/35">Built by</span>
             <p className="text-xs italic text-white/40 shrink-0">Built for engineers who ship.</p>
           </div>

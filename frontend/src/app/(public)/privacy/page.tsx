@@ -3,7 +3,7 @@ import { Footer } from '@/components/layout/Footer'
 import Link from 'next/link'
 
 export const metadata = {
-  title: 'Privacy Policy — DriftLogg',
+  title: 'Privacy Policy — Beacon',
 }
 
 export default function PrivacyPage() {
@@ -18,7 +18,7 @@ export default function PrivacyPage() {
             <section>
               <h2 className="mb-2 text-lg font-semibold text-dl-forest">Overview</h2>
               <p>
-                DriftLogg (&quot;we&quot;, &quot;us&quot;) respects your privacy. This policy describes what we
+                Beacon (&quot;we&quot;, &quot;us&quot;) respects your privacy. This policy describes what we
                 collect when you use our website and product, and how we use that information.
               </p>
             </section>
@@ -34,8 +34,8 @@ export default function PrivacyPage() {
               <h2 className="mb-2 text-lg font-semibold text-dl-forest">Contact</h2>
               <p>
                 Questions about privacy? Email{' '}
-                <a href="mailto:hello@driftlogg.com" className="text-dl-teal underline-offset-2 hover:underline">
-                  hello@driftlogg.com
+                <a href="mailto:hello@beacon.com" className="text-dl-teal underline-offset-2 hover:underline">
+                  hello@beacon.com
                 </a>
                 .
               </p>

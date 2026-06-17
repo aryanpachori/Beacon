@@ -24,7 +24,7 @@ export async function POST(req: Request) {
         {
           type: 'paragraph',
           content: [
-            { type: 'text', text: 'DriftLogg has detected a critical decay in package ' },
+            { type: 'text', text: 'Beacon has detected a critical decay in package ' },
             { type: 'text', text: alert.packageName, marks: [{ type: 'strong' }] },
             { type: 'text', text: '. The Survival Probability Score (SPS) fell from ' },
             { type: 'text', text: String(alert.spsBefore), marks: [{ type: 'strike' }] },
@@ -71,7 +71,7 @@ export async function POST(req: Request) {
     const issuePayload = {
       fields: {
         project: { key: projectKey },
-        summary: `[DriftLogg] Migrate away from decaying package: ${alert.packageName}`,
+        summary: `[Beacon] Migrate away from decaying package: ${alert.packageName}`,
         description,
         issuetype: { name: 'Task' },
       },

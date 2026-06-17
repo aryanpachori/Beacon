@@ -16,8 +16,8 @@ import type { Alert, Package, Repo } from '@/types'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000'
 
-const ACCESS_TOKEN_KEY = 'driftlogg_access_token'
-const REFRESH_TOKEN_KEY = 'driftlogg_refresh_token'
+const ACCESS_TOKEN_KEY = 'beacon_access_token'
+const REFRESH_TOKEN_KEY = 'beacon_refresh_token'
 
 export function getApiUrl(): string {
   return API_URL.replace(/\/$/, '')
@@ -42,14 +42,14 @@ export function clearAuthTokens(): void {
   if (typeof window === 'undefined') return
   localStorage.removeItem(ACCESS_TOKEN_KEY)
   localStorage.removeItem(REFRESH_TOKEN_KEY)
-  localStorage.removeItem('driftlogg_slack_url')
-  localStorage.removeItem('driftlogg_google_chat_url')
+  localStorage.removeItem('beacon_slack_url')
+  localStorage.removeItem('beacon_google_chat_url')
   localStorage.removeItem('dl_intended_url')
 
-  // Proactively clear any other driftlogg or session keys in localStorage
+  // Proactively clear any other beacon or session keys in localStorage
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i)
-    if (key && (key.startsWith('driftlogg_') || key === 'dl_intended_url')) {
+    if (key && (key.startsWith('beacon_') || key === 'dl_intended_url')) {
       localStorage.removeItem(key)
       i--
     }

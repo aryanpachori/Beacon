@@ -25,7 +25,7 @@ export function FinalCTA() {
           <Link href="/register" className="btn-primary">
             Start free →
           </Link>
-          <a href="mailto:hello@driftlogg.com" className="btn-ghost">
+          <a href="mailto:hello@beacon.com" className="btn-ghost">
             Talk to us
           </a>
         </div>

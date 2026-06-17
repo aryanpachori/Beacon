@@ -3,7 +3,7 @@ import crypto from 'crypto'
 
 export async function POST(req: Request) {
   try {
-    const secret = process.env.RAZORPAY_WEBHOOK_SECRET || 'driftlogg_secret_123'
+    const secret = process.env.RAZORPAY_WEBHOOK_SECRET || 'beacon_secret_123'
     const signature = req.headers.get('x-razorpay-signature')
     const rawBody = await req.text()
 
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
     })
 
     // Set cookie valid for 7 days so client dashboard reflects new tier instantly
-    response.cookies.set('driftlogg_plan', planLevel, { path: '/', maxAge: 60 * 60 * 24 * 7 })
+    response.cookies.set('beacon_plan', planLevel, { path: '/', maxAge: 60 * 60 * 24 * 7 })
     return response
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Internal Server Error'

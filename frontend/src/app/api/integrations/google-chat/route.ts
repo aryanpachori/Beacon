@@ -16,10 +16,10 @@ export async function POST(req: Request) {
     const googleChatPayload = {
       cardsV2: [
         {
-          cardId: 'driftlogg-alert',
+          cardId: 'beacon-alert',
           card: {
             header: {
-              title: `DriftLogg Alert: ${alert.packageName}`,
+              title: `Beacon Alert: ${alert.packageName}`,
               subtitle: `${alert.tier.toUpperCase()} SPS Drop`,
               imageUrl: 'https://fonts.gstatic.com/s/i/short-term/release/googlesymbols/warning/default/48px.svg',
               imageType: 'CIRCLE',
@@ -64,7 +64,7 @@ export async function POST(req: Request) {
                           text: 'View Survival Breakdown',
                           onClick: {
                             openLink: {
-                              url: `https://driftlogg.com/packages/${alert.packageId || 'moment'}`,
+                              url: `https://beacon.com/packages/${alert.packageId || 'moment'}`,
                             },
                           },
                         },

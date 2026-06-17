@@ -36,9 +36,9 @@ export async function sendOrgDigest(installationId: string): Promise<void> {
   const frequencyName = integration.digestFrequency === 'weekly' ? 'Weekly' : 'Daily'
 
   await resend.emails.send({
-    from: process.env.DIGEST_FROM || 'digest@driftlogg.com',
+    from: process.env.DIGEST_FROM || 'digest@beacon.com',
     to: integration.digestEmail,
-    subject: `DriftLogg ${frequencyName} Dependency Health Digest`,
+    subject: `Beacon ${frequencyName} Dependency Health Digest`,
     html: `<h2>Dependency health summary</h2><ul>${items || '<li>No critical packages</li>'}</ul>`,
   })
 }
@@ -55,10 +55,10 @@ export async function sendPublicDigest(): Promise<void> {
   const resend = new Resend(apiKey)
   for (const sub of subscribers) {
     await resend.emails.send({
-      from: process.env.DIGEST_FROM || 'digest@driftlogg.com',
+      from: process.env.DIGEST_FROM || 'digest@beacon.com',
       to: sub.email,
-      subject: 'DriftLogg Weekly Open Source Health Brief',
-      html: '<p>Your weekly open source dependency health brief from DriftLogg.</p>',
+      subject: 'Beacon Weekly Open Source Health Brief',
+      html: '<p>Your weekly open source dependency health brief from Beacon.</p>',
     })
   }
 }
@@ -69,9 +69,9 @@ export async function sendWelcomeEmail(email: string): Promise<void> {
 
   const resend = new Resend(apiKey)
   await resend.emails.send({
-    from: process.env.DIGEST_FROM || 'digest@driftlogg.com',
+    from: process.env.DIGEST_FROM || 'digest@beacon.com',
     to: email,
-    subject: 'Welcome to DriftLogg digest',
-    html: '<p>Thanks for subscribing to the DriftLogg newsletter.</p>',
+    subject: 'Welcome to Beacon digest',
+    html: '<p>Thanks for subscribing to the Beacon newsletter.</p>',
   })
 }

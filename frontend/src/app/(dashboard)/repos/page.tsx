@@ -65,7 +65,7 @@ export default function ReposPage() {
           <h1 className="page-heading">Repositories</h1>
           <p className="mt-1 text-sm text-dl-muted">
             {repoLimit === 1
-              ? 'Starter plan: monitor one repository. Pick which repo DriftLogg scans — even if GitHub grants access to all repos.'
+              ? 'Starter plan: monitor one repository. Pick which repo Beacon scans — even if GitHub grants access to all repos.'
               : `Pro plan: monitor up to ${repoLimit} repositories.`}
           </p>
         </div>
@@ -94,8 +94,8 @@ export default function ReposPage() {
                 </Dialog.Title>
                 <Dialog.Description className="mb-6 text-[13px] text-dl-muted">
                   {atRepoLimit
-                    ? 'Switch to a different repository. DriftLogg scans the repo you select.'
-                    : 'Install the GitHub App to let DriftLogg scan your dependencies.'}
+                    ? 'Switch to a different repository. Beacon scans the repo you select.'
+                    : 'Install the GitHub App to let Beacon scan your dependencies.'}
                 </Dialog.Description>
 
                 {repos.length > 0 && (
@@ -121,7 +121,7 @@ export default function ReposPage() {
                 </button>
 
                 <p className="mt-4 text-center text-[12px] text-dl-muted">
-                  🔒 Read-only access — DriftLogg never writes to your repos.
+                  🔒 Read-only access — Beacon never writes to your repos.
                 </p>
                 <Dialog.Close asChild>
                   <button

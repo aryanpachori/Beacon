@@ -19,7 +19,7 @@ export async function POST(req: Request) {
           type: 'header',
           text: {
             type: 'plain_text',
-            text: `🚨 DriftLogg Health Drop Alert: ${alert.packageName}`,
+            text: `🚨 Beacon Health Drop Alert: ${alert.packageName}`,
             emoji: true,
           },
         },
@@ -46,7 +46,7 @@ export async function POST(req: Request) {
                 type: 'plain_text',
                 text: 'View Survival Breakdown',
               },
-              url: `https://driftlogg.com/packages/${alert.packageId || 'moment'}`,
+              url: `https://beacon.com/packages/${alert.packageId || 'moment'}`,
               style: 'danger',
             },
           ],

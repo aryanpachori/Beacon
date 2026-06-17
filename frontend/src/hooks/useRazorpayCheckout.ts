@@ -61,7 +61,7 @@ export function useRazorpayCheckout() {
         key: keyId,
         amount: order.amount,
         currency: order.currency,
-        name: 'DriftLogg',
+        name: 'Beacon',
         description: 'Pro plan — monthly',
         order_id: order.order_id,
         prefill: {

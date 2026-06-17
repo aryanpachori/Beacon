@@ -56,13 +56,13 @@ export default function IntegrationsPage() {
 
   // Pre-fill from localStorage on mount
   useEffect(() => {
-    const cachedSlack = localStorage.getItem('driftlogg_slack_url')
+    const cachedSlack = localStorage.getItem('beacon_slack_url')
     if (cachedSlack) {
       setSlackUrl(cachedSlack)
       setSlackStatus({ type: 'success', text: 'Connected ✓ — previously verified webhook URL.' })
     }
 
-    const cachedGChat = localStorage.getItem('driftlogg_google_chat_url')
+    const cachedGChat = localStorage.getItem('beacon_google_chat_url')
     if (cachedGChat) {
       setGoogleChatUrl(cachedGChat)
       setGoogleChatStatus({ type: 'success', text: 'Connected ✓ — previously verified webhook URL.' })
@@ -93,7 +93,7 @@ export default function IntegrationsPage() {
       const data = await res.json()
       if (res.ok) {
         setSlackStatus({ type: 'success', text: 'Success! Block Kit alert delivered to Slack.' })
-        localStorage.setItem('driftlogg_slack_url', slackUrl)
+        localStorage.setItem('beacon_slack_url', slackUrl)
       } else {
         setSlackStatus({ type: 'error', text: data.error || 'Failed to dispatch Slack webhook.' })
       }
@@ -118,7 +118,7 @@ export default function IntegrationsPage() {
       const data = await res.json()
       if (res.ok) {
         setGoogleChatStatus({ type: 'success', text: 'Success! Card alert delivered to Google Chat.' })
-        localStorage.setItem('driftlogg_google_chat_url', googleChatUrl)
+        localStorage.setItem('beacon_google_chat_url', googleChatUrl)
       } else {
         setGoogleChatStatus({ type: 'error', text: data.error || 'Failed to dispatch Google Chat webhook.' })
       }

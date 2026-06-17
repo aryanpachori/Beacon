@@ -45,10 +45,10 @@ export function AlertCard({ alert }: AlertCardProps) {
       return
     }
 
-    const domain = localStorage.getItem('driftlogg_jira_domain')
-    const email = localStorage.getItem('driftlogg_jira_email')
-    const token = localStorage.getItem('driftlogg_jira_token')
-    const projectKey = localStorage.getItem('driftlogg_jira_proj_key')
+    const domain = localStorage.getItem('beacon_jira_domain')
+    const email = localStorage.getItem('beacon_jira_email')
+    const token = localStorage.getItem('beacon_jira_token')
+    const projectKey = localStorage.getItem('beacon_jira_proj_key')
 
     if (!domain || !email || !token || !projectKey) {
       toast.error('JIRA integration not configured. Go to Integrations to set it up.')

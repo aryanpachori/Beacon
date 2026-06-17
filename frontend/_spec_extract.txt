@@ -1,6 +1,6 @@
 <user_query>
-in @frontend/  some of this is already implemented implement therest Project — DriftLogg marketing site
-You are building the public-facing marketing website for DriftLogg, a predictive open source dependency health monitoring platform. This is a separate Next.js project from the app dashboard — it is the site a visitor lands on before they sign up. It includes a landing page, a pricing page, and all supporting sections. The stack is Next.js 14 App Router, TypeScript, Tailwind CSS, Framer Motion for animations, and Lucide React for icons. No backend, no auth, no API calls — this is a pure static marketing site with mock content.
+in @frontend/  some of this is already implemented implement therest Project — Beacon marketing site
+You are building the public-facing marketing website for Beacon, a predictive open source dependency health monitoring platform. This is a separate Next.js project from the app dashboard — it is the site a visitor lands on before they sign up. It includes a landing page, a pricing page, and all supporting sections. The stack is Next.js 14 App Router, TypeScript, Tailwind CSS, Framer Motion for animations, and Lucide React for icons. No backend, no auth, no API calls — this is a pure static marketing site with mock content.
 
 Colour system — define in tailwind.config.ts and globals.css
 Every colour used anywhere on the site must come from these tokens. No hardcoded hex values anywhere in component files — always reference a token.
@@ -39,7 +39,7 @@ tscolors: {
 
 Typography
 Import Inter via next/font/google and apply globally. The type scale is as follows — apply these via Tailwind utility classes, never inline styles.
-The hero headline sits at 56px on desktop, 36px on mobile, weight 500, colour --dl-text, line-height 1.15, letter-spacing -0.02em. Section headings are 36px desktop / 26px mobile, weight 500, same colour. Sub-headings inside cards or feature blocks are 18px, weight 500. Body copy throughout is 15px, weight 400, colour --dl-forest, line-height 1.7. Muted body (captions, supporting copy) is 14px, colour --dl-muted. Labels and overlines are 11px, uppercase, letter-spacing 0.08em, weight 500, colour --dl-hint. The logo wordmark "DriftLogg" is 17px, weight 600, colour #C2D099 when on dark backgrounds and #1C3B38 when on light.
+The hero headline sits at 56px on desktop, 36px on mobile, weight 500, colour --dl-text, line-height 1.15, letter-spacing -0.02em. Section headings are 36px desktop / 26px mobile, weight 500, same colour. Sub-headings inside cards or feature blocks are 18px, weight 500. Body copy throughout is 15px, weight 400, colour --dl-forest, line-height 1.7. Muted body (captions, supporting copy) is 14px, colour --dl-muted. Labels and overlines are 11px, uppercase, letter-spacing 0.08em, weight 500, colour --dl-hint. The logo wordmark "Beacon" is 17px, weight 600, colour #C2D099 when on dark backgrounds and #1C3B38 when on light.
 
 Global styles — src/app/globals.css
 cssbody {
@@ -155,15 +155,15 @@ src/
     └── index.ts
 
 Component — Nav.tsx
-Sticky top nav. Background #1C3B38 always — does not change on scroll. Height 60px. Max-width 1200px centred with px-6. Left side: logo "DriftLogg" in #C2D099 17px/600. Centre (desktop only, hidden on mobile): nav links — "Product", "How it works", "Pricing", "Docs" — in rgba(194,208,153,0.55) 14px, hover #E6EEC9. Right side: "Sign in" ghost link in rgba(194,208,153,0.55) + "Start free" primary button (#35858E bg, white text, 11px 20px padding). On mobile collapse centre links into a hamburger menu (Lucide Menu icon, #C2D099). Hamburger opens a full-width dropdown below the nav in #1C3B38 with the same links stacked vertically. Use useState for open/close. Framer Motion: nav fades in opacity 0→1 over 0.3s on mount. Active link (matched by usePathname()) gets #E6EEC9 colour.
+Sticky top nav. Background #1C3B38 always — does not change on scroll. Height 60px. Max-width 1200px centred with px-6. Left side: logo "Beacon" in #C2D099 17px/600. Centre (desktop only, hidden on mobile): nav links — "Product", "How it works", "Pricing", "Docs" — in rgba(194,208,153,0.55) 14px, hover #E6EEC9. Right side: "Sign in" ghost link in rgba(194,208,153,0.55) + "Start free" primary button (#35858E bg, white text, 11px 20px padding). On mobile collapse centre links into a hamburger menu (Lucide Menu icon, #C2D099). Hamburger opens a full-width dropdown below the nav in #1C3B38 with the same links stacked vertically. Use useState for open/close. Framer Motion: nav fades in opacity 0→1 over 0.3s on mount. Active link (matched by usePathname()) gets #E6EEC9 colour.
 
 Component — Footer.tsx
 Background #1C3B38. Max-width 1200px centred, padding 64px 24px 40px. Four columns in a CSS grid grid-cols-4 on desktop, grid-cols-2 on tablet, single column on mobile.
-Column 1 (brand): Logo "DriftLogg" #C2D099 17px/600. Tagline below: "Predict dependency rot before it hits production." in rgba(194,208,153,0.55) 13px, max-width 200px. Social icons (GitHub, Twitter/X, LinkedIn) as Lucide icons 18px rgba(194,208,153,0.5) with hover #C2D099.
+Column 1 (brand): Logo "Beacon" #C2D099 17px/600. Tagline below: "Predict dependency rot before it hits production." in rgba(194,208,153,0.55) 13px, max-width 200px. Social icons (GitHub, Twitter/X, LinkedIn) as Lucide icons 18px rgba(194,208,153,0.5) with hover #C2D099.
 Column 2 (Product): heading "Product" 11px uppercase #9BB8A0. Links: Dashboard, Packages, Alerts, Integrations, Changelog — all 13px rgba(194,208,153,0.55) hover #E6EEC9.
 Column 3 (Company): heading "Company" same style. Links: About, Blog, Careers, Press, Contact.
 Column 4 (Legal): heading "Legal" same style. Links: Privacy Policy, Terms of Service, Security, Cookie Policy.
-Bottom bar: thin 1px solid rgba(194,208,153,0.12) divider. Below it: "© 2025 DriftLogg. All rights reserved." left in #9BB8A0 12px. Right: "Built for engineers who ship." in rgba(194,208,153,0.4) 12px italic.
+Bottom bar: thin 1px solid rgba(194,208,153,0.12) divider. Below it: "© 2025 Beacon. All rights reserved." left in #9BB8A0 12px. Right: "Built for engineers who ship." in rgba(194,208,153,0.4) 12px italic.
 
 Landing page — app/page.tsx
 Assembles sections in this exact order: <Nav />, <Hero />, <SocialProof />, <ProblemSection />, <HowItWorks />, <FeatureGrid />, <DashboardPreview />, <Testimonials />, <ComparisonTable />, <FinalCTA />, <Footer />. No padding between sections — each section handles its own vertical padding internally.
@@ -171,7 +171,7 @@ Assembles sections in this exact order: <Nav />, <Hero />, <SocialProof />, <Pro
 Section — Hero.tsx
 Background #1C3B38 (dark). Full viewport height on desktop, min-height 680px on mobile. Max-width 1200px centred, padding 120px 24px 100px.
 Layout is two columns on desktop (55% left text, 45% right visual), stacked on mobile.
-Left column content in order from top: an overline label "Predictive dependency intelligence" — 11px uppercase #7DA78C with a 1px #7DA78C left border pl-3. Then the headline: "Know which packages are dying — 60 days before they do." in #E6EEC9 56px/500 line-height 1.15. Then supporting copy: "DriftLogg monitors every open source dependency in your codebase and predicts abandonment before it becomes a production incident. Stop firefighting. Start planning." in rgba(194,208,153,0.7) 16px, max-width 480px. Then two buttons side by side: "Start free — no card needed" primary + "See how it works →" secondary ghost. Below buttons: three trust micro-signals in a flex row — a green dot + "SOC 2 in progress", a lock icon + "Read-only GitHub access", a shield icon + "No code ever stored" — all 12px rgba(194,208,153,0.5).
+Left column content in order from top: an overline label "Predictive dependency intelligence" — 11px uppercase #7DA78C with a 1px #7DA78C left border pl-3. Then the headline: "Know which packages are dying — 60 days before they do." in #E6EEC9 56px/500 line-height 1.15. Then supporting copy: "Beacon monitors every open source dependency in your codebase and predicts abandonment before it becomes a production incident. Stop firefighting. Start planning." in rgba(194,208,153,0.7) 16px, max-width 480px. Then two buttons side by side: "Start free — no card needed" primary + "See how it works →" secondary ghost. Below buttons: three trust micro-signals in a flex row — a green dot + "SOC 2 in progress", a lock icon + "Read-only GitHub access", a shield icon + "No code ever stored" — all 12px rgba(194,208,153,0.5).
 Right column: a mock dashboard card — rgba(255,255,255,0.04) background, 1px solid rgba(194,208,153,0.12) border, 16px radius, padding 20px. Inside: a top row with "Dependency health" label left and a pulsing green dot + "Live" right. Below: three package rows showing a mock critical, at-risk, and healthy package. Each row has a package icon (2-letter mono abbreviation in a rgba(194,208,153,0.15) square), package name + version, a 5-bar sparkline (coloured by tier), and an SPS number (coloured by tier). Add a subtle glow effect on the card using box-shadow: 0 0 60px rgba(53,133,142,0.15). The pulsing green dot uses Framer Motion animate={{ opacity: [1, 0.3, 1] }} transition={{ repeat: Infinity, duration: 2 }}.
 Framer Motion: left column text children stagger in from left x: -20→0, opacity: 0→1 with staggerChildren: 0.1. Right column card slides in from right x: 30→0, opacity: 0→1 with 0.4s delay. Use useInView so animation only fires when section enters viewport.
 
@@ -194,7 +194,7 @@ Four steps in a horizontal timeline on desktop — a thin 1px solid #C2D099 line
 Each step has a circle number (36×36px, #35858E background, white text 14px/500), a step title 16px/500 #1C3B38 below, and 13px body copy #7DA78C below that.
 Step 1: "Install GitHub App" — "One-click installation. Read-only access to your manifest files only. No source code, no secrets."
 Step 2: "Select your repos" — "Choose which repositories to monitor — individual repos or your entire org. Monorepo support included."
-Step 3: "We scan and score" — "DriftLogg reads your dependency manifests, collects signals from 8 external sources, and runs our XGBoost survival model."
+Step 3: "We scan and score" — "Beacon reads your dependency manifests, collects signals from 8 external sources, and runs our XGBoost survival model."
 Step 4: "Get your risk dashboard" — "A ranked board of every dependency scored 0–100. Critical packages surface first. Migration recommendations included."
 Framer Motion: step circles animate in sequence, each with a 0.15s delay after the previous one, scale 0→1 with a spring transition stiffness: 200, damping: 18.
 
@@ -205,7 +205,7 @@ Six feature cards in grid-cols-3 on desktop, grid-cols-2 on tablet, grid-cols-1 
 Feature 1: Icon TrendingDown. Name "60–90 day survival forecast". Description "Our XGBoost model predicts package abandonment probability before the signals become obvious."
 Feature 2: Icon GitBranch. Name "GitHub App integration". Description "One-click read-only connection. Supports monorepos, multiple manifest formats, and org-wide scanning."
 Feature 3: Icon Bell. Name "Threshold alerts". Description "Configure SPS drop thresholds per org. Get notified in Slack, email, or JIRA the moment a package crosses your line."
-Feature 4: Icon ArrowRightLeft. Name "Migration recommendations". Description "When a package falls, DriftLogg surfaces ranked replacement packages with estimated migration effort."
+Feature 4: Icon ArrowRightLeft. Name "Migration recommendations". Description "When a package falls, Beacon surfaces ranked replacement packages with estimated migration effort."
 Feature 5: Icon BarChart2. Name "Signal breakdown". Description "Six weighted signal categories — commit velocity, maintainer activity, funding, issues, community, security — visualised per package."
 Feature 6: Icon Shield. Name "Security hygiene tracking". Description "Days since last release, CVE age, and OSSF Scorecard delta tracked continuously alongside health signals."
 Framer Motion: useInView stagger on cards, opacity 0→1, y 12→0, staggerChildren 0.07s.
@@ -231,23 +231,23 @@ Background #F4F8EC. Padding 100px 24px. Max-width 1100px centred.
 Overline: "What engineers say". Heading: "Teams that stopped firefighting." 36px/500.
 Three testimonial cards in grid-cols-3 on desktop, stacked on mobile. Each card: #fff bg, 1px solid #D4E0C8 border, 14px radius, 28px padding. A large opening quote mark " in #C2D099 48px/300 at top. Quote text 15px #2A5C52 italic below. Author row at bottom: initials avatar circle (36×36px, #E6EEC9 bg, #35858E text 13px/500) + name 14px/500 #1C3B38 + role/company 12px #7DA78C.
 Testimonial 1: "We caught a critical abandonment in node-sass six weeks before our CI started failing. The migration recommendation pointed us straight to sass. Saved an entire sprint." — Priya M., VP Engineering at Stackery.
-Testimonial 2: "DriftLogg is the first tool that tells me what's about to break, not what already has. That's a completely different kind of value for a platform team." — Rohan D., Senior Platform Engineer at BuildCo.
-Testimonial 3: "We were asked to demonstrate software supply chain security posture to auditors. DriftLogg gave us the report we needed in one export. That alone justified the subscription." — Aditya K., CTO at ShipFast.
+Testimonial 2: "Beacon is the first tool that tells me what's about to break, not what already has. That's a completely different kind of value for a platform team." — Rohan D., Senior Platform Engineer at BuildCo.
+Testimonial 3: "We were asked to demonstrate software supply chain security posture to auditors. Beacon gave us the report we needed in one export. That alone justified the subscription." — Aditya K., CTO at ShipFast.
 Framer Motion: stagger 0.1s, opacity 0→1, y 10→0 per card on scroll into view.
 
 Section — ComparisonTable.tsx
 Background #F0F5E8. Padding 100px 24px. Max-width 900px centred.
 Overline: "How we compare". Heading: "Built for prediction, not reaction." 36px/500.
-A comparison table — #F4F8EC bg, 1px solid #D4E0C8 border, 14px radius, overflow hidden. Column headers: Feature · DriftLogg · Snyk · Dependabot · OSSF Scorecard. DriftLogg column header has #35858E bg #fff text to highlight it. Cell text 13px #2A5C52. Alternating row backgrounds: #F4F8EC and #fff. Check icons (Lucide Check 16px #35858E) for yes, dash for no (#D4E0C8), partial indicator for partial.
+A comparison table — #F4F8EC bg, 1px solid #D4E0C8 border, 14px radius, overflow hidden. Column headers: Feature · Beacon · Snyk · Dependabot · OSSF Scorecard. Beacon column header has #35858E bg #fff text to highlight it. Cell text 13px #2A5C52. Alternating row backgrounds: #F4F8EC and #fff. Check icons (Lucide Check 16px #35858E) for yes, dash for no (#D4E0C8), partial indicator for partial.
 Rows:
-"Predictive abandonment score" — DriftLogg ✓ · Snyk — · Dependabot — · OSSF —
-"60–90 day survival forecast" — DriftLogg ✓ · Snyk — · Dependabot — · OSSF —
-"Migration recommendations" — DriftLogg ✓ · Snyk partial · Dependabot partial · OSSF —
-"Known CVE detection" — DriftLogg ✓ · Snyk ✓ · Dependabot ✓ · OSSF partial
-"Maintainer activity signals" — DriftLogg ✓ · Snyk — · Dependabot — · OSSF ✓
-"Funding gap detection" — DriftLogg ✓ · Snyk — · Dependabot — · OSSF —
-"Slack + JIRA alerts" — DriftLogg ✓ · Snyk ✓ · Dependabot partial · OSSF —
-"OSSF Scorecard integration" — DriftLogg ✓ · Snyk partial · Dependabot — · OSSF ✓
+"Predictive abandonment score" — Beacon ✓ · Snyk — · Dependabot — · OSSF —
+"60–90 day survival forecast" — Beacon ✓ · Snyk — · Dependabot — · OSSF —
+"Migration recommendations" — Beacon ✓ · Snyk partial · Dependabot partial · OSSF —
+"Known CVE detection" — Beacon ✓ · Snyk ✓ · Dependabot ✓ · OSSF partial
+"Maintainer activity signals" — Beacon ✓ · Snyk — · Dependabot — · OSSF ✓
+"Funding gap detection" — Beacon ✓ · Snyk — · Dependabot — · OSSF —
+"Slack + JIRA alerts" — Beacon ✓ · Snyk ✓ · Dependabot partial · OSSF —
+"OSSF Scorecard integration" — Beacon ✓ · Snyk partial · Dependabot — · OSSF ✓
 Below the table: a small caption "Comparison based on publicly available feature documentation as of May 2025." in #9BB8A0 11px centred.
 
 Section — FinalCTA.tsx
@@ -282,13 +282,13 @@ Component — PricingFAQ.tsx
 Background #F0F5E8. Padding 80px 24px. Max-width 720px centred. Heading "Frequently asked questions" 28px/500 centred.
 Eight FAQ items as an accordion. Each item: question 15px/500 #1C3B38 in a full-width button with a Lucide ChevronDown icon right (rotates 180° when open, Framer Motion rotate: 0→180). Answer expands below with Framer Motion AnimatePresence — height: 0→auto using a motion.div with overflow: hidden. Answer text 14px #7DA78C with padding 12px 0 16px.
 FAQ items:
-Q: "What exactly does DriftLogg read from my GitHub?" A: "DriftLogg only reads your dependency manifest files — package.json, requirements.txt, go.mod, pom.xml, Gemfile, and Cargo.toml. It never reads your source code, environment files, or secrets. Our GitHub App requests the minimum possible permission scope."
+Q: "What exactly does Beacon read from my GitHub?" A: "Beacon only reads your dependency manifest files — package.json, requirements.txt, go.mod, pom.xml, Gemfile, and Cargo.toml. It never reads your source code, environment files, or secrets. Our GitHub App requests the minimum possible permission scope."
 Q: "How does the Survival Probability Score work?" A: "SPS is a 0–100 index produced by an XGBoost machine learning model trained on historical data from 50,000+ open source packages. It models the probability that a package remains actively maintained over the next 60–90 days, based on six weighted signal categories: commit velocity, maintainer activity, funding status, issue resolution drift, community health, and security hygiene."
-Q: "How accurate are the predictions?" A: "In backtesting, DriftLogg correctly identified packages that went abandoned within 90 days with a precision of ~84% at the Critical tier threshold. False positives are surfaced with full signal breakdowns so engineers can make their own judgment calls."
-Q: "Can I use DriftLogg on private repos?" A: "Yes. The GitHub App installation works for both public and private repositories. Your manifest data is stored encrypted at rest using AES-256 and never shared."
+Q: "How accurate are the predictions?" A: "In backtesting, Beacon correctly identified packages that went abandoned within 90 days with a precision of ~84% at the Critical tier threshold. False positives are surfaced with full signal breakdowns so engineers can make their own judgment calls."
+Q: "Can I use Beacon on private repos?" A: "Yes. The GitHub App installation works for both public and private repositories. Your manifest data is stored encrypted at rest using AES-256 and never shared."
 Q: "What ecosystems are supported?" A: "Phase 1 supports npm and PyPI. go.mod, Cargo.toml, Maven, and RubyGems are rolling out in Phase 2. Enterprise customers can request priority ecosystem support."
 Q: "How do I cancel my subscription?" A: "You can cancel at any time from the billing settings page. There are no lock-in contracts. Your data is retained for 30 days post-cancellation and then permanently deleted."
-Q: "Does DriftLogg integrate with my existing tools?" A: "Yes. Slack, email, JIRA, and Linear integrations are available on Pro and above. A REST API and webhook support are available on Team and above for custom integrations."
+Q: "Does Beacon integrate with my existing tools?" A: "Yes. Slack, email, JIRA, and Linear integrations are available on Pro and above. A REST API and webhook support are available on Team and above for custom integrations."
 Q: "Is there a free trial for paid plans?" A: "Pro and Team plans include a 14-day free trial with no credit card required. Enterprise plans include a guided proof-of-concept engagement."
 
 Component — PricingCTA.tsx
@@ -302,18 +302,18 @@ Every section uses useInView from Framer Motion with once: true and margin: "-80
 
 SEO and metadata — app/layout.tsx
 tsexport const metadata = {
-  title: 'DriftLogg — Predictive Dependency Health Monitoring',
-  description: 'Know which open source packages are dying 60 days before they do. DriftLogg monitors your dependencies and predicts abandonment before it hits production.',
+  title: 'Beacon — Predictive Dependency Health Monitoring',
+  description: 'Know which open source packages are dying 60 days before they do. Beacon monitors your dependencies and predicts abandonment before it hits production.',
   openGraph: {
-    title: 'DriftLogg — Predictive Dependency Health Monitoring',
+    title: 'Beacon — Predictive Dependency Health Monitoring',
     description: 'Predict dependency rot before it becomes a production incident.',
-    url: 'https://driftlogg.com',
-    siteName: 'DriftLogg',
+    url: 'https://beacon.com',
+    siteName: 'Beacon',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'DriftLogg',
+    title: 'Beacon',
     description: 'Predict dependency rot before it hits production.',
   },
 }

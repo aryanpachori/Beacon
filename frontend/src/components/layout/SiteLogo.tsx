@@ -36,7 +36,7 @@ export function SiteLogo({
       </span>
       {showWordmark && (
         <span className={`text-[17px] font-medium tracking-tight ${wordmarkClass}`}>
-          DriftLogg
+          Beacon
         </span>
       )}
     </Link>

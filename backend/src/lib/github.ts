@@ -13,7 +13,7 @@ function getGitHubAppPrivateKey(): string | undefined {
   const candidates = [
     resolve(keyPath),
     resolve('/app', keyPath),
-    '/app/driftlogg.2026-06-10.private-key.pem',
+    '/app/beacon.2026-06-10.private-key.pem',
   ]
 
   for (const path of candidates) {
@@ -131,7 +131,7 @@ export function getOAuthRedirectUri(): string {
 }
 
 export function getInstallUrl(state?: string): string {
-  const appName = process.env.GITHUB_APP_NAME || 'driftlogg'
+  const appName = process.env.GITHUB_APP_NAME || 'beacon'
   const base = `https://github.com/apps/${appName}/installations/new`
   return state ? `${base}?state=${encodeURIComponent(state)}` : base
 }

@@ -23,18 +23,18 @@ export const metadata: Metadata = {
     icon: '/favicon.ico',
     apple: '/logo.png',
   },
-  title: 'DriftLogg — Predictive Dependency Health',
+  title: 'Beacon — Predictive Dependency Health',
   description:
     'Know which open source packages are dying before they become production incidents. Predictive dependency intelligence for engineering teams.',
   openGraph: {
-    title: 'DriftLogg — Predictive Dependency Health',
+    title: 'Beacon — Predictive Dependency Health',
     description: 'Know which packages are dying — 60 days before they do.',
     type: 'website',
-    siteName: 'DriftLogg',
+    siteName: 'Beacon',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'DriftLogg — Predictive Dependency Health',
+    title: 'Beacon — Predictive Dependency Health',
     description: 'Know which packages are dying — 60 days before they do.',
   },
 }

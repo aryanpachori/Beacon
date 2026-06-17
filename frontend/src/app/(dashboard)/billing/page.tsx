@@ -176,7 +176,7 @@ export default function BillingPage() {
       <div className="mb-8">
         <h1 className="page-heading text-dl-forest">Billing</h1>
         <p className="mt-1 text-[13px] text-dl-muted">
-          Manage your DriftLogg plan. Payments are processed securely via Razorpay.
+          Manage your Beacon plan. Payments are processed securely via Razorpay.
         </p>
       </div>
 

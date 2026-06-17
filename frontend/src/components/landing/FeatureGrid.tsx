@@ -37,7 +37,7 @@ const FEATURES = [
     icon: ArrowRightLeft,
     name: 'Migration recommendations',
     description:
-      'When a package falls, DriftLogg surfaces ranked replacement packages with estimated migration effort.',
+      'When a package falls, Beacon surfaces ranked replacement packages with estimated migration effort.',
     hoverAnim: { x: [0, 4, -4, 0], transition: { duration: 0.5, repeat: Infinity, repeatDelay: 0.8 } },
   },
   {

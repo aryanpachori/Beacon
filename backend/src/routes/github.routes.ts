@@ -210,7 +210,7 @@ githubRouter.get("/callback", async (req, res, next) => {
     const accountLogin =
       await resolveInstallationAccountLogin(installationIdNum);
 
-    // One GitHub installation per DriftLogg user — if this installationId is
+    // One GitHub installation per Beacon user — if this installationId is
     // already claimed by a DIFFERENT user, redirect with an error rather than
     // silently re-assigning it (which would break the original user's scans).
     const existing = await prisma.githubInstallation.findUnique({
@@ -225,7 +225,7 @@ githubRouter.get("/callback", async (req, res, next) => {
       return res.redirect(`${frontendUrl}/onboarding?step=1&error=installation_claimed`);
     }
 
-    // Also enforce: one GitHub account per DriftLogg user.
+    // Also enforce: one GitHub account per Beacon user.
     // If this user already has a DIFFERENT installation linked, block the new one.
     const userInstallation = await prisma.githubInstallation.findFirst({
       where: { userId, NOT: { installationId: BigInt(installationId) } },

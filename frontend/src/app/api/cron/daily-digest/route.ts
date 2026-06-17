@@ -181,9 +181,9 @@ async function sendDigestEmail(compiledData: CompiledDigestData, apiKey?: string
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      from: 'digests@driftlogg.com',
+      from: 'digests@beacon.com',
       to: compiledData.recipientEmail,
-      subject: `[DriftLogg] Daily Digest for ${compiledData.orgName}`,
+      subject: `[Beacon] Daily Digest for ${compiledData.orgName}`,
       html: `<h1>Daily Digest for ${compiledData.orgName}</h1><p>Health Index: ${compiledData.stackHealthIndex}/100</p>`,
     }),
   })

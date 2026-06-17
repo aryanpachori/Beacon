@@ -30,7 +30,7 @@ Set `PORT=8081` in `py-intelligence/.env` locally (overrides API `PORT=4000` fro
 | `REDIS_URL`               | Yes      | Same Redis as the Node API                               |
 | `API_PUBLIC_URL`          | Yes      | Node API base URL (e.g. `https://your-api.onrender.com`) |
 | `INTERNAL_WEBHOOK_SECRET` | Yes      | Must match `backend/.env` exactly                        |
-| `MODEL_PATH`              | Yes      | `data/driftlogg_model.json` (relative to repo root)      |
+| `MODEL_PATH`              | Yes      | `data/beacon_model.json` (relative to repo root)      |
 | `API_URL`                 | No       | Overrides `API_PUBLIC_URL` for callbacks                 |
 
 ## Render (Web Service — free tier)
@@ -39,7 +39,7 @@ Do **not** use `gunicorn` — this is a queue worker, not a Django app. `worker.
 
 | Field          | Value                                                            |
 | -------------- | ---------------------------------------------------------------- |
-| Name           | `driftlogg-intelligence`                                         |
+| Name           | `beacon-intelligence`                                         |
 | Language       | Python 3                                                         |
 | Root Directory | _(leave empty)_                                                  |
 | Build Command  | `pip install -r py-intelligence/requirements.txt`                |
@@ -53,7 +53,7 @@ Do **not** use `gunicorn` — this is a queue worker, not a Django app. `worker.
 | `REDIS_URL`               | Same as API                     |
 | `API_PUBLIC_URL`          | `https://your-api.onrender.com` |
 | `INTERNAL_WEBHOOK_SECRET` | Same as API                     |
-| `MODEL_PATH`              | `data/driftlogg_model.json`     |
+| `MODEL_PATH`              | `data/beacon_model.json`     |
 
 Paid **Background Worker** is better for 24/7 queue processing (no HTTP port needed).
 

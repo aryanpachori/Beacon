@@ -14,7 +14,7 @@ const TESTIMONIALS = [
   },
   {
     quote:
-      'DriftLogg is the first tool that tells me what\'s about to break, not what already has. That\'s a completely different kind of value for a platform team.',
+      'Beacon is the first tool that tells me what\'s about to break, not what already has. That\'s a completely different kind of value for a platform team.',
     name: 'Rohan D.',
     role: 'Senior Platform Engineer at BuildCo',
     initials: 'RD',
@@ -22,7 +22,7 @@ const TESTIMONIALS = [
   },
   {
     quote:
-      'We were asked to demonstrate software supply chain security posture to auditors. DriftLogg gave us the report we needed in one export. That alone justified the subscription.',
+      'We were asked to demonstrate software supply chain security posture to auditors. Beacon gave us the report we needed in one export. That alone justified the subscription.',
     name: 'Aditya K.',
     role: 'CTO at ShipFast',
     initials: 'AK',
@@ -30,7 +30,7 @@ const TESTIMONIALS = [
   },
   {
     quote:
-      'Our security team used to spend hours triaging dependency alerts. DriftLogg cut our triage time by 70% because we only look at things that are actually at risk of dying.',
+      'Our security team used to spend hours triaging dependency alerts. Beacon cut our triage time by 70% because we only look at things that are actually at risk of dying.',
     name: 'Sarah L.',
     role: 'Security Lead at NovaTech',
     initials: 'SL',
@@ -38,7 +38,7 @@ const TESTIMONIALS = [
   },
   {
     quote:
-      'I integrated DriftLogg into our CI pipeline. When a dependency drops below SPS 40, it auto-creates a migration ticket in JIRA. Our tech debt backlog finally has signal.',
+      'I integrated Beacon into our CI pipeline. When a dependency drops below SPS 40, it auto-creates a migration ticket in JIRA. Our tech debt backlog finally has signal.',
     name: 'Marcus W.',
     role: 'DevOps Manager at CloudScale',
     initials: 'MW',

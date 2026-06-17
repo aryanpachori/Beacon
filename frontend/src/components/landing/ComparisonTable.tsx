@@ -6,22 +6,22 @@ import { inViewOptions, sectionReveal } from '@/components/marketing/motion'
 
 type CellValue = 'yes' | 'no' | 'partial'
 
-const ROWS: { feature: string; driftlogg: CellValue; snyk: CellValue; dependabot: CellValue; ossf: CellValue }[] = [
-  { feature: 'Predictive abandonment score', driftlogg: 'yes', snyk: 'no', dependabot: 'no', ossf: 'no' },
-  { feature: '60–90 day survival forecast', driftlogg: 'yes', snyk: 'no', dependabot: 'no', ossf: 'no' },
-  { feature: 'Migration recommendations', driftlogg: 'yes', snyk: 'partial', dependabot: 'partial', ossf: 'no' },
-  { feature: 'Known CVE detection', driftlogg: 'yes', snyk: 'yes', dependabot: 'yes', ossf: 'partial' },
-  { feature: 'Maintainer activity signals', driftlogg: 'yes', snyk: 'no', dependabot: 'no', ossf: 'yes' },
-  { feature: 'Funding gap detection', driftlogg: 'yes', snyk: 'no', dependabot: 'no', ossf: 'no' },
-  { feature: 'Slack + JIRA alerts', driftlogg: 'yes', snyk: 'yes', dependabot: 'partial', ossf: 'no' },
-  { feature: 'OSSF Scorecard integration', driftlogg: 'yes', snyk: 'partial', dependabot: 'no', ossf: 'yes' },
+const ROWS: { feature: string; beacon: CellValue; snyk: CellValue; dependabot: CellValue; ossf: CellValue }[] = [
+  { feature: 'Predictive abandonment score', beacon: 'yes', snyk: 'no', dependabot: 'no', ossf: 'no' },
+  { feature: '60–90 day survival forecast', beacon: 'yes', snyk: 'no', dependabot: 'no', ossf: 'no' },
+  { feature: 'Migration recommendations', beacon: 'yes', snyk: 'partial', dependabot: 'partial', ossf: 'no' },
+  { feature: 'Known CVE detection', beacon: 'yes', snyk: 'yes', dependabot: 'yes', ossf: 'partial' },
+  { feature: 'Maintainer activity signals', beacon: 'yes', snyk: 'no', dependabot: 'no', ossf: 'yes' },
+  { feature: 'Funding gap detection', beacon: 'yes', snyk: 'no', dependabot: 'no', ossf: 'no' },
+  { feature: 'Slack + JIRA alerts', beacon: 'yes', snyk: 'yes', dependabot: 'partial', ossf: 'no' },
+  { feature: 'OSSF Scorecard integration', beacon: 'yes', snyk: 'partial', dependabot: 'no', ossf: 'yes' },
 ]
 
-function Cell({ value, isDriftLogg }: { value: CellValue; isDriftLogg?: boolean }) {
+function Cell({ value, isBeacon }: { value: CellValue; isBeacon?: boolean }) {
   if (value === 'yes')
     return (
       <Check
-        className={`mx-auto ${isDriftLogg ? 'h-5 w-5 text-dl-teal' : 'h-4 w-4 text-dl-teal/70'}`}
+        className={`mx-auto ${isBeacon ? 'h-5 w-5 text-dl-teal' : 'h-4 w-4 text-dl-teal/70'}`}
       />
     )
   if (value === 'partial') return <span className="text-neutral-500">partial</span>
@@ -57,7 +57,7 @@ export function ComparisonTable() {
                   <th className="px-4 py-3 text-left font-medium text-dl-text">Feature</th>
                   <th className="relative px-4 py-3 font-medium text-white">
                     <div className="absolute inset-0 bg-dl-teal" />
-                    <span className="relative z-10">DriftLogg</span>
+                    <span className="relative z-10">Beacon</span>
                   </th>
                   <th className="px-4 py-3 font-medium text-dl-muted">Snyk</th>
                   <th className="px-4 py-3 font-medium text-dl-muted">Dependabot</th>
@@ -74,7 +74,7 @@ export function ComparisonTable() {
                   >
                     <td className="px-4 py-3 text-left font-medium text-dl-forest">{row.feature}</td>
                     <td className="bg-dl-teal/[0.06] px-4 py-3">
-                      <Cell value={row.driftlogg} isDriftLogg />
+                      <Cell value={row.beacon} isBeacon />
                     </td>
                     <td className="px-4 py-3">
                       <Cell value={row.snyk} />

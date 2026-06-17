@@ -133,7 +133,7 @@ async function sendGchatAlert(webhookUrl: string, params: AlertDispatchParams) {
                   buttonList: {
                     buttons: [
                       {
-                        text: 'View in DriftLogg',
+                        text: 'View in Beacon',
                         onClick: {
                           openLink: {
                             url: `${process.env.FRONTEND_URL}/packages/${params.packageId}`,
@@ -157,22 +157,22 @@ async function sendImmediateEmail(email: string, params: AlertDispatchParams) {
   if (!apiKey) return
 
   const resend = new Resend(apiKey)
-  let subject = `DriftLogg Alert: ${params.packageName} (${params.tier})`
+  let subject = `Beacon Alert: ${params.packageName} (${params.tier})`
   let html = `<p><strong>${params.packageName}</strong> SPS: ${params.prevSps} → ${params.newSps}</p><p>${params.reason}</p>`
 
   if (params.alertType === AlertType.recovery) {
-    subject = `DriftLogg Recovery Alert: ${params.packageName} recovered to ${params.tier}`
+    subject = `Beacon Recovery Alert: ${params.packageName} recovered to ${params.tier}`
     html = `<p><strong>${params.packageName}</strong> has recovered to ${params.tier} tier (SPS: ${params.prevSps} → ${params.newSps}).</p><p>${params.reason}</p>`
   } else if (params.alertType === AlertType.tier_change) {
-    subject = `DriftLogg Tier Change Alert: ${params.packageName} tier changed to ${params.tier}`
+    subject = `Beacon Tier Change Alert: ${params.packageName} tier changed to ${params.tier}`
     html = `<p><strong>${params.packageName}</strong> has worsened to ${params.tier} tier (SPS: ${params.prevSps} → ${params.newSps}).</p><p>${params.reason}</p>`
   } else if (params.alertType === AlertType.supply_chain) {
-    subject = `DriftLogg Security Alert: CVE / Supply Chain Advisory for ${params.packageName}`
+    subject = `Beacon Security Alert: CVE / Supply Chain Advisory for ${params.packageName}`
     html = `<p><strong>${params.packageName}</strong> is affected by a security advisory / CVE override (${params.cveId || 'No CVE ID'}).</p><p>${params.reason}</p>`
   }
 
   await resend.emails.send({
-    from: process.env.EMAIL_FROM || 'alerts@driftlogg.com',
+    from: process.env.EMAIL_FROM || 'alerts@beacon.com',
     to: email,
     subject,
     html,
@@ -186,7 +186,7 @@ export async function sendSlackTest(webhookUrl: string): Promise<void> {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: '*DriftLogg Test Alert*\nYour Slack integration is working.',
+          text: '*Beacon Test Alert*\nYour Slack integration is working.',
         },
       },
     ],
@@ -197,9 +197,9 @@ export async function sendGchatTest(webhookUrl: string): Promise<void> {
   await axios.post(webhookUrl, {
     cardsV2: [
       {
-        cardId: 'driftlogg-test',
+        cardId: 'beacon-test',
         card: {
-          header: { title: 'DriftLogg Test Alert' },
+          header: { title: 'Beacon Test Alert' },
           sections: [
             {
               widgets: [

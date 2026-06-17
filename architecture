@@ -1,10 +1,10 @@
-Here's the complete end to end architecture of everything DriftLogg is building.
+Here's the complete end to end architecture of everything Beacon is building.
 
 ---
 
-## What DriftLogg is
+## What Beacon is
 
-A predictive dependency health monitoring platform. Engineering teams connect their GitHub repos once. DriftLogg scans every package, scores each one 0–100 using machine learning, predicts which ones will be abandoned 60–90 days before it happens, and alerts the team before it becomes a production incident.
+A predictive dependency health monitoring platform. Engineering teams connect their GitHub repos once. Beacon scans every package, scores each one 0–100 using machine learning, predicts which ones will be abandoned 60–90 days before it happens, and alerts the team before it becomes a production incident.
 
 ---
 
@@ -175,7 +175,7 @@ A predictive dependency health monitoring platform. Engineering teams connect th
 ### Signup and onboarding
 
 ```
-1. User visits driftlogg.com (Next.js landing)
+1. User visits beacon.com (Next.js landing)
    → Clicks "Start free"
    → /register page
    → POST /api/auth/register
@@ -635,7 +635,7 @@ Required for Connect GitHub + first scan:
 
 ```
 GITHUB_APP_ID=…
-GITHUB_APP_NAME=driftlogg          → install URL slug
+GITHUB_APP_NAME=beacon          → install URL slug
 GITHUB_APP_PRIVATE_KEY_PATH=…      → PEM file in backend/ (preferred locally)
   OR GITHUB_APP_PRIVATE_KEY=…      → inline PEM with \n escapes (CI/Docker alt)
 

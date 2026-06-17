@@ -65,7 +65,7 @@ export function BeforeAfter() {
               >
                 <AlertTriangle className="h-4 w-4 text-dl-critical" />
               </div>
-              <span className="text-[15px] font-semibold text-dl-critical">Without DriftLogg</span>
+              <span className="text-[15px] font-semibold text-dl-critical">Without Beacon</span>
             </div>
             <ul className="flex flex-col gap-3.5">
               {WITHOUT.map(({ icon: Icon, text }) => (
@@ -96,7 +96,7 @@ export function BeforeAfter() {
               >
                 <CheckCircle className="h-4 w-4 text-dl-teal" />
               </div>
-              <span className="text-[15px] font-semibold text-dl-teal">With DriftLogg</span>
+              <span className="text-[15px] font-semibold text-dl-teal">With Beacon</span>
             </div>
             <ul className="flex flex-col gap-3.5">
               {WITH.map(({ icon: Icon, text }) => (

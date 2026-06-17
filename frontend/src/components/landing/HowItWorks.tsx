@@ -15,7 +15,7 @@ const STEPS = [
   },
   {
     title: 'We scan and score',
-    copy: 'DriftLogg reads your dependency manifests, collects signals from 8 external sources, and runs our XGBoost survival model.',
+    copy: 'Beacon reads your dependency manifests, collects signals from 8 external sources, and runs our XGBoost survival model.',
   },
   {
     title: 'Get your risk dashboard',

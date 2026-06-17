@@ -3,7 +3,7 @@
   "configVersion": 0,
   "workspaces": {
     "": {
-      "name": "driftlogg-api",
+      "name": "beacon-api",
       "dependencies": {
         "@octokit/auth-app": "^8.2.0",
         "@octokit/rest": "^22.0.1",

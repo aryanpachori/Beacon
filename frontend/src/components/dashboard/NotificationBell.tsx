@@ -174,7 +174,7 @@ export function NotificationBell() {
 
           <div className="flex items-center justify-between px-4 py-2.5 bg-dl-surface dark:bg-[#121b2d] border-t border-dl-border dark:border-white/5">
             <span className="text-[10px] text-dl-muted">
-              alerts@driftlogg.io
+              alerts@beacon.io
             </span>
             <Link
               href="/alerts"

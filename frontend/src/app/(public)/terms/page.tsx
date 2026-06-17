@@ -3,7 +3,7 @@ import { Footer } from '@/components/layout/Footer'
 import Link from 'next/link'
 
 export const metadata = {
-  title: 'Terms of Service — DriftLogg',
+  title: 'Terms of Service — Beacon',
 }
 
 export default function TermsPage() {
@@ -18,14 +18,14 @@ export default function TermsPage() {
             <section>
               <h2 className="mb-2 text-lg font-semibold text-dl-forest">Agreement</h2>
               <p>
-                By using DriftLogg, you agree to these terms. If you do not agree, do not use the
+                By using Beacon, you agree to these terms. If you do not agree, do not use the
                 service.
               </p>
             </section>
             <section>
               <h2 className="mb-2 text-lg font-semibold text-dl-forest">Service</h2>
               <p>
-                DriftLogg provides repository analysis and drift detection. Features and availability
+                Beacon provides repository analysis and drift detection. Features and availability
                 may change as we improve the product. We strive for accuracy but do not guarantee
                 uninterrupted or error-free operation.
               </p>
@@ -34,8 +34,8 @@ export default function TermsPage() {
               <h2 className="mb-2 text-lg font-semibold text-dl-forest">Contact</h2>
               <p>
                 Questions? Email{' '}
-                <a href="mailto:hello@driftlogg.com" className="text-dl-teal underline-offset-2 hover:underline">
-                  hello@driftlogg.com
+                <a href="mailto:hello@beacon.com" className="text-dl-teal underline-offset-2 hover:underline">
+                  hello@beacon.com
                 </a>
                 .
               </p>

@@ -7,6 +7,6 @@ services:
     env_file:
       - .env
     volumes:
-      - ./driftlogg.2026-06-10.private-key.pem:/app/driftlogg.2026-06-10.private-key.pem:ro
+      - ./beacon.2026-06-10.private-key.pem:/app/beacon.2026-06-10.private-key.pem:ro
     environment:
-      GITHUB_APP_PRIVATE_KEY_PATH: /app/driftlogg.2026-06-10.private-key.pem
+      GITHUB_APP_PRIVATE_KEY_PATH: /app/beacon.2026-06-10.private-key.pem
