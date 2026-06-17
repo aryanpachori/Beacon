@@ -211,14 +211,18 @@ export async function incrementScanScored(
 
   await generateRecommendations(packageId, newSps);
 
-  await prisma.packageScore.create({
-    data: {
-      packageId,
-      sps: newSps,
-      tier: tierEnum,
-      featureVector: signals,
-    },
-  });
+  // Dedup: skip if a score was already written for this package in the last 10 minutes
+  // (prevents duplicate rows when user triggers multiple scans in quick succession)
+  const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000)
+  const recentScore = await prisma.packageScore.findFirst({
+    where: { packageId, scoredAt: { gte: tenMinutesAgo } },
+    select: { id: true },
+  })
+  if (!recentScore) {
+    await prisma.packageScore.create({
+      data: { packageId, sps: newSps, tier: tierEnum, featureVector: signals },
+    })
+  }
 
   const progress = await bumpScanProgress(installationId, "scored");
 
