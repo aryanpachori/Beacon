@@ -125,6 +125,36 @@ billingRouter.post('/verify-payment', authMiddleware, async (req: AuthRequest, r
   }
 })
 
+billingRouter.post('/cancel', authMiddleware, async (req: AuthRequest, res, next) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.user!.userId },
+      select: { plan: true },
+    })
+    if (!user) throw new AppError(404, 'User not found')
+    if (user.plan !== Plan.pro) {
+      throw new AppError(400, 'You are not on a paid plan')
+    }
+
+    const starterLimits = getPlanLimits(Plan.starter)
+    await prisma.user.update({
+      where: { id: req.user!.userId },
+      data: {
+        plan: Plan.starter,
+        planStatus: PlanStatus.cancelled,
+        repoLimit: starterLimits.repoLimit,
+        packageLimit: starterLimits.packageLimit,
+      },
+    })
+
+    await trimSelectedReposForUser(req.user!.userId, starterLimits.repoLimit)
+
+    res.json({ success: true, plan: Plan.starter })
+  } catch (err) {
+    next(err)
+  }
+})
+
 billingRouter.post('/subscribe', authMiddleware, async (req: AuthRequest, res, next) => {
   try {
     const { planId } = req.body as { planId?: string }
