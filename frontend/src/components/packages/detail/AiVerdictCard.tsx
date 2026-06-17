@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Sparkles, RefreshCw, AlertCircle } from 'lucide-react'
 import type { Package } from '@/types'
 
@@ -17,7 +17,7 @@ export function AiVerdictCard({ pkg }: AiVerdictCardProps) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
 
-  async function fetchInsight() {
+  const fetchInsight = useCallback(async function fetchInsight() {
     setLoading(true)
     setError(false)
     try {
@@ -43,9 +43,9 @@ export function AiVerdictCard({ pkg }: AiVerdictCardProps) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [pkg.id, pkg.name, pkg.ecosystem, pkg.sps, pkg.tier, pkg.signals, pkg.signalFacts, pkg.predictionReason])
 
-  useEffect(() => { fetchInsight() }, [pkg.id])
+  useEffect(() => { fetchInsight() }, [fetchInsight])
 
   const rSquared = pkg.predictionConfidence
   const daysToCritical = pkg.predictedCriticalAt

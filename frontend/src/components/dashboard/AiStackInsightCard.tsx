@@ -45,9 +45,9 @@ export function AiStackInsightCard({ analytics, critical, atRisk, watch, healthy
     } finally {
       setLoading(false)
     }
-  }
+  }, [critical, atRisk, watch, healthy, avgSps, analytics])
 
-  useEffect(() => { fetchInsight() }, [critical, atRisk, watch, healthy])
+  useEffect(() => { fetchInsight() }, [fetchInsight])
 
   const borderColor = critical > 0
     ? 'border-red-500/20 bg-red-500/5'
