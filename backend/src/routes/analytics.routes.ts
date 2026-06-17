@@ -218,7 +218,7 @@ analyticsRouter.get('/', async (req: AuthRequest, res, next) => {
         name: p.name,
         spsDrop: 0,
         currentSps: p.currentSps ?? 0,
-        tier: p.tier,
+        tier: p.tier ?? 'watch',
       }))
     }
 
@@ -238,7 +238,7 @@ analyticsRouter.get('/', async (req: AuthRequest, res, next) => {
         name: p.name,
         spsGain: 0,
         currentSps: p.currentSps ?? 0,
-        tier: p.tier,
+        tier: p.tier ?? 'healthy',
       }))
     }
 
