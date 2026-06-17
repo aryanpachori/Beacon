@@ -2,12 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Check, CreditCard, Loader2 } from 'lucide-react'
+import { AlertTriangle, Check, Clock, CreditCard, Loader2, X } from 'lucide-react'
 import { RazorpayUpgradeButton } from '@/components/billing/RazorpayUpgradeButton'
 import { useRazorpayCheckout } from '@/hooks/useRazorpayCheckout'
-import { fetchBillingPlan, type BillingPlanResponse } from '@/lib/api'
+import { cancelSubscription, fetchBillingPlan, type BillingPlanResponse } from '@/lib/api'
 import { formatInr, PRO_PLAN_PRICE_INR } from '@/lib/billing'
 import { useAppData } from '@/context/AppDataContext'
+
 
 const PRO_FEATURES = [
   '5 repos',
@@ -32,8 +33,11 @@ export default function BillingPage() {
   const [billing, setBilling] = useState<BillingPlanResponse | null>(null)
   const [loadingPlan, setLoadingPlan] = useState(true)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [cancelConfirm, setCancelConfirm] = useState(false)
+  const [cancelLoading, setCancelLoading] = useState(false)
   const autoCheckoutStarted = useRef(false)
   const { startCheckout, loading: checkoutLoading } = useRazorpayCheckout()
+
 
   const loadPlan = useCallback(async () => {
     setLoadingPlan(true)
@@ -50,12 +54,38 @@ export default function BillingPage() {
   }, [loadPlan])
 
   const isPro = (billing?.plan ?? user?.plan) === 'pro'
+  const isCancelPending = isPro && (billing?.cancelAtPeriodEnd ?? false)
+  const expiresOnLabel = billing?.proExpiresAt
+    ? new Date(billing.proExpiresAt).toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      })
+    : null
 
   const onPaymentSuccess = useCallback(async () => {
     setSuccessMessage('Payment successful — you are now on Pro.')
     await Promise.all([loadPlan(), refresh()])
     router.replace('/billing')
   }, [loadPlan, refresh, router])
+
+  const handleCancel = async () => {
+    setCancelLoading(true)
+    try {
+      await cancelSubscription()
+      await Promise.all([loadPlan(), refresh()])
+      setCancelConfirm(false)
+      setSuccessMessage(
+        billing?.proExpiresAt
+          ? `Subscription cancelled. You’ll keep Pro access until ${new Date(billing.proExpiresAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}.`
+          : 'Subscription cancelled. You’ll keep Pro access until your billing period ends.'
+      )
+    } catch {
+      setCancelConfirm(false)
+    } finally {
+      setCancelLoading(false)
+    }
+  }
 
   useEffect(() => {
     if (autoCheckoutStarted.current || loadingPlan || isPro) return
@@ -89,6 +119,60 @@ export default function BillingPage() {
 
   return (
     <div className="app-page">
+      {/* Cancel confirmation modal */}
+      {cancelConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div
+            className="relative w-full max-w-md rounded-2xl p-6 shadow-2xl flex flex-col gap-5"
+            style={{ background: '#0d131f', border: '1.5px solid rgba(239,68,68,0.35)' }}
+          >
+            <button
+              type="button"
+              onClick={() => setCancelConfirm(false)}
+              disabled={cancelLoading}
+              className="absolute right-4 top-4 rounded-lg p-1 text-dl-muted hover:text-dl-text transition-colors"
+              aria-label="Close"
+            >
+              <X className="h-4 w-4" />
+            </button>
+
+            <div className="flex items-start gap-4">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-500/15">
+                <AlertTriangle className="h-5 w-5 text-red-400" />
+              </div>
+              <div>
+                <p className="text-[15px] font-semibold text-dl-forest">Cancel subscription?</p>
+                <p className="mt-1.5 text-[13px] leading-relaxed text-dl-muted">
+                  Your Pro access will continue until the end of your current billing period. After
+                  that, your account will automatically move to the Starter plan and monitored repos
+                  will be trimmed to 1.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setCancelConfirm(false)}
+                disabled={cancelLoading}
+                className="flex-1 rounded-xl border border-dl-border bg-dl-surface px-4 py-2.5 text-[13px] font-medium text-dl-muted hover:text-dl-text transition-colors disabled:opacity-50"
+              >
+                Keep Pro
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleCancel()}
+                disabled={cancelLoading}
+                className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-red-500/90 px-4 py-2.5 text-[13px] font-semibold text-white hover:bg-red-500 transition-colors disabled:opacity-60"
+              >
+                {cancelLoading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+                {cancelLoading ? 'Cancelling…' : 'Yes, cancel'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="mb-8">
         <h1 className="page-heading text-dl-forest">Billing</h1>
         <p className="mt-1 text-[13px] text-dl-muted">
@@ -143,6 +227,24 @@ export default function BillingPage() {
               Limits: {billing?.repoLimit ?? 1} repo(s), up to{' '}
               {(billing?.packageLimit ?? 200).toLocaleString()} packages
             </p>
+
+            {/* Cancellation pending notice */}
+            {isCancelPending && (
+              <div
+                className="mt-3 flex items-start gap-2 rounded-lg px-3 py-2.5 text-[12px] leading-relaxed"
+                style={{
+                  background: 'rgba(245,158,11,0.08)',
+                  border: '1px solid rgba(245,158,11,0.3)',
+                }}
+              >
+                <Clock className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-400" />
+                <span className="text-amber-300">
+                  {expiresOnLabel
+                    ? <>Cancellation scheduled. Pro access ends on <strong>{expiresOnLabel}</strong>.</>
+                    : <>Cancellation scheduled. Pro access ends at the end of your billing period.</>}
+                </span>
+              </div>
+            )}
           </div>
           {!isPro && (
             <RazorpayUpgradeButton
@@ -205,6 +307,31 @@ export default function BillingPage() {
           </div>
         </div>
       </div>
+
+      {/* Cancel subscription card — Pro only, hidden once cancellation is already pending */}
+      {isPro && !isCancelPending && (
+        <div
+          className="mt-6 rounded-xl px-6 py-5"
+          style={{ border: '1.5px solid rgba(239,68,68,0.25)', background: 'rgba(239,68,68,0.04)' }}
+        >
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-[15px] font-semibold text-dl-forest">We&apos;re sad to see you go</p>
+              <p className="mt-1 text-[13px] leading-relaxed text-dl-muted">
+                You can cancel anytime. Your Pro access will remain active until the end of your
+                current billing period — after that, your account moves to the Starter plan.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setCancelConfirm(true)}
+              className="shrink-0 rounded-xl border border-red-500/40 bg-red-500/10 px-5 py-2.5 text-[13px] font-medium text-red-400 transition-colors hover:bg-red-500/20 hover:text-red-300 hover:border-red-500/60"
+            >
+              Cancel subscription
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

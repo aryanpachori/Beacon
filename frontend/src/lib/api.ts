@@ -220,6 +220,8 @@ export type BillingPlanResponse = {
   email: string
   fullName: string | null
   proAmountPaise: number
+  cancelAtPeriodEnd?: boolean
+  proExpiresAt?: string | null
 }
 
 export async function fetchBillingPlan(): Promise<BillingPlanResponse> {
@@ -247,6 +249,11 @@ export async function verifyBillingPayment(body: {
     body: JSON.stringify(body),
   })
 }
+
+export async function cancelSubscription(): Promise<{ success: boolean; plan: string }> {
+  return apiFetch('/api/billing/cancel', { method: 'POST' })
+}
+
 
 export type OnboardingRepo = {
   id: string
