@@ -1,6 +1,8 @@
 import { Router } from 'express'
 import { incrementScanScored } from '../services/alert.service'
 import { AppError } from '../middleware/error.middleware'
+import { prisma } from '../db/client'
+import { sendOrgDigest } from '../services/digest.service'
 
 export const internalRouter = Router()
 
@@ -11,6 +13,23 @@ function verifyInternalSecret(req: { headers: Record<string, string | string[] |
     throw new AppError(401, 'Unauthorized')
   }
 }
+
+internalRouter.post('/trigger-digest', async (req, res, next) => {
+  try {
+    verifyInternalSecret(req)
+    const installations = await prisma.githubInstallation.findMany({
+      select: { id: true },
+    })
+    const results = await Promise.allSettled(
+      installations.map(i => sendOrgDigest(i.id))
+    )
+    const sent = results.filter(r => r.status === 'fulfilled').length
+    const failed = results.filter(r => r.status === 'rejected').length
+    res.json({ success: true, sent, failed })
+  } catch (err) {
+    next(err)
+  }
+})
 
 internalRouter.post('/score-complete', async (req, res, next) => {
   try {

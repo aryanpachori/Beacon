@@ -330,36 +330,27 @@ export function OnboardingFlow() {
                     Choose repo to scan →
                   </button>
                 ) : (
-                  <>
+                  <div className="flex w-full flex-col gap-3">
+                    <button
+                      type="button"
+                      onClick={handleInstallApp}
+                      disabled={connecting}
+                      className="btn-primary w-full py-2.5 disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {connecting ? 'Redirecting…' : '① Install Beacon GitHub App'}
+                    </button>
                     <button
                       type="button"
                       onClick={handleLinkGitHub}
                       disabled={connecting}
-                      className="btn-primary w-full py-2.5 disabled:cursor-not-allowed disabled:opacity-60"
+                      className="w-full rounded-xl border border-dl-border bg-dl-bg py-2.5 text-[14px] font-semibold text-dl-navy transition-colors hover:bg-dl-surface disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                      {connecting ? 'Redirecting…' : 'Link GitHub account'}
+                      {connecting ? 'Redirecting…' : '② Already installed — Link GitHub account'}
                     </button>
-                    {needsInstall && (
-                      <button
-                        type="button"
-                        onClick={handleInstallApp}
-                        disabled={connecting}
-                        className="w-full py-2.5 text-sm text-dl-teal underline"
-                      >
-                        Install Beacon GitHub App
-                      </button>
-                    )}
-                    {!needsInstall && (
-                      <button
-                        type="button"
-                        onClick={handleInstallApp}
-                        disabled={connecting}
-                        className="text-xs text-dl-m-muted underline"
-                      >
-                        Need to install the app first?
-                      </button>
-                    )}
-                  </>
+                    <p className="text-center text-[11px] text-dl-muted">
+                      First time? Install the app, then link your account.
+                    </p>
+                  </div>
                 )}
 
                 {githubConnected && configureUrl && (
