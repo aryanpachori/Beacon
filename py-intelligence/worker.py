@@ -58,25 +58,30 @@ async def process_job(job: Any, job_token: str) -> None:  # noqa: ARG001
     installation_id: str = data["installation_id"]
     prev_sps: int | None = data.get("prev_sps")
     signals: dict[str, float] = data.get("signals", {})
+    is_advisory: bool = bool(data.get("is_advisory", False))
+    cve_id: str | None = data.get("cve_id")
 
-    logger.info("scoring_started job_id=%s package_id=%s prev_sps=%s", job.id, package_id, prev_sps)
+    logger.info("scoring_started job_id=%s package_id=%s prev_sps=%s is_advisory=%s", job.id, package_id, prev_sps, is_advisory)
 
     new_sps, tier, prediction_reason = score(signals)
     prev_tier = assign_tier(prev_sps) if prev_sps is not None else None
 
-    await asyncio.to_thread(
-        post_score_complete,
-        {
-            "package_id": package_id,
-            "installation_id": installation_id,
-            "new_sps": new_sps,
-            "tier": tier,
-            "prev_sps": prev_sps,
-            "prev_tier": prev_tier,
-            "prediction_reason": prediction_reason,
-            "signals": signals,
-        },
-    )
+    payload: dict[str, Any] = {
+        "package_id": package_id,
+        "installation_id": installation_id,
+        "new_sps": new_sps,
+        "tier": tier,
+        "prev_sps": prev_sps,
+        "prev_tier": prev_tier,
+        "prediction_reason": prediction_reason,
+        "signals": signals,
+    }
+    if is_advisory:
+        payload["is_advisory"] = True
+    if cve_id:
+        payload["cve_id"] = cve_id
+
+    await asyncio.to_thread(post_score_complete, payload)
 
     logger.info("scoring_complete job_id=%s package_id=%s new_sps=%d tier=%s", job.id, package_id, new_sps, tier)
 
@@ -88,10 +93,18 @@ async def main() -> None:
 
     worker = Worker(QUEUE_NAME, process_job, {"connection": config.REDIS_URL, "concurrency": 5})
 
-    loop = asyncio.get_running_loop()
     stop_event = asyncio.Event()
-    for sig in (signal.SIGINT, signal.SIGTERM):
-        loop.add_signal_handler(sig, stop_event.set)
+    loop = asyncio.get_running_loop()
+
+    def request_stop(*_args: object) -> None:
+        loop.call_soon_threadsafe(stop_event.set)
+
+    if sys.platform == "win32":
+        signal.signal(signal.SIGINT, request_stop)
+        signal.signal(signal.SIGTERM, request_stop)
+    else:
+        for sig in (signal.SIGINT, signal.SIGTERM):
+            loop.add_signal_handler(sig, stop_event.set)
 
     logger.info("intelligence_worker_ready queue=%s", QUEUE_NAME)
     await stop_event.wait()

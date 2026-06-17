@@ -135,12 +135,24 @@ function rowsToResolved(
 export async function resolvePackageSignals(
   packageId: string
 ): Promise<ResolvedPackageSignals | null> {
+  // 1. Try the fast snapshot column on the package itself
+  const pkg = await prisma.package.findUnique({
+    where: { id: packageId },
+    select: { signalSnapshot: true },
+  })
+  if (pkg?.signalSnapshot) {
+    const parsed = parseCachedPayload(JSON.stringify(pkg.signalSnapshot))
+    if (parsed) return parsed
+  }
+
+  // 2. Redis cache (warm from previous API reads)
   const cached = await redis.get(`signals:${packageId}`)
   if (cached) {
     const parsed = parseCachedPayload(cached)
     if (parsed) return parsed
   }
 
+  // 3. Fall back to history rows
   const rows = await prisma.packageSignal.findMany({
     where: { packageId },
     orderBy: { capturedAt: 'desc' },
@@ -157,11 +169,32 @@ export async function resolveSignalsBatch(
   const result = new Map<string, ResolvedPackageSignals>()
   if (packageIds.length === 0) return result
 
-  const keys = packageIds.map((id) => `signals:${id}`)
-  const cached = await redis.mget(...keys)
+  // 1. Pull snapshots from the packages table in one query (no Redis needed)
+  const pkgs = await prisma.package.findMany({
+    where: { id: { in: packageIds } },
+    select: { id: true, signalSnapshot: true },
+  })
 
   const missingIds: string[] = []
-  packageIds.forEach((id, index) => {
+  for (const pkg of pkgs) {
+    if (pkg.signalSnapshot) {
+      const parsed = parseCachedPayload(JSON.stringify(pkg.signalSnapshot))
+      if (parsed) {
+        result.set(pkg.id, parsed)
+        continue
+      }
+    }
+    missingIds.push(pkg.id)
+  }
+
+  if (missingIds.length === 0) return result
+
+  // 2. Redis cache for any packages that don't have a snapshot yet
+  const keys = missingIds.map((id) => `signals:${id}`)
+  const cached = await redis.mget(...keys)
+
+  const stillMissing: string[] = []
+  missingIds.forEach((id, index) => {
     const raw = cached[index]
     if (raw) {
       const parsed = parseCachedPayload(raw)
@@ -170,13 +203,14 @@ export async function resolveSignalsBatch(
         return
       }
     }
-    missingIds.push(id)
+    stillMissing.push(id)
   })
 
-  if (missingIds.length === 0) return result
+  if (stillMissing.length === 0) return result
 
+  // 3. Last resort: history rows
   const rows = await prisma.packageSignal.findMany({
-    where: { packageId: { in: missingIds } },
+    where: { packageId: { in: stillMissing } },
     orderBy: { capturedAt: 'desc' },
     select: { packageId: true, signalType: true, value: true, rawData: true },
   })
@@ -188,7 +222,7 @@ export async function resolveSignalsBatch(
     byPackage.set(row.packageId, list)
   }
 
-  for (const id of missingIds) {
+  for (const id of stillMissing) {
     const pkgRows = byPackage.get(id) ?? []
     const resolved = rowsToResolved(pkgRows)
     if (resolved) result.set(id, resolved)

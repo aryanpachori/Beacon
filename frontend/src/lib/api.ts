@@ -274,26 +274,33 @@ export async function cancelSubscription(): Promise<{ success: boolean; plan: st
 
 
 export type OnboardingRepo = {
-  id: string
+  id: string          // GitHub repo ID as string (used as selection key)
   fullName: string
   name: string
   org: string
+  githubRepoId: number
 }
 
 export type OnboardingReposResponse = {
   repos: OnboardingRepo[]
   repoLimit: number
-  selectedRepos: string[]
+  selectedRepos: string[]  // GitHub repo IDs of previously-selected repos
 }
 
 export async function fetchOnboardingRepos(): Promise<OnboardingReposResponse> {
   return apiFetch<OnboardingReposResponse>('/api/github/onboarding/repos')
 }
 
-export async function startOnboardingScan(repoIds: string[]): Promise<void> {
+export type StartScanRepo = {
+  githubRepoId: number
+  name: string
+  org: string
+}
+
+export async function startOnboardingScan(repos: StartScanRepo[]): Promise<void> {
   await apiFetch('/api/github/start-scan', {
     method: 'POST',
-    body: JSON.stringify({ repoIds }),
+    body: JSON.stringify({ repos }),
   })
 }
 

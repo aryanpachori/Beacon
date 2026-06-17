@@ -12,7 +12,7 @@ export function OnboardingGame() {
 
   useEffect(() => {
     const img = new Image()
-    img.src = '/logo.png'
+    img.src = '/image.png'
     img.onload = () => {
       logoRef.current = img
     }
@@ -184,7 +184,7 @@ export function OnboardingGame() {
         }
       }
 
-      // Draw Player (Bodyguard logo image)
+      // Draw Player (lighthouse logo sprite)
       if (logoRef.current) {
         ctx.save()
         let drawHeight = player.height

@@ -39,6 +39,8 @@ export interface SignalCollectJobData {
   triggered_by?: string
   /** Advisory cron: re-check a single package */
   packageId?: string
+  /** Advisory cron: CVE ID found via OSV.dev for this package */
+  cveId?: string
 }
 
 /** Six normalised scores for Python feature vector (0–100 each). */
@@ -58,6 +60,8 @@ export interface IntelligenceScoreJobData {
   installation_github_id: number
   prev_sps: number | null
   signals: IntelligenceSignalsPayload
+  is_advisory?: boolean
+  cve_id?: string
 }
 
 export function toIntelligenceSignals(signals: NormalizedSignals): IntelligenceSignalsPayload {
@@ -82,8 +86,8 @@ export const signalCollectQueue = new Queue<SignalCollectJobData>(Queues.SIGNAL_
   defaultJobOptions: {
     attempts: 3,
     backoff: { type: 'exponential', delay: 5000 },
-    removeOnComplete: 100,
-    removeOnFail: 500,
+    removeOnComplete: { count: 5 },
+    removeOnFail: { count: 20 },
   },
 })
 
@@ -92,7 +96,7 @@ export const intelligenceQueue = new Queue<IntelligenceScoreJobData>(Queues.INTE
   defaultJobOptions: {
     attempts: 3,
     backoff: { type: 'exponential', delay: 3000 },
-    removeOnComplete: 100,
-    removeOnFail: 500,
+    removeOnComplete: { count: 5 },
+    removeOnFail: { count: 20 },
   },
 })

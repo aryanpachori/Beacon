@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google'
+import { Plus_Jakarta_Sans, JetBrains_Mono, Sora } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Toaster } from 'sonner'
@@ -18,10 +18,17 @@ const geistMono = JetBrains_Mono({
   display: 'swap',
 })
 
+const sora = Sora({
+  subsets: ['latin'],
+  variable: '--font-sora',
+  weight: ['600', '700', '800'],
+  display: 'swap',
+})
+
 export const metadata: Metadata = {
   icons: {
     icon: '/favicon.ico',
-    apple: '/logo.png',
+    apple: '/image.png',
   },
   title: 'Beacon — Predictive Dependency Health',
   description:
@@ -45,7 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('dl_theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.classList.add('dark')}catch(e){}` }} />
       </head>
-      <body className={`${plusJakarta.variable} ${geistMono.variable} font-sans antialiased`}>
+      <body className={`${plusJakarta.variable} ${geistMono.variable} ${sora.variable} font-sans antialiased`}>
         {children}
         <Toaster
           position="bottom-right"

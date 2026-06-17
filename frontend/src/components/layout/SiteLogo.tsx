@@ -26,7 +26,7 @@ export function SiteLogo({
         className={`flex h-8 w-8 shrink-0 items-center justify-center ${iconClassName}`}
       >
         <Image
-          src="/logo.png"
+          src="/image.png"
           alt=""
           width={32}
           height={32}
@@ -35,7 +35,9 @@ export function SiteLogo({
         />
       </span>
       {showWordmark && (
-        <span className={`text-[17px] font-medium tracking-tight ${wordmarkClass}`}>
+        <span
+          className={`font-[family-name:var(--font-sora)] text-[20px] font-bold tracking-[-0.02em] ${wordmarkClass}`}
+        >
           Beacon
         </span>
       )}

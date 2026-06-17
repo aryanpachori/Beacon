@@ -19,42 +19,53 @@ export const packagesRouter = Router();
 
 packagesRouter.use(authMiddleware);
 
+const PAGE_SIZE = 50;
+
 packagesRouter.get("/", async (req: AuthRequest, res, next) => {
   try {
     const ctx = await getUserInstallationContext(req.user!.userId);
     if (!ctx || ctx.selectedRepoIds.length === 0)
-      return res.json({ packages: [] });
+      return res.json({ packages: [], nextCursor: null, total: 0 });
 
     const { installation, selectedRepoIds } = ctx;
     const repoScope = monitoredRepoRelation(installation.id, selectedRepoIds);
 
     const tierFilter = req.query.tier as string | undefined;
     const ecosystemFilter = req.query.ecosystem as string | undefined;
+    const cursor = req.query.cursor as string | undefined; // last seen package id
+    const pageSize = Math.min(Number(req.query.limit ?? PAGE_SIZE), 200);
 
-    const packages = await prisma.package.findMany({
-      where: {
-        repoPackages: { some: repoScope },
-        ...(tierFilter ? { tier: fromApiTier(tierFilter) } : {}),
-        ...(ecosystemFilter ? { ecosystem: ecosystemFilter as Ecosystem } : {}),
-      },
-      select: {
-        id: true,
-        name: true,
-        ecosystem: true,
-        currentSps: true,
-        tier: true,
-        updatedAt: true,
-        repoPackages: {
-          where: repoScope,
-          take: 1,
-          select: {
-            declaredVersion: true,
-            repo: { select: { org: true, name: true } },
+    const where = {
+      repoPackages: { some: repoScope },
+      ...(tierFilter ? { tier: fromApiTier(tierFilter) } : {}),
+      ...(ecosystemFilter ? { ecosystem: ecosystemFilter as Ecosystem } : {}),
+    };
+
+    const [total, packages] = await Promise.all([
+      prisma.package.count({ where }),
+      prisma.package.findMany({
+        where,
+        ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+        take: pageSize,
+        select: {
+          id: true,
+          name: true,
+          ecosystem: true,
+          currentSps: true,
+          tier: true,
+          updatedAt: true,
+          repoPackages: {
+            where: repoScope,
+            take: 1,
+            select: {
+              declaredVersion: true,
+              repo: { select: { org: true, name: true } },
+            },
           },
         },
-      },
-      orderBy: { currentSps: "asc" },
-    });
+        orderBy: { currentSps: "asc" },
+      }),
+    ]);
 
     const packageIds = packages.map((p) => p.id);
     const signalMap = await resolveSignalsBatch(packageIds);
@@ -65,6 +76,7 @@ packagesRouter.get("/", async (req: AuthRequest, res, next) => {
         where: { packageId: { in: packageIds } },
         orderBy: { scoredAt: "asc" },
         select: { packageId: true, sps: true },
+        take: pageSize * 30,
       });
       for (const row of rows) {
         const hist = historyByPackage.get(row.packageId) ?? [];
@@ -73,6 +85,8 @@ packagesRouter.get("/", async (req: AuthRequest, res, next) => {
         historyByPackage.set(row.packageId, hist);
       }
     }
+
+    const nextCursor = packages.length === pageSize ? packages[packages.length - 1].id : null;
 
     res.json({
       packages: packages.map((p) => ({
@@ -89,6 +103,8 @@ packagesRouter.get("/", async (req: AuthRequest, res, next) => {
         signals: toApiSignalsPayload(signalMap.get(p.id) ?? null),
         spsHistory: historyByPackage.get(p.id) ?? [],
       })),
+      nextCursor,
+      total,
     });
   } catch (err) {
     next(err);

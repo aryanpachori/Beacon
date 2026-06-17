@@ -113,7 +113,7 @@ export function Footer() {
           <div>
             <Link href="/" className="inline-flex items-center gap-2.5">
               <Image
-                src="/logo.png"
+                src="/image.png"
                 alt=""
                 width={32}
                 height={32}

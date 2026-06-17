@@ -238,7 +238,10 @@ export function OnboardingFlow() {
     setStartingScan(true)
     setRepoError(null)
     try {
-      await startOnboardingScan(selected)
+      const selectedRepoObjs = repos
+        .filter((r) => selected.includes(r.id))
+        .map((r) => ({ githubRepoId: r.githubRepoId, name: r.name, org: r.org }))
+      await startOnboardingScan(selectedRepoObjs)
       setStep(3)
     } catch (err) {
       setRepoError(err instanceof Error ? err.message : 'Could not start scan')

@@ -189,17 +189,58 @@ analyticsRouter.get('/', async (req: AuthRequest, res, next) => {
       }
     }
 
-    const topDeclining = movements
+    let topDeclining = movements
       .filter(m => m.delta < 0)
       .sort((a, b) => a.delta - b.delta)
       .slice(0, 5)
       .map(m => ({ id: m.id, name: m.name, spsDrop: Math.abs(m.delta), currentSps: m.currentSps, tier: m.tier }))
 
-    const topImproving = movements
+    let topImproving = movements
       .filter(m => m.delta > 0)
       .sort((a, b) => b.delta - a.delta)
       .slice(0, 5)
       .map(m => ({ id: m.id, name: m.name, spsGain: m.delta, currentSps: m.currentSps, tier: m.tier }))
+
+    // Fallback: when no score history exists yet, use current SPS + tier as proxy
+    if (topDeclining.length === 0 && packageIds.length > 0) {
+      const worstPkgs = await prisma.package.findMany({
+        where: {
+          repoPackages: { some: repoScope },
+          tier: { in: ['critical', 'at_risk'] },
+          currentSps: { not: null },
+        },
+        select: { id: true, name: true, currentSps: true, tier: true },
+        orderBy: { currentSps: 'asc' },
+        take: 5,
+      })
+      topDeclining = worstPkgs.map(p => ({
+        id: p.id,
+        name: p.name,
+        spsDrop: 0,
+        currentSps: p.currentSps ?? 0,
+        tier: p.tier,
+      }))
+    }
+
+    if (topImproving.length === 0 && packageIds.length > 0) {
+      const bestPkgs = await prisma.package.findMany({
+        where: {
+          repoPackages: { some: repoScope },
+          tier: 'healthy',
+          currentSps: { not: null },
+        },
+        select: { id: true, name: true, currentSps: true, tier: true },
+        orderBy: { currentSps: 'desc' },
+        take: 5,
+      })
+      topImproving = bestPkgs.map(p => ({
+        id: p.id,
+        name: p.name,
+        spsGain: 0,
+        currentSps: p.currentSps ?? 0,
+        tier: p.tier,
+      }))
+    }
 
     res.json({
       alertTrend,

@@ -120,6 +120,8 @@ model Package {
   predictionConfidence Float?
   predictionSlope      Float?
   predictionReason     String?
+  signalSnapshot       Json?
+  signalCapturedAt     DateTime?
   firstSeenAt          DateTime            @default(now())
   updatedAt            DateTime            @updatedAt
   alertsAsSubject      Alert[]

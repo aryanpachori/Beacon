@@ -80,6 +80,8 @@ export async function checkAndFireAlert(
     return;
   }
 
+  // Dedup all alert types (including recovery) within a 24-hour window.
+  // Without this a package bouncing between tiers fires multiple recovery alerts per day.
   const dedupKey = `alert:dedup:${alertType}:${params.installationId}:${params.packageId}`;
   if (await redis.get(dedupKey)) return;
   await redis.setex(dedupKey, 86400, "1");

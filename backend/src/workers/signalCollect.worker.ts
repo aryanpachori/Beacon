@@ -10,7 +10,7 @@ import {
 } from '../lib/github'
 import { toEcosystem } from '../lib/ecosystem'
 import { parseManifest, dedupeDependencies, ParsedDependency } from '../services/manifest.service'
-import { collectPackageSignals, cacheSignals } from '../services/signals.service'
+import { collectPackageSignals } from '../services/signals.service'
 import { persistSignals } from '../services/signalPersistence.service'
 import { resolvePackageGithubRepo } from '../services/packageRepoResolver.service'
 import { buildUnresolvedPackageSignals } from '../services/unresolvedSignals.service'
@@ -229,7 +229,6 @@ async function processScanJob(job: Job<SignalCollectJobData>): Promise<void> {
           }
 
           await persistSignals(packageId, collected)
-          await cacheSignals(packageId, collected)
 
           const pkg = await prisma.package.findUnique({
             where: { id: packageId },
@@ -240,6 +239,8 @@ async function processScanJob(job: Job<SignalCollectJobData>): Promise<void> {
             ? dep.name
             : collected.facts.signalSourceRepo
 
+          const isAdvisory = data.triggered_by === 'advisory'
+
           await enqueueIntelligenceScore(
             {
               package_id: packageId,
@@ -247,6 +248,8 @@ async function processScanJob(job: Job<SignalCollectJobData>): Promise<void> {
               installation_id: installation.id,
               installation_github_id: installation_id,
               signals: toIntelligenceSignals(collected.normalized),
+              ...(isAdvisory ? { is_advisory: true } : {}),
+              ...(data.cveId ? { cve_id: data.cveId } : {}),
             },
             {
               packageName: dep.name,

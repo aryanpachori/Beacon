@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import { fetchAnalytics, type AnalyticsData } from "@/lib/api";
 import { useAppData } from "@/context/AppDataContext";
+import { AiStackInsightCard } from "@/components/dashboard/AiStackInsightCard";
 
 /* ── Animated count-up ───────────────────────────────────────────────── */
 function CountUp({ to, duration = 1200 }: { to: number; duration?: number }) {
@@ -381,6 +382,18 @@ export function InsightsDashboard() {
         )}
       </div>
 
+      {/* ── AI Stack Insight ── */}
+      {!isMock && analytics && !analyticsLoading && (
+        <AiStackInsightCard
+          analytics={analytics}
+          critical={critical}
+          atRisk={atRisk}
+          watch={dashboard?.healthCounts?.watch ?? 0}
+          healthy={healthy}
+          avgSps={dashboard?.avgSps ? Math.round(dashboard.avgSps) : 0}
+        />
+      )}
+
       {/* ── Row 1: Alert trend + SPS distribution ── */}
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-[60fr_40fr]">
         {/* Alert trend area chart */}
@@ -685,7 +698,7 @@ export function InsightsDashboard() {
                   </div>
                   <div className="flex items-center gap-1 text-red-500">
                     <ArrowDownRight className="h-3.5 w-3.5" />
-                    <span className="text-[12px] font-bold">{pkg.spsDrop}</span>
+                    <span className="text-[12px] font-bold">{pkg.spsDrop > 0 ? pkg.spsDrop : '—'}</span>
                   </div>
                 </motion.div>
               ))}
@@ -745,7 +758,7 @@ export function InsightsDashboard() {
                   </div>
                   <div className="flex items-center gap-1 text-green-600">
                     <ArrowUpRight className="h-3.5 w-3.5" />
-                    <span className="text-[12px] font-bold">{pkg.spsGain}</span>
+                    <span className="text-[12px] font-bold">{pkg.spsGain > 0 ? pkg.spsGain : '—'}</span>
                   </div>
                 </motion.div>
               ))}

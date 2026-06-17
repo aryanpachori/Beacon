@@ -5,32 +5,60 @@ import { signalCollectQueue } from '../lib/queue'
 export async function runCriticalScan(): Promise<void> {
   console.log('Critical tier rescan starting...')
 
-  const installations = await prisma.githubInstallation.findMany({
+  // Group by installation, but only include the specific repos that contain critical packages.
+  // Previously we passed no repo list so the worker re-scanned ALL selected repos for the
+  // installation even if only one had a critical package — wasteful.
+  const rows = await prisma.repoPackage.findMany({
     where: {
-      suspendedAt: null,
-      repos: {
-        some: {
-          repoPackages: {
-            some: { package: { tier: Tier.critical } },
+      package: { tier: Tier.critical },
+      repo: { installation: { suspendedAt: null } },
+    },
+    select: {
+      repo: {
+        select: {
+          org: true,
+          name: true,
+          installationId: true,
+          installation: {
+            select: { id: true, installationId: true },
           },
         },
       },
     },
-    select: { id: true, installationId: true },
-    distinct: ['id'],
+    distinct: ['repoId'],
   })
 
-  for (const installation of installations) {
+  // Group repos by installation
+  const byInstallation = new Map<
+    string,
+    { installationDbId: string; installationGithubId: number; repos: { owner: string; repo: string }[] }
+  >()
+
+  for (const row of rows) {
+    const inst = row.repo.installation
+    const key = inst.id
+    if (!byInstallation.has(key)) {
+      byInstallation.set(key, {
+        installationDbId: inst.id,
+        installationGithubId: Number(inst.installationId),
+        repos: [],
+      })
+    }
+    byInstallation.get(key)!.repos.push({ owner: row.repo.org, repo: row.repo.name })
+  }
+
+  for (const { installationDbId, installationGithubId, repos } of byInstallation.values()) {
     await signalCollectQueue.add(
       'critical-scan',
       {
-        installation_id: Number(installation.installationId),
-        installationDbId: installation.id,
+        installation_id: installationGithubId,
+        installationDbId,
         triggered_by: 'cron-critical',
+        repos,                              // only the repos that actually have critical packages
       },
       { priority: 5 }
     )
   }
 
-  console.log(`Queued ${installations.length} critical installations`)
+  console.log(`Queued ${byInstallation.size} installations (${rows.length} repos) for critical scan`)
 }

@@ -2,23 +2,28 @@ import { prisma } from '../db/client'
 import { sendOrgDigest } from '../services/digest.service'
 
 export async function runDigest(): Promise<void> {
-  console.log('Org digest starting...')
+  const now = new Date()
+  const currentUtcHour = now.getUTCHours()  // 0-23
+  const currentUtcDay  = now.getUTCDay()    // 0 = Sunday
 
   const integrations = await prisma.orgIntegration.findMany({
-    where: { digestEnabled: true, digestEmail: { not: null } },
+    where: {
+      digestEnabled: true,
+      digestEmail: { not: null },
+      digestFrequency: { not: 'never' },
+      digestHour: currentUtcHour,            // only orgs whose preferred hour matches right now
+    },
     select: { installationId: true, digestFrequency: true, digestDay: true },
   })
 
-  const currentUtcDay = new Date().getUTCDay() // 0-6 (Sunday is 0, Monday is 1, etc.)
   let sentCount = 0
-
   for (const row of integrations) {
-    if (row.digestFrequency === 'never') continue
     if (row.digestFrequency === 'weekly' && row.digestDay !== currentUtcDay) continue
-
     await sendOrgDigest(row.installationId)
     sentCount++
   }
 
-  console.log(`Sent digests for ${sentCount} of ${integrations.length} total enabled integrations`)
+  if (sentCount > 0) {
+    console.log(`Digest hour=${currentUtcHour}: sent ${sentCount} digests`)
+  }
 }

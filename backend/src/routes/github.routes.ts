@@ -21,9 +21,11 @@ import {
 import { getRepoLimitForPlan } from "../lib/planLimits";
 import {
   linkInstallationForGitHubUser,
+  listInstallationRepos,
   markScanFailed,
   resolveInstallationAccountLogin,
   syncInstallationRepos,
+  upsertSelectedRepos,
 } from "../services/githubInstallation.service";
 
 export const githubRouter = Router();
@@ -97,16 +99,7 @@ githubRouter.get("/oauth/callback", async (req, res, next) => {
       );
     }
 
-    try {
-      await syncInstallationRepos(
-        installation.id,
-        Number(installation.installationId),
-      );
-    } catch (err) {
-      console.error("Failed to sync repos after OAuth link:", err);
-      await markScanFailed(installation.id);
-      return res.redirect(`${frontendUrl}/onboarding?step=2&error=github_sync`);
-    }
+    // Repos are fetched lazily in /onboarding/repos — no bulk DB write here.
 
     await prisma.user.update({
       where: { id: userId },
@@ -256,13 +249,7 @@ githubRouter.get("/callback", async (req, res, next) => {
       },
     });
 
-    try {
-      await syncInstallationRepos(installation.id, installationIdNum);
-    } catch (err) {
-      console.error("Failed to sync GitHub repos after install:", err);
-      await markScanFailed(installation.id);
-      return res.redirect(`${frontendUrl}/onboarding?step=2&error=github_sync`);
-    }
+    // Repos fetched lazily in /onboarding/repos — no bulk DB write on connect.
 
     await prisma.user.update({
       where: { id: userId },
@@ -294,41 +281,42 @@ githubRouter.get(
       });
 
       if (!installation) {
-        return res.json({ repos: [], repoLimit });
+        return res.json({ repos: [], repoLimit, selectedRepos: [] });
       }
 
-      let repos = await prisma.repo.findMany({
-        where: { installationId: installation.id },
-        select: { id: true, fullName: true, name: true, org: true },
-        orderBy: [{ org: "asc" }, { name: "asc" }],
-      });
-
-      if (repos.length === 0) {
-        try {
-          await syncInstallationRepos(
-            installation.id,
-            Number(installation.installationId),
-          );
-          repos = await prisma.repo.findMany({
-            where: { installationId: installation.id },
-            select: { id: true, fullName: true, name: true, org: true },
-            orderBy: [{ org: "asc" }, { name: "asc" }],
-          });
-        } catch (err) {
-          console.error("Failed to sync repos for onboarding:", err);
-          throw new AppError(502, "Could not load repositories from GitHub");
-        }
+      // Always fetch from GitHub API — no bulk DB write, just a read
+      let repos: { id: string; fullName: string; name: string; org: string; githubRepoId: number }[] = []
+      try {
+        const ghRepos = await listInstallationRepos(Number(installation.installationId))
+        repos = ghRepos
+          .map((r) => ({
+            id: r.id,                          // GitHub repo ID as string (used as selection key)
+            fullName: r.fullName,
+            name: r.name,
+            org: r.org,
+            githubRepoId: r.githubRepoId!,
+          }))
+          .sort((a, b) => a.fullName.localeCompare(b.fullName))
+      } catch (err) {
+        console.error("Failed to list repos from GitHub:", err);
+        throw new AppError(502, "Could not load repositories from GitHub");
       }
 
-      const selectedRepos = Array.isArray(installation.selectedRepos)
+      // Map previously-selected DB repo IDs → GitHub IDs so the UI can pre-check them
+      const selectedDbIds = Array.isArray(installation.selectedRepos)
         ? (installation.selectedRepos as string[])
-        : [];
+        : []
 
-      res.json({
-        repos,
-        repoLimit,
-        selectedRepos,
-      });
+      let selectedGithubIds: string[] = []
+      if (selectedDbIds.length > 0) {
+        const existingRepos = await prisma.repo.findMany({
+          where: { id: { in: selectedDbIds }, installationId: installation.id },
+          select: { githubRepoId: true },
+        })
+        selectedGithubIds = existingRepos.map((r) => r.githubRepoId.toString())
+      }
+
+      res.json({ repos, repoLimit, selectedRepos: selectedGithubIds });
     } catch (err) {
       next(err);
     }
@@ -340,8 +328,11 @@ githubRouter.post(
   authMiddleware,
   async (req: AuthRequest, res, next) => {
     try {
-      const { repoIds } = req.body as { repoIds?: string[] };
-      if (!repoIds?.length) {
+      // Accept repos as objects: [{githubRepoId, name, org, defaultBranch?, isPrivate?}]
+      // githubRepoId is the numeric GitHub repo ID (string or number)
+      type RepoInput = { githubRepoId: number | string; name: string; org: string; defaultBranch?: string; isPrivate?: boolean }
+      const { repos: repoInputs } = req.body as { repos?: RepoInput[] };
+      if (!repoInputs?.length) {
         throw new AppError(400, "Select at least one repository");
       }
 
@@ -352,7 +343,7 @@ githubRouter.post(
       if (!user) throw new AppError(404, "User not found");
 
       const repoLimit = getRepoLimitForPlan(user.plan);
-      if (repoIds.length > repoLimit) {
+      if (repoInputs.length > repoLimit) {
         throw new AppError(
           400,
           `Your plan allows ${repoLimit} repo${repoLimit === 1 ? "" : "s"}`,
@@ -366,21 +357,24 @@ githubRouter.post(
       if (!installation)
         throw new AppError(404, "No GitHub installation found");
 
-      const repos = await prisma.repo.findMany({
-        where: {
-          id: { in: repoIds },
-          installationId: installation.id,
-        },
-      });
+      // Upsert only the selected repos — no bulk write for unselected ones
+      const upserted = await upsertSelectedRepos(
+        installation.id,
+        repoInputs.map((r) => ({
+          githubRepoId: Number(r.githubRepoId),
+          name: r.name,
+          org: r.org,
+          defaultBranch: r.defaultBranch,
+          isPrivate: r.isPrivate,
+        }))
+      )
 
-      if (repos.length !== repoIds.length) {
-        throw new AppError(400, "One or more repositories are invalid");
-      }
+      const selectedDbIds = upserted.map((r) => r.id)
 
       await prisma.githubInstallation.update({
         where: { id: installation.id },
         data: {
-          selectedRepos: repoIds,
+          selectedRepos: selectedDbIds,
           scanStatus: ScanStatus.scanning,
           scanProgress: { total: 0, scanned: 0, scored: 0 },
         },
@@ -397,7 +391,7 @@ githubRouter.post(
           installation_id: Number(installation.installationId),
           installationDbId: installation.id,
           userId: req.user!.userId,
-          repos: repos.map((r) => ({ owner: r.org, repo: r.name })),
+          repos: upserted.map((r) => ({ owner: r.org, repo: r.name })),
           triggered_by: "onboarding",
         },
         { attempts: 1 }

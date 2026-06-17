@@ -4,14 +4,21 @@ import { getAppOctokit, getInstallationOctokit } from '../lib/github'
 import { notifyScanProgress } from './scanProgress.service'
 
 export type SyncedRepo = {
-  id: string
+  id: string           // DB UUID when persisted; GitHub repo ID string when from listInstallationRepos
+  githubRepoId?: number
   fullName: string
   name: string
   org: string
+  defaultBranch?: string
+  isPrivate?: boolean
 }
 
-export async function syncInstallationRepos(
-  installationDbId: string,
+/**
+ * Fetch all repos accessible to this GitHub App installation from the API.
+ * Does NOT write to the database — repos are persisted only when the user
+ * explicitly selects them via /start-scan.
+ */
+export async function listInstallationRepos(
   installationGithubId: number
 ): Promise<SyncedRepo[]> {
   const octokit = await getInstallationOctokit(installationGithubId)
@@ -19,39 +26,56 @@ export async function syncInstallationRepos(
     per_page: 100,
   })
 
-  const synced: SyncedRepo[] = []
-  for (const repo of data.repositories) {
+  return data.repositories.map((repo) => ({
+    id: repo.id.toString(),          // GitHub repo ID (not a DB ID)
+    githubRepoId: repo.id,
+    fullName: repo.full_name,
+    name: repo.name,
+    org: repo.owner?.login ?? 'unknown',
+    defaultBranch: repo.default_branch ?? 'main',
+    isPrivate: repo.private ?? false,
+  }))
+}
+
+/**
+ * Upsert only the repos the user has selected into the DB.
+ * Called from /start-scan — not on every GitHub connect.
+ */
+export async function upsertSelectedRepos(
+  installationDbId: string,
+  repos: Array<{ githubRepoId: number; name: string; org: string; defaultBranch?: string; isPrivate?: boolean }>
+): Promise<SyncedRepo[]> {
+  const upserted: SyncedRepo[] = []
+  for (const r of repos) {
     const row = await prisma.repo.upsert({
       where: {
         installationId_githubRepoId: {
           installationId: installationDbId,
-          githubRepoId: BigInt(repo.id),
+          githubRepoId: BigInt(r.githubRepoId),
         },
       },
       create: {
         installationId: installationDbId,
-        githubRepoId: BigInt(repo.id),
-        name: repo.name,
-        org: repo.owner?.login ?? 'unknown',
-        fullName: repo.full_name,
-        defaultBranch: repo.default_branch ?? 'main',
-        isPrivate: repo.private ?? false,
+        githubRepoId: BigInt(r.githubRepoId),
+        name: r.name,
+        org: r.org,
+        fullName: `${r.org}/${r.name}`,
+        defaultBranch: r.defaultBranch ?? 'main',
+        isPrivate: r.isPrivate ?? false,
       },
-      update: {
-        defaultBranch: repo.default_branch ?? 'main',
-        fullName: repo.full_name,
-        org: repo.owner?.login ?? 'unknown',
-      },
+      update: { org: r.org, fullName: `${r.org}/${r.name}` },
     })
-    synced.push({
-      id: row.id,
-      fullName: row.fullName,
-      name: row.name,
-      org: row.org,
-    })
+    upserted.push({ id: row.id, fullName: row.fullName, name: row.name, org: row.org })
   }
+  return upserted
+}
 
-  return synced
+/** @deprecated Use listInstallationRepos (no DB writes) instead. */
+export async function syncInstallationRepos(
+  installationDbId: string,
+  installationGithubId: number
+): Promise<SyncedRepo[]> {
+  return listInstallationRepos(installationGithubId)
 }
 
 export async function resolveInstallationAccountLogin(
