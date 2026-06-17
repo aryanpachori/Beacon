@@ -8,6 +8,7 @@ import {
 } from "./notification.service";
 import { bumpScanProgress } from "./scanProgress.service";
 import { computePrediction } from "./prediction.service";
+import { generateRecommendations } from "./recommendation.service";
 import type { IntelligenceSignalsPayload } from "../lib/queue";
 
 export interface CheckAlertParams {
@@ -205,6 +206,8 @@ export async function incrementScanScored(
       predictionSlope: prediction?.predictionSlope ?? null,
     },
   });
+
+  await generateRecommendations(packageId, newSps);
 
   await prisma.packageScore.create({
     data: {

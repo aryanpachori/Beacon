@@ -13,6 +13,7 @@ import {
   resolveSignalsBatch,
   toApiSignalsPayload,
 } from "../services/resolvePackageSignals.service";
+import { listPackageRecommendations } from "../services/recommendation.service";
 
 export const packagesRouter = Router();
 
@@ -142,15 +143,17 @@ packagesRouter.get("/:id", async (req: AuthRequest, res, next) => {
 
     const resolvedSignals = await resolvePackageSignals(packageId);
 
-    const history =
+    const [history, recommendations] = await Promise.all([
       ctx && repos.length > 0
-        ? await prisma.packageScore.findMany({
+        ? prisma.packageScore.findMany({
             where: { packageId },
             orderBy: { scoredAt: "asc" },
             take: 90,
             select: { sps: true },
           })
-        : [];
+        : Promise.resolve([]),
+      listPackageRecommendations(packageId),
+    ]);
 
     res.json({
       id: pkg.id,
@@ -169,7 +172,7 @@ packagesRouter.get("/:id", async (req: AuthRequest, res, next) => {
       })),
       signals: toApiSignalsPayload(resolvedSignals),
       spsHistory: history.map((h) => h.sps),
-      recommendations: [],
+      recommendations,
       effortEstimate: {
         linesImpacted: 0,
         filesAffected: repos.length,
@@ -193,37 +196,9 @@ packagesRouter.get(
       const { id } = req.params;
       const packageId = Array.isArray(id) ? id[0]! : id;
 
-      const recs = await prisma.recommendation.findMany({
-        where: { fromPackageId: packageId },
-        include: {
-          toPackage: {
-            select: {
-              name: true,
-              ecosystem: true,
-              currentSps: true,
-              weeklyDownloads: true,
-            },
-          },
-        },
-      });
+      const recommendations = await listPackageRecommendations(packageId);
 
-      res.json({
-        recommendations: recs.map((r) => ({
-          toPackageId: r.toPackageId,
-          name: r.toPackage.name,
-          sps: r.toPackage.currentSps ?? 0,
-          weeklyDownloads: r.toPackage.weeklyDownloads
-            ? Number(r.toPackage.weeklyDownloads)
-            : 0,
-          ecosystem: r.toPackage.ecosystem,
-          reason: r.reason ?? undefined,
-          effortLines: r.effortLines ?? undefined,
-          effortFiles: r.effortFiles ?? undefined,
-          effortWeeks: r.effortWeeks ?? undefined,
-          confidence: r.confidence ?? 0,
-          isOfficial: r.isOfficial,
-        })),
-      });
+      res.json({ recommendations });
     } catch (err) {
       next(err);
     }
