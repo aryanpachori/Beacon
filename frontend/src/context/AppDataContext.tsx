@@ -18,7 +18,7 @@ import {
   fetchMe,
   fetchPackages,
   fetchRepos,
-  getAccessToken,
+  isAuthenticated,
 } from '@/lib/api'
 import type { Alert, Package, Repo } from '@/types'
 
@@ -74,7 +74,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   }, [])
 
   useEffect(() => {
-    if (!getAccessToken()) {
+    if (!isAuthenticated()) {
       const search = searchParams.toString()
       router.replace(loginPathWithRedirect(pathname, search ? `?${search}` : ''))
       return

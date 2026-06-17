@@ -39,8 +39,26 @@ export function setAuthTokens(accessToken: string, refreshToken: string): void {
 }
 
 export function clearAuthTokens(): void {
+  if (typeof window === 'undefined') return
   localStorage.removeItem(ACCESS_TOKEN_KEY)
   localStorage.removeItem(REFRESH_TOKEN_KEY)
+  localStorage.removeItem('driftlogg_slack_url')
+  localStorage.removeItem('driftlogg_google_chat_url')
+  localStorage.removeItem('dl_intended_url')
+
+  // Proactively clear any other driftlogg or session keys in localStorage
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i)
+    if (key && (key.startsWith('driftlogg_') || key === 'dl_intended_url')) {
+      localStorage.removeItem(key)
+      i--
+    }
+  }
+}
+
+export function isAuthenticated(): boolean {
+  if (typeof window === 'undefined') return false
+  return !!getAccessToken() && !!getRefreshToken()
 }
 
 export class ApiError extends Error {

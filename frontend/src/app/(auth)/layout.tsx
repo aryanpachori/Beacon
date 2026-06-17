@@ -2,8 +2,10 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { Shield, TrendingDown, Bell, Zap, Sun, Moon, Lightbulb, RefreshCw } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { SiteLogo } from '@/components/layout/SiteLogo'
 import { useTheme } from '@/hooks/useTheme'
+import { isAuthenticated } from '@/lib/api'
 
 function useFunFact() {
   const [fact, setFact] = useState<string | null>(null)
@@ -41,8 +43,29 @@ const STATS = [
 ]
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter()
+  const [checkingAuth, setCheckingAuth] = useState(true)
   const [theme, toggleTheme, themeMounted] = useTheme()
   const { fact, loading, refresh } = useFunFact()
+
+  useEffect(() => {
+    if (isAuthenticated()) {
+      router.replace('/dashboard')
+    } else {
+      setCheckingAuth(false)
+    }
+  }, [router])
+
+  if (checkingAuth) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#0f1e3a] text-sm text-white/60">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#5b9fe8] border-t-transparent" />
+          <span>Verifying session…</span>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="flex min-h-screen bg-dl-bg">
