@@ -2,25 +2,22 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Sparkles } from 'lucide-react'
+import { GitBranch, RefreshCw, Sparkles, ArrowUpRight } from 'lucide-react'
 import { motion } from 'framer-motion'
 import type { Repo, Tier } from '@/types'
 import { TierChip } from '@/components/ui/TierChip'
 import { SPSBadge } from '@/components/ui/SPSBadge'
-import { tierColor } from '@/lib/constants'
+import { useAppData } from '@/context/AppDataContext'
 import {
   getAiHealthSummary,
   getLastScannedLabel,
   getTierBreakdown,
   getCriticalCount,
   getAtRiskCount,
-  getTopRisks,
   getAvgSpsColorClass,
-  getTierBarFillClass,
-  TIER_BREAKDOWN_LABELS,
+  getRepoFullName,
 } from '@/lib/reposData'
 import { cn } from '@/lib/utils'
-
 import { triggerRepoRescan } from '@/lib/api'
 
 interface RepoCardProps {
@@ -28,20 +25,75 @@ interface RepoCardProps {
   onRescan?: () => Promise<void>
 }
 
-const TIER_DOT_CLASS: Record<Tier, string> = {
-  critical: 'bg-dl-critical',
-  'at-risk': 'bg-dl-risk',
-  watch: 'bg-dl-watch',
-  healthy: 'bg-dl-healthy',
+const TIER_CONFIG: Record<
+  Tier,
+  { label: string; color: string; bg: string; barClass: string }
+> = {
+  healthy: {
+    label: 'Healthy',
+    color: '#16a34a',
+    bg: 'rgba(22,163,74,0.15)',
+    barClass: 'tier-bar-fill-healthy',
+  },
+  watch: {
+    label: 'Watch',
+    color: '#ca8a04',
+    bg: 'rgba(202,138,4,0.15)',
+    barClass: 'tier-bar-fill-watch',
+  },
+  'at-risk': {
+    label: 'At risk',
+    color: '#ea580c',
+    bg: 'rgba(234,88,12,0.15)',
+    barClass: 'tier-bar-fill-at-risk',
+  },
+  critical: {
+    label: 'Critical',
+    color: '#dc2626',
+    bg: 'rgba(220,38,38,0.15)',
+    barClass: 'tier-bar-fill-critical',
+  },
+}
+
+const TIER_ORDER: Tier[] = ['critical', 'at-risk', 'watch', 'healthy']
+
+function MetricChip({
+  label,
+  value,
+  valueClassName,
+}: {
+  label: string
+  value: number | string
+  valueClassName?: string
+}) {
+  return (
+    <div className="flex flex-1 flex-col items-center px-2 py-1 text-center">
+      <span
+        className={cn(
+          'text-[22px] font-semibold tabular-nums leading-none tracking-tight',
+          valueClassName ?? 'text-dl-forest'
+        )}
+      >
+        {value}
+      </span>
+      <span className="mt-1.5 text-[10px] font-medium uppercase tracking-wider text-dl-muted">
+        {label}
+      </span>
+    </div>
+  )
 }
 
 export function RepoCard({ repo, onRescan }: RepoCardProps) {
+  const { packages } = useAppData()
   const [scanning, setScanning] = useState(false)
-  const criticalCount = getCriticalCount(repo)
-  const atRiskCount = getAtRiskCount(repo)
-  const breakdown = getTierBreakdown(repo)
-  const topRisks = getTopRisks(repo)
+
+  const repoPackages = packages.filter(p => p.repoName === getRepoFullName(repo))
+  const breakdown = getTierBreakdown(repo, packages)
+  const criticalCount = getCriticalCount(repo, packages)
+  const atRiskCount = getAtRiskCount(repo, packages)
   const avgSpsColor = getAvgSpsColorClass(repo)
+  const worstPkg = repoPackages.find(p => p.name === repo.worstPackage.name)
+  const worstHref = worstPkg ? `/packages/${worstPkg.id}` : `/packages/${repo.worstPackage.name}`
 
   const handleScan = async () => {
     if (scanning) return
@@ -57,7 +109,7 @@ export function RepoCard({ repo, onRescan }: RepoCardProps) {
   return (
     <motion.article
       className={cn(
-        'repo-card dash-card overflow-hidden transition-colors',
+        'dash-panel overflow-hidden transition-colors',
         scanning && 'border-dl-teal'
       )}
       animate={
@@ -73,134 +125,147 @@ export function RepoCard({ repo, onRescan }: RepoCardProps) {
       }
       transition={scanning ? { duration: 0.65, repeat: 2, ease: 'easeInOut' } : { duration: 0.2 }}
     >
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
-        <div className="min-w-0">
-          <div className="mb-3 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-            <span className="font-mono text-[16px] font-medium text-dl-forest">{repo.name}</span>
-            <span className="font-mono text-[12px] text-dl-hint">{repo.org}</span>
-            <span className="ml-auto text-[11px] text-dl-hint">{getLastScannedLabel(repo)}</span>
+      {/* Header */}
+      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-dl-border px-5 py-4">
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-dl-border bg-dl-surface">
+            <GitBranch className="h-5 w-5 text-dl-teal" aria-hidden />
           </div>
-
-          <div className="mb-4 flex gap-2">
-            <Sparkles className="mt-0.5 h-[13px] w-[13px] shrink-0 text-dl-teal" aria-hidden />
-            <p className="text-[12px] leading-relaxed text-dl-muted">{getAiHealthSummary(repo)}</p>
-          </div>
-
-          <div className="mt-4 grid grid-cols-2 gap-3">
-            <div className="stat-tile repo-stat-tile">
-              <p className="text-[10px] uppercase tracking-wider text-dl-muted">Packages</p>
-              <p className="mt-1 text-[20px] font-medium text-dl-forest">{repo.packageCount}</p>
-            </div>
-            <div className="stat-tile repo-stat-tile">
-              <p className="text-[10px] uppercase tracking-wider text-dl-muted">Avg SPS</p>
-              <p className={cn('mt-1 text-[20px] font-medium tabular-nums', avgSpsColor)}>
-                {repo.avgSps}
-              </p>
-            </div>
-            <div className="stat-tile repo-stat-tile">
-              <p className="text-[10px] uppercase tracking-wider text-dl-muted">Critical</p>
-              <p
-                className={cn(
-                  'mt-1 text-[20px] font-medium tabular-nums',
-                  criticalCount > 0 ? 'text-dl-critical' : 'text-dl-forest'
-                )}
-              >
-                {criticalCount}
-              </p>
-            </div>
-            <div className="stat-tile repo-stat-tile">
-              <p className="text-[10px] uppercase tracking-wider text-dl-muted">At risk</p>
-              <p
-                className={cn(
-                  'mt-1 text-[20px] font-medium tabular-nums',
-                  atRiskCount > 0 ? 'text-dl-risk' : 'text-dl-forest'
-                )}
-              >
-                {atRiskCount}
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-4 flex items-center gap-3 overflow-x-auto whitespace-nowrap">
-            <span className="shrink-0 text-[11px] text-dl-muted">Highest risk</span>
-            <span className="shrink-0 text-[13px] font-medium text-dl-forest">
-              {repo.worstPackage.name}
-            </span>
-            <span className="shrink-0">
-              <TierChip tier={repo.worstPackage.tier} />
-            </span>
-            <span className="shrink-0">
-              <SPSBadge score={repo.worstPackage.sps} tier={repo.worstPackage.tier} size="sm" />
-            </span>
-            <Link
-              href={`/packages/${repo.worstPackage.name}`}
-              className="shrink-0 text-[12px] font-medium text-dl-teal hover:underline"
-            >
-              View →
-            </Link>
+          <div className="min-w-0">
+            <h2 className="truncate font-mono text-[16px] font-semibold text-dl-forest">
+              {repo.name}
+            </h2>
+            <p className="truncate text-[12px] text-dl-hint">
+              {repo.org}
+              <span className="sm:hidden"> · {getLastScannedLabel(repo)}</span>
+            </p>
           </div>
         </div>
 
-        <div className="min-w-0 lg:pt-0">
-          <p className="dash-section-label mb-3">Package health breakdown</p>
-          <div className="space-y-2.5">
-            {breakdown.map(row => (
-              <div key={row.tier} className="flex items-center gap-2">
-                <span className="w-16 shrink-0 text-[11px] text-dl-muted">
-                  {TIER_BREAKDOWN_LABELS[row.tier]}
-                </span>
-                <div className="tier-bar-track">
-                  <div
-                    className={getTierBarFillClass(row.tier)}
-                    style={{ width: `${row.pct}%` }}
-                  />
-                </div>
-                <span className="w-6 shrink-0 text-right text-[11px] tabular-nums text-dl-hint">
-                  {row.count}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          <p className="dash-section-label mb-2 mt-4">Top risks</p>
-          <ul className="mb-4 space-y-2">
-            {topRisks.map(risk => (
-              <li key={risk.id}>
-                <Link
-                  href={`/packages/${risk.id}`}
-                  className="flex items-center gap-2.5 rounded-lg px-1 py-1 transition-colors hover:bg-[rgba(255,255,255,0.04)]"
-                >
-                  <span
-                    className={cn('h-1.5 w-1.5 shrink-0 rounded-full', TIER_DOT_CLASS[risk.tier])}
-                    aria-hidden
-                  />
-                  <span className="w-[72px] shrink-0 truncate text-[13px] text-dl-forest">
-                    {risk.name}
-                  </span>
-                  <span className="min-w-0 flex-1 truncate text-[11px] text-dl-hint">
-                    {risk.riskPill}
-                  </span>
-                  <span
-                    className={cn(
-                      'shrink-0 text-right text-[13px] font-medium tabular-nums',
-                      tierColor(risk.tier, 'text')
-                    )}
-                  >
-                    {risk.sps}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-
+        <div className="flex shrink-0 items-center gap-3">
+          <span className="hidden text-[11px] text-dl-hint sm:inline">
+            {getLastScannedLabel(repo)}
+          </span>
           <button
             type="button"
-            className="repo-scan-btn"
+            className="btn-dash-secondary flex items-center gap-1.5 px-3 py-1.5 text-[12px]"
             onClick={handleScan}
             disabled={scanning}
           >
+            <RefreshCw className={cn('h-3.5 w-3.5', scanning && 'animate-spin')} aria-hidden />
             {scanning ? 'Scanning…' : 'Scan now'}
           </button>
+        </div>
+      </div>
+
+      {/* AI summary */}
+      <div className="mx-5 mt-4 flex gap-2.5 rounded-xl border border-dl-teal/20 bg-dl-teal/5 px-4 py-3">
+        <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-dl-teal" aria-hidden />
+        <p className="text-[12px] leading-relaxed text-dl-muted">{getAiHealthSummary(repo)}</p>
+      </div>
+
+      {/* Body */}
+      <div className="mt-4 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
+        {/* Metrics + worst package */}
+        <div className="border-b border-dl-border px-5 py-5 lg:border-b-0 lg:border-r">
+          <div className="flex items-stretch rounded-xl border border-dl-border bg-dl-surface/60 px-1 py-4">
+            <MetricChip label="Packages" value={repo.packageCount} />
+            <div className="w-px shrink-0 self-stretch bg-dl-border" aria-hidden />
+            <MetricChip label="Avg SPS" value={repo.avgSps} valueClassName={avgSpsColor} />
+            <div className="w-px shrink-0 self-stretch bg-dl-border" aria-hidden />
+            <MetricChip
+              label="Critical"
+              value={criticalCount}
+              valueClassName={criticalCount > 0 ? 'text-dl-critical' : 'text-dl-forest'}
+            />
+            <div className="w-px shrink-0 self-stretch bg-dl-border" aria-hidden />
+            <MetricChip
+              label="At risk"
+              value={atRiskCount}
+              valueClassName={atRiskCount > 0 ? 'text-dl-risk' : 'text-dl-forest'}
+            />
+          </div>
+
+          {repo.worstPackage.name !== '—' && (
+            <Link
+              href={worstHref}
+              className={cn(
+                'group mt-4 flex items-center gap-3 rounded-xl border border-dl-border bg-dl-surface p-3.5 transition-colors hover:border-dl-teal/40 hover:bg-dl-teal/5',
+                'border-l-[3px]',
+                repo.worstPackage.tier === 'critical'
+                  ? 'border-l-dl-critical'
+                  : repo.worstPackage.tier === 'at-risk'
+                    ? 'border-l-dl-risk'
+                    : repo.worstPackage.tier === 'watch'
+                      ? 'border-l-dl-watch'
+                      : 'border-l-dl-healthy'
+              )}
+            >
+              <div className="min-w-0 flex-1">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-dl-muted">
+                  Highest risk
+                </p>
+                <div className="mt-1 flex flex-wrap items-center gap-2">
+                  <span className="text-[14px] font-medium text-dl-forest">
+                    {repo.worstPackage.name}
+                  </span>
+                  <TierChip tier={repo.worstPackage.tier} />
+                </div>
+              </div>
+              <SPSBadge score={repo.worstPackage.sps} tier={repo.worstPackage.tier} size="sm" />
+              <ArrowUpRight className="h-4 w-4 shrink-0 text-dl-muted transition-colors group-hover:text-dl-teal" />
+            </Link>
+          )}
+        </div>
+
+        {/* Distribution + top risks */}
+        <div className="px-5 py-5">
+          <p className="dash-section-label mb-3">Package health</p>
+
+          {repo.packageCount > 0 && (
+            <div className="mb-4 flex h-2 overflow-hidden rounded-full bg-dl-border">
+              {TIER_ORDER.map(tier => {
+                const row = breakdown.find(b => b.tier === tier)
+                if (!row || row.pct === 0) return null
+                return (
+                  <div
+                    key={tier}
+                    className={cn('h-full transition-[width] duration-500', TIER_CONFIG[tier].barClass)}
+                    style={{ width: `${row.pct}%` }}
+                    title={`${TIER_CONFIG[tier].label}: ${row.count}`}
+                  />
+                )
+              })}
+            </div>
+          )}
+
+          <div className="space-y-2.5">
+            {breakdown.map(row => {
+              const cfg = TIER_CONFIG[row.tier]
+              return (
+                <div key={row.tier} className="flex items-center gap-3">
+                  <div
+                    className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-[10px] font-bold"
+                    style={{ background: cfg.bg, color: cfg.color }}
+                  >
+                    {row.count}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-0.5 flex items-center justify-between gap-2">
+                      <span className="text-[11px] font-medium text-dl-text">{cfg.label}</span>
+                      <span className="text-[10px] tabular-nums text-dl-muted">{row.pct}%</span>
+                    </div>
+                    <div className="progress-track">
+                      <div
+                        className="h-full rounded-full transition-[width] duration-700 ease-out"
+                        style={{ width: `${row.pct}%`, background: cfg.color }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
         </div>
       </div>
     </motion.article>

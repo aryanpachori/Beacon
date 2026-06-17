@@ -141,7 +141,7 @@ export default function ReposPage() {
       {repos.length === 0 ? (
         <ReposEmptyState onConnect={handleSelectRepo} />
       ) : (
-        <div className="mt-6 flex flex-col gap-5">
+        <div className="mt-6 flex flex-col gap-6">
           {repos.map((repo) => (
             <RepoCard key={repo.id} repo={repo} onRescan={refresh} />
           ))}

@@ -1,8 +1,30 @@
-import type { Repo, Tier } from '@/types'
+import type { Package, Repo, Tier } from '@/types'
 import { packages } from '@/lib/mockData'
 import { getRiskPills } from '@/lib/dashboardData'
 import { spsToTier, tierColor } from '@/lib/constants'
 import { daysSinceDate } from '@/lib/utils'
+
+export function getRepoPackages(repo: Repo, allPackages?: Package[]): Package[] {
+  const full = getRepoFullName(repo)
+  if (allPackages?.length) {
+    return allPackages.filter(p => p.repoName === full)
+  }
+  return packages.filter(p => p.repoName === full)
+}
+
+function countTiersFromPackages(pkgs: Package[]): Record<Tier, number> {
+  const counts: Record<Tier, number> = {
+    critical: 0,
+    'at-risk': 0,
+    watch: 0,
+    healthy: 0,
+  }
+  for (const pkg of pkgs) {
+    if (pkg.scoringPending) continue
+    counts[pkg.tier] += 1
+  }
+  return counts
+}
 
 export interface TierBreakdown {
   tier: Tier
@@ -62,8 +84,12 @@ export function getLastScannedLabel(repo: Repo): string {
   return `Last scanned ${days}d ago`
 }
 
-export function getTierBreakdown(repo: Repo): TierBreakdown[] {
-  const counts = TIER_COUNTS[repo.id] ?? inferTierCounts(repo)
+export function getTierBreakdown(repo: Repo, allPackages?: Package[]): TierBreakdown[] {
+  const livePackages = getRepoPackages(repo, allPackages)
+  const counts =
+    livePackages.length > 0
+      ? countTiersFromPackages(livePackages)
+      : TIER_COUNTS[repo.id] ?? inferTierCounts(repo)
   const total = repo.packageCount
   const order: Tier[] = ['critical', 'at-risk', 'watch', 'healthy']
 
@@ -92,34 +118,51 @@ function inferTierCounts(repo: Repo): Record<Tier, number> {
   return counts
 }
 
-export function getCriticalCount(repo: Repo): number {
-  return getTierBreakdown(repo).find(b => b.tier === 'critical')?.count ?? 0
+export function getCriticalCount(repo: Repo, allPackages?: Package[]): number {
+  return getTierBreakdown(repo, allPackages).find(b => b.tier === 'critical')?.count ?? 0
 }
 
-export function getAtRiskCount(repo: Repo): number {
-  return getTierBreakdown(repo).find(b => b.tier === 'at-risk')?.count ?? 0
+export function getAtRiskCount(repo: Repo, allPackages?: Package[]): number {
+  return getTierBreakdown(repo, allPackages).find(b => b.tier === 'at-risk')?.count ?? 0
 }
 
-export function getTopRisks(repo: Repo): RepoTopRisk[] {
+export function getTopRisks(repo: Repo, allPackages?: Package[]): RepoTopRisk[] {
   const overrideIds = TOP_RISK_OVERRIDES[repo.id]
-  const full = getRepoFullName(repo)
+  const livePackages = getRepoPackages(repo, allPackages)
 
   const pool = overrideIds
     ? overrideIds
         .map(id => packages.find(p => p.id === id))
         .filter((p): p is (typeof packages)[0] => Boolean(p))
-    : packages
-        .filter(p => p.repoName === full)
-        .sort((a, b) => a.sps - b.sps)
-        .slice(0, 3)
+    : livePackages.length > 0
+      ? [...livePackages]
+          .filter(p => !p.scoringPending)
+          .sort((a, b) => a.sps - b.sps)
+      : packages
+          .filter(p => p.repoName === getRepoFullName(repo))
+          .sort((a, b) => a.sps - b.sps)
 
-  return pool.slice(0, 3).map(pkg => ({
+  const risks = pool.slice(0, 3).map(pkg => ({
     id: pkg.id,
     name: pkg.name,
     sps: pkg.sps,
     tier: pkg.tier,
     riskPill: getRiskPills(pkg)[0] ?? 'Elevated risk',
   }))
+
+  if (risks.length === 0 && repo.worstPackage.name !== '—') {
+    return [
+      {
+        id: repo.worstPackage.name,
+        name: repo.worstPackage.name,
+        sps: repo.worstPackage.sps,
+        tier: repo.worstPackage.tier,
+        riskPill: 'Lowest SPS in repo',
+      },
+    ]
+  }
+
+  return risks
 }
 
 export function getAvgSpsColorClass(repo: Repo): string {
