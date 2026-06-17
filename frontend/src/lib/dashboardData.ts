@@ -177,19 +177,25 @@ export const SIGNAL_LEVEL_CLASS: Record<SignalLevel, string> = {
   bad: 'text-dl-critical',
 }
 
-export function formatLastUpdatedLabel(iso: string): string {
-  const days = daysSinceDate(iso)
+export function formatDaysSinceLabel(days: number): string {
   if (days < 90) return `${days}d ago`
   if (days < 365) return `${Math.floor(days / 30)}mo ago`
   const years = Math.floor(days / 365)
   return `${years}y ago`
 }
 
-export function getLastUpdatedColorClass(iso: string): string {
-  const days = daysSinceDate(iso)
+export function getDaysSinceColorClass(days: number): string {
   if (days < 90) return 'text-dl-healthy'
   if (days < 365) return 'text-dl-warning'
   return 'text-dl-critical'
+}
+
+export function formatLastUpdatedLabel(iso: string): string {
+  return formatDaysSinceLabel(daysSinceDate(iso))
+}
+
+export function getLastUpdatedColorClass(iso: string): string {
+  return getDaysSinceColorClass(daysSinceDate(iso))
 }
 
 export { packages, alerts, repos }
