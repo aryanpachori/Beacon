@@ -33,7 +33,7 @@ const SIGNAL_PILLS: Record<string, string[]> = {
 }
 
 export function isAlertResolved(alert: Alert): boolean {
-  return alert.slackSent && alert.jiraCreated
+  return alert.resolved === true || alert.alertType === 'recovery'
 }
 
 export function isAlertUnread(alert: Alert): boolean {

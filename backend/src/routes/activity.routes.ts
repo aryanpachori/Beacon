@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { prisma } from '../db/client'
+import { prisma, toApiTier } from '../db/client'
 import { authMiddleware, AuthRequest } from '../middleware/auth.middleware'
 import {
   getUserInstallationContext,
@@ -63,7 +63,7 @@ activityRouter.get('/', async (req: AuthRequest, res, next) => {
       packageId: a.package.id,
       packageName: a.package.name,
       ecosystem: a.package.ecosystem,
-      tier: a.tierAfter ?? a.tierBefore ?? 'healthy',
+      tier: toApiTier(a.tierAfter ?? a.tierBefore) ?? 'healthy',
       spsBefore: a.spsBefore ?? undefined,
       spsAfter: a.spsAfter ?? undefined,
       aiReason: a.aiReason ?? undefined,

@@ -102,7 +102,7 @@ export interface Alert {
   firedAt: string;
   repos: string[];
   slackSent: boolean;
-  jiraCreated: boolean;
+  resolved: boolean;
   aiReason?: string;
   signalPills?: string[];
   alertType?: string;

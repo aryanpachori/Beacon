@@ -19,7 +19,7 @@ export const packagesRouter = Router();
 
 packagesRouter.use(authMiddleware);
 
-const PAGE_SIZE = 50;
+const PAGE_SIZE = 500;
 
 packagesRouter.get("/", async (req: AuthRequest, res, next) => {
   try {

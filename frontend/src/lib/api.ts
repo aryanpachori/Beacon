@@ -169,8 +169,10 @@ export async function fetchPackageById(id: string): Promise<Package> {
   return adaptPackageDetail(data)
 }
 
-export async function fetchAlerts(limit = 50): Promise<Alert[]> {
-  const data = await apiFetch<{ alerts: ApiAlert[] }>(`/api/alerts?limit=${limit}`)
+export async function fetchAlerts(limit = 200, offset = 0): Promise<Alert[]> {
+  const data = await apiFetch<{ alerts: ApiAlert[]; total: number }>(
+    `/api/alerts?limit=${limit}&offset=${offset}`
+  )
   return data.alerts.map(adaptAlert)
 }
 

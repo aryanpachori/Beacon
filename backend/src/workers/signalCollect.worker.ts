@@ -142,31 +142,35 @@ async function processScanJob(job: Job<SignalCollectJobData>): Promise<void> {
     packageIdByKey.set(`${dep.ecosystem}:${dep.name}`, pkg.id)
   }
 
-  await Promise.all(
-    allDeps.map(async (dep) => {
-      const packageId = packageIdByKey.get(`${dep.ecosystem}:${dep.name}`)
-      if (!packageId) return
+  // Batch repoPackage upserts in chunks to avoid connection pool exhaustion
+  const repoPackageChunks = chunkArray(allDeps, 5)
+  for (const chunk of repoPackageChunks) {
+    await Promise.all(
+      chunk.map(async (dep) => {
+        const packageId = packageIdByKey.get(`${dep.ecosystem}:${dep.name}`)
+        if (!packageId) return
 
-      const manifestFile = dep.manifestPath.split('/').pop() ?? dep.manifestPath
-      await prisma.repoPackage.upsert({
-        where: {
-          repoId_packageId_manifestPath: {
+        const manifestFile = dep.manifestPath.split('/').pop() ?? dep.manifestPath
+        await prisma.repoPackage.upsert({
+          where: {
+            repoId_packageId_manifestPath: {
+              repoId: dep.repoId,
+              packageId,
+              manifestPath: dep.manifestPath,
+            },
+          },
+          create: {
             repoId: dep.repoId,
             packageId,
             manifestPath: dep.manifestPath,
+            manifestFile,
+            declaredVersion: dep.version,
           },
-        },
-        create: {
-          repoId: dep.repoId,
-          packageId,
-          manifestPath: dep.manifestPath,
-          manifestFile,
-          declaredVersion: dep.version,
-        },
-        update: { declaredVersion: dep.version },
+          update: { declaredVersion: dep.version },
+        })
       })
-    })
-  )
+    )
+  }
 
   const packageRecords = [...uniquePackageDeps.values()].map((dep) => ({
     packageId: packageIdByKey.get(`${dep.ecosystem}:${dep.name}`)!,

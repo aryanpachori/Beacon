@@ -36,11 +36,11 @@ export function AlertCard({ alert }: AlertCardProps) {
   const timeLabel = useRelativeTime(alert.firedAt)
 
   const [jiraLoading, setJiraLoading] = useState(false)
-  const [jiraUrl, setJiraUrl] = useState<string | null>(alert.jiraCreated ? '#' : null)
+  const [jiraUrl, setJiraUrl] = useState<string | null>(null)
   const [resolved, setResolved] = useState(false)
 
   const handleOpenJira = async () => {
-    if (alert.jiraCreated || (jiraUrl && jiraUrl !== '#')) {
+    if (jiraUrl && jiraUrl !== '#') {
       window.open(jiraUrl === '#' ? 'https://jira.atlassian.com' : (jiraUrl || ''), '_blank')
       return
     }
@@ -164,7 +164,7 @@ export function AlertCard({ alert }: AlertCardProps) {
           className="btn-dash-secondary flex items-center gap-1.5 px-3 py-1.5 text-[12px]"
         >
           {jiraLoading && <RefreshCw className="h-3 w-3 animate-spin" />}
-          {alert.jiraCreated || jiraUrl ? 'Open in JIRA' : 'Create JIRA Task'}
+          {jiraUrl ? 'Open in JIRA' : 'Create JIRA Task'}
         </button>
         <button
           type="button"

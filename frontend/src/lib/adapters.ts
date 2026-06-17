@@ -76,7 +76,7 @@ export type ApiAlert = {
   signalPills?: string[];
   firedAt: string;
   slackSent: boolean;
-  jiraCreated: boolean;
+  resolved: boolean;
 };
 
 export type ApiRepo = {
@@ -291,7 +291,7 @@ export function adaptAlert(a: ApiAlert): Alert {
     firedAt: toIsoDate(a.firedAt),
     repos: [],
     slackSent: a.slackSent,
-    jiraCreated: a.jiraCreated,
+    resolved: a.resolved,
     aiReason: a.aiReason ?? undefined,
     signalPills: a.signalPills,
     alertType: a.alertType,

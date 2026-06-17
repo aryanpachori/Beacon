@@ -22,18 +22,27 @@ alertsRouter.get('/', async (req: AuthRequest, res, next) => {
     const limit = Math.min(parseInt(req.query.limit as string) || 50, 100)
     const offset = parseInt(req.query.offset as string) || 0
 
-    const alerts = await prisma.alert.findMany({
-      where: {
-        installationId: ctx.installation.id,
-        package: { repoPackages: { some: repoScope } },
-      },
-      include: { package: { select: { name: true } } },
-      orderBy: { firedAt: 'desc' },
-      take: limit,
-      skip: offset,
-    })
+    const [total, alerts] = await Promise.all([
+      prisma.alert.count({
+        where: {
+          installationId: ctx.installation.id,
+          package: { repoPackages: { some: repoScope } },
+        },
+      }),
+      prisma.alert.findMany({
+        where: {
+          installationId: ctx.installation.id,
+          package: { repoPackages: { some: repoScope } },
+        },
+        include: { package: { select: { name: true } } },
+        orderBy: { firedAt: 'desc' },
+        take: limit,
+        skip: offset,
+      }),
+    ])
 
     res.json({
+      total,
       alerts: alerts.map((a) => ({
         id: a.id,
         packageId: a.packageId,
@@ -47,7 +56,7 @@ alertsRouter.get('/', async (req: AuthRequest, res, next) => {
         signalPills: a.signalPills,
         firedAt: a.firedAt,
         slackSent: a.slackSent,
-        jiraCreated: false,
+        resolved: a.resolved ?? (a.alertType === 'recovery'),
       })),
     })
   } catch (err) {

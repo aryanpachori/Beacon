@@ -27,6 +27,7 @@ import { errorMiddleware } from './middleware/error.middleware'
 import { startWorkers } from './workers/signalCollect.worker'
 import { startIntelligenceWorker } from './workers/intelligenceScore.worker'
 import { startCrons } from './cron'
+import { signalCollectQueue, intelligenceQueue } from './lib/queue'
 
 const app = express()
 
@@ -87,6 +88,16 @@ const PORT = process.env.PORT || 4000
 
 async function main() {
   await connectRedis()
+
+  // Drain stale BullMQ jobs when DB has been wiped (no packages = leftover jobs reference dead IDs)
+  const packageCount = await prisma.package.count()
+  if (packageCount === 0) {
+    await Promise.allSettled([
+      signalCollectQueue.obliterate({ force: true }),
+      intelligenceQueue.obliterate({ force: true }),
+    ])
+    console.log('Queues drained — fresh DB detected')
+  }
 
   app.listen(PORT, () => {
     console.log(`Beacon API running on port ${PORT}`)

@@ -12,7 +12,7 @@ export function OnboardingGame() {
 
   useEffect(() => {
     const img = new Image()
-    img.src = '/image.png'
+    img.src = '/logo.png'
     img.onload = () => {
       logoRef.current = img
     }

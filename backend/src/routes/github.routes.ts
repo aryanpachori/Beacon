@@ -357,6 +357,11 @@ githubRouter.post(
       if (!installation)
         throw new AppError(404, "No GitHub installation found");
 
+      // Prevent duplicate scans — if already scanning, return early
+      if (installation.scanStatus === ScanStatus.scanning || installation.scanStatus === ScanStatus.scoring) {
+        return res.json({ success: true, alreadyRunning: true });
+      }
+
       // Upsert only the selected repos — no bulk write for unselected ones
       const upserted = await upsertSelectedRepos(
         installation.id,

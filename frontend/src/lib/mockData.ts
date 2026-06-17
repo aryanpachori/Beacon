@@ -507,7 +507,7 @@ export const alerts: Alert[] = [
     firedAt: '2026-05-15T09:23:00Z',
     repos: ['acme-corp/frontend', 'acme-corp/mobile'],
     slackSent: true,
-    jiraCreated: true,
+    resolved: true,
   },
   {
     id: 'alert-2',
@@ -519,7 +519,7 @@ export const alerts: Alert[] = [
     firedAt: '2026-05-14T14:45:00Z',
     repos: ['acme-corp/api-gateway'],
     slackSent: true,
-    jiraCreated: false,
+    resolved: false,
   },
   {
     id: 'alert-3',
@@ -531,7 +531,7 @@ export const alerts: Alert[] = [
     firedAt: '2026-05-13T11:10:00Z',
     repos: ['acme-corp/frontend', 'acme-corp/design-system'],
     slackSent: true,
-    jiraCreated: true,
+    resolved: true,
   },
   {
     id: 'alert-4',
@@ -543,7 +543,7 @@ export const alerts: Alert[] = [
     firedAt: '2026-05-12T16:30:00Z',
     repos: ['acme-corp/design-system'],
     slackSent: false,
-    jiraCreated: false,
+    resolved: false,
   },
   {
     id: 'alert-5',
@@ -555,7 +555,7 @@ export const alerts: Alert[] = [
     firedAt: '2026-05-11T08:00:00Z',
     repos: ['acme-corp/legacy-app', 'acme-corp/frontend', 'acme-corp/utils'],
     slackSent: true,
-    jiraCreated: true,
+    resolved: true,
   },
   {
     id: 'alert-6',
@@ -567,7 +567,7 @@ export const alerts: Alert[] = [
     firedAt: '2026-05-10T13:20:00Z',
     repos: ['acme-corp/build-tools'],
     slackSent: true,
-    jiraCreated: false,
+    resolved: false,
   },
   {
     id: 'alert-7',
@@ -579,7 +579,7 @@ export const alerts: Alert[] = [
     firedAt: '2026-05-09T10:00:00Z',
     repos: ['acme-corp/utils'],
     slackSent: true,
-    jiraCreated: true,
+    resolved: true,
   },
   {
     id: 'alert-8',
@@ -591,7 +591,7 @@ export const alerts: Alert[] = [
     firedAt: '2026-05-08T15:45:00Z',
     repos: ['acme-corp/auth-service'],
     slackSent: false,
-    jiraCreated: false,
+    resolved: false,
   },
 ]
 

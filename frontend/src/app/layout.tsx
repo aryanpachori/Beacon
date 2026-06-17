@@ -27,8 +27,8 @@ const sora = Sora({
 
 export const metadata: Metadata = {
   icons: {
-    icon: '/favicon.ico',
-    apple: '/image.png',
+    icon: '/logo.png',
+    apple: '/logo.png',
   },
   title: 'Beacon — Predictive Dependency Health',
   description:
