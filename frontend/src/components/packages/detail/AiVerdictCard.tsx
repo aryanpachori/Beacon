@@ -43,7 +43,7 @@ export function AiVerdictCard({ pkg }: AiVerdictCardProps) {
     } finally {
       setLoading(false)
     }
-  }, [pkg.id, pkg.name, pkg.ecosystem, pkg.sps, pkg.tier, pkg.signals, pkg.signalFacts, pkg.predictionReason])
+  }, [pkg.name, pkg.ecosystem, pkg.sps, pkg.tier, pkg.signals, pkg.signalFacts, pkg.predictionReason])
 
   useEffect(() => { fetchInsight() }, [fetchInsight])
 

@@ -1,12 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000'
 
-/**
- * Proxy to the backend digest cron endpoint.
- * The actual sending (SMTP via nodemailer) happens in the backend digest.service.ts.
- */
-async function handleRequest(_req: NextRequest) {
+async function handleRequest() {
   try {
     const secret = process.env.INTERNAL_WEBHOOK_SECRET
     if (!secret) {
@@ -30,10 +26,10 @@ async function handleRequest(_req: NextRequest) {
   }
 }
 
-export async function GET(req: NextRequest) {
-  return handleRequest(req)
+export async function GET() {
+  return handleRequest()
 }
 
-export async function POST(req: NextRequest) {
-  return handleRequest(req)
+export async function POST() {
+  return handleRequest()
 }
