@@ -1,7 +1,7 @@
 import type { Package, Signal } from '@/types'
 import { alerts } from '@/lib/mockData'
 import { daysSinceDate } from '@/lib/utils'
-import { formatLastUpdatedLabel, getLastUpdatedColorClass } from '@/lib/dashboardData'
+import { formatDaysSinceLabel, getDaysSinceColorClass } from '@/lib/dashboardData'
 import { tierColor } from '@/lib/constants'
 
 export interface MaintainerProfile {
@@ -273,11 +273,11 @@ export function getOpenIssues(pkg: Package) {
 }
 
 export function getDaysSinceCommit(pkg: Package) {
-  const days = daysSinceDate(pkg.lastUpdated)
+  const days = pkg.signalFacts?.daysSinceLastCommit ?? daysSinceDate(pkg.lastUpdated)
   return {
     days,
-    label: formatLastUpdatedLabel(pkg.lastUpdated),
-    colorClass: getLastUpdatedColorClass(pkg.lastUpdated),
+    label: formatDaysSinceLabel(days),
+    colorClass: getDaysSinceColorClass(days),
   }
 }
 
