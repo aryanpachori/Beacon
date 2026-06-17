@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Sparkles, RefreshCw, AlertCircle } from 'lucide-react'
 import type { AnalyticsData } from '@/lib/api'
 
@@ -18,7 +18,7 @@ export function AiStackInsightCard({ analytics, critical, atRisk, watch, healthy
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
 
-  async function fetchInsight() {
+  const fetchInsight = useCallback(async function fetchInsight() {
     setLoading(true)
     setError(false)
     try {

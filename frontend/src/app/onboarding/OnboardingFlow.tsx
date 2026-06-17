@@ -57,7 +57,7 @@ export function OnboardingFlow() {
   const [loadingRepos, setLoadingRepos] = useState(false)
   const [startingScan, setStartingScan] = useState(false)
   const [repoError, setRepoError] = useState<string | null>(null)
-  const [needsInstall, setNeedsInstall] = useState(false)
+  const [, setNeedsInstall] = useState(false)
   const [summaryRepoNames, setSummaryRepoNames] = useState<string[]>([])
   const [summaryPackageCount, setSummaryPackageCount] = useState(0)
 

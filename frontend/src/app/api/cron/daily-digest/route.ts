@@ -6,7 +6,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000'
  * Proxy to the backend digest cron endpoint.
  * The actual sending (SMTP via nodemailer) happens in the backend digest.service.ts.
  */
-async function handleRequest(req: NextRequest) {
+async function handleRequest(_req: NextRequest) {
   try {
     const secret = process.env.INTERNAL_WEBHOOK_SECRET
     if (!secret) {
