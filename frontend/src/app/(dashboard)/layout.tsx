@@ -5,6 +5,7 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { DashboardShell } from "@/components/layout/DashboardShell";
 import { AppDataProvider } from "@/context/AppDataContext";
 import { isAuthenticated } from "@/lib/api";
+import { removeExpiredCache } from "@/lib/apiCache";
 
 function DashboardLayoutFallback({ message }: { message: string }) {
   return (
@@ -22,6 +23,11 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [checkingAuth, setCheckingAuth] = useState(true);
+
+  // Sweep stale cache entries once per app boot
+  useEffect(() => {
+    removeExpiredCache();
+  }, []);
 
   useEffect(() => {
     if (!isAuthenticated()) {
