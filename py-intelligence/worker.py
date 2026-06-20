@@ -91,7 +91,14 @@ async def main() -> None:
     initialize_scoring()
     logger.info("intelligence_worker_starting queue=%s redis=%s", QUEUE_NAME, config.REDIS_URL)
 
-    worker = Worker(QUEUE_NAME, process_job, {"connection": config.REDIS_URL, "concurrency": 5})
+    worker = Worker(QUEUE_NAME, process_job, {
+        "connection": config.REDIS_URL,
+        "concurrency": 1,
+        # Stalled check runs every 5 minutes instead of every 30s (default).
+        # At concurrency=1 with instant jobs, stalls are irrelevant — this cuts
+        # ~2,800 idle Redis commands/day down to ~240.
+        "stalledInterval": 300_000,
+    })
 
     stop_event = asyncio.Event()
     loop = asyncio.get_running_loop()
