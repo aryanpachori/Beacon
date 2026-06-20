@@ -6,7 +6,7 @@ export async function runDigest(): Promise<void> {
   const currentUtcHour = now.getUTCHours()  // 0-23
   const currentUtcDay  = now.getUTCDay()    // 0 = Sunday
 
-  if (currentUtcHour !== 1) return   // send once daily at 01:00 UTC (06:30 IST)
+  if (currentUtcHour !== 2) return   // send once daily at 02:00 UTC (07:30 IST ≈ 8 AM IST)
 
   const integrations = await prisma.orgIntegration.findMany({
     where: {

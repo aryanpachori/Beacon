@@ -234,7 +234,7 @@ export default function IntegrationsPage() {
             <h2 className="card-heading">Daily Digest</h2>
           </div>
           <p className="text-[13px] leading-relaxed text-dl-muted">
-            Manually trigger the daily health digest email for all monitored installations. Normally runs automatically at 01:00 UTC.
+            Manually trigger the daily health digest email for all monitored installations. Automatically sends every day at 8:00 AM IST.
           </p>
 
           <form onSubmit={handleTriggerDigest} className="flex flex-col gap-3">
