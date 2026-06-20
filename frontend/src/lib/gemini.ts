@@ -1,8 +1,11 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
+// Priority order: try higher-capacity models first, fall back to lite variants.
+// gemini-2.5-flash-lite has a low RPD (20/day) and hits limits easily.
 const MODEL_PRIORITY = [
-  'gemini-2.5-flash-lite',
+  'gemini-2.5-flash',
   'gemini-2.0-flash',
+  'gemini-2.5-flash-lite',
   'gemini-2.0-flash-lite',
 ]
 

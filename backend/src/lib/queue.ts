@@ -1,6 +1,4 @@
-import { Queue } from 'bullmq'
 import type { NormalizedSignals } from '../services/signals.service'
-import { getRedisConnectionOptions } from './redisConnection'
 
 export const Queues = {
   SIGNAL_COLLECT: 'signal-collect',
@@ -60,28 +58,3 @@ export function toIntelligenceSignals(signals: NormalizedSignals): IntelligenceS
     security_hygiene: signals.securityHygiene,
   }
 }
-
-const queueConnection = {
-  ...getRedisConnectionOptions(),
-  maxRetriesPerRequest: null,
-}
-
-/**
- * Intelligence-score queue — only BullMQ queue still in use.
- * signal-collect was replaced by in-process queue (lib/scanQueue.ts), so that
- * Queue object is removed entirely to stop idle Redis heartbeats for it.
- *
- * Tuned to minimise Redis commands:
- * - streams.events.maxLen:0  → disables the events stream (no XADD/XTRIM per job)
- * - stalledInterval:0        → disables stalled-job heartbeat (no SET every ~1s)
- * - removeOnComplete/Fail    → no job retention, no scan overhead
- */
-export const intelligenceQueue = new Queue<IntelligenceScoreJobData>(Queues.INTELLIGENCE_SCORE, {
-  connection: queueConnection,
-  streams: { events: { maxLen: 0 } },
-  defaultJobOptions: {
-    attempts: 1,
-    removeOnComplete: { count: 0 },
-    removeOnFail: { count: 0 },
-  },
-})

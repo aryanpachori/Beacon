@@ -1,4 +1,4 @@
-bullmq
+redis>=5.0.0
 httpx
 python-dotenv
 xgboost

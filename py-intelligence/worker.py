@@ -1,8 +1,14 @@
-"""BullMQ consumer for intelligence-score jobs."""
+"""Direct Redis BRPOP consumer for intelligence-score jobs.
+
+Replaces the BullMQ Python worker to eliminate idle polling overhead on Upstash.
+Uses a single BRPOP with 30s timeout — 2 Redis commands/minute when idle instead
+of hundreds from BullMQ's 1ms block timeout + stalled-check loop.
+"""
 
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 import os
 import signal
@@ -11,7 +17,7 @@ import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from typing import Any
 
-from bullmq import Worker  # type: ignore
+import redis.asyncio as aioredis
 
 import config
 from callback import post_score_complete
@@ -25,7 +31,8 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-QUEUE_NAME = "intelligence-score"
+QUEUE_KEY = "beacon:intel:queue"
+BRPOP_TIMEOUT = 30  # seconds — 2 Redis commands/minute when idle
 
 
 class _HealthHandler(BaseHTTPRequestHandler):
@@ -44,7 +51,6 @@ class _HealthHandler(BaseHTTPRequestHandler):
 
 
 def _start_health_server() -> None:
-    """Render Web Services require a process listening on $PORT."""
     port = int(os.environ.get("PORT", "8080"))
     server = HTTPServer(("0.0.0.0", port), _HealthHandler)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
@@ -52,8 +58,7 @@ def _start_health_server() -> None:
     logger.info("health_server_listening port=%s", port)
 
 
-async def process_job(job: Any, job_token: str) -> None:  # noqa: ARG001
-    data: dict[str, Any] = job.data
+async def process_job(job_id: str, data: dict[str, Any]) -> None:
     package_id: str = data["package_id"]
     installation_id: str = data["installation_id"]
     prev_sps: int | None = data.get("prev_sps")
@@ -61,7 +66,7 @@ async def process_job(job: Any, job_token: str) -> None:  # noqa: ARG001
     is_advisory: bool = bool(data.get("is_advisory", False))
     cve_id: str | None = data.get("cve_id")
 
-    logger.info("scoring_started job_id=%s package_id=%s prev_sps=%s is_advisory=%s", job.id, package_id, prev_sps, is_advisory)
+    logger.info("scoring_started job_id=%s package_id=%s prev_sps=%s is_advisory=%s", job_id, package_id, prev_sps, is_advisory)
 
     new_sps, tier, prediction_reason = score(signals)
     prev_tier = assign_tier(prev_sps) if prev_sps is not None else None
@@ -83,22 +88,36 @@ async def process_job(job: Any, job_token: str) -> None:  # noqa: ARG001
 
     await asyncio.to_thread(post_score_complete, payload)
 
-    logger.info("scoring_complete job_id=%s package_id=%s new_sps=%d tier=%s", job.id, package_id, new_sps, tier)
+    logger.info("scoring_complete job_id=%s package_id=%s new_sps=%d tier=%s", job_id, package_id, new_sps, tier)
+
+
+async def consume_loop(client: aioredis.Redis, stop_event: asyncio.Event) -> None:
+    logger.info("consumer_ready queue=%s brpop_timeout=%ss", QUEUE_KEY, BRPOP_TIMEOUT)
+    while not stop_event.is_set():
+        try:
+            result = await client.brpop(QUEUE_KEY, timeout=BRPOP_TIMEOUT)
+            if result is None:
+                # Timeout — no job available, loop back
+                continue
+            _, raw = result
+            envelope = json.loads(raw)
+            job_id: str = envelope.get("id", "unknown")
+            data: dict[str, Any] = envelope.get("data", {})
+            await process_job(job_id, data)
+        except asyncio.CancelledError:
+            break
+        except Exception as err:
+            logger.error("job_failed error=%s", err)
+            await asyncio.sleep(1)
 
 
 async def main() -> None:
     _start_health_server()
     initialize_scoring()
-    logger.info("intelligence_worker_starting queue=%s redis=%s", QUEUE_NAME, config.REDIS_URL)
+    logger.info("intelligence_worker_starting queue=%s redis=%s", QUEUE_KEY, config.REDIS_URL)
 
-    worker = Worker(QUEUE_NAME, process_job, {
-        "connection": config.REDIS_URL,
-        "concurrency": 1,
-        # Stalled check runs every 5 minutes instead of every 30s (default).
-        # At concurrency=1 with instant jobs, stalls are irrelevant — this cuts
-        # ~2,800 idle Redis commands/day down to ~240.
-        "stalledInterval": 300_000,
-    })
+    # Single connection — one BRPOP/30s when idle
+    client = aioredis.from_url(config.REDIS_URL, decode_responses=True)
 
     stop_event = asyncio.Event()
     loop = asyncio.get_running_loop()
@@ -113,9 +132,8 @@ async def main() -> None:
         for sig in (signal.SIGINT, signal.SIGTERM):
             loop.add_signal_handler(sig, stop_event.set)
 
-    logger.info("intelligence_worker_ready queue=%s", QUEUE_NAME)
-    await stop_event.wait()
-    await worker.close()
+    await consume_loop(client, stop_event)
+    await client.aclose()
     logger.info("intelligence_worker_stopped")
 
 
