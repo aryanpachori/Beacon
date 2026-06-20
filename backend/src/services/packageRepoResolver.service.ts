@@ -1,7 +1,6 @@
 import axios from "axios";
 import { Ecosystem } from "@prisma/client";
 import { prisma } from "../db/client";
-import { redis } from "../lib/redis";
 
 export type ResolvedPackageRepo = {
   owner: string;
@@ -10,12 +9,6 @@ export type ResolvedPackageRepo = {
   homepage: string | null;
   source: "database" | "registry" | "github_sponsor";
 };
-
-const CACHE_TTL_SECONDS = 86400 * 7; // 7 days
-
-function cacheKey(ecosystem: string, name: string): string {
-  return `pkg-repo:${ecosystem}:${name.toLowerCase()}`;
-}
 
 /** Parse owner/repo from common GitHub URL shapes and npm `github:` shorthand. */
 export function parseGithubRepoFromUrl(
@@ -236,43 +229,17 @@ async function resolveRubyGems(
   return null;
 }
 
-async function readCached(
-  ecosystem: string,
-  name: string,
-): Promise<ResolvedPackageRepo | null> {
-  const raw = await redis.get(cacheKey(ecosystem, name));
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw) as ResolvedPackageRepo;
-  } catch {
-    return null;
-  }
-}
-
-async function writeCache(
-  ecosystem: string,
-  name: string,
-  resolved: ResolvedPackageRepo,
-): Promise<void> {
-  await redis.setex(
-    cacheKey(ecosystem, name),
-    CACHE_TTL_SECONDS,
-    JSON.stringify(resolved),
-  );
-}
-
 /**
  * Resolve the upstream GitHub repository for a dependency package.
- * Uses cached DB fields, Redis, then public registry metadata.
+ * Cache: Postgres `package.githubOwner + githubRepoName` (set once, reused on subsequent scans).
+ * Zero Redis commands.
  */
 export async function resolvePackageGithubRepo(
   packageId: string,
   name: string,
   ecosystem: string,
 ): Promise<ResolvedPackageRepo | null> {
-  const cached = await readCached(ecosystem, name);
-  if (cached) return cached;
-
+  // 1. Postgres cache — already resolved on a previous scan
   const existing = await prisma.package.findUnique({
     where: { id: packageId },
     select: {
@@ -284,7 +251,7 @@ export async function resolvePackageGithubRepo(
   });
 
   if (existing?.githubOwner && existing.githubRepoName) {
-    const fromDb = toResolved(
+    return toResolved(
       existing.githubOwner,
       existing.githubRepoName,
       existing.githubRepoUrl ??
@@ -292,10 +259,9 @@ export async function resolvePackageGithubRepo(
       existing.homepageUrl,
       "database",
     );
-    await writeCache(ecosystem, name, fromDb);
-    return fromDb;
   }
 
+  // 2. Resolve from registry + persist to Postgres for next scan
   let resolved: ResolvedPackageRepo | null = null;
   try {
     resolved = await fromRegistry(ecosystem, name);
@@ -312,7 +278,6 @@ export async function resolvePackageGithubRepo(
   }
 
   if (resolved) {
-    await writeCache(ecosystem, name, resolved);
     await prisma.package.update({
       where: { id: packageId },
       data: {

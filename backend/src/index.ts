@@ -7,7 +7,6 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 import { prisma } from './db/client'
-import { connectRedis } from './lib/redis'
 import { authRouter } from './routes/auth.routes'
 import { githubRouter } from './routes/github.routes'
 import { dashboardRouter } from './routes/dashboard.routes'
@@ -26,7 +25,6 @@ import { maintainersRouter } from './routes/maintainers.routes'
 import { errorMiddleware } from './middleware/error.middleware'
 import { startWorkers } from './workers/signalCollect.worker'
 import { startCrons } from './cron'
-import { signalCollectQueue, intelligenceQueue } from './lib/queue'
 
 const app = express()
 
@@ -86,18 +84,6 @@ app.use(errorMiddleware)
 const PORT = process.env.PORT || 4000
 
 async function main() {
-  await connectRedis()
-
-  // Drain stale BullMQ jobs when DB has been wiped (no packages = leftover jobs reference dead IDs)
-  const packageCount = await prisma.package.count()
-  if (packageCount === 0) {
-    await Promise.allSettled([
-      signalCollectQueue.obliterate({ force: true }),
-      intelligenceQueue.obliterate({ force: true }),
-    ])
-    console.log('Queues drained — fresh DB detected')
-  }
-
   app.listen(PORT, () => {
     console.log(`Beacon API running on port ${PORT}`)
     startWorkers()

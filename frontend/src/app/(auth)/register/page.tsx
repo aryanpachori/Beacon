@@ -117,7 +117,7 @@ function RegisterForm() {
         }),
       })
       setAuthTokens(data.accessToken, data.refreshToken)
-      router.push(redirectTo || '/dashboard')
+      router.push(redirectTo || '/onboarding')
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message)

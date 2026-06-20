@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Ecosystem, Tier } from '@prisma/client'
 import { prisma } from '../db/client'
-import { signalCollectQueue } from '../lib/queue'
+import { enqueueScan } from '../lib/scanQueue'
 
 // OSV.dev ecosystem names that map to our Ecosystem enum
 const OSV_ECOSYSTEM: Partial<Record<Ecosystem, string>> = {
@@ -92,17 +92,13 @@ export async function runAdvisoryCheck(): Promise<void> {
     const vulns = await fetchOsvVulns(pkg.name, pkg.ecosystem)
     const cveId = vulns.length > 0 ? pickCveId(vulns) : undefined
 
-    await signalCollectQueue.add(
-      'advisory-check',
-      {
-        installation_id: Number(installation.installationId),
-        installationDbId: link.repo.installationId,
-        triggered_by: 'advisory',
-        packageId: pkg.id,
-        ...(cveId ? { cveId } : {}),
-      },
-      { priority: 15 }
-    )
+    enqueueScan({
+      installation_id: Number(installation.installationId),
+      installationDbId: link.repo.installationId,
+      triggered_by: 'advisory',
+      packageId: pkg.id,
+      ...(cveId ? { cveId } : {}),
+    })
     queued++
   }
 

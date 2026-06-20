@@ -21,7 +21,7 @@ function InstallCopyRow({ packageName }: { packageName: string }) {
   const { copy, copied } = useCopyToClipboard()
   const cmd = `npm install ${packageName}`
   return (
-    <div className="mt-2 flex items-center gap-2 rounded-md bg-dl-nav/40 px-2.5 py-1.5 font-mono text-[11px] text-dl-forest">
+    <div className="mt-2 flex items-center gap-2 rounded-md bg-dl-surface px-2.5 py-1.5 font-mono text-[11px] text-dl-forest">
       <span className="flex-1">{cmd}</span>
       <button
         onClick={() => copy(cmd)}

@@ -3,7 +3,7 @@ import crypto from 'crypto'
 import { Plan, PlanStatus } from '@prisma/client'
 import { getPlanLimits } from '../lib/planLimits'
 import { trimSelectedReposForUser } from '../services/selectedReposTrim.service'
-import { signalCollectQueue } from '../lib/queue'
+import { enqueueScan } from '../lib/scanQueue'
 import { isManifestPath } from '../lib/github'
 import { prisma } from '../db/client'
 
@@ -70,7 +70,7 @@ webhooksRouter.post('/github', async (req: Request, res: Response, next: NextFun
             return res.status(200).json({ ok: true })
           }
 
-          await signalCollectQueue.add('scan', {
+          enqueueScan({
             installation_id: installationId,
             installationDbId: installation?.id,
             repos: [{ owner, repo, manifestPaths: [...affectedPaths] }],

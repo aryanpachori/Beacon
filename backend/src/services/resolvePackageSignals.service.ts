@@ -1,5 +1,4 @@
 import { prisma } from '../db/client'
-import { redis } from '../lib/redis'
 import type { NormalizedSignals } from './signals.service'
 
 export type SignalFacts = {
@@ -145,14 +144,7 @@ export async function resolvePackageSignals(
     if (parsed) return parsed
   }
 
-  // 2. Redis cache (warm from previous API reads)
-  const cached = await redis.get(`signals:${packageId}`)
-  if (cached) {
-    const parsed = parseCachedPayload(cached)
-    if (parsed) return parsed
-  }
-
-  // 3. Fall back to history rows
+  // 2. Fall back to history rows
   const rows = await prisma.packageSignal.findMany({
     where: { packageId },
     orderBy: { capturedAt: 'desc' },
@@ -189,28 +181,9 @@ export async function resolveSignalsBatch(
 
   if (missingIds.length === 0) return result
 
-  // 2. Redis cache for any packages that don't have a snapshot yet
-  const keys = missingIds.map((id) => `signals:${id}`)
-  const cached = await redis.mget(...keys)
-
-  const stillMissing: string[] = []
-  missingIds.forEach((id, index) => {
-    const raw = cached[index]
-    if (raw) {
-      const parsed = parseCachedPayload(raw)
-      if (parsed) {
-        result.set(id, parsed)
-        return
-      }
-    }
-    stillMissing.push(id)
-  })
-
-  if (stillMissing.length === 0) return result
-
-  // 3. Last resort: history rows
+  // 2. History rows for packages without a snapshot
   const rows = await prisma.packageSignal.findMany({
-    where: { packageId: { in: stillMissing } },
+    where: { packageId: { in: missingIds } },
     orderBy: { capturedAt: 'desc' },
     select: { packageId: true, signalType: true, value: true, rawData: true },
   })
@@ -222,7 +195,7 @@ export async function resolveSignalsBatch(
     byPackage.set(row.packageId, list)
   }
 
-  for (const id of stillMissing) {
+  for (const id of missingIds) {
     const pkgRows = byPackage.get(id) ?? []
     const resolved = rowsToResolved(pkgRows)
     if (resolved) result.set(id, resolved)

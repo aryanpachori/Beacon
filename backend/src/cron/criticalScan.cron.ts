@@ -1,6 +1,6 @@
 import { Tier } from '@prisma/client'
 import { prisma } from '../db/client'
-import { signalCollectQueue } from '../lib/queue'
+import { enqueueScan } from '../lib/scanQueue'
 
 export async function runCriticalScan(): Promise<void> {
   console.log('Critical tier rescan starting...')
@@ -48,16 +48,12 @@ export async function runCriticalScan(): Promise<void> {
   }
 
   for (const { installationDbId, installationGithubId, repos } of byInstallation.values()) {
-    await signalCollectQueue.add(
-      'critical-scan',
-      {
-        installation_id: installationGithubId,
-        installationDbId,
-        triggered_by: 'cron-critical',
-        repos,                              // only the repos that actually have critical packages
-      },
-      { priority: 5 }
-    )
+    enqueueScan({
+      installation_id: installationGithubId,
+      installationDbId,
+      triggered_by: 'cron-critical',
+      repos,
+    })
   }
 
   console.log(`Queued ${byInstallation.size} installations (${rows.length} repos) for critical scan`)

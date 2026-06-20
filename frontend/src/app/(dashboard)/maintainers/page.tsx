@@ -89,7 +89,7 @@ export default function MaintainersPage() {
             onClick={() => setFilter(f)}
             className={`rounded-xl px-3.5 py-1.5 text-[12px] font-semibold transition-all capitalize ${
               filter === f
-                ? 'bg-dl-navy text-dl-bg shadow-sm'
+                ? 'bg-dl-navy text-dl-bg shadow-sm dark:bg-dl-blue dark:text-white'
                 : 'bg-dl-bg border border-dl-border text-dl-muted hover:text-dl-text'
             }`}
           >

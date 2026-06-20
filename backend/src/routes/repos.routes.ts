@@ -8,7 +8,7 @@ import {
   monitoredRepoWhere,
   parseSelectedRepoIds,
 } from '../services/selectedRepos.service'
-import { SignalCollectJobName, signalCollectQueue } from '../lib/queue'
+import { enqueueScan } from '../lib/scanQueue'
 import { ScanStatus } from '@prisma/client'
 import { notifyScanProgress } from '../services/scanProgress.service'
 
@@ -151,17 +151,13 @@ reposRouter.post('/rescan', async (req: AuthRequest, res, next) => {
       },
     })
 
-    await signalCollectQueue.add(
-      SignalCollectJobName.SCAN,
-      {
-        installation_id: Number(installation.installationId),
-        installationDbId: ctx.installation.id,
-        userId: req.user!.userId,
-        repos: repos.map((r) => ({ owner: r.org, repo: r.name })),
-        triggered_by: 'manual',
-      },
-      { attempts: 1 }
-    )
+    enqueueScan({
+      installation_id: Number(installation.installationId),
+      installationDbId: ctx.installation.id,
+      userId: req.user!.userId,
+      repos: repos.map((r) => ({ owner: r.org, repo: r.name })),
+      triggered_by: 'manual',
+    })
 
     await notifyScanProgress(ctx.installation.id)
     res.json({ success: true })

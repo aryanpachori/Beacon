@@ -110,7 +110,7 @@ export default function ReposPage() {
 
                 <button
                   type="button"
-                  className="flex w-full items-center justify-center gap-2.5 rounded-xl bg-dl-navy py-3 text-[13px] font-semibold text-dl-bg transition-all hover:opacity-90 disabled:opacity-60"
+                  className="flex w-full items-center justify-center gap-2.5 rounded-xl bg-dl-navy text-dl-bg dark:bg-dl-blue dark:text-white py-3 text-[13px] font-semibold transition-all hover:opacity-90 disabled:opacity-60"
                   disabled={installing}
                   onClick={handleInstallGithub}
                   style={{ boxShadow: '0 2px 8px rgba(30,42,60,0.25)' }}

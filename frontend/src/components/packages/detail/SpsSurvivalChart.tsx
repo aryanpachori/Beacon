@@ -37,7 +37,7 @@ export function SpsSurvivalChart({ pkg }: SpsSurvivalChartProps) {
     chartData.find(d => d.dayIndex === dayIndex)?.date ?? ''
 
   return (
-    <div className="dash-card relative p-5">
+    <div className="dash-card relative p-5" style={{ border: 'none', background: 'var(--dl-surface)' }}>
       <p className="dash-section-label mb-4">90-day SPS survival curve</p>
       <ResponsiveContainer width="100%" height={220}>
         <LineChart data={chartData} margin={{ top: 8, right: 8, bottom: 4, left: 0 }}>

@@ -1,6 +1,6 @@
-import { Worker, Job } from 'bullmq'
 import { ScanStatus } from '@prisma/client'
-import { queueConnection, Queues, SignalCollectJobData, toIntelligenceSignals } from '../lib/queue'
+import { SignalCollectJobData, toIntelligenceSignals } from '../lib/queue'
+import { registerScanProcessor } from '../lib/scanQueue'
 import { enqueueIntelligenceScore } from '../services/intelligenceEnqueue.service'
 import { prisma } from '../db/client'
 import {
@@ -18,43 +18,19 @@ import { bumpScanProgress, notifyScanProgress } from '../services/scanProgress.s
 import { markScanFailed } from '../services/githubInstallation.service'
 
 const MANIFEST_CONCURRENCY = 20
-/** Full-repo scans can run many minutes (GitHub + DB). Default BullMQ lock is 30s → false stalls. */
-const SCAN_LOCK_MS = 20 * 60 * 1000
 
 export function startWorkers(): void {
-  const worker = new Worker<SignalCollectJobData>(
-    Queues.SIGNAL_COLLECT,
-    async (job: Job<SignalCollectJobData>) => {
-      await processScanJob(job)
-    },
-    {
-      connection: queueConnection,
-      concurrency: 1,
-      lockDuration: SCAN_LOCK_MS,
-      stalledInterval: 60_000,
-      maxStalledCount: 5,
-    }
-  )
-
-  worker.on('failed', async (job, err) => {
-    console.error(`signal-collect job ${job?.id} failed:`, err.message)
-    const installationDbId = job?.data.installationDbId
-    if (installationDbId) {
-      await markScanFailed(installationDbId)
-    }
-  })
-
-  console.log('Signal collect worker started')
+  registerScanProcessor(processScanJob)
+  console.log('Signal collect worker started (in-process, 0 Redis)')
 }
 
-async function processScanJob(job: Job<SignalCollectJobData>): Promise<void> {
-  const data = job.data
+export async function processScanJob(data: SignalCollectJobData): Promise<void> {
   const { installation_id, installationDbId } = data
 
   console.log(
     JSON.stringify({
       event: 'signal_collect_job_started',
-      queue: Queues.SIGNAL_COLLECT,
+      queue: 'signal-collect',
       installationGithubId: installation_id,
       installationDbId,
       repoCount: data.repos?.length ?? 0,
@@ -178,7 +154,6 @@ async function processScanJob(job: Job<SignalCollectJobData>): Promise<void> {
   }))
 
   const totalPackages = packageRecords.length
-  await job.updateProgress({ phase: 'upserted', total: totalPackages, scanned: 0 })
 
   const chunks = chunkArray(packageRecords, MANIFEST_CONCURRENCY)
   let scannedSoFar = 0
@@ -276,11 +251,6 @@ async function processScanJob(job: Job<SignalCollectJobData>): Promise<void> {
       })
     )
     scannedSoFar += chunk.length
-    await job.updateProgress({
-      phase: 'scanning',
-      total: totalPackages,
-      scanned: Math.min(scannedSoFar, totalPackages),
-    })
   }
 
   const afterScan = await prisma.githubInstallation.findUnique({

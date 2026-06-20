@@ -179,7 +179,7 @@ export default function PackagesPage() {
                   onClick={() => setFilter(t.value)}
                   className={`flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${
                     filter === t.value
-                      ? 'bg-dl-navy text-dl-bg'
+                      ? 'bg-dl-navy text-dl-bg dark:bg-dl-blue dark:text-white'
                       : 'border border-dl-border bg-dl-bg text-dl-muted hover:text-dl-text'
                   }`}
                 >
@@ -202,7 +202,7 @@ export default function PackagesPage() {
                   placeholder="Search packages…"
                   value={search}
                   onChange={e => setSearch(e.target.value)}
-                  className="h-8 w-[180px] rounded-xl border border-dl-border bg-dl-bg pl-8 pr-3 text-[12px] text-dl-navy placeholder:text-dl-border outline-none transition-[width] focus:border-dl-blue/40 focus:ring-2 focus:ring-dl-blue/10 focus:w-[240px]"
+                  className="h-8 w-[180px] rounded-xl border border-dl-border bg-dl-bg pl-8 pr-3 text-[12px] text-dl-text placeholder:text-dl-muted outline-none transition-[width] focus:border-dl-blue/40 focus:ring-2 focus:ring-dl-blue/10 focus:w-[240px]"
                 />
               </div>
 
@@ -225,13 +225,13 @@ export default function PackagesPage() {
               <div className="flex overflow-hidden rounded-xl border border-dl-border">
                 <button
                   onClick={() => setView('list')}
-                  className={`flex h-8 w-8 items-center justify-center transition-colors ${view === 'list' ? 'bg-dl-navy text-dl-bg' : 'bg-dl-bg text-dl-muted hover:bg-dl-surface'}`}
+                  className={`flex h-8 w-8 items-center justify-center transition-colors ${view === 'list' ? 'bg-dl-navy text-dl-bg dark:bg-dl-blue dark:text-white' : 'bg-dl-bg text-dl-muted hover:bg-dl-surface'}`}
                 >
                   <LayoutList className="h-3.5 w-3.5" />
                 </button>
                 <button
                   onClick={() => setView('grid')}
-                  className={`flex h-8 w-8 items-center justify-center transition-colors ${view === 'grid' ? 'bg-dl-navy text-dl-bg' : 'bg-dl-bg text-dl-muted hover:bg-dl-surface'}`}
+                  className={`flex h-8 w-8 items-center justify-center transition-colors ${view === 'grid' ? 'bg-dl-navy text-dl-bg dark:bg-dl-blue dark:text-white' : 'bg-dl-bg text-dl-muted hover:bg-dl-surface'}`}
                 >
                   <LayoutGrid className="h-3.5 w-3.5" />
                 </button>

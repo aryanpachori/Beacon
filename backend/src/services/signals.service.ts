@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { Octokit } from '@octokit/rest'
-import { redis } from '../lib/redis'
 import type { MaintainerSnapshot, SignalFacts } from './resolvePackageSignals.service'
 
 const DEPRECATED_SECURITY_SCORE = 10
@@ -342,31 +341,6 @@ function rawValueForSignal(
   }
 }
 
-export async function cacheSignals(
-  packageId: string,
-  collected: CollectedPackageSignals
-): Promise<void> {
-  const key = `signals:${packageId}`
-  const ttlSeconds = 21600
-  const payload = {
-    ...collected.normalized,
-    facts: collected.facts,
-    maintainers: collected.maintainers,
-  }
-  await redis.setex(key, ttlSeconds, JSON.stringify(payload))
-
-  console.log(
-    JSON.stringify({
-      event: 'signals_cached_redis',
-      key,
-      ttlSeconds,
-      packageId,
-      signals: collected.normalized,
-      facts: collected.facts,
-      timestamp: new Date().toISOString(),
-    })
-  )
-}
 
 export { rawValueForSignal }
 

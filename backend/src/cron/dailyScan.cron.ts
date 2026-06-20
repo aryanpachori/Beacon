@@ -1,5 +1,5 @@
 import { prisma } from '../db/client'
-import { signalCollectQueue } from '../lib/queue'
+import { enqueueScan } from '../lib/scanQueue'
 import { parseSelectedRepoIds } from '../services/selectedRepos.service'
 
 export async function runDailyScan(): Promise<void> {
@@ -21,16 +21,12 @@ export async function runDailyScan(): Promise<void> {
     })
     if (repoRows.length === 0) continue
 
-    await signalCollectQueue.add(
-      'daily-scan',
-      {
-        installation_id: Number(installation.installationId),
-        installationDbId: installation.id,
-        triggered_by: 'cron',
-        repos: repoRows.map((r) => ({ owner: r.org, repo: r.name })),
-      },
-      { priority: 10 }
-    )
+    enqueueScan({
+      installation_id: Number(installation.installationId),
+      installationDbId: installation.id,
+      triggered_by: 'cron',
+      repos: repoRows.map((r) => ({ owner: r.org, repo: r.name })),
+    })
     queued++
   }
 
