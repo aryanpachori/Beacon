@@ -482,7 +482,7 @@ export function InsightsDashboard() {
                   tick={{ fontSize: 10, fill: "var(--dl-muted)" }}
                   allowDecimals={false}
                 />
-                <Tooltip content={<ChartTooltip />} />
+                <Tooltip content={<ChartTooltip />} cursor={{ fill: "var(--dl-blue-pale)", fillOpacity: 0.5 }} />
                 <Bar dataKey="count" radius={[4, 4, 0, 0]}>
                   {analytics?.spsHistogram.map((entry, i) => {
                     const colors = [
