@@ -329,7 +329,7 @@ export function NavSidebar({
         isCollapsed ? 'md:px-2' : ''
       )}>
         <a
-          href="mailto:support@beacon.com"
+          href="mailto:support@beaconapp.dev"
           title={isCollapsed ? 'Help & Support' : undefined}
           className={cn(
             'flex items-center gap-2.5 rounded-xl py-2 text-[12px] font-medium text-dl-muted hover:bg-dl-surface hover:text-dl-text transition-all duration-150',

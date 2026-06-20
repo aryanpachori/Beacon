@@ -485,7 +485,7 @@ body {
     color: var(--dl-navy);
   }
 
-  .marketing-title   { @apply text-[28px] font-semibold tracking-tight text-dl-navy md:text-[32px]; }
+  .marketing-title   { @apply text-[28px] font-semibold tracking-tight text-dl-navy dark:text-white md:text-[32px]; }
   .marketing-subtitle { @apply text-sm leading-relaxed text-dl-muted; }
 
   /* ── Signal / tier bars ── */

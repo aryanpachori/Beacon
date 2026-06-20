@@ -19,7 +19,7 @@ export function PricingCTA() {
           Our team responds within one business day. Or start free and explore on your own.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <a href="mailto:hello@beacon.com" className="btn-secondary">
+          <a href="mailto:hello@beaconapp.dev" className="btn-secondary">
             Talk to sales
           </a>
           <Link href="/register" className="btn-primary">
