@@ -45,8 +45,11 @@ export async function sendOrgDigest(installationId: string, opts?: { force?: boo
   const watchPackages    = allPackages.filter(p => p.tier === Tier.watch).map(toDigestPkg).slice(0, 10)
   const healthyCount     = allPackages.filter(p => p.tier === Tier.healthy).length
 
+  const digestFrequency = integration?.digestFrequency ?? 'daily'
+  const digestEmail = integration?.digestEmail ?? null
+
   const { subject, html } = buildDigestEmail({
-    frequency: integration.digestFrequency === 'weekly' ? 'weekly' : 'daily',
+    frequency: digestFrequency === 'weekly' ? 'weekly' : 'daily',
     accountLogin: installation?.accountLogin ?? 'your organization',
     criticalPackages,
     atRiskPackages,
@@ -57,7 +60,7 @@ export async function sendOrgDigest(installationId: string, opts?: { force?: boo
   })
 
   // Send to the org's configured email + always the founders
-  const to = integration.digestEmail ? [integration.digestEmail, ...FOUNDER_EMAILS] : FOUNDER_EMAILS
+  const to = digestEmail ? [digestEmail, ...FOUNDER_EMAILS] : FOUNDER_EMAILS
   await sendMail({ to, subject, html })
 }
 
