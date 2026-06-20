@@ -237,7 +237,7 @@ export async function processScanJob(data: SignalCollectJobData): Promise<void> 
             }
           )
 
-          await bumpScanProgress(installation.id, 'scanned')
+          await bumpScanProgress(installation.id, 'scanned', dep.name)
         } catch (err) {
           console.error(
             JSON.stringify({

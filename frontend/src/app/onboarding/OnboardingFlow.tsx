@@ -61,7 +61,7 @@ export function OnboardingFlow() {
   const [summaryRepoNames, setSummaryRepoNames] = useState<string[]>([])
   const [summaryPackageCount, setSummaryPackageCount] = useState(0)
 
-  const { progress, activeCount, percent, isComplete, isFailed, error, reconnectStatus } = useScanProgressStream(
+  const { progress, activeCount, percent, currentPackage, isComplete, isFailed, error, reconnectStatus } = useScanProgressStream(
     step === 3
   )
 
@@ -484,8 +484,18 @@ export function OnboardingFlow() {
                       {progress.status === 'scoring' ? 'packages scored' : 'packages scanned'}
                     </p>
                   </div>
-                  <div className="progress-track w-full">
-                    <div className="progress-fill" style={{ width: `${percent}%` }} />
+                  <div className="w-full space-y-1.5">
+                    <div className="progress-track w-full">
+                      <div className="progress-fill" style={{ width: `${percent}%` }} />
+                    </div>
+                    {currentPackage && !isComplete && !isFailed && (
+                      <p className="truncate text-center text-[11px] text-dl-m-muted">
+                        <span className="mr-1 opacity-50">
+                          {progress.status === 'scoring' ? 'Scoring' : 'Scanning'}
+                        </span>
+                        <span className="font-mono font-medium text-dl-teal">{currentPackage}</span>
+                      </p>
+                    )}
                   </div>
                   {reconnectStatus === 'reconnecting' && (
                     <p className="text-xs text-amber-400">

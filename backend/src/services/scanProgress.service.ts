@@ -7,6 +7,7 @@ export interface ScanProgressPayload {
   total: number;
   scanned: number;
   scored: number;
+  currentPackage?: string;
 }
 
 type ScanProgressJson = { total?: number; scanned?: number; scored?: number };
@@ -101,11 +102,13 @@ function publishScanProgress(
 export async function bumpScanProgress(
   installationDbId: string,
   field: ScanProgressField,
+  currentPackage?: string,
 ): Promise<ScanProgressPayload | null> {
   const row = await bumpScanProgressRow(installationDbId, field);
   if (!row) return null;
 
   const payload = formatScanProgress(row.scanStatus, row.scanProgress);
+  if (currentPackage) payload.currentPackage = currentPackage;
   publishScanProgress(row.userId, payload);
   return payload;
 }

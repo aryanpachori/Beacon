@@ -385,6 +385,7 @@ export type ScanProgressEvent = {
   total: number
   scanned: number
   scored: number
+  currentPackage?: string
 }
 
 // ── Analytics ────────────────────────────────────────────────────────────────

@@ -119,6 +119,7 @@ export function useScanProgressStream(enabled: boolean) {
     reconnectStatus,
     activeCount,
     percent,
+    currentPackage: progress.currentPackage,
     isComplete: progress.status === 'complete',
     isFailed: progress.status === 'failed',
     /** True when the stream opened and scan was already done (stale completed scan) */
