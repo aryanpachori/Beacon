@@ -7,9 +7,9 @@ import { useAppData } from '@/context/AppDataContext'
 import { cn } from '@/lib/utils'
 
 const TYPES = [
-  { value: 'general', label: '💬 General' },
-  { value: 'bug',     label: '🐛 Bug Report' },
-  { value: 'feature', label: '✨ Feature Request' },
+  { value: 'general', label: 'General' },
+  { value: 'bug',     label: 'Bug Report' },
+  { value: 'feature', label: 'Feature Request' },
 ]
 
 interface Props {

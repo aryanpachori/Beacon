@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect, useRef } from 'react'
 import {
-  LayoutDashboard, Package, Bell, GitBranch, Settings2,
+  LayoutDashboard, Package, Bell, GitBranch,
   CreditCard, User, LogOut, ChevronLeft, ChevronRight,
   BarChart2, Activity, HelpCircle, Zap, Shield, Users,
   Command, ChevronDown, Sun, Moon, MessageSquarePlus,
@@ -57,7 +57,6 @@ const NAV_SECTIONS = [
       { label: 'Integrations', href: '/integrations', icon: Zap },
       { label: 'Security',     href: '/security',     icon: Shield,    soon: true },
       { label: 'Billing',      href: '/billing',      icon: CreditCard },
-      { label: 'Settings',     href: '/settings',     icon: Settings2, soon: true },
     ],
   },
 ]
@@ -347,7 +346,7 @@ export function NavSidebar({
           </span>
         </button>
         <a
-          href="mailto:support@beaconapp.dev"
+          href="mailto:aryanpachori03@gmail.com"
           title={isCollapsed ? 'Help & Support' : undefined}
           className={cn(
             'flex items-center gap-2.5 rounded-xl py-2 text-[12px] font-medium text-dl-muted hover:bg-dl-surface hover:text-dl-text transition-all duration-150',

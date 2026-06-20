@@ -17,15 +17,18 @@ function verifyInternalSecret(req: { headers: Record<string, string | string[] |
 internalRouter.post('/trigger-digest', async (req, res, next) => {
   try {
     verifyInternalSecret(req)
+    // Respond immediately so Next.js cron route doesn't time out,
+    // then send digests in the background.
+    res.json({ success: true, queued: true })
     const installations = await prisma.githubInstallation.findMany({
       select: { id: true },
     })
     const results = await Promise.allSettled(
-      installations.map(i => sendOrgDigest(i.id))
+      installations.map(i => sendOrgDigest(i.id, { force: true }))
     )
     const sent = results.filter(r => r.status === 'fulfilled').length
     const failed = results.filter(r => r.status === 'rejected').length
-    res.json({ success: true, sent, failed })
+    console.log(`trigger-digest: sent=${sent} failed=${failed}`)
   } catch (err) {
     next(err)
   }

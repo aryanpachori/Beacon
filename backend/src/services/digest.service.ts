@@ -5,13 +5,15 @@ import { buildDigestEmail, buildWelcomeEmail, DigestPackage } from '../lib/email
 
 const DASHBOARD_URL = process.env.FRONTEND_URL ?? 'https://beaconapp.dev'
 
-export async function sendOrgDigest(installationId: string): Promise<void> {
+export async function sendOrgDigest(installationId: string, opts?: { force?: boolean }): Promise<void> {
   const integration = await prisma.orgIntegration.findUnique({
     where: { installationId },
     select: { digestEmail: true, digestFrequency: true, digestEnabled: true },
   })
-  if (!integration?.digestEnabled) return
-  if (integration.digestFrequency === 'never') return
+  if (!opts?.force) {
+    if (!integration?.digestEnabled) return
+    if (integration.digestFrequency === 'never') return
+  }
 
   const installation = await prisma.githubInstallation.findUnique({
     where: { id: installationId },

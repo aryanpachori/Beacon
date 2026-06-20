@@ -7,7 +7,6 @@ import type { Tier } from '@/types'
 import { useAppData } from '@/context/AppDataContext'
 import { AlertCard } from '@/components/alerts/AlertCard'
 import { AlertSummaryCard } from '@/components/alerts/AlertSummaryCard'
-import { AlertTriageCard } from '@/components/alerts/AlertTriageCard'
 import { FilterTabs } from '@/components/ui/FilterTabs'
 import { getUnreadCount, isAlertResolved } from '@/lib/alertsData'
 import Link from 'next/link'
@@ -124,7 +123,6 @@ export default function AlertsPage() {
 
         <aside className="min-w-0 lg:sticky lg:top-6 lg:self-start">
           <AlertSummaryCard alerts={alerts} />
-          <AlertTriageCard />
         </aside>
       </div>
     </div>
