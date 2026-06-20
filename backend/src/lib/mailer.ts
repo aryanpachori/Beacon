@@ -1,9 +1,3 @@
-export const FOUNDER_EMAILS = [
-  'madolkararyan16@gmail.com',
-  'aryanpachori03@gmail.com',
-  'kapoorsamarth7@gmail.com',
-]
-
 export interface MailOptions {
   to: string | string[]
   subject: string
@@ -17,7 +11,7 @@ export async function sendMail(opts: MailOptions): Promise<void> {
   if (!apiKey) throw new Error('RESEND_API_KEY is not set')
 
   const toAddresses = Array.isArray(opts.to) ? opts.to : [opts.to]
-  const allRecipients = [...new Set([...toAddresses, ...FOUNDER_EMAILS])]
+  const allRecipients = [...new Set(toAddresses)]
 
   const from = opts.from ?? 'Beacon Alerts <alerts@beacon.forgefastlabs.com>'
 

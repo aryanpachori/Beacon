@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { AlertType } from '@prisma/client'
-import { sendMail, FOUNDER_EMAILS } from '../lib/mailer'
+import { sendMail } from '../lib/mailer'
 import { buildAlertEmail } from '../lib/emailTemplates'
 
 export interface AlertDispatchParams {
@@ -73,8 +73,8 @@ async function sendAlertEmail(orgEmail: string | null, params: AlertDispatchPara
     signals: params.signals,
   })
 
-  const to = orgEmail ? [orgEmail, ...FOUNDER_EMAILS] : FOUNDER_EMAILS
-  await sendMail({ to, subject, html })
+  if (!orgEmail) return
+  await sendMail({ to: [orgEmail], subject, html })
 }
 
 async function sendSlackAlert(webhookUrl: string, params: AlertDispatchParams) {

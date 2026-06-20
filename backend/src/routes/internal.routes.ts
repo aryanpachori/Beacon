@@ -3,7 +3,13 @@ import { incrementScanScored } from '../services/alert.service'
 import { AppError } from '../middleware/error.middleware'
 import { prisma } from '../db/client'
 import { sendOrgDigest } from '../services/digest.service'
-import { sendMail, FOUNDER_EMAILS } from '../lib/mailer'
+import { sendMail } from '../lib/mailer'
+
+const FOUNDER_EMAILS = [
+  'madolkararyan16@gmail.com',
+  'aryanpachori03@gmail.com',
+  'kapoorsamarth7@gmail.com',
+]
 
 export const internalRouter = Router()
 

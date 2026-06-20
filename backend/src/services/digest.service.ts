@@ -1,9 +1,15 @@
 import { Tier } from '@prisma/client'
 import { prisma, toApiTier } from '../db/client'
-import { sendMail, FOUNDER_EMAILS } from '../lib/mailer'
+import { sendMail } from '../lib/mailer'
 import { buildDigestEmail, buildWelcomeEmail, DigestPackage } from '../lib/emailTemplates'
 
 const DASHBOARD_URL = process.env.FRONTEND_URL ?? 'https://beaconapp.dev'
+
+const FOUNDER_EMAILS = [
+  'madolkararyan16@gmail.com',
+  'aryanpachori03@gmail.com',
+  'kapoorsamarth7@gmail.com',
+]
 
 export async function sendOrgDigest(installationId: string, opts?: { force?: boolean }): Promise<void> {
   const integration = await prisma.orgIntegration.findUnique({
@@ -59,8 +65,7 @@ export async function sendOrgDigest(installationId: string, opts?: { force?: boo
     dashboardUrl: DASHBOARD_URL,
   })
 
-  // Send to the org's configured email + always the founders
-  const to = digestEmail ? [digestEmail, ...FOUNDER_EMAILS] : FOUNDER_EMAILS
+  const to = [...new Set([...(digestEmail ? [digestEmail] : []), ...FOUNDER_EMAILS])]
   await sendMail({ to, subject, html, from: 'Beacon Digest <digest@beacon.forgefastlabs.com>' })
 }
 
@@ -109,5 +114,5 @@ export async function sendPublicDigest(): Promise<void> {
 
 export async function sendWelcomeEmail(email: string): Promise<void> {
   const { subject, html } = buildWelcomeEmail(email)
-  await sendMail({ to: [email, ...FOUNDER_EMAILS], subject, html })
+  await sendMail({ to: [email], subject, html })
 }
