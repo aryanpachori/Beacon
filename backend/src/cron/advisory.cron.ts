@@ -48,17 +48,19 @@ function pickCveId(vulns: OsvVuln[]): string | undefined {
 }
 
 export async function runAdvisoryCheck(): Promise<void> {
-  // Process critical/at_risk packages ordered by how long ago they were last scored
-  // so every package gets a turn, not just the first 20 by insertion order.
+  // Only re-check packages not scored in the last 20 hours (advisory now runs once daily).
+  const twentyHoursAgo = new Date(Date.now() - 20 * 60 * 60 * 1000)
+
   const packages = await prisma.package.findMany({
     where: {
       tier: { in: [Tier.critical, Tier.at_risk] },
+      lastScoredAt: { lt: twentyHoursAgo },
       repoPackages: {
         some: { repo: { installation: { suspendedAt: null } } },
       },
     },
-    orderBy: { lastScoredAt: 'asc' }, // longest-unscored first
-    take: 50,
+    orderBy: { lastScoredAt: 'asc' },
+    take: 20,
     select: {
       id: true,
       name: true,

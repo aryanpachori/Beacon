@@ -1,6 +1,5 @@
 import { AlertType, ScanStatus, AlertSeverity } from "@prisma/client";
 import { prisma, fromApiTier, tierRank, toApiTier } from "../db/client";
-import { redis } from "../lib/redis";
 import { markOnboardingComplete } from "./githubInstallation.service";
 import {
   dispatchChannels,
@@ -80,11 +79,14 @@ export async function checkAndFireAlert(
     return;
   }
 
-  // Dedup all alert types (including recovery) within a 24-hour window.
-  // Without this a package bouncing between tiers fires multiple recovery alerts per day.
-  const dedupKey = `alert:dedup:${alertType}:${params.installationId}:${params.packageId}`;
-  if (await redis.get(dedupKey)) return;
-  await redis.setex(dedupKey, 86400, "1");
+  // Dedup: skip if the same alert type already fired for this package in the last 24h.
+  // Uses Postgres instead of Redis to eliminate 2 Redis commands per package per scan.
+  const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const recentAlert = await prisma.alert.findFirst({
+    where: { packageId: params.packageId, installationId: params.installationId, alertType, createdAt: { gte: oneDayAgo } },
+    select: { id: true },
+  });
+  if (recentAlert) return;
 
   await prisma.alert.create({
     data: {

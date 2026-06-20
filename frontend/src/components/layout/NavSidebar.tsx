@@ -7,11 +7,12 @@ import {
   LayoutDashboard, Package, Bell, GitBranch, Settings2,
   CreditCard, User, LogOut, ChevronLeft, ChevronRight,
   BarChart2, Activity, HelpCircle, Zap, Shield, Users,
-  Command, ChevronDown, Sun, Moon,
+  Command, ChevronDown, Sun, Moon, MessageSquarePlus,
 } from 'lucide-react'
 import { useTheme } from '@/hooks/useTheme'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SiteLogo } from '@/components/layout/SiteLogo'
+import { FeedbackModal } from '@/components/layout/FeedbackModal'
 import { useAppData } from '@/context/AppDataContext'
 import { getUnreadCount } from '@/lib/alertsData'
 import { cn } from '@/lib/utils'
@@ -80,6 +81,7 @@ export function NavSidebar({
 
   const [theme, toggleTheme, themeMounted] = useTheme()
   const [profileOpen, setProfileOpen] = useState(false)
+  const [feedbackOpen, setFeedbackOpen] = useState(false)
   const profileRef = useRef<HTMLDivElement>(null)
 
   const defaultOpenSections = Object.fromEntries(
@@ -323,11 +325,27 @@ export function NavSidebar({
         </div>
       )}
 
-      {/* ── Help link ── */}
+      {/* ── Help + Feedback ── */}
       <div className={cn(
-        'border-t border-dl-border px-3 py-2',
+        'border-t border-dl-border px-3 py-2 flex flex-col gap-0.5',
         isCollapsed ? 'md:px-2' : ''
       )}>
+        <button
+          type="button"
+          onClick={() => setFeedbackOpen(true)}
+          title={isCollapsed ? 'Share Feedback' : undefined}
+          className={cn(
+            'flex items-center gap-2.5 rounded-xl py-2 text-[12px] font-medium text-dl-muted hover:bg-dl-surface hover:text-dl-text transition-all duration-150',
+            isCollapsed ? 'md:justify-center md:px-0' : 'px-2.5'
+          )}
+        >
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg">
+            <MessageSquarePlus className="h-3.5 w-3.5" />
+          </div>
+          <span className={cn('transition-all duration-200', isCollapsed ? 'md:hidden' : '')}>
+            Share Feedback
+          </span>
+        </button>
         <a
           href="mailto:support@beacon.com"
           title={isCollapsed ? 'Help & Support' : undefined}
@@ -344,6 +362,7 @@ export function NavSidebar({
           </span>
         </a>
       </div>
+      <FeedbackModal open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
 
       {/* ── Profile ── */}
       <div className={cn(

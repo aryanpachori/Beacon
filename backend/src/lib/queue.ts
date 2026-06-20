@@ -81,22 +81,19 @@ export const queueConnection = {
   maxRetriesPerRequest: null,
 }
 
+// Signal-collect queue — tuned for minimum Redis commands:
+// - attempts:1 (no retry overhead), removeOnComplete/Fail:{count:0} (no job retention scans)
+// Intelligence-score is now inline (no BullMQ queue) — saves ~80 Redis cmds per package.
 export const signalCollectQueue = new Queue<SignalCollectJobData>(Queues.SIGNAL_COLLECT, {
   connection: queueConnection,
   defaultJobOptions: {
-    attempts: 3,
-    backoff: { type: 'exponential', delay: 5000 },
-    removeOnComplete: { count: 5 },
-    removeOnFail: { count: 20 },
+    attempts: 1,
+    removeOnComplete: { count: 0 },
+    removeOnFail: { count: 0 },
   },
 })
 
+// Kept for obliterate() calls during DB reset — not used for enqueuing.
 export const intelligenceQueue = new Queue<IntelligenceScoreJobData>(Queues.INTELLIGENCE_SCORE, {
   connection: queueConnection,
-  defaultJobOptions: {
-    attempts: 3,
-    backoff: { type: 'exponential', delay: 3000 },
-    removeOnComplete: { count: 5 },
-    removeOnFail: { count: 20 },
-  },
 })

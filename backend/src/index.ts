@@ -25,7 +25,6 @@ import { activityRouter } from './routes/activity.routes'
 import { maintainersRouter } from './routes/maintainers.routes'
 import { errorMiddleware } from './middleware/error.middleware'
 import { startWorkers } from './workers/signalCollect.worker'
-import { startIntelligenceWorker } from './workers/intelligenceScore.worker'
 import { startCrons } from './cron'
 import { signalCollectQueue, intelligenceQueue } from './lib/queue'
 
@@ -102,11 +101,6 @@ async function main() {
   app.listen(PORT, () => {
     console.log(`Beacon API running on port ${PORT}`)
     startWorkers()
-    if (process.env.ENABLE_NODE_INTELLIGENCE_WORKER === 'true') {
-      startIntelligenceWorker()
-    } else {
-      console.log('Node intelligence worker disabled — use py-intelligence/ for scoring')
-    }
     startCrons()
   })
 }

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Mail } from 'lucide-react'
+import { Mail, MessageSquarePlus, Send, CheckCircle2 } from 'lucide-react'
 
 
 
@@ -51,6 +51,104 @@ function FooterColumn({ title, links }: { title: string; links: { label: string;
           </li>
         ))}
       </ul>
+    </div>
+  )
+}
+
+const FEEDBACK_TYPES = [
+  { value: 'general', label: '💬 General' },
+  { value: 'bug',     label: '🐛 Bug' },
+  { value: 'feature', label: '✨ Feature' },
+]
+
+function FooterFeedback() {
+  const [type, setType] = useState('general')
+  const [message, setMessage] = useState('')
+  const [email, setEmail] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [sent, setSent] = useState(false)
+  const [error, setError] = useState('')
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!message.trim()) return
+    setLoading(true)
+    setError('')
+    try {
+      const res = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message, type, email }),
+      })
+      if (!res.ok) throw new Error('Failed')
+      setSent(true)
+      setMessage('')
+      setEmail('')
+    } catch {
+      setError('Failed to send. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="rounded-xl border border-white/10 bg-white/[0.03] p-6">
+      <div className="flex items-center gap-2.5 mb-2">
+        <MessageSquarePlus className="h-4 w-4 text-dl-teal" />
+        <p className="text-[15px] font-medium text-white">Share Feedback</p>
+      </div>
+      <p className="text-[13px] text-white/60 mb-4">
+        Bug, idea, or anything else — we read every message.
+      </p>
+      {sent ? (
+        <div className="flex items-center gap-2 text-dl-teal">
+          <CheckCircle2 className="h-4 w-4" />
+          <p className="text-sm font-medium">Thanks! We&apos;ll look into it.</p>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="flex flex-col gap-2.5">
+          <div className="flex gap-2">
+            {FEEDBACK_TYPES.map(t => (
+              <button
+                key={t.value}
+                type="button"
+                onClick={() => setType(t.value)}
+                className={`flex-1 rounded-lg border px-2 py-1.5 text-[11px] font-semibold transition-colors ${
+                  type === t.value
+                    ? 'border-dl-teal/60 bg-dl-teal/10 text-dl-teal'
+                    : 'border-white/10 bg-white/[0.03] text-white/50 hover:border-white/20'
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+          <input
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            placeholder="your@email.com (optional)"
+            className="rounded-lg border border-white/15 bg-white/[0.04] px-3.5 py-2 text-[13px] text-white placeholder:text-white/35 outline-none focus:border-dl-teal/50"
+          />
+          <textarea
+            value={message}
+            onChange={e => setMessage(e.target.value)}
+            placeholder="Tell us what's on your mind..."
+            rows={3}
+            required
+            className="resize-none rounded-lg border border-white/15 bg-white/[0.04] px-3.5 py-2.5 text-[13px] text-white placeholder:text-white/35 outline-none focus:border-dl-teal/50"
+          />
+          {error && <p className="text-[11px] text-red-400">{error}</p>}
+          <button
+            type="submit"
+            disabled={loading || !message.trim()}
+            className="flex items-center justify-center gap-2 rounded-lg bg-dl-teal px-5 py-2.5 text-[13px] font-medium text-white transition-all hover:opacity-90 disabled:opacity-50"
+          >
+            <Send className="h-3.5 w-3.5" />
+            {loading ? 'Sending…' : 'Send feedback'}
+          </button>
+        </form>
+      )}
     </div>
   )
 }
@@ -104,16 +202,17 @@ export function Footer() {
   return (
     <footer className="bg-dl-nav">
       <div className="mx-auto max-w-[1200px] px-6 pb-6 pt-10">
-        {/* Newsletter Signup Row */}
-        <div className="mb-8">
+        {/* Newsletter + Feedback Row */}
+        <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2">
           <NewsletterSignup />
+          <FooterFeedback />
         </div>
 
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <Link href="/" className="inline-flex items-center gap-2.5">
               <Image
-                src="/image.png"
+                src="/logo.png"
                 alt=""
                 width={32}
                 height={32}
