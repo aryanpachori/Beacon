@@ -6,7 +6,6 @@ import {
   Users, TrendingDown, GitBranch, Star, BookOpen,
   AlertTriangle, CheckCircle2, Clock,
 } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { fetchMaintainers, type MaintainerOverview } from '@/lib/api'
 import { NotificationBell } from '@/components/dashboard/NotificationBell'
@@ -120,7 +119,12 @@ export default function MaintainersPage() {
           {filtered.map((m, i) => {
             const risk = riskConfig(m.riskLevel)
             const RiskIcon = risk.icon
-            const initials = (m.displayName || m.login).slice(0, 2).toUpperCase()
+            const initials = (m.displayName || m.login)
+              .split(/\s+/)
+              .map((p) => p[0])
+              .join('')
+              .slice(0, 2)
+              .toUpperCase()
 
             return (
               <motion.div
@@ -132,14 +136,10 @@ export default function MaintainersPage() {
               >
                 {/* Header */}
                 <div className="flex items-start gap-3">
-                  {/* Avatar */}
-                  {m.avatarUrl ? (
-                    <Image src={m.avatarUrl} alt={m.displayName} width={40} height={40} className="h-10 w-10 rounded-full border border-dl-border" />
-                  ) : (
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#2f7eda] to-[#1a5fb4] text-[12px] font-bold text-white">
-                      {initials}
-                    </div>
-                  )}
+                  {/* Avatar (Initials) */}
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#2f7eda] to-[#1a5fb4] text-[12px] font-bold text-white shadow-sm">
+                    {initials}
+                  </div>
                   <div className="flex-1 min-w-0">
                     <p className="truncate text-[14px] font-bold text-dl-navy">{m.displayName}</p>
                     <a
