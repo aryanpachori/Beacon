@@ -12,7 +12,7 @@ export class AppError extends Error {
 }
 
 async function notifySlack(req: Request, err: Error, statusCode: number): Promise<void> {
-  const webhook = process.env.FEEDBACK_SLACK_WEBHOOK
+  const webhook = process.env.ALERT_SLACK_WEBHOOK
   if (!webhook) return
   try {
     await fetch(webhook, {
