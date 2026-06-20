@@ -61,7 +61,7 @@ export async function sendOrgDigest(installationId: string, opts?: { force?: boo
 
   // Send to the org's configured email + always the founders
   const to = digestEmail ? [digestEmail, ...FOUNDER_EMAILS] : FOUNDER_EMAILS
-  await sendMail({ to, subject, html })
+  await sendMail({ to, subject, html, from: 'Beacon Digest <digest@beacon.forgefastlabs.com>' })
 }
 
 export async function sendPublicDigest(): Promise<void> {

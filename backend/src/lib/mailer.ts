@@ -1,18 +1,3 @@
-import nodemailer from 'nodemailer'
-
-// Gmail SMTP transporter — uses an app-specific password (not account password).
-// Generate at: https://myaccount.google.com/apppasswords
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true, // SSL
-  auth: {
-    user: process.env.SMTP_USER ?? 'kapoorsamarth7@gmail.com',
-    pass: process.env.SMTP_PASS ?? '',
-  },
-})
-
-// Founders always receive every alert and digest email
 export const FOUNDER_EMAILS = [
   'madolkararyan16@gmail.com',
   'aryanpachori03@gmail.com',
@@ -23,20 +8,36 @@ export interface MailOptions {
   to: string | string[]
   subject: string
   html: string
+  from?: string
   replyTo?: string
 }
 
 export async function sendMail(opts: MailOptions): Promise<void> {
-  const toAddresses = Array.isArray(opts.to) ? opts.to : [opts.to]
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) throw new Error('RESEND_API_KEY is not set')
 
-  // Merge user addresses with founders, dedup
+  const toAddresses = Array.isArray(opts.to) ? opts.to : [opts.to]
   const allRecipients = [...new Set([...toAddresses, ...FOUNDER_EMAILS])]
 
-  await transporter.sendMail({
-    from: `"Beacon" <${process.env.SMTP_USER ?? 'kapoorsamarth7@gmail.com'}>`,
-    to: allRecipients.join(', '),
-    subject: opts.subject,
-    html: opts.html,
-    replyTo: opts.replyTo ?? process.env.SMTP_USER,
+  const from = opts.from ?? 'Beacon Alerts <alerts@beacon.forgefastlabs.com>'
+
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from,
+      to: allRecipients,
+      subject: opts.subject,
+      html: opts.html,
+      ...(opts.replyTo ? { reply_to: opts.replyTo } : {}),
+    }),
   })
+
+  if (!res.ok) {
+    const body = await res.text()
+    throw new Error(`Resend API error ${res.status}: ${body}`)
+  }
 }
