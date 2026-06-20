@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Search, LayoutDashboard, Package, Bell, GitBranch,
-  Settings, CreditCard, Zap, X, ArrowRight, Command,
+  CreditCard, Zap, X, ArrowRight, Command,
 } from 'lucide-react'
 
 interface CommandItem {
@@ -89,11 +89,6 @@ export function CommandPalette() {
       id: 'billing', label: 'Billing & Plan', description: 'Manage subscription',
       icon: CreditCard, action: () => navigate('/billing'),
       group: 'Navigation', keywords: ['plan', 'pro', 'upgrade', 'payment'],
-    },
-    {
-      id: 'settings', label: 'Settings', description: 'Account & preferences',
-      icon: Settings, action: () => navigate('/settings'),
-      group: 'Navigation', keywords: ['profile', 'account'],
     },
   ]
 
