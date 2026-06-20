@@ -41,12 +41,19 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // Guard: new users must complete onboarding before accessing dashboard
+    // Guard: new users must complete onboarding before accessing dashboard.
+    // Once complete the flag is permanent in localStorage (cleared on logout).
+    if (localStorage.getItem("beacon_onboarded") === "1") {
+      setCheckingAuth(false);
+      return;
+    }
+
     fetchOnboardingState()
       .then((state) => {
         if (!state.onboardingComplete) {
           router.replace("/onboarding");
         } else {
+          localStorage.setItem("beacon_onboarded", "1");
           setCheckingAuth(false);
         }
       })

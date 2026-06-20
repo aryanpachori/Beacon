@@ -27,6 +27,8 @@ export const CACHE_TTL = {
   maintainers: 10 * 60 * 1000,
   /** Authenticated user profile */
   user: 10 * 60 * 1000,
+  /** Billing plan — changes only after payment/cancel */
+  billing: 10 * 60 * 1000,
 } as const
 
 export type CacheTtlKey = keyof typeof CACHE_TTL
@@ -87,6 +89,8 @@ export const cacheKey = {
 
   recommendations: (packageId: string) =>
     `${CACHE_PREFIX}recommendations_${packageId}`,
+
+  billing: () => `${CACHE_PREFIX}billing`,
 } as const
 
 // ── Internal types ────────────────────────────────────────────────────────────
@@ -259,6 +263,7 @@ function ttlForKey(key: string): number {
   if (key.includes('_maintainers')) return CACHE_TTL.maintainers
   if (key.includes('_recommendations')) return CACHE_TTL.packageDetail
   if (key.includes('_user'))      return CACHE_TTL.user
+  if (key.includes('_billing'))   return CACHE_TTL.billing
   // Unknown key — expire aggressively (5 min)
   return 5 * 60 * 1000
 }

@@ -75,7 +75,7 @@ export type ApiAlert = {
   alertType?: string;
   signalPills?: string[];
   firedAt: string;
-  slackSent: boolean;
+  slackSent?: boolean;
   resolved: boolean;
 };
 

@@ -168,6 +168,8 @@ export function OnboardingFlow() {
     if (step === 3 && isComplete) {
       if (progress.total > 0) {
         setSummaryPackageCount(progress.total)
+        // Mark onboarding done so dashboard layout never calls /onboarding/state again
+        if (typeof window !== 'undefined') localStorage.setItem('beacon_onboarded', '1')
         setStep(4)
       } else {
         setRepoError(

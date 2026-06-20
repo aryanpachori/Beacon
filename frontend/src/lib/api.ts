@@ -319,7 +319,12 @@ export type BillingPlanResponse = {
 }
 
 export async function fetchBillingPlan(): Promise<BillingPlanResponse> {
-  return apiFetch<BillingPlanResponse>('/api/billing/plan')
+  const key = cacheKey.billing()
+  const cached = getCachedData<BillingPlanResponse>(key, CACHE_TTL.billing)
+  if (cached) return cached
+  const data = await apiFetch<BillingPlanResponse>('/api/billing/plan')
+  setCachedData(key, data)
+  return data
 }
 
 export async function createBillingOrder(amountPaise: number): Promise<{
@@ -338,14 +343,18 @@ export async function verifyBillingPayment(body: {
   razorpay_payment_id: string
   razorpay_signature: string
 }): Promise<{ success: boolean; plan: string }> {
-  return apiFetch('/api/billing/verify-payment', {
+  const result = await apiFetch<{ success: boolean; plan: string }>('/api/billing/verify-payment', {
     method: 'POST',
     body: JSON.stringify(body),
   })
+  invalidateCacheByPrefix(cacheKey.billing())
+  return result
 }
 
 export async function cancelSubscription(): Promise<{ success: boolean; plan: string }> {
-  return apiFetch('/api/billing/cancel', { method: 'POST' })
+  const result = await apiFetch<{ success: boolean; plan: string }>('/api/billing/cancel', { method: 'POST' })
+  invalidateCacheByPrefix(cacheKey.billing())
+  return result
 }
 
 

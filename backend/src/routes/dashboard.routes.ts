@@ -146,8 +146,6 @@ dashboardRouter.get('/', async (req: AuthRequest, res, next) => {
         spsAfter: a.spsAfter,
         tier: toApiTier(a.tierAfter),
         firedAt: a.firedAt,
-        slackSent: a.slackSent,
-        jiraCreated: false,
       })),
       avgSps: spsCount > 0 ? Math.round(spsSum / spsCount) : 0,
       totalPackages,

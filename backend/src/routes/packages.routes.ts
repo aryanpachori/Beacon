@@ -72,18 +72,21 @@ packagesRouter.get("/", async (req: AuthRequest, res, next) => {
 
     const historyByPackage = new Map<string, number[]>();
     if (packageIds.length > 0) {
+      // Order DESC so we always get the most recent scores first,
+      // then reverse per-package so the chart renders oldest→newest.
       const rows = await prisma.packageScore.findMany({
         where: { packageId: { in: packageIds } },
-        orderBy: { scoredAt: "asc" },
+        orderBy: { scoredAt: "desc" },
         select: { packageId: true, sps: true },
         take: pageSize * 30,
       });
       for (const row of rows) {
         const hist = historyByPackage.get(row.packageId) ?? [];
-        hist.push(row.sps);
-        if (hist.length > 30) hist.shift();
+        if (hist.length < 30) hist.push(row.sps);
         historyByPackage.set(row.packageId, hist);
       }
+      // Reverse so each array is chronological (oldest → newest)
+      for (const [k, v] of historyByPackage) historyByPackage.set(k, v.reverse());
     }
 
     const nextCursor = packages.length === pageSize ? packages[packages.length - 1].id : null;
