@@ -78,6 +78,20 @@ function RegisterForm() {
     return ''
   }
 
+  // Auto-fill name + handle from email local part if user hasn't typed them yet
+  function autofillFromEmail(val: string) {
+    const local = val.split('@')[0] ?? ''
+    if (!local) return
+    // Split on dots, underscores, hyphens → capitalize each word → join as full name
+    const parts = local.split(/[._-]/).map(p => p.replace(/\d+/g, '').trim()).filter(Boolean)
+    const suggested = parts.length > 1
+      ? parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ')
+      : local.replace(/\d+/g, '').charAt(0).toUpperCase() + local.replace(/\d+/g, '').slice(1)
+    if (!fullName.trim() && suggested) setFullName(suggested)
+    // Handle: lowercase local part, strip special chars, max 20 chars
+    if (!nickname.trim()) setNickname(local.toLowerCase().replace(/[^a-z0-9._-]/g, '').slice(0, 20))
+  }
+
   const validatePassword = (val: string) => {
     if (!val) return 'Password is required'
     if (val.length < 8) return 'Password must be at least 8 characters'
@@ -225,7 +239,7 @@ function RegisterForm() {
                 setEmail(e.target.value)
                 if (emailTouched) setEmailError(validateEmail(e.target.value))
               }}
-              onBlur={() => { setEmailTouched(true); setEmailError(validateEmail(email)) }}
+              onBlur={() => { setEmailTouched(true); setEmailError(validateEmail(email)); autofillFromEmail(email) }}
               placeholder="you@company.com"
               className={cn(
                 'w-full rounded-xl border bg-dl-bg px-4 py-3 text-[14px] text-dl-navy placeholder:text-dl-muted outline-none transition-all duration-150',
