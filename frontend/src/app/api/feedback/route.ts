@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const SLACK_WEBHOOK = 'https://hooks.slack.com/services/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'
+const SLACK_WEBHOOK = process.env.FEEDBACK_SLACK_WEBHOOK ?? ''
 
 export async function POST(req: NextRequest) {
   try {
+    if (!SLACK_WEBHOOK) return NextResponse.json({ error: 'Feedback not configured' }, { status: 503 })
     const { message, type, email } = await req.json() as { message: string; type: string; email?: string }
     if (!message?.trim()) return NextResponse.json({ error: 'Message required' }, { status: 400 })
 
