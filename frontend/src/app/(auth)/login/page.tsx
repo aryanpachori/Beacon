@@ -94,8 +94,7 @@ function LoginForm() {
         return
       }
 
-      const step = data.user?.onboardingStep ?? 1
-      router.push(step >= 4 ? '/dashboard' : '/onboarding')
+      router.push('/dashboard')
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message)
