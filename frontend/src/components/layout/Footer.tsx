@@ -132,7 +132,22 @@ export function Footer() {
 
         <div className="mt-8 border-t border-white/10 pt-4">
           <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
-            <p className="text-xs text-white/45">© 2026 Beacon. All rights reserved.</p>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+              <p className="text-xs text-white/45">© 2026 Beacon. All rights reserved.</p>
+              <a
+                href="https://www.producthunt.com/products/beacon-23?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-beacon-28"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  alt="Beacon - Know before your dependencies break. | Product Hunt"
+                  src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1176923&theme=dark&t=1781985098931"
+                  width={167}
+                  height={36}
+                  style={{ width: '167px', height: '36px' }}
+                />
+              </a>
+            </div>
             <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
               {[
                 { name: 'Aryan Pachori',   github: 'https://github.com/aryanpachori',   x: 'https://x.com/aryan42116' },
