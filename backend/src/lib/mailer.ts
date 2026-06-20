@@ -4,8 +4,8 @@ import nodemailer from 'nodemailer'
 // Generate at: https://myaccount.google.com/apppasswords
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
-  port: 587,
-  secure: false, // STARTTLS
+  port: 465,
+  secure: true, // SSL
   auth: {
     user: process.env.SMTP_USER ?? 'kapoorsamarth7@gmail.com',
     pass: process.env.SMTP_PASS ?? '',
