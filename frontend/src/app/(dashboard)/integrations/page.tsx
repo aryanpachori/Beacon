@@ -119,11 +119,14 @@ export default function IntegrationsPage() {
     setDigestStatus(null)
     try {
       const res = await fetch('/api/cron/daily-digest', { method: 'POST' })
-      const data = await res.json().catch(() => ({})) as { success?: boolean; sent?: number; failed?: number; error?: string }
-      if (!res.ok || data.error) throw new Error(data.error ?? 'Failed')
+      const data = await res.json().catch(() => ({})) as { success?: boolean; sent?: number; failed?: number; errors?: string[]; error?: string }
+      if (!res.ok) throw new Error(data.error ?? 'Request failed')
+      if ((data.errors?.length ?? 0) > 0) {
+        throw new Error(`Mail failed: ${data.errors!.join('; ')}`)
+      }
       setDigestStatus({
         type: 'success',
-        text: `Digest sent to ${data.sent ?? 1} installation(s).${(data.failed ?? 0) > 0 ? ` (${data.failed} failed)` : ''}`,
+        text: `Digest sent to ${data.sent ?? 0} installation(s).`,
       })
     } catch (err) {
       setDigestStatus({ type: 'error', text: err instanceof Error ? err.message : 'Failed to trigger digest.' })
