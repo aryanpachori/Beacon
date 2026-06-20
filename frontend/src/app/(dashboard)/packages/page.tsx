@@ -15,13 +15,6 @@ import { useDebounce } from '@/hooks/useDebounce'
 type FilterTab = 'all' | Tier
 type SortKey = 'sps_asc' | 'sps_desc' | 'name_asc' | 'updated_desc'
 
-const TIER_FILTERS: { label: string; value: FilterTab; color?: string }[] = [
-  { label: 'All',       value: 'all' },
-  { label: 'Critical',  value: 'critical',  color: '#dc2626' },
-  { label: 'At risk',   value: 'at-risk',   color: '#ea580c' },
-  { label: 'Watch',     value: 'watch',     color: '#ca8a04' },
-  { label: 'Healthy',   value: 'healthy',   color: '#16a34a' },
-]
 
 function avgSps(pkgs: Package[]) {
   const scored = pkgs.filter(p => !p.scoringPending && p.sps > 0)
@@ -134,13 +127,19 @@ export default function PackagesPage() {
         <>
           {/* ── KPI stat strip ── */}
           <div className="mb-4 flex flex-wrap items-center gap-2">
-            {tierCounts.critical > 0 && (
-              <button onClick={() => setFilter(filter === 'critical' ? 'all' : 'critical')}
-                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'critical' ? 'bg-red-500 text-white' : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'}`}>
-                <span className="h-1.5 w-1.5 rounded-full bg-current" />
-                {tierCounts.critical} critical
-              </button>
-            )}
+            <button onClick={() => setFilter('all')}
+              className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${
+                filter === 'all'
+                  ? 'bg-dl-navy text-dl-bg dark:bg-dl-blue dark:text-white shadow-sm'
+                  : 'border border-dl-border bg-dl-bg text-dl-muted hover:text-dl-text'
+              }`}>
+              All
+            </button>
+            <button onClick={() => setFilter(filter === 'critical' ? 'all' : 'critical')}
+              className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'critical' ? 'bg-red-500 text-white' : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'}`}>
+              <span className="h-1.5 w-1.5 rounded-full bg-current" />
+              {tierCounts.critical} critical
+            </button>
             {tierCounts['at-risk'] > 0 && (
               <button onClick={() => setFilter(filter === 'at-risk' ? 'all' : 'at-risk')}
                 className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'at-risk' ? 'bg-orange-500 text-white' : 'bg-orange-500/10 text-orange-500 hover:bg-orange-500/20'}`}>
@@ -170,26 +169,7 @@ export default function PackagesPage() {
           </div>
 
           {/* ── Controls: search + sort + view toggle ── */}
-          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            {/* Filter tabs */}
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5">
-              {TIER_FILTERS.map(t => (
-                <button
-                  key={t.value}
-                  onClick={() => setFilter(t.value)}
-                  className={`flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${
-                    filter === t.value
-                      ? 'bg-dl-navy text-dl-bg dark:bg-dl-blue dark:text-white'
-                      : 'border border-dl-border bg-dl-bg text-dl-muted hover:text-dl-text'
-                  }`}
-                >
-                  {t.color && filter !== t.value && (
-                    <span className="h-1.5 w-1.5 rounded-full" style={{ background: t.color }} />
-                  )}
-                  {t.label}
-                </button>
-              ))}
-            </div>
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
 
             {/* Right controls */}
             <div className="flex items-center gap-2">
