@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     const emoji = type === 'bug' ? '🐛' : type === 'feature' ? '✨' : '💬'
     const typeLabel = type === 'bug' ? 'Bug Report' : type === 'feature' ? 'Feature Request' : 'General Feedback'
 
-    await fetch(SLACK_WEBHOOK, {
+    const slackRes = await fetch(SLACK_WEBHOOK, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -38,6 +38,12 @@ export async function POST(req: NextRequest) {
         ],
       }),
     })
+
+    if (!slackRes.ok) {
+      const body = await slackRes.text()
+      console.error(`Slack feedback webhook failed: ${slackRes.status} ${body}`)
+      return NextResponse.json({ error: `Slack rejected: ${body}` }, { status: 502 })
+    }
 
     return NextResponse.json({ success: true })
   } catch {
