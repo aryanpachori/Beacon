@@ -7,7 +7,6 @@ import { BeforeAfter } from '@/components/landing/BeforeAfter'
 import { HowItWorks } from '@/components/landing/HowItWorks'
 import { FeatureGrid } from '@/components/landing/FeatureGrid'
 import { DashboardPreview } from '@/components/landing/DashboardPreview'
-import { Testimonials } from '@/components/landing/Testimonials'
 import { ComparisonTable } from '@/components/landing/ComparisonTable'
 import { FinalCTA } from '@/components/landing/FinalCTA'
 
@@ -23,7 +22,6 @@ export default function HomePage() {
         <HowItWorks />
         <FeatureGrid />
         <DashboardPreview />
-        <Testimonials />
         <ComparisonTable />
         <FinalCTA />
       </main>
