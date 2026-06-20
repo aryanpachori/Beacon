@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { Sparkles, RefreshCw, AlertCircle } from 'lucide-react'
+import { RefreshCw, AlertCircle } from 'lucide-react'
 import type { AnalyticsData } from '@/lib/api'
 
 interface Props {
@@ -58,14 +58,9 @@ export function AiStackInsightCard({ analytics, critical, atRisk, watch, healthy
   return (
     <div className={`rounded-2xl border p-5 ${borderColor}`}>
       <div className="mb-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-500/15">
-            <Sparkles className="h-3.5 w-3.5 text-indigo-500" />
-          </div>
-          <div>
-            <p className="text-[13px] font-semibold text-dl-navy">AI Stack Analysis</p>
-            <p className="text-[10px] text-dl-muted">Powered by Gemini</p>
-          </div>
+        <div>
+          <p className="text-[13px] font-semibold text-dl-navy">AI Stack Analysis</p>
+          <p className="text-[10px] text-dl-muted">Powered by Gemini</p>
         </div>
         {!loading && (
           <button

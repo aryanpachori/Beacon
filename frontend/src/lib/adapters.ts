@@ -290,7 +290,7 @@ export function adaptAlert(a: ApiAlert): Alert {
     tier: a.tier,
     firedAt: toIsoDate(a.firedAt),
     repos: [],
-    slackSent: a.slackSent,
+    slackSent: a.slackSent ?? false,
     resolved: a.resolved,
     aiReason: a.aiReason ?? undefined,
     signalPills: a.signalPills,
