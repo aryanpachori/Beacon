@@ -315,7 +315,10 @@ export function OnboardingFlow() {
                     ) : (
                       <>
                         Beacon watches your dependencies and predicts abandonment 60–90 days
-                        before it happens. Link your GitHub account to continue.
+                        before it happens.{' '}
+                        {configureUrl
+                          ? 'Link your GitHub account to continue.'
+                          : 'Install the GitHub App to connect your repos.'}
                       </>
                     )}
                   </p>
@@ -331,25 +334,24 @@ export function OnboardingFlow() {
                   >
                     Choose repo to scan →
                   </button>
+                ) : configureUrl ? (
+                  <button
+                    type="button"
+                    onClick={handleLinkGitHub}
+                    disabled={connecting}
+                    className="btn-primary w-full py-2.5 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {connecting ? 'Redirecting…' : 'Link GitHub account'}
+                  </button>
                 ) : (
-                  <>
-                    <button
-                      type="button"
-                      onClick={handleLinkGitHub}
-                      disabled={connecting}
-                      className="btn-primary w-full py-2.5 disabled:cursor-not-allowed disabled:opacity-60"
-                    >
-                      {connecting ? 'Redirecting…' : 'Link GitHub account'}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleInstallApp}
-                      disabled={connecting}
-                      className="text-xs text-dl-m-muted underline"
-                    >
-                      Need to install the app first?
-                    </button>
-                  </>
+                  <button
+                    type="button"
+                    onClick={handleInstallApp}
+                    disabled={connecting}
+                    className="btn-primary w-full py-2.5 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {connecting ? 'Redirecting…' : 'Install Beacon on GitHub'}
+                  </button>
                 )}
 
                 {githubConnected && configureUrl && (
