@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { DashboardShell } from "@/components/layout/DashboardShell";
 import { AppDataProvider } from "@/context/AppDataContext";
-import { isAuthenticated } from "@/lib/api";
+import { isAuthenticated, fetchOnboardingState } from "@/lib/api";
 import { removeExpiredCache } from "@/lib/apiCache";
 
 function DashboardLayoutFallback({ message }: { message: string }) {
@@ -38,9 +38,22 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
           ? "/login"
           : `/login?redirect=${encodeURIComponent(returnTo)}`;
       router.replace(redirectUrl);
-    } else {
-      setCheckingAuth(false);
+      return;
     }
+
+    // Guard: new users must complete onboarding before accessing dashboard
+    fetchOnboardingState()
+      .then((state) => {
+        if (!state.onboardingComplete) {
+          router.replace("/onboarding");
+        } else {
+          setCheckingAuth(false);
+        }
+      })
+      .catch(() => {
+        // If we can't fetch state, let through (avoids locking out users on network error)
+        setCheckingAuth(false);
+      });
   }, [router, pathname, searchParams]);
 
   if (checkingAuth) {
