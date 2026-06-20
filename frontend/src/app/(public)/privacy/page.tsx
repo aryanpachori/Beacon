@@ -13,7 +13,7 @@ export default function PrivacyPage() {
       <main className="section-light">
         <div className="mx-auto max-w-2xl px-6 py-24">
           <h1 className="marketing-title text-[28px] md:text-[32px]">Privacy Policy</h1>
-          <p className="mt-2 text-sm text-dl-muted">Last updated: March 17, 2026</p>
+          <p className="mt-2 text-sm text-dl-muted">Last updated: June 20, 2026</p>
           <div className="mt-10 space-y-6 text-sm leading-relaxed text-dl-forest">
             <section>
               <h2 className="mb-2 text-lg font-semibold text-dl-forest">Overview</h2>
@@ -34,8 +34,8 @@ export default function PrivacyPage() {
               <h2 className="mb-2 text-lg font-semibold text-dl-forest">Contact</h2>
               <p>
                 Questions about privacy? Email{' '}
-                <a href="mailto:hello@beacon.com" className="text-dl-teal underline-offset-2 hover:underline">
-                  hello@beacon.com
+                <a href="mailto:hello@beaconapp.dev" className="text-dl-teal underline-offset-2 hover:underline">
+                  hello@beaconapp.dev
                 </a>
                 .
               </p>
