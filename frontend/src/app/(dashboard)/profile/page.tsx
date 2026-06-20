@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import {
   User,
@@ -9,6 +9,7 @@ import {
   RefreshCw,
   Loader2,
 } from 'lucide-react'
+import Image from 'next/image'
 import { useAppData } from '@/context/AppDataContext'
 import {
   ApiError,
@@ -16,15 +17,8 @@ import {
   type BillingPlanResponse,
   updateProfile,
 } from '@/lib/api'
+import { avatarUrl } from '@/lib/gravatar'
 import { formatInr, PRO_PLAN_PRICE_INR } from '@/lib/billing'
-
-const AVATAR_BACKGROUNDS = [
-  'bg-gradient-to-tr from-dl-teal to-dl-sage-light',
-  'bg-gradient-to-tr from-[#00b4db] to-[#0083b0]',
-  'bg-gradient-to-tr from-[#8A2387] to-[#E94057]',
-  'bg-gradient-to-tr from-[#11998e] to-[#38ef7d]',
-  'bg-gradient-to-tr from-[#FF512F] to-[#DD2476]',
-]
 
 function planLabel(plan: string): string {
   return plan === 'pro' ? 'Pro' : 'Starter'
@@ -110,7 +104,6 @@ export default function ProfilePage() {
 
   const [name, setName] = useState('')
   const [nickname, setNickname] = useState('')
-  const [avatarIdx, setAvatarIdx] = useState(0)
   const [personalLoading, setPersonalLoading] = useState(false)
   const [personalSuccess, setPersonalSuccess] = useState(false)
   const [personalError, setPersonalError] = useState<string | null>(null)
@@ -133,16 +126,9 @@ export default function ProfilePage() {
     if (!user) return
     setName(user.fullName ?? '')
     setNickname(user.nickname ?? user.email.split('@')[0] ?? '')
-    setAvatarIdx(user.avatarThemeIndex ?? 0)
   }, [user])
 
   const activePlan = billing?.plan ?? user?.plan ?? 'starter'
-
-  const avatarBg = AVATAR_BACKGROUNDS[avatarIdx] ?? AVATAR_BACKGROUNDS[0]
-  const initials = useMemo(
-    () => displayInitials(name || (user?.fullName ?? null), user?.email ?? ''),
-    [name, user?.fullName, user?.email]
-  )
 
   const handleSavePersonal = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -153,7 +139,6 @@ export default function ProfilePage() {
       await updateProfile({
         fullName: name.trim(),
         nickname: nickname.trim(),
-        avatarThemeIndex: avatarIdx,
       })
       await refresh()
       setPersonalSuccess(true)
@@ -193,28 +178,16 @@ export default function ProfilePage() {
 
           <form onSubmit={handleSavePersonal} className="flex flex-col gap-5">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-              <div
-                className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-full text-[22px] font-bold text-white shadow-inner transition-all duration-300 ${avatarBg}`}
-              >
-                {initials || 'DL'}
-              </div>
+              <Image
+                src={avatarUrl(name || (user?.fullName ?? ''), user?.email ?? '')}
+                alt="Avatar"
+                width={64}
+                height={64}
+                className="h-16 w-16 shrink-0 rounded-full shadow-inner"
+                unoptimized
+              />
               <div className="flex flex-col gap-1.5">
-                <span className="text-xs font-medium text-dl-muted">Avatar Theme Gradient</span>
-                <div className="flex items-center gap-2">
-                  {AVATAR_BACKGROUNDS.map((bg, idx) => (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={() => setAvatarIdx(idx)}
-                      className={`h-6 w-6 rounded-full border transition-all ${bg} ${
-                        avatarIdx === idx
-                          ? 'border-white scale-110 ring-2 ring-dl-teal/50'
-                          : 'border-transparent hover:scale-105'
-                      }`}
-                      aria-label={`Select avatar theme gradient ${idx + 1}`}
-                    />
-                  ))}
-                </div>
+                <span className="text-xs font-medium text-dl-muted">Avatar (auto-generated from your name)</span>
               </div>
             </div>
 

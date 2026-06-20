@@ -11,9 +11,11 @@ import {
 } from 'lucide-react'
 import { useTheme } from '@/hooks/useTheme'
 import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 import { SiteLogo } from '@/components/layout/SiteLogo'
 import { FeedbackModal } from '@/components/layout/FeedbackModal'
 import { useAppData } from '@/context/AppDataContext'
+import { avatarUrl } from '@/lib/gravatar'
 import { getUnreadCount } from '@/lib/alertsData'
 import { cn } from '@/lib/utils'
 
@@ -115,11 +117,6 @@ export function NavSidebar({
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
-
-  const initials = (user?.fullName
-    ? user.fullName.split(/\s+/).map((p) => p[0]).join('').slice(0, 2)
-    : (user?.email ?? 'U').slice(0, 2)
-  ).toUpperCase()
 
   const plan = user?.plan ?? 'free'
   const chip = planChip(plan)
@@ -385,9 +382,14 @@ export function NavSidebar({
                 {/* Profile header */}
                 <div className="px-4 py-3 bg-dl-surface border-b border-dl-border">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#2f7eda] to-[#1a5fb4] text-[11px] font-bold text-white shadow-sm">
-                      {initials}
-                    </div>
+                    <Image
+                      src={avatarUrl(user?.fullName ?? '', user?.email ?? '')}
+                      alt="Avatar"
+                      width={36}
+                      height={36}
+                      className="h-9 w-9 shrink-0 rounded-full shadow-sm"
+                      unoptimized
+                    />
                     <div className="min-w-0">
                       <p className="truncate text-[13px] font-semibold text-dl-navy">
                         {user?.fullName ?? user?.nickname ?? 'User'}
@@ -435,9 +437,14 @@ export function NavSidebar({
               isCollapsed ? 'md:justify-center' : ''
             )}
           >
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#2f7eda] to-[#1a5fb4] text-[11px] font-bold text-white shadow-sm">
-              {initials}
-            </div>
+            <Image
+              src={avatarUrl(user?.fullName ?? '', user?.email ?? '')}
+              alt="Avatar"
+              width={32}
+              height={32}
+              className="h-8 w-8 shrink-0 rounded-full shadow-sm"
+              unoptimized
+            />
             <div className={cn('flex-1 min-w-0', isCollapsed ? 'md:hidden' : '')}>
               <p className="truncate text-[12px] font-semibold text-dl-navy">
                 {user?.nickname ?? user?.fullName ?? user?.email ?? '…'}
