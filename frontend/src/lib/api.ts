@@ -100,30 +100,38 @@ export async function apiFetch<T>(
   if (token) headers.set('Authorization', `Bearer ${token}`)
 
   const res = await fetch(`${getApiUrl()}${path}`, { ...options, headers })
-  if (res.status === 401 && getRefreshToken() && !shouldSkipTokenRefresh(path)) {
-    try {
-      const refreshed = await fetch(`${getApiUrl()}/api/auth/refresh`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refreshToken: getRefreshToken() }),
-      })
-      if (refreshed.ok) {
-        const { accessToken } = (await refreshed.json()) as { accessToken: string }
-        localStorage.setItem(ACCESS_TOKEN_KEY, accessToken)
-        headers.set('Authorization', `Bearer ${accessToken}`)
-        const retry = await fetch(`${getApiUrl()}${path}`, { ...options, headers })
-        if (!retry.ok) {
-          const body = await retry.json().catch(() => ({}))
-          throw new ApiError(
-            (body as { error?: string }).error ?? `Request failed (${retry.status})`,
-            (body as { code?: string }).code
-          )
+  if (res.status === 401 && !shouldSkipTokenRefresh(path)) {
+    if (getRefreshToken()) {
+      try {
+        const refreshed = await fetch(`${getApiUrl()}/api/auth/refresh`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ refreshToken: getRefreshToken() }),
+        })
+        if (refreshed.ok) {
+          const { accessToken } = (await refreshed.json()) as { accessToken: string }
+          localStorage.setItem(ACCESS_TOKEN_KEY, accessToken)
+          headers.set('Authorization', `Bearer ${accessToken}`)
+          const retry = await fetch(`${getApiUrl()}${path}`, { ...options, headers })
+          if (!retry.ok) {
+            const body = await retry.json().catch(() => ({}))
+            throw new ApiError(
+              (body as { error?: string }).error ?? `Request failed (${retry.status})`,
+              (body as { code?: string }).code
+            )
+          }
+          return retry.json() as Promise<T>
         }
-        return retry.json() as Promise<T>
+      } catch (err) {
+        if (err instanceof ApiError) throw err
       }
-    } catch {
-      clearAuthTokens()
     }
+    // Refresh failed or no refresh token — session is dead, force logout
+    clearAuthTokens()
+    if (typeof window !== 'undefined') {
+      window.location.href = '/login'
+    }
+    throw new ApiError('Session expired. Please sign in again.')
   }
   if (!res.ok) {
     const body = await res.json().catch(() => ({}))
