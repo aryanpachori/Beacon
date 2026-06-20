@@ -84,18 +84,6 @@ function planPrice(plan: string): string {
   return plan === 'pro' ? `${formatInr(PRO_PLAN_PRICE_INR)}/month` : 'Free'
 }
 
-function displayInitials(fullName: string | null, email: string): string {
-  if (fullName?.trim()) {
-    return fullName
-      .split(/\s+/)
-      .map((n) => n[0])
-      .join('')
-      .substring(0, 2)
-      .toUpperCase()
-  }
-  return email.slice(0, 2).toUpperCase()
-}
-
 export default function ProfilePage() {
   const { user, loading: appLoading, refresh } = useAppData()
 
