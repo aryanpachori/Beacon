@@ -19,7 +19,24 @@ async function notifySlack(req: Request, err: Error, statusCode: number): Promis
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        text: `*API Error ${statusCode}* on \`${req.method} ${req.path}\`\n\`\`\`${err.message}\`\`\``,
+        text: `API Error ${statusCode} on ${req.method} ${req.path}: ${err.message}`,
+        blocks: [
+          {
+            type: 'section',
+            text: {
+              type: 'mrkdwn',
+              text: `*🚨 API Error ${statusCode}*\n\`${req.method} ${req.path}\``,
+            },
+          },
+          {
+            type: 'section',
+            text: { type: 'mrkdwn', text: `\`\`\`${err.message.slice(0, 500)}\`\`\`` },
+          },
+          {
+            type: 'context',
+            elements: [{ type: 'mrkdwn', text: new Date().toISOString() }],
+          },
+        ],
       }),
     })
   } catch {
