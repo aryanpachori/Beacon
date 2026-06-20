@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Send, CheckCircle2 } from 'lucide-react'
+import { CheckCircle2 } from 'lucide-react'
 
 const FOOTER_COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
   {
@@ -49,59 +49,6 @@ function FooterColumn({ title, links }: { title: string; links: { label: string;
           </li>
         ))}
       </ul>
-    </div>
-  )
-}
-
-function FooterFeedback() {
-  const [message, setMessage] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [sent, setSent] = useState(false)
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!message.trim()) return
-    setLoading(true)
-    try {
-      await fetch('/api/feedback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message, type: 'general' }),
-      })
-      setSent(true)
-      setMessage('')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  return (
-    <div>
-      <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.08em] text-white/45">
-        Feedback
-      </p>
-      {sent ? (
-        <div className="flex items-center gap-2 text-dl-teal text-sm">
-          <CheckCircle2 className="h-4 w-4 shrink-0" />
-          Thanks — we read every message.
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit} className="flex items-center gap-2">
-          <input
-            value={message}
-            onChange={e => setMessage(e.target.value)}
-            placeholder="Got a thought? Tell us…"
-            className="flex-1 rounded-lg border border-white/15 bg-white/[0.04] px-3.5 py-2 text-[13px] text-white placeholder:text-white/35 outline-none focus:border-dl-teal/50 transition-colors"
-          />
-          <button
-            type="submit"
-            disabled={loading || !message.trim()}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-dl-teal text-white transition-all hover:opacity-90 disabled:opacity-40"
-          >
-            <Send className="h-3.5 w-3.5" />
-          </button>
-        </form>
-      )}
     </div>
   )
 }
@@ -178,10 +125,9 @@ export function Footer() {
           ))}
         </div>
 
-        {/* Newsletter + Feedback */}
-        <div className="mt-10 grid grid-cols-1 gap-8 border-t border-white/10 pt-8 sm:grid-cols-2">
+        {/* Newsletter */}
+        <div className="mt-10 border-t border-white/10 pt-8">
           <NewsletterSignup />
-          <FooterFeedback />
         </div>
 
         <div className="mt-8 border-t border-white/10 pt-4">
