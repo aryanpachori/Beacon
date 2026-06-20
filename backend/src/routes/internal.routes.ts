@@ -3,6 +3,7 @@ import { incrementScanScored } from '../services/alert.service'
 import { AppError } from '../middleware/error.middleware'
 import { prisma } from '../db/client'
 import { sendOrgDigest } from '../services/digest.service'
+import { sendMail, FOUNDER_EMAILS } from '../lib/mailer'
 
 export const internalRouter = Router()
 
@@ -13,6 +14,20 @@ function verifyInternalSecret(req: { headers: Record<string, string | string[] |
     throw new AppError(401, 'Unauthorized')
   }
 }
+
+internalRouter.post('/test-email', async (req, res, next) => {
+  try {
+    verifyInternalSecret(req)
+    await sendMail({
+      to: FOUNDER_EMAILS,
+      subject: '✅ Beacon Email Test',
+      html: '<p>Resend is working. Emails from <strong>beacon.forgefastlabs.com</strong> are live.</p>',
+    })
+    res.json({ success: true, sent_to: FOUNDER_EMAILS })
+  } catch (err) {
+    next(err)
+  }
+})
 
 internalRouter.post('/trigger-digest', async (req, res, next) => {
   try {
