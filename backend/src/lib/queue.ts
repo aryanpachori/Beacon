@@ -2,20 +2,8 @@ import { Queue } from 'bullmq'
 import type { NormalizedSignals } from '../services/signals.service'
 import { getRedisConnectionOptions } from './redisConnection'
 
-/**
- * One Redis instance (REDIS_URL) backs everything:
- * - BullMQ queue 1: signal-collect  (Node worker consumes)
- * - BullMQ queue 2: intelligence-score (py-intelligence worker, or Node if enabled)
- * - Signal cache, alert dedup, rate limits, JWT refresh (ioredis in lib/redis.ts)
- *
- * Queues are separated by BullMQ queue name — not separate Redis DBs.
- * See architecture doc: "The two queues — nothing more"
- */
-
 export const Queues = {
-  /** GitHub connect, webhooks, crons → manifest scan + signal collection */
   SIGNAL_COLLECT: 'signal-collect',
-  /** After signals persisted → SPS scoring (py-intelligence worker) */
   INTELLIGENCE_SCORE: 'intelligence-score',
 } as const
 
@@ -30,16 +18,14 @@ export const IntelligenceJobName = {
   SCORE: 'score',
 } as const
 
-/** Pushed by API (callback, webhooks, crons). Consumed by Node signal worker. */
+/** Pushed by API (callback, webhooks, crons). Consumed by Node signal worker (in-process). */
 export interface SignalCollectJobData {
   installation_id: number
   installationDbId?: string
   userId?: string
   repos?: Array<{ owner: string; repo: string; manifestPaths?: string[] }>
   triggered_by?: string
-  /** Advisory cron: re-check a single package */
   packageId?: string
-  /** Advisory cron: CVE ID found via OSV.dev for this package */
   cveId?: string
 }
 
@@ -53,7 +39,7 @@ export interface IntelligenceSignalsPayload {
   security_hygiene: number
 }
 
-/** Pushed by Node after signal collection. Consumed by py-intelligence worker. */
+/** Pushed by Node after signal collection. Consumed by py-intelligence worker via Redis. */
 export interface IntelligenceScoreJobData {
   package_id: string
   installation_id: string
@@ -75,25 +61,27 @@ export function toIntelligenceSignals(signals: NormalizedSignals): IntelligenceS
   }
 }
 
-/** Shared BullMQ connection — same Redis as lib/redis.ts (Upstash or local). */
-export const queueConnection = {
+const queueConnection = {
   ...getRedisConnectionOptions(),
   maxRetriesPerRequest: null,
 }
 
-// Signal-collect queue — tuned for minimum Redis commands:
-// - attempts:1 (no retry overhead), removeOnComplete/Fail:{count:0} (no job retention scans)
-// Intelligence-score is now inline (no BullMQ queue) — saves ~80 Redis cmds per package.
-export const signalCollectQueue = new Queue<SignalCollectJobData>(Queues.SIGNAL_COLLECT, {
+/**
+ * Intelligence-score queue — only BullMQ queue still in use.
+ * signal-collect was replaced by in-process queue (lib/scanQueue.ts), so that
+ * Queue object is removed entirely to stop idle Redis heartbeats for it.
+ *
+ * Tuned to minimise Redis commands:
+ * - streams.events.maxLen:0  → disables the events stream (no XADD/XTRIM per job)
+ * - stalledInterval:0        → disables stalled-job heartbeat (no SET every ~1s)
+ * - removeOnComplete/Fail    → no job retention, no scan overhead
+ */
+export const intelligenceQueue = new Queue<IntelligenceScoreJobData>(Queues.INTELLIGENCE_SCORE, {
   connection: queueConnection,
+  streams: { events: { maxLen: 0 } },
   defaultJobOptions: {
     attempts: 1,
     removeOnComplete: { count: 0 },
     removeOnFail: { count: 0 },
   },
-})
-
-// Kept for obliterate() calls during DB reset — not used for enqueuing.
-export const intelligenceQueue = new Queue<IntelligenceScoreJobData>(Queues.INTELLIGENCE_SCORE, {
-  connection: queueConnection,
 })
