@@ -97,19 +97,11 @@ export default function PackagesPage() {
   return (
     <div className="app-page">
       {/* Header */}
-      <div className="mb-5 flex items-center justify-between">
-        <div>
-          <h1 className="page-heading">Packages</h1>
-          <p className="page-description">
-            {packages.length} packages across {repos.length} repo{repos.length !== 1 ? 's' : ''}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button type="button" onClick={refresh} className="flex h-8 w-8 items-center justify-center rounded-xl border border-dl-border text-dl-muted hover:bg-dl-surface hover:text-dl-text transition-colors">
-            <RefreshCw className="h-3.5 w-3.5" />
-          </button>
-          <NotificationBell />
-        </div>
+      <div className="mb-5">
+        <h1 className="page-heading">Packages</h1>
+        <p className="page-description">
+          {packages.length} packages across {repos.length} repo{repos.length !== 1 ? 's' : ''}
+        </p>
       </div>
 
       {packages.length === 0 && repos.length === 0 ? (
@@ -125,55 +117,53 @@ export default function PackagesPage() {
         </div>
       ) : (
         <>
-          {/* ── KPI stat strip ── */}
-          <div className="mb-4 flex flex-wrap items-center gap-2">
-            <button onClick={() => setFilter('all')}
-              className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${
-                filter === 'all'
-                  ? 'bg-dl-navy text-dl-bg dark:bg-dl-blue dark:text-white shadow-sm'
-                  : 'border border-dl-border bg-dl-bg text-dl-muted hover:text-dl-text'
-              }`}>
-              All
-            </button>
-            <button onClick={() => setFilter(filter === 'critical' ? 'all' : 'critical')}
-              className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'critical' ? 'bg-red-500 text-white' : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'}`}>
-              <span className="h-1.5 w-1.5 rounded-full bg-current" />
-              {tierCounts.critical} critical
-            </button>
-            {tierCounts['at-risk'] > 0 && (
-              <button onClick={() => setFilter(filter === 'at-risk' ? 'all' : 'at-risk')}
-                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'at-risk' ? 'bg-orange-500 text-white' : 'bg-orange-500/10 text-orange-500 hover:bg-orange-500/20'}`}>
-                <span className="h-1.5 w-1.5 rounded-full bg-current" />
-                {tierCounts['at-risk']} at-risk
+          {/* ── Filter tabs + right controls in one row ── */}
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+            {/* Left: filter tabs */}
+            <div className="flex flex-wrap items-center gap-2">
+              <button onClick={() => setFilter('all')}
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${
+                  filter === 'all'
+                    ? 'bg-dl-navy text-dl-bg dark:bg-dl-blue dark:text-white shadow-sm'
+                    : 'border border-dl-border bg-dl-bg text-dl-muted hover:text-dl-text'
+                }`}>
+                All
               </button>
-            )}
-            {tierCounts.watch > 0 && (
-              <button onClick={() => setFilter(filter === 'watch' ? 'all' : 'watch')}
-                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'watch' ? 'bg-yellow-500 text-white' : 'bg-yellow-500/10 text-yellow-600 hover:bg-yellow-500/20'}`}>
+              <button onClick={() => setFilter(filter === 'critical' ? 'all' : 'critical')}
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'critical' ? 'bg-red-500 text-white' : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'}`}>
                 <span className="h-1.5 w-1.5 rounded-full bg-current" />
-                {tierCounts.watch} watch
+                {tierCounts.critical} critical
               </button>
-            )}
-            {tierCounts.healthy > 0 && (
-              <button onClick={() => setFilter(filter === 'healthy' ? 'all' : 'healthy')}
-                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'healthy' ? 'bg-green-500 text-white' : 'bg-green-500/10 text-green-600 hover:bg-green-500/20'}`}>
-                <span className="h-1.5 w-1.5 rounded-full bg-current" />
-                {tierCounts.healthy} healthy
-              </button>
-            )}
-            {avg !== null && (
-              <div className="flex items-center gap-1.5 rounded-xl bg-dl-blue-pale px-3 py-1.5 text-[12px] font-semibold text-dl-blue">
-                Avg SPS: {avg}
-              </div>
-            )}
-          </div>
+              {tierCounts['at-risk'] > 0 && (
+                <button onClick={() => setFilter(filter === 'at-risk' ? 'all' : 'at-risk')}
+                  className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'at-risk' ? 'bg-orange-500 text-white' : 'bg-orange-500/10 text-orange-500 hover:bg-orange-500/20'}`}>
+                  <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                  {tierCounts['at-risk']} at-risk
+                </button>
+              )}
+              {tierCounts.watch > 0 && (
+                <button onClick={() => setFilter(filter === 'watch' ? 'all' : 'watch')}
+                  className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'watch' ? 'bg-yellow-500 text-white' : 'bg-yellow-500/10 text-yellow-600 hover:bg-yellow-500/20'}`}>
+                  <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                  {tierCounts.watch} watch
+                </button>
+              )}
+              {tierCounts.healthy > 0 && (
+                <button onClick={() => setFilter(filter === 'healthy' ? 'all' : 'healthy')}
+                  className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'healthy' ? 'bg-green-500 text-white' : 'bg-green-500/10 text-green-600 hover:bg-green-500/20'}`}>
+                  <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                  {tierCounts.healthy} healthy
+                </button>
+              )}
+              {avg !== null && (
+                <div className="flex items-center gap-1.5 rounded-xl bg-dl-blue-pale px-3 py-1.5 text-[12px] font-semibold text-dl-blue">
+                  Avg SPS: {avg}
+                </div>
+              )}
+            </div>
 
-          {/* ── Controls: search + sort + view toggle ── */}
-          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
-
-            {/* Right controls */}
+            {/* Right: search + sort + view + refresh + bell */}
             <div className="flex items-center gap-2">
-              {/* Search */}
               <div className="relative flex items-center">
                 <Search className="pointer-events-none absolute left-2.5 h-3.5 w-3.5 text-dl-border" />
                 <input
@@ -185,8 +175,6 @@ export default function PackagesPage() {
                   className="h-8 w-[180px] rounded-xl border border-dl-border bg-dl-bg pl-8 pr-3 text-[12px] text-dl-text placeholder:text-dl-muted outline-none transition-[width] focus:border-dl-blue/40 focus:ring-2 focus:ring-dl-blue/10 focus:w-[240px]"
                 />
               </div>
-
-              {/* Sort */}
               <div className="relative flex items-center">
                 <ArrowUpDown className="pointer-events-none absolute left-2.5 h-3.5 w-3.5 text-dl-border" />
                 <select
@@ -200,22 +188,20 @@ export default function PackagesPage() {
                   <option value="updated_desc">Recently updated</option>
                 </select>
               </div>
-
-              {/* View toggle */}
               <div className="flex overflow-hidden rounded-xl border border-dl-border">
-                <button
-                  onClick={() => setView('list')}
-                  className={`flex h-8 w-8 items-center justify-center transition-colors ${view === 'list' ? 'bg-dl-navy text-dl-bg dark:bg-dl-blue dark:text-white' : 'bg-dl-bg text-dl-muted hover:bg-dl-surface'}`}
-                >
+                <button onClick={() => setView('list')}
+                  className={`flex h-8 w-8 items-center justify-center transition-colors ${view === 'list' ? 'bg-dl-navy text-dl-bg dark:bg-dl-blue dark:text-white' : 'bg-dl-bg text-dl-muted hover:bg-dl-surface'}`}>
                   <LayoutList className="h-3.5 w-3.5" />
                 </button>
-                <button
-                  onClick={() => setView('grid')}
-                  className={`flex h-8 w-8 items-center justify-center transition-colors ${view === 'grid' ? 'bg-dl-navy text-dl-bg dark:bg-dl-blue dark:text-white' : 'bg-dl-bg text-dl-muted hover:bg-dl-surface'}`}
-                >
+                <button onClick={() => setView('grid')}
+                  className={`flex h-8 w-8 items-center justify-center transition-colors ${view === 'grid' ? 'bg-dl-navy text-dl-bg dark:bg-dl-blue dark:text-white' : 'bg-dl-bg text-dl-muted hover:bg-dl-surface'}`}>
                   <LayoutGrid className="h-3.5 w-3.5" />
                 </button>
               </div>
+              <button type="button" onClick={refresh} className="flex h-8 w-8 items-center justify-center rounded-xl border border-dl-border text-dl-muted hover:bg-dl-surface hover:text-dl-text transition-colors">
+                <RefreshCw className="h-3.5 w-3.5" />
+              </button>
+              <NotificationBell />
             </div>
           </div>
 
