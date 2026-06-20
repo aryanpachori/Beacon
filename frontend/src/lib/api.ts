@@ -13,6 +13,14 @@ import {
   adaptRepo,
 } from '@/lib/adapters'
 import type { Alert, Package, Repo } from '@/types'
+import {
+  CACHE_TTL,
+  cacheKey,
+  clearAllCache,
+  getCachedData,
+  invalidateCacheByPrefix,
+  setCachedData,
+} from '@/lib/apiCache'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000'
 
@@ -45,6 +53,9 @@ export function clearAuthTokens(): void {
   localStorage.removeItem('beacon_slack_url')
   localStorage.removeItem('beacon_google_chat_url')
   localStorage.removeItem('dl_intended_url')
+
+  // Clear the API response cache so stale data never leaks between sessions
+  clearAllCache()
 
   // Proactively clear any other beacon or session keys in localStorage
   for (let i = 0; i < localStorage.length; i++) {
@@ -125,7 +136,13 @@ export async function apiFetch<T>(
 }
 
 export async function fetchMe(): Promise<ApiUser> {
-  return apiFetch<ApiUser>('/api/auth/me')
+  const key = cacheKey.user()
+  const cached = getCachedData<ApiUser>(key, CACHE_TTL.user)
+  if (cached) return cached
+
+  const data = await apiFetch<ApiUser>('/api/auth/me')
+  setCachedData(key, data)
+  return data
 }
 
 export async function updateProfile(body: {
@@ -133,10 +150,13 @@ export async function updateProfile(body: {
   nickname?: string
   avatarThemeIndex?: number
 }): Promise<ApiUser> {
-  return apiFetch<ApiUser>('/api/auth/me', {
+  const data = await apiFetch<ApiUser>('/api/auth/me', {
     method: 'PATCH',
     body: JSON.stringify(body),
   })
+  // Invalidate user cache so next read gets fresh profile
+  invalidateCacheByPrefix(cacheKey.user())
+  return data
 }
 
 export async function updateSelectedRepos(repoIds: string[]): Promise<void> {
@@ -144,36 +164,69 @@ export async function updateSelectedRepos(repoIds: string[]): Promise<void> {
     method: 'PATCH',
     body: JSON.stringify({ repos: repoIds }),
   })
+  // Changing selected repos invalidates repos, packages and dashboard caches
+  invalidateCacheByPrefix(cacheKey.repos())
+  invalidateCacheByPrefix(cacheKey.packages())
+  invalidateCacheByPrefix(cacheKey.dashboard())
 }
 
 export async function fetchDashboard(): Promise<ApiDashboard> {
-  return apiFetch<ApiDashboard>('/api/dashboard')
+  const key = cacheKey.dashboard()
+  const cached = getCachedData<ApiDashboard>(key, CACHE_TTL.dashboard)
+  if (cached) return cached
+
+  const data = await apiFetch<ApiDashboard>('/api/dashboard')
+  setCachedData(key, data)
+  return data
 }
 
 export async function fetchPackages(params?: {
   tier?: string
   ecosystem?: string
+  page?: number
 }): Promise<Package[]> {
+  const filters: Record<string, string> = {}
+  if (params?.tier) filters.tier = params.tier
+  if (params?.ecosystem) filters.ecosystem = params.ecosystem
+
+  const key = cacheKey.packages(params?.page, filters)
+  const cached = getCachedData<Package[]>(key, CACHE_TTL.packages)
+  if (cached) return cached
+
   const qs = new URLSearchParams()
   if (params?.tier) qs.set('tier', params.tier)
   if (params?.ecosystem) qs.set('ecosystem', params.ecosystem)
   const query = qs.toString()
-  const data = await apiFetch<{ packages: ApiPackageListItem[] }>(
+  const raw = await apiFetch<{ packages: ApiPackageListItem[] }>(
     `/api/packages${query ? `?${query}` : ''}`
   )
-  return data.packages.map(adaptPackageListItem)
+  const result = raw.packages.map(adaptPackageListItem)
+  setCachedData(key, result)
+  return result
 }
 
 export async function fetchPackageById(id: string): Promise<Package> {
-  const data = await apiFetch<ApiPackageDetail>(`/api/packages/${id}`)
-  return adaptPackageDetail(data)
+  const key = cacheKey.packageDetail(id)
+  const cached = getCachedData<Package>(key, CACHE_TTL.packageDetail)
+  if (cached) return cached
+
+  const raw = await apiFetch<ApiPackageDetail>(`/api/packages/${id}`)
+  const result = adaptPackageDetail(raw)
+  setCachedData(key, result)
+  return result
 }
 
 export async function fetchAlerts(limit = 200, offset = 0): Promise<Alert[]> {
-  const data = await apiFetch<{ alerts: ApiAlert[]; total: number }>(
+  const key = cacheKey.alerts(limit, offset)
+  const cached = getCachedData<Alert[]>(key, CACHE_TTL.alerts)
+  if (cached) return cached
+
+  const raw = await apiFetch<{ alerts: ApiAlert[]; total: number }>(
     `/api/alerts?limit=${limit}&offset=${offset}`
   )
-  return data.alerts.map(adaptAlert)
+  const result = raw.alerts.map(adaptAlert)
+  setCachedData(key, result)
+  return result
 }
 
 export async function fetchRepos(): Promise<{
@@ -181,18 +234,31 @@ export async function fetchRepos(): Promise<{
   repoLimit: number
   monitoredCount: number
 }> {
-  const data = await apiFetch<{ repos: ApiRepo[]; repoLimit: number; monitoredCount: number }>(
+  const key = cacheKey.repos()
+  const cached = getCachedData<{ repos: Repo[]; repoLimit: number; monitoredCount: number }>(
+    key,
+    CACHE_TTL.repos
+  )
+  if (cached) return cached
+
+  const raw = await apiFetch<{ repos: ApiRepo[]; repoLimit: number; monitoredCount: number }>(
     '/api/repos'
   )
-  return {
-    repos: data.repos.map(adaptRepo),
-    repoLimit: data.repoLimit,
-    monitoredCount: data.monitoredCount,
+  const result = {
+    repos: raw.repos.map(adaptRepo),
+    repoLimit: raw.repoLimit,
+    monitoredCount: raw.monitoredCount,
   }
+  setCachedData(key, result)
+  return result
 }
 
 export async function triggerRepoRescan(): Promise<void> {
   await apiFetch('/api/repos/rescan', { method: 'POST' })
+  // A rescan changes package scores and repo stats — bust those caches
+  invalidateCacheByPrefix(cacheKey.repos())
+  invalidateCacheByPrefix(cacheKey.packages())
+  invalidateCacheByPrefix(cacheKey.dashboard())
 }
 
 export async function fetchGithubInstallUrl(): Promise<string> {
@@ -327,7 +393,13 @@ export type AnalyticsData = {
 }
 
 export async function fetchAnalytics(): Promise<AnalyticsData> {
-  return apiFetch<AnalyticsData>('/api/analytics')
+  const key = cacheKey.analytics()
+  const cached = getCachedData<AnalyticsData>(key, CACHE_TTL.analytics)
+  if (cached) return cached
+
+  const data = await apiFetch<AnalyticsData>('/api/analytics')
+  setCachedData(key, data)
+  return data
 }
 
 // ── Activity Feed ─────────────────────────────────────────────────────────────
@@ -352,8 +424,14 @@ export type ActivityEvent = {
 }
 
 export async function fetchActivity(limit = 100): Promise<ActivityEvent[]> {
-  const data = await apiFetch<{ events: ActivityEvent[] }>(`/api/activity?limit=${limit}`)
-  return data.events
+  const key = cacheKey.activity(limit)
+  const cached = getCachedData<ActivityEvent[]>(key, CACHE_TTL.activity)
+  if (cached) return cached
+
+  const raw = await apiFetch<{ events: ActivityEvent[] }>(`/api/activity?limit=${limit}`)
+  const result = raw.events
+  setCachedData(key, result)
+  return result
 }
 
 // ── Maintainers ───────────────────────────────────────────────────────────────
@@ -374,8 +452,13 @@ export type MaintainerOverview = {
 }
 
 export async function fetchMaintainers(): Promise<MaintainerOverview[]> {
-  const data = await apiFetch<{ maintainers: MaintainerOverview[] }>('/api/maintainers')
-  return data.maintainers
+  const key = cacheKey.maintainers()
+  const cached = getCachedData<MaintainerOverview[]>(key, CACHE_TTL.maintainers)
+  if (cached) return cached
+
+  const raw = await apiFetch<{ maintainers: MaintainerOverview[] }>('/api/maintainers')
+  setCachedData(key, raw.maintainers)
+  return raw.maintainers
 }
 
 // ── Package Recommendations ───────────────────────────────────────────────────
@@ -395,8 +478,13 @@ export type PackageRecommendation = {
 }
 
 export async function fetchPackageRecommendations(packageId: string): Promise<PackageRecommendation[]> {
-  const data = await apiFetch<{ recommendations: PackageRecommendation[] }>(`/api/packages/${packageId}/recommendations`)
-  return data.recommendations
+  const key = cacheKey.recommendations(packageId)
+  const cached = getCachedData<PackageRecommendation[]>(key, CACHE_TTL.packageDetail)
+  if (cached) return cached
+
+  const raw = await apiFetch<{ recommendations: PackageRecommendation[] }>(`/api/packages/${packageId}/recommendations`)
+  setCachedData(key, raw.recommendations)
+  return raw.recommendations
 }
 
 export function openScanProgressStream(

@@ -21,7 +21,7 @@ const FOOTER_COLUMNS: { title: string; links: { label: string; href: string }[] 
     title: 'Company',
     links: [
       { label: 'About', href: '/#features' },
-      { label: 'Contact', href: 'mailto:hello@beacon.com' },
+      { label: 'Contact', href: 'mailto:hello@beaconapp.dev' },
     ],
   },
   {
