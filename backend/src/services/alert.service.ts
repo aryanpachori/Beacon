@@ -83,7 +83,7 @@ export async function checkAndFireAlert(
   // Uses Postgres instead of Redis to eliminate 2 Redis commands per package per scan.
   const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
   const recentAlert = await prisma.alert.findFirst({
-    where: { packageId: params.packageId, installationId: params.installationId, alertType, createdAt: { gte: oneDayAgo } },
+    where: { packageId: params.packageId, installationId: params.installationId, alertType, firedAt: { gte: oneDayAgo } },
     select: { id: true },
   });
   if (recentAlert) return;
