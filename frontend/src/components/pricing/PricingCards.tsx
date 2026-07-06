@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Check } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { inViewOptions, staggerContainer, sectionReveal } from '@/components/marketing/motion'
+import { ProCheckoutLink } from '@/components/billing/RazorpayUpgradeButton'
 import { formatInr, PRO_PLAN_PRICE_INR } from '@/lib/billing'
 
 export type BillingPeriod = 'monthly' | 'annual'
@@ -116,8 +117,8 @@ export function PricingCards({ billingPeriod, onBillingChange }: PricingCardsPro
                 }`}
               >
                 {plan.popular && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-indigo-500 px-3 py-0.5 text-[11px] font-medium text-white">
-                    Coming Soon
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-dl-teal px-3 py-0.5 text-[11px] font-medium text-white">
+                    Most popular
                   </span>
                 )}
                 <p className="text-[13px] font-medium uppercase tracking-wide text-dl-forest">
@@ -140,22 +141,17 @@ export function PricingCards({ billingPeriod, onBillingChange }: PricingCardsPro
                 </div>
                 <p className="mt-2 text-[13px] text-neutral-600">{plan.tagline}</p>
                 {plan.id === 'pro' ? (
-                  <>
-                    <button
-                      disabled
-                      className="mt-6 flex w-full cursor-not-allowed items-center justify-center rounded-xl bg-indigo-100 px-5 py-2.5 text-sm font-semibold text-indigo-400"
-                    >
-                      Coming Soon
-                    </button>
-                    <p className="mt-2 text-center text-[11px] text-neutral-500">
-                      Pro launches soon — join free now
-                    </p>
-                  </>
+                  <ProCheckoutLink className={`mt-6 ${plan.ctaClass}`}>
+                    {plan.cta}
+                  </ProCheckoutLink>
                 ) : (
                   <Link href={plan.href!} className={`mt-6 ${plan.ctaClass}`}>
                     {plan.cta}
                   </Link>
                 )}
+                <p className="mt-2 text-center text-[11px] text-neutral-500">
+                  {plan.id === 'pro' ? 'Sign in required to complete payment' : null}
+                </p>
                 <ul className="mt-4 space-y-2.5">
                   {plan.features.map((feature) => (
                     <li
