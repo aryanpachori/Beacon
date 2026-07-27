@@ -37,8 +37,8 @@ const TIER: Record<string, {
   },
   healthy: {
     label:        'Health Update',
-    headerBg:     'rgba(53,133,142,0.18)',
-    headerBorder: 'rgba(53,133,142,0.30)',
+    headerBg:     'rgba(91,110,76,0.18)',
+    headerBorder: 'rgba(91,110,76,0.30)',
     badge:        'bg-[#35858E] text-white',
     spsColor:     '#5bbec8',
     accentBar:    '#35858E',

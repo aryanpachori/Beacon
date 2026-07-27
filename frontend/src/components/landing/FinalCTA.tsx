@@ -1,46 +1,46 @@
 'use client'
 
 import Link from 'next/link'
-import { Lock, Shield } from 'lucide-react'
+import { Cpu, GitBranch, Terminal } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { inViewOptions, sectionReveal } from '@/components/marketing/motion'
 
 export function FinalCTA() {
   return (
-    <section className="section-dark px-6 py-[120px]">
+    <section className="section-dark px-6 py-[140px]">
       <motion.div
-        className="mx-auto max-w-[800px] text-center"
+        className="mx-auto max-w-[720px] text-center"
         initial="hidden"
         whileInView="visible"
         viewport={inViewOptions}
         variants={sectionReveal}
       >
-        <h2 className="text-[36px] font-medium leading-tight text-white md:text-[40px]">
-          Start protecting your stack today.
+        <h2 className="text-[34px] font-medium leading-[1.15] text-dl-text md:text-[42px]">
+          Let your AI ship faster.<br /> Let <span className="font-serif italic font-normal text-dl-blue">Beacon</span> watch.
         </h2>
-        <p className="mx-auto mt-5 max-w-[480px] text-base text-white/75">
-          Free for one repo. No credit card. GitHub App installs in 60 seconds.
+        <p className="mx-auto mt-6 max-w-[420px] text-[15px] leading-relaxed text-dl-muted">
+          Free to install. No repo access required. Live in your editor in under a minute.
         </p>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           <Link href="/register" className="btn-primary">
-            Start free →
+            Install Beacon — free
           </Link>
-          <a href="mailto:hello@beaconapp.dev" className="btn-ghost">
+          <a href="mailto:hello@beaconapp.dev" className="text-[13.5px] text-dl-muted underline decoration-dl-border underline-offset-4 transition-colors hover:text-dl-text hover:decoration-dl-muted">
             Talk to us
           </a>
         </div>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-xs text-white/60">
+        <div className="mt-14 flex flex-wrap items-center justify-center gap-x-7 gap-y-2 border-t border-dl-border pt-6 text-xs text-dl-muted">
           <span className="flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-dl-healthy" />
-            SOC 2 in progress
+            <Terminal className="h-3.5 w-3.5" />
+            IDE · MCP · CLI
           </span>
           <span className="flex items-center gap-1.5">
-            <Lock className="h-3.5 w-3.5" />
-            Read-only GitHub access
+            <Cpu className="h-3.5 w-3.5" />
+            Local-first
           </span>
           <span className="flex items-center gap-1.5">
-            <Shield className="h-3.5 w-3.5" />
-            No code ever stored
+            <GitBranch className="h-3.5 w-3.5" />
+            Zero repo access
           </span>
         </div>
       </motion.div>

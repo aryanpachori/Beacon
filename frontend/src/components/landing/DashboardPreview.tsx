@@ -2,39 +2,37 @@
 
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, useMotionTemplate } from 'framer-motion'
-import { SparklineBars } from '@/components/marketing/SparklineBars'
-import { MarketingTierChip, type MarketingTier } from '@/components/marketing/MarketingTierChip'
 import { inViewOptions, sectionReveal } from '@/components/marketing/motion'
 
+type Severity = 'critical' | 'high' | 'medium'
+type Status = 'fixed' | 'reviewing' | 'flagged'
+
 type Row = {
-  name: string
-  ecosystem: string
-  trend: 'declining' | 'flat' | 'rising'
-  sps: number
-  tier: MarketingTier
+  finding: string
+  repo: string
+  severity: Severity
+  status: Status
 }
 
 const ROWS: Row[] = [
-  { name: 'moment', ecosystem: 'npm', trend: 'declining', sps: 11, tier: 'critical' },
-  { name: 'request', ecosystem: 'npm', trend: 'declining', sps: 17, tier: 'critical' },
-  { name: 'node-sass', ecosystem: 'npm', trend: 'declining', sps: 32, tier: 'at-risk' },
-  { name: 'rxjs', ecosystem: 'npm', trend: 'declining', sps: 38, tier: 'at-risk' },
-  { name: 'express', ecosystem: 'npm', trend: 'flat', sps: 67, tier: 'watch' },
-  { name: 'lodash', ecosystem: 'npm', trend: 'rising', sps: 84, tier: 'healthy' },
+  { finding: 'Hardcoded API key', repo: 'payments-api', severity: 'critical', status: 'fixed' },
+  { finding: 'SQL injection via interpolation', repo: 'checkout-service', severity: 'critical', status: 'fixed' },
+  { finding: 'Missing authorization check', repo: 'admin-panel', severity: 'high', status: 'reviewing' },
+  { finding: 'Unvalidated redirect', repo: 'marketing-site', severity: 'medium', status: 'fixed' },
+  { finding: 'Insecure deserialization', repo: 'worker-queue', severity: 'high', status: 'flagged' },
+  { finding: 'Weak session expiry', repo: 'auth-service', severity: 'medium', status: 'fixed' },
 ]
 
-const SPS_COLOR: Record<MarketingTier, string> = {
-  critical: 'text-dl-critical',
-  'at-risk': 'text-dl-risk',
-  watch: 'text-dl-watch',
-  healthy: 'text-dl-healthy',
+const SEVERITY_COLOR: Record<Severity, string> = {
+  critical: 'text-[#D08877]',
+  high: 'text-[#D1A276]',
+  medium: 'text-[#D0C08A]',
 }
 
-const SPARK_COLOR: Record<MarketingTier, string> = {
-  critical: 'var(--dl-critical)',
-  'at-risk': 'var(--dl-risk)',
-  watch: 'var(--dl-watch)',
-  healthy: 'var(--dl-healthy)',
+const STATUS_CHIP: Record<Status, { label: string; className: string }> = {
+  fixed: { label: 'Fixed', className: 'bg-dl-blue/15 text-dl-blue border-dl-blue/25' },
+  reviewing: { label: 'Reviewing', className: 'bg-dl-surface text-dl-muted border-dl-border' },
+  flagged: { label: 'Flagged', className: 'bg-[#D08877]/12 text-[#D08877] border-[#D08877]/25' },
 }
 
 export function DashboardPreview() {
@@ -45,11 +43,11 @@ export function DashboardPreview() {
   })
   const rotateX = useTransform(scrollYProgress, [0, 1], [4, 0])
   const scale = useTransform(scrollYProgress, [0, 1], [0.96, 1])
-  const shadowOpacity = useTransform(scrollYProgress, [0, 1], [0.05, 0.18])
-  const boxShadow = useMotionTemplate`0 0 80px rgba(53, 133, 142, ${shadowOpacity})`
+  const shadowOpacity = useTransform(scrollYProgress, [0, 1], [0.1, 0.24])
+  const boxShadow = useMotionTemplate`0 20px 60px -20px rgba(20,17,11, ${shadowOpacity})`
 
   return (
-    <section ref={sectionRef} className="section-dark px-6 py-[100px]">
+    <section ref={sectionRef} className="section-dark px-6 py-[120px]">
       <motion.div
         className="mx-auto max-w-[1200px] text-center"
         initial="hidden"
@@ -57,58 +55,48 @@ export function DashboardPreview() {
         viewport={inViewOptions}
         variants={sectionReveal}
       >
-        <p className="label-overline">Your command center</p>
-        <h2 className="mt-4 text-section-mobile font-medium text-white lg:text-section">
-          See every risk, ranked and ready to act on.
+        <p className="section-kicker justify-center"><span className="kicker-index">05</span> Visibility when you want it</p>
+        <h2 className="mx-auto mt-5 max-w-[600px] text-section-mobile font-medium text-dl-text lg:text-section">
+          Every finding, across every repo — one quiet feed.
         </h2>
-        <p className="mx-auto mt-4 max-w-[560px] text-[15px] text-white/75">
-          A single view of every dependency in your stack — sorted by survival probability, with
-          migration paths surfaced automatically.
+        <p className="mx-auto mt-5 max-w-[520px] text-[15px] leading-relaxed text-dl-muted">
+          Beacon works inline by default. When you do want the bird&apos;s-eye view, every catch
+          across your team surfaces here — what was found, where, and whether it shipped fixed.
         </p>
 
         <motion.div
-          style={{
-            rotateX,
-            scale,
-            transformPerspective: 1200,
-            boxShadow,
-          }}
+          style={{ rotateX, scale, transformPerspective: 1200, boxShadow }}
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
           viewport={inViewOptions}
-          className="mx-auto mt-12 w-full max-w-[860px] rounded-2xl border border-white/10 bg-white/5 p-6 shadow-[0_0_80px_rgba(53,133,142,0.12)]"
+          className="glass-panel mx-auto mt-14 w-full max-w-[860px] p-6"
         >
           <motion.div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-            <span className="text-sm font-medium text-white">Dependency dashboard</span>
-            <span className="text-xs text-white/50">Sample view</span>
+            <span className="text-sm font-medium text-dl-text">Team findings</span>
+            <span className="text-xs text-dl-muted">Sample view</span>
           </motion.div>
 
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[520px] text-left text-sm">
+            <table className="w-full min-w-[560px] text-left text-sm">
               <thead>
-                <tr className="border-b border-white/10 text-[11px] uppercase tracking-wide text-white/45">
-                  <th className="pb-3 font-medium">Package</th>
-                  <th className="pb-3 font-medium">Ecosystem</th>
-                  <th className="pb-3 font-medium">Trend</th>
-                  <th className="pb-3 font-medium">SPS</th>
-                  <th className="pb-3 font-medium">Tier</th>
+                <tr className="border-b border-dl-border text-[11px] uppercase tracking-wide text-dl-muted">
+                  <th className="pb-3 font-medium">Finding</th>
+                  <th className="pb-3 font-medium">Repo</th>
+                  <th className="pb-3 font-medium">Severity</th>
+                  <th className="pb-3 font-medium">Status</th>
                 </tr>
               </thead>
               <tbody>
                 {ROWS.map((row) => (
-                  <tr
-                    key={row.name}
-                    className="border-b border-white/5 transition-colors hover:bg-white/[0.03]"
-                  >
-                    <td className="py-3 font-medium text-white">{row.name}</td>
-                    <td className="py-3 text-white/65">{row.ecosystem}</td>
+                  <tr key={row.finding} className="border-b border-dl-border/60 transition-colors hover:bg-dl-surface/60">
+                    <td className="py-3 font-medium text-dl-text">{row.finding}</td>
+                    <td className="py-3 font-mono text-[12px] text-dl-muted">{row.repo}</td>
+                    <td className={`py-3 font-medium capitalize ${SEVERITY_COLOR[row.severity]}`}>{row.severity}</td>
                     <td className="py-3">
-                      <SparklineBars trend={row.trend} color={SPARK_COLOR[row.tier]} />
-                    </td>
-                    <td className={`py-3 font-mono font-medium ${SPS_COLOR[row.tier]}`}>{row.sps}</td>
-                    <td className="py-3">
-                      <MarketingTierChip tier={row.tier} />
+                      <span className={`inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] font-medium ${STATUS_CHIP[row.status].className}`}>
+                        {STATUS_CHIP[row.status].label}
+                      </span>
                     </td>
                   </tr>
                 ))}

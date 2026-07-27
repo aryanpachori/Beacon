@@ -3,174 +3,253 @@
 @tailwind utilities;
 
 /* ═══════════════════════════════════════════════════════
-   Design tokens — single light mode, Octet SaaS palette
-   #fcfdfd Brilliance · #edeff3 Springtime Rain
-   #c6d1d7 Wind Weaver · #9fa0b5 Wild Thistle
-   #2f7eda Soothing Sapphire · #555663 Blackwater
+   Beacon design tokens — Ivory & Charcoal
+   The same warm, editorial palette as the public site now
+   runs through the whole product: warm ivory/linen by
+   default, warm charcoal (never pure black) in dark mode,
+   muted moss as the one accent.
    ═══════════════════════════════════════════════════════ */
 :root {
-  --dl-blue:        #2f7eda;
-  --dl-blue-light:  #5b9fe8;
-  --dl-blue-dark:   #1a5fb4;
-  --dl-blue-pale:   #eaf2fd;
+  --dl-blue:        #5B6E4C;
+  --dl-blue-light:  #79905F;
+  --dl-blue-dark:   #40502F;
+  --dl-blue-pale:   #E7E9DA;
+  --dl-aurora:      #A9805A;
 
-  --dl-bg:      #fcfdfd;
-  --dl-surface: #edeff3;
-  --dl-border:  #c6d1d7;
-  --dl-muted:   #9fa0b5;
-  --dl-text:    #555663;
-  --dl-navy:    #1e2a3c;
+  --dl-bg:      #F6F1E6;
+  --dl-surface: #EEE6D5;
+  --dl-border:  #DDD2B9;
+  --dl-muted:   #8A7F6A;
+  --dl-text:    #2E2A22;
+  --dl-navy:    #211E17;
 
-  --dl-healthy:  #16a34a;
-  --dl-watch:    #ca8a04;
-  --dl-risk:     #ea580c;
-  --dl-critical: #dc2626;
-  --dl-danger:   #ef4444;
-  --dl-warning:  #f97316;
-  --dl-success:  #22c55e;
+  --dl-healthy:  #5B6E4C;
+  --dl-watch:    #A87A2E;
+  --dl-risk:     #B06430;
+  --dl-critical: #A44636;
+  --dl-danger:   #A44636;
+  --dl-warning:  #A87A2E;
+  --dl-success:  #5B6E4C;
 
   /* Legacy aliases so old class-names still resolve */
-  --dl-teal:        #2f7eda;
-  --dl-page:        #fcfdfd;
-  --dl-card:        #edeff3;
-  --dl-cream:       #edeff3;
-  --dl-nav:         #1e2a3c;
-  --dl-forest:      #555663;
-  --dl-hint:        #9fa0b5;
-  --dl-sage:        #9fa0b5;
-  --dl-sage-light:  #c6d1d7;
-  --dl-border-mid:  #c6d1d7;
-  --dl-m-border:    #c6d1d7;
-  --dl-m-text:      #555663;
-  --dl-m-muted:     #9fa0b5;
-  --dl-m-healthy:   #16a34a;
-  --dl-m-watch:     #ca8a04;
-  --dl-m-risk:      #ea580c;
-  --dl-m-critical:  #dc2626;
-  --dl-chart-grid:  #f0f2f5;
+  --dl-teal:        #5B6E4C;
+  --dl-page:        #F6F1E6;
+  --dl-card:        #FBF7EC;
+  --dl-cream:       #EEE6D5;
+  --dl-nav:         #F6F1E6;
+  --dl-forest:      #4A4436;
+  --dl-hint:        #8A7F6A;
+  --dl-sage:        #8A7F6A;
+  --dl-sage-light:  #E4DAC4;
+  --dl-border-mid:  #DDD2B9;
+  --dl-m-border:    #DDD2B9;
+  --dl-m-text:      #2E2A22;
+  --dl-m-muted:     #8A7F6A;
+  --dl-m-healthy:   #5B6E4C;
+  --dl-m-watch:     #A87A2E;
+  --dl-m-risk:      #B06430;
+  --dl-m-critical:  #A44636;
+  --dl-chart-grid:  #E8E0CC;
 }
 
 /* ═══════════════════════════════════════════════════════
-   Dark mode overrides
+   Dark mode — the warm-charcoal break, matching the public
+   site's dark sections. Never pure black.
    ═══════════════════════════════════════════════════════ */
 .dark {
   color-scheme: dark;
-  --dl-bg:         #0f1117;
-  --dl-surface:    #1a1d27;
-  --dl-border:     #2a2d3e;
-  --dl-muted:      #9ca3af;
-  --dl-text:       #d1d5db;
-  --dl-chart-grid: #2a2d3e;
-  --dl-navy:       #e2e8f0;
+  --dl-bg:         #241F17;
+  --dl-surface:    #2C2619;
+  --dl-border:     rgba(246,238,220,0.11);
+  --dl-muted:      #AB9F86;
+  --dl-text:       #EEE5D2;
+  --dl-chart-grid: rgba(246,238,220,0.06);
+  --dl-navy:       #F3ECDD;
 
-  --dl-blue:       #60a5fa;
-  --dl-blue-light: #93c5fd;
-  --dl-blue-dark:  #3b82f6;
-  --dl-blue-pale:  #1e3a5f;
+  --dl-blue:       #A3BC8C;
+  --dl-blue-light: #BBD1A5;
+  --dl-blue-dark:  #7E9868;
+  --dl-blue-pale:  rgba(163,188,140,0.14);
+  --dl-aurora:     #C9A47C;
 
   /* Legacy aliases */
-  --dl-page:       #0f1117;
-  --dl-card:       #1a1d27;
-  --dl-nav:        #e2e8f0;
-  --dl-forest:     #d1d5db;
-  --dl-hint:       #9ca3af;
-  --dl-sage:       #9ca3af;
-  --dl-sage-light: #2a2d3e;
-  --dl-border-mid: #2a2d3e;
-  --dl-m-border:   #2a2d3e;
-  --dl-m-text:     #d1d5db;
-  --dl-m-muted:    #6b7280;
-  --dl-cream:      #1a1d27;
-  --dl-teal:       #60a5fa;
+  --dl-page:       #241F17;
+  --dl-card:       #29241A;
+  --dl-nav:        #241F17;
+  --dl-forest:     #DED2B7;
+  --dl-hint:       #AB9F86;
+  --dl-sage:       #AB9F86;
+  --dl-sage-light: rgba(246,238,220,0.12);
+  --dl-border-mid: rgba(246,238,220,0.11);
+  --dl-m-border:   rgba(246,238,220,0.11);
+  --dl-m-text:     #EEE5D2;
+  --dl-m-muted:    #AB9F86;
+  --dl-cream:      #2C2619;
+  --dl-teal:       #A3BC8C;
+
+  --dl-healthy:  #A3BC8C;
+  --dl-watch:    #D0A85C;
+  --dl-risk:     #D18E60;
+  --dl-critical: #D08877;
 }
 
-/* Landing / marketing — own palette (separate from dashboard .dark tokens) */
+/* Landing / marketing — warm editorial surface.
+   Ivory, linen and stone by default; a small number of sections
+   dip into warm charcoal for contrast. Never pure black, never
+   neon — the palette of a paper-and-ink product, not a terminal. */
 .site-shell {
-  --dl-blue:        #2f7eda;
-  --dl-blue-light:  #5b9fe8;
-  --dl-blue-dark:   #1a5fb4;
-  --dl-blue-pale:   #eaf2fd;
-
-  --dl-bg:          #fcfdfd;
-  --dl-surface:     #edeff3;
-  --dl-border:      #c6d1d7;
-  --dl-text:        #555663;
-  --dl-navy:        #1e2a3c;
-
-  /* Readable secondary text on light backgrounds */
-  --dl-muted:       #6b7280;
-  --dl-sage:        #555663;
-  --dl-hint:        #6b7280;
-  --dl-forest:      #555663;
-
-  --dl-teal:        #2f7eda;
-  --dl-page:        #fcfdfd;
-  --dl-card:        #edeff3;
-  --dl-cream:       #f8fafc;
-  --dl-nav:         #1e2a3c;
-  --dl-sage-light:  #9fa0b5;
-  --dl-border-mid:  #c6d1d7;
-  --dl-m-border:    #c6d1d7;
-  --dl-m-text:      #555663;
-  --dl-m-muted:     #6b7280;
-
   color-scheme: light;
+
+  /* Accent — muted moss/sage. Used sparingly, as a guide, not a glow. */
+  --dl-blue:        #5B6E4C;
+  --dl-blue-light:  #79905F;
+  --dl-blue-dark:   #40502F;
+  --dl-blue-pale:   #E7E9DA;
+  --dl-aurora:      #A9805A;
+
+  --dl-bg:          #F6F1E6;
+  --dl-surface:     #EEE6D5;
+  --dl-border:      #DDD2B9;
+  --dl-text:        #2E2A22;
+  --dl-navy:        #211E17;
+
+  --dl-muted:       #8A7F6A;
+  --dl-sage:        #8A7F6A;
+  --dl-hint:        #8A7F6A;
+  --dl-forest:      #4A4436;
+
+  --dl-teal:        #5B6E4C;
+  --dl-page:        #F6F1E6;
+  --dl-card:        #FBF7EC;
+  --dl-cream:       #EEE6D5;
+  --dl-nav:         #F6F1E6;
+  --dl-sage-light:  #E4DAC4;
+  --dl-border-mid:  #DDD2B9;
+  --dl-m-border:    #DDD2B9;
+  --dl-m-text:      #2E2A22;
+  --dl-m-muted:     #8A7F6A;
+
+  --dl-healthy:  #5B6E4C;
+  --dl-watch:    #A87A2E;
+  --dl-risk:     #B06430;
+  --dl-critical: #A44636;
 }
 
-/* Dark marketing surfaces — nav, hero, footer, section-dark */
-.site-shell .section-dark,
-.site-shell .bg-dl-nav {
-  --dl-cream:       #ffffff;
-  --dl-sage:        #ffffff;
-  --dl-sage-light:  #ffffff;
-  --dl-hint:        #ffffff;
-  --dl-muted:       #ffffff;
+/* The warm-charcoal break — used by a handful of sections
+   (hero, the dashboard preview, the closing CTA, the footer)
+   as an intentional, quiet contrast note, never the whole page. */
+.site-shell .section-dark {
+  color-scheme: dark;
+
+  --dl-bg:          #241F17;
+  --dl-surface:     #2C2619;
+  --dl-card:        #29241A;
+  --dl-border:      rgba(246,238,220,0.11);
+  --dl-text:        #EEE5D2;
+  --dl-navy:        #F3ECDD;
+
+  --dl-muted:       #AB9F86;
+  --dl-sage:        #AB9F86;
+  --dl-hint:        #AB9F86;
+  --dl-forest:      #DED2B7;
+
+  --dl-teal:        #A3BC8C;
+  --dl-page:        #241F17;
+  --dl-cream:       #2C2619;
+  --dl-nav:         #241F17;
+  --dl-sage-light:  rgba(246,238,220,0.12);
+  --dl-border-mid:  rgba(246,238,220,0.11);
+  --dl-m-border:    rgba(246,238,220,0.11);
+  --dl-m-text:      #EEE5D2;
+  --dl-m-muted:     #AB9F86;
+
+  --dl-blue:        #A3BC8C;
+  --dl-blue-light:  #BBD1A5;
+  --dl-blue-dark:   #7E9868;
+  --dl-blue-pale:   rgba(163,188,140,0.14);
+
+  --dl-healthy:  #A3BC8C;
+  --dl-watch:    #D0A85C;
+  --dl-risk:     #D18E60;
+  --dl-critical: #D08877;
 }
 
-/* Light marketing sections — stronger secondary text */
-.site-shell .section-light,
-.site-shell .section-cream,
-.site-shell .bg-dl-card,
-.site-shell .bg-dl-page {
-  --dl-muted:       #555663;
-  --dl-sage:        #555663;
-  --dl-hint:        #555663;
-  --dl-sage-light:  #9fa0b5;
-}
-
+/* Landing dark mode — warm charcoal throughout, section contrast preserved */
 .dark .site-shell {
   color-scheme: dark;
 
-  /* Light sections → dark surfaces */
-  --dl-bg:          #0f1117;
-  --dl-surface:     #1a1d27;
-  --dl-page:        #0f1117;
-  --dl-card:        #1a1d27;
-  --dl-border:      #2a2d3e;
-  --dl-border-mid:  #2a2d3e;
-  --dl-m-border:    #2a2d3e;
+  --dl-bg:          #241F17;
+  --dl-surface:     #2C2619;
+  --dl-card:        #29241A;
+  --dl-border:      rgba(246,238,220,0.11);
+  --dl-text:        #EEE5D2;
+  --dl-navy:        #F3ECDD;
+  --dl-muted:       #AB9F86;
+  --dl-sage:        #AB9F86;
+  --dl-hint:        #AB9F86;
+  --dl-forest:      #DED2B7;
+  --dl-teal:        #A3BC8C;
+  --dl-page:        #241F17;
+  --dl-cream:       #2C2619;
+  --dl-nav:         #241F17;
+  --dl-sage-light:  rgba(246,238,220,0.12);
+  --dl-border-mid:  rgba(246,238,220,0.11);
+  --dl-m-border:    rgba(246,238,220,0.11);
+  --dl-m-text:      #EEE5D2;
+  --dl-m-muted:     #AB9F86;
+  --dl-blue:        #A3BC8C;
+  --dl-blue-light:  #BBD1A5;
+  --dl-blue-dark:   #7E9868;
+  --dl-blue-pale:   rgba(163,188,140,0.14);
+  --dl-aurora:      #C9A47C;
+  --dl-healthy:     #A3BC8C;
+  --dl-watch:       #D0A85C;
+  --dl-risk:        #D18E60;
+  --dl-critical:    #D08877;
+}
 
-  --dl-text:        #d1d5db;
-  --dl-forest:      #d1d5db;
-  --dl-muted:       #9ca3af;
-  --dl-hint:        #9ca3af;
-  --dl-sage:        #9ca3af;
-  --dl-m-text:      #d1d5db;
-  --dl-m-muted:     #9ca3af;
+.dark .site-shell .section-dark {
+  --dl-bg:          #1A1610;
+  --dl-surface:     #241F17;
+  --dl-card:        #29241A;
+  --dl-nav:         #1A1610;
+  --dl-page:        #1A1610;
+}
 
-  /* Dark sections (nav, hero, footer) — stay dark */
-  --dl-nav:         #0a1220;
-  --dl-navy:        #0a1220;
+/* Auth — warm charcoal brand panel (matches landing section-dark) */
+.auth-brand-panel {
+  color-scheme: dark;
+  background: #241F17;
+  color: #EEE5D2;
 
-  /* Text on dark sections — stay light */
-  --dl-cream:       #f5f7fa;
-  --dl-sage-light:  #c6d1d7;
-
-  --dl-blue:        #60a5fa;
-  --dl-blue-light:  #93c5fd;
-  --dl-blue-dark:   #3b82f6;
-  --dl-blue-pale:   #1e3a5f;
-  --dl-teal:        #60a5fa;
+  --dl-bg:          #241F17;
+  --dl-surface:     #2C2619;
+  --dl-card:        #29241A;
+  --dl-border:      rgba(246,238,220,0.11);
+  --dl-text:        #EEE5D2;
+  --dl-navy:        #F3ECDD;
+  --dl-muted:       #AB9F86;
+  --dl-sage:        #AB9F86;
+  --dl-hint:        #AB9F86;
+  --dl-forest:      #DED2B7;
+  --dl-teal:        #A3BC8C;
+  --dl-page:        #241F17;
+  --dl-cream:       #2C2619;
+  --dl-nav:         #241F17;
+  --dl-sage-light:  rgba(246,238,220,0.12);
+  --dl-border-mid:  rgba(246,238,220,0.11);
+  --dl-m-border:    rgba(246,238,220,0.11);
+  --dl-m-text:      #EEE5D2;
+  --dl-m-muted:     #AB9F86;
+  --dl-blue:        #A3BC8C;
+  --dl-blue-light:  #BBD1A5;
+  --dl-blue-dark:   #7E9868;
+  --dl-blue-pale:   rgba(163,188,140,0.14);
+  --dl-aurora:      #C9A47C;
+  --dl-healthy:     #A3BC8C;
+  --dl-watch:       #D0A85C;
+  --dl-risk:        #D18E60;
+  --dl-critical:    #D08877;
 }
 
 /* ─── Base reset ─── */
@@ -236,28 +315,30 @@ body {
   /* ── Section backgrounds ── */
   .section-light  { @apply bg-dl-bg; }
   .section-cream  { @apply bg-dl-surface; }
-  .section-dark   { @apply bg-dl-navy; }
+  .section-dark   { @apply bg-dl-nav; }
 
   /* ── Cards ── */
   .dash-card {
     background: var(--dl-bg);
     border: 1px solid var(--dl-border);
-    border-radius: 14px;
+    border-radius: 16px;
     padding: 20px;
-    transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
   }
   .dash-card:hover {
-    box-shadow: 0 8px 30px rgba(47,126,218,0.1), 0 2px 8px rgba(0,0,0,0.05);
-    border-color: rgba(47,126,218,0.3);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.18), 0 0 0 1px rgba(46,230,168,0.12);
+    border-color: rgba(46,230,168,0.28);
+    transform: translateY(-1px);
   }
 
   .dl-card {
-    @apply rounded-[14px] border border-dl-border bg-dl-bg p-6;
-    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    @apply rounded-[16px] border border-dl-border bg-dl-bg p-6;
+    transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
   }
   .dl-card:hover {
-    box-shadow: 0 8px 30px rgba(47,126,218,0.1), 0 2px 8px rgba(0,0,0,0.05);
-    border-color: rgba(47,126,218,0.3);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.18), 0 0 0 1px rgba(46,230,168,0.12);
+    border-color: rgba(46,230,168,0.28);
+    transform: translateY(-1px);
   }
 
   /* Insight / stat card */
@@ -274,28 +355,37 @@ body {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(47,126,218,0.03) 0%, transparent 60%);
+    background: linear-gradient(135deg, rgba(46,230,168,0.03) 0%, transparent 60%);
     pointer-events: none;
   }
   .insight-card:hover {
-    box-shadow: 0 8px 30px rgba(47,126,218,0.12), 0 2px 8px rgba(0,0,0,0.05);
-    border-color: rgba(47,126,218,0.35);
+    box-shadow: 0 8px 30px rgba(46,230,168,0.12), 0 2px 8px rgba(0,0,0,0.05);
+    border-color: rgba(46,230,168,0.35);
     transform: translateY(-1px);
   }
 
-  /* ── Buttons ── */
+  /* ── Buttons ──
+     Tactile: a soft top highlight + grounded shadow so buttons read as
+     physical surfaces, not flat CSS rectangles. */
   .btn-primary {
-    @apply inline-flex items-center gap-2 rounded-lg border-none bg-dl-blue px-[22px] py-[11px] text-sm font-medium text-white transition-all duration-150;
-    box-shadow: 0 2px 8px rgba(47,126,218,0.35);
+    @apply relative inline-flex items-center gap-2 rounded-[9px] border-none bg-dl-blue px-6 py-3 text-[13.5px] font-medium text-[#F6F1E6] transition-all duration-200 ease-out;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.12),
+      0 1px 1px rgba(30,25,15,0.12),
+      0 6px 16px -8px rgba(46,40,25,0.35);
   }
   .btn-primary:hover {
-    @apply -translate-y-px;
     background: var(--dl-blue-dark);
-    box-shadow: 0 4px 16px rgba(47,126,218,0.45);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.14),
+      0 1px 1px rgba(30,25,15,0.12),
+      0 8px 20px -8px rgba(46,40,25,0.4);
+    transform: translateY(-1px);
   }
+  .btn-primary:active { transform: translateY(0); }
 
   .btn-secondary {
-    @apply inline-flex items-center gap-2 rounded-lg border-[1.5px] border-dl-blue bg-transparent px-[22px] py-[11px] text-sm font-medium text-dl-blue transition-all duration-150;
+    @apply inline-flex items-center gap-2 rounded-[9px] border-[1.5px] border-dl-blue bg-transparent px-6 py-3 text-[13.5px] font-medium text-dl-blue transition-all duration-200 ease-out;
   }
   .btn-secondary:hover {
     background: var(--dl-blue-pale);
@@ -303,22 +393,16 @@ body {
   }
 
   .btn-ghost {
-    @apply inline-flex items-center gap-2 rounded-lg border border-dl-border bg-dl-surface px-[22px] py-[11px] text-sm font-medium text-dl-text transition-colors duration-150;
+    @apply inline-flex items-center gap-2 rounded-[9px] border border-dl-border bg-transparent px-6 py-3 text-[13.5px] font-medium text-dl-text transition-all duration-200 ease-out;
   }
-  .btn-ghost:hover { @apply bg-dl-surface border-dl-muted; }
-
-  /* Ghost button on dark marketing sections */
-  .site-shell .section-dark .btn-ghost,
-  .site-shell .bg-dl-nav .btn-ghost {
-    @apply border-white/25 bg-white/10 text-white hover:border-white/40 hover:bg-white/15;
-  }
+  .btn-ghost:hover { @apply border-dl-muted; transform: translateY(-1px); }
 
   .btn-dash-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-dl-blue px-4 py-2.5 text-sm font-medium text-white transition-all duration-150 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40;
-    box-shadow: 0 2px 8px rgba(47,126,218,0.3);
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-dl-blue px-4 py-2.5 text-sm font-semibold text-[#052018] transition-all duration-150 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40;
+    box-shadow: 0 2px 12px rgba(46,230,168,0.25);
   }
   .btn-dash-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-dl-border bg-dl-bg px-4 py-2.5 text-sm font-medium text-dl-text transition-colors hover:bg-dl-surface hover:border-dl-muted;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-dl-border bg-dl-bg px-4 py-2.5 text-sm font-medium text-dl-text transition-colors hover:bg-dl-surface hover:border-dl-muted;
   }
 
   /* ── Form elements ── */
@@ -329,7 +413,7 @@ body {
   }
   .form-input:focus {
     border-color: var(--dl-blue);
-    box-shadow: 0 0 0 3px rgba(47,126,218,0.12);
+    box-shadow: 0 0 0 3px rgba(46,230,168,0.12);
   }
 
   .dash-input {
@@ -345,7 +429,7 @@ body {
   .dash-input::placeholder { color: var(--dl-muted); }
   .dash-input:focus {
     border-color: var(--dl-blue);
-    box-shadow: 0 0 0 3px rgba(47,126,218,0.1);
+    box-shadow: 0 0 0 3px rgba(46,230,168,0.1);
   }
 
   /* ── Filter tabs ── */
@@ -363,19 +447,19 @@ body {
   .filter-tab:hover {
     background: var(--dl-blue-pale);
     color: var(--dl-blue);
-    border-color: rgba(47,126,218,0.2);
+    border-color: rgba(46,230,168,0.2);
   }
   .filter-tab-active {
     font-size: 13px;
     padding: 6px 14px;
     border-radius: 99px;
     background: var(--dl-blue);
-    color: #fff;
+    color: #052018;
     border: 1px solid transparent;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
     white-space: nowrap;
-    box-shadow: 0 2px 8px rgba(47,126,218,0.3);
+    box-shadow: 0 2px 8px rgba(46,230,168,0.3);
   }
 
   /* ── Tier chips ── */
@@ -389,24 +473,24 @@ body {
     white-space: nowrap;
   }
   .tier-chip-healthy {
-    background: rgba(22,163,74,0.1);
-    color: #16a34a;
-    border: 1px solid rgba(22,163,74,0.25);
+    background: rgba(31,174,122,0.1);
+    color: #1FAE7A;
+    border: 1px solid rgba(31,174,122,0.25);
   }
   .tier-chip-watch {
-    background: rgba(202,138,4,0.1);
-    color: #ca8a04;
-    border: 1px solid rgba(202,138,4,0.25);
+    background: rgba(200,148,22,0.1);
+    color: #C89416;
+    border: 1px solid rgba(200,148,22,0.25);
   }
   .tier-chip-risk {
-    background: rgba(234,88,12,0.1);
-    color: #ea580c;
-    border: 1px solid rgba(234,88,12,0.25);
+    background: rgba(217,119,46,0.1);
+    color: #D9772E;
+    border: 1px solid rgba(217,119,46,0.25);
   }
   .tier-chip-critical {
-    background: rgba(220,38,38,0.1);
-    color: #dc2626;
-    border: 1px solid rgba(220,38,38,0.25);
+    background: rgba(214,72,63,0.1);
+    color: #D6483F;
+    border: 1px solid rgba(214,72,63,0.25);
   }
 
   /* ── Progress bars ── */
@@ -449,15 +533,17 @@ body {
     @apply text-[11px] font-semibold uppercase tracking-[0.09em] text-dl-muted;
   }
 
-  /* Marketing: readable overline on dark vs light sections */
-  .site-shell .section-dark .label-overline,
-  .site-shell .bg-dl-nav .label-overline {
-    @apply text-white/70;
+  /* Editorial section kicker — serif italic index mark + label,
+     the recurring "handwritten margin note" motif that ties sections together. */
+  .section-kicker {
+    @apply inline-flex items-center gap-2.5 text-[13px] text-dl-muted;
+    font-variant-numeric: tabular-nums;
   }
-  .site-shell .section-light .label-overline,
-  .site-shell .section-cream .label-overline {
-    @apply text-dl-forest;
+  .section-kicker .kicker-index {
+    @apply font-serif italic text-dl-blue;
+    font-size: 15px;
   }
+
   .page-heading {
     font-size: 1.25rem;
     font-weight: 600;
@@ -522,7 +608,7 @@ body {
     padding: 12px 14px;
     transition: border-color 0.15s;
   }
-  .stat-tile:hover { border-color: rgba(47,126,218,0.3); }
+  .stat-tile:hover { border-color: rgba(46,230,168,0.3); }
 
   /* ── Repo scan button ── */
   .repo-scan-btn {
@@ -577,7 +663,7 @@ body {
 }
 .form-input-default:focus {
   border-color: var(--dl-blue);
-  box-shadow: 0 0 0 3px rgba(47,126,218,0.12);
+  box-shadow: 0 0 0 3px rgba(46,230,168,0.12);
   outline: none;
 }
 .form-input-error {
@@ -586,7 +672,7 @@ body {
 }
 .form-input-success {
   border-color: var(--dl-healthy) !important;
-  box-shadow: 0 0 0 3px rgba(22,163,74,0.1) !important;
+  box-shadow: 0 0 0 3px rgba(31,174,122,0.1) !important;
 }
 .form-input-disabled {
   background: var(--dl-surface) !important;
@@ -619,24 +705,40 @@ body {
 .testimonial-fade-left  { background: linear-gradient(to right, var(--dl-card), transparent); }
 .testimonial-fade-right { background: linear-gradient(to left, var(--dl-card), transparent); }
 
-/* ─── Hero mesh gradient ─── */
-@keyframes hero-mesh {
-  0%, 100% { background-position: 0% 50%, 100% 50%, 50% 100%; }
-  33%       { background-position: 100% 0%, 0% 100%, 50% 0%;   }
-  66%       { background-position: 50% 100%, 50% 0%, 0% 50%;   }
-}
+/* ─── Ambient field — a single, near-invisible warm glow low in
+   the frame, like light falling across paper. No motion, no neon. ─── */
 .hero-mesh-gradient {
   background:
-    radial-gradient(ellipse 700px 700px at 20% 30%, rgba(47,126,218,0.12), transparent),
-    radial-gradient(ellipse 500px 500px at 80% 60%, rgba(91,159,232,0.10), transparent),
-    radial-gradient(ellipse 400px 400px at 50% 80%, rgba(30,42,60,0.06),   transparent);
-  background-size: 200% 200%, 200% 200%, 200% 200%;
-  animation: hero-mesh 20s ease-in-out infinite;
+    radial-gradient(ellipse 900px 500px at 85% 100%, rgba(91,110,76,0.06), transparent 65%),
+    radial-gradient(ellipse 700px 500px at 0% 0%, rgba(169,128,90,0.05), transparent 65%);
 }
 
-/* ─── Blue glow pill (used in hero badges) ─── */
+/* Fine paper grain — barely-there texture instead of a technical grid */
+.ambient-grid {
+  background-image: radial-gradient(rgba(46,40,25,0.05) 0.5px, transparent 0.5px);
+  background-size: 4px 4px;
+  mask-image: radial-gradient(ellipse 70% 60% at 30% 10%, black, transparent);
+}
+.dark .ambient-grid {
+  background-image: radial-gradient(rgba(246,238,220,0.04) 0.5px, transparent 0.5px);
+}
+
+/* ─── Accent glow pill (used in hero badges) ─── */
 .blue-glow {
-  box-shadow: 0 0 0 1px rgba(47,126,218,0.2), 0 4px 16px rgba(47,126,218,0.2);
+  box-shadow: 0 0 0 1px rgba(91,110,76,0.18), 0 4px 16px rgba(91,110,76,0.12);
+}
+
+/* ─── Paper surface — a lifted panel with soft, warm depth ─── */
+.glass-panel {
+  background: var(--dl-card);
+  border: 1px solid var(--dl-border);
+  border-radius: 12px;
+}
+
+/* ─── Hairline divider — the editorial rule between sections ─── */
+.hairline {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--dl-border) 15%, var(--dl-border) 85%, transparent);
 }
 
 /* ─── Sidebar nav link active indicator ─── */

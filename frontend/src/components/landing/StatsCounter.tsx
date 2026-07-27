@@ -12,10 +12,10 @@ interface Stat {
 }
 
 const STATS: Stat[] = [
-  { label: 'Packages Scanned', value: 12400, suffix: '+', prefix: '' },
-  { label: 'Abandonments Predicted', value: 47, suffix: '', prefix: '' },
-  { label: 'Prediction Accuracy', value: 92, suffix: '%', prefix: '' },
-  { label: 'Setup Time', value: 60, suffix: 's', prefix: '< ' },
+  { label: 'Diffs reviewed', value: 340000, suffix: '+', prefix: '' },
+  { label: 'Issues caught pre-commit', value: 96, suffix: '%', prefix: '' },
+  { label: 'Median review time', value: 400, suffix: 'ms', prefix: '< ' },
+  { label: 'Install time', value: 60, suffix: 's', prefix: '< ' },
 ]
 
 function AnimatedNumber({ value, prefix, suffix }: { value: number; prefix: string; suffix: string }) {
@@ -47,7 +47,7 @@ function AnimatedNumber({ value, prefix, suffix }: { value: number; prefix: stri
 
 export function StatsCounter() {
   return (
-    <section className="border-y border-dl-border bg-dl-page py-16 px-6">
+    <section className="border-y border-dl-border bg-dl-page py-14 px-6">
       <motion.div
         className="mx-auto max-w-[1100px]"
         initial="hidden"
@@ -57,14 +57,14 @@ export function StatsCounter() {
       >
         <motion.div
           variants={sectionReveal}
-          className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-0 md:divide-x md:divide-dl-border"
+          className="grid grid-cols-2 gap-y-10 md:grid-cols-4 md:divide-x md:divide-dl-border"
         >
           {STATS.map((stat) => (
-            <div key={stat.label} className="flex flex-col items-center text-center px-6">
-              <span className="text-[36px] font-semibold tracking-tight text-dl-teal md:text-[42px]">
+            <div key={stat.label} className="flex flex-col px-6 first:pl-0 md:text-left">
+              <span className="font-serif text-[32px] italic text-dl-navy md:text-[38px]">
                 <AnimatedNumber value={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
               </span>
-              <span className="mt-2 text-[13px] font-medium text-neutral-600">{stat.label}</span>
+              <span className="mt-1.5 text-[13px] text-dl-muted">{stat.label}</span>
             </div>
           ))}
         </motion.div>

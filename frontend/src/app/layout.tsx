@@ -1,27 +1,20 @@
 import type { Metadata } from 'next'
-import { Plus_Jakarta_Sans, JetBrains_Mono, Sora } from 'next/font/google'
+import { Inter, JetBrains_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Toaster } from 'sonner'
 import './globals.css'
 
-const plusJakarta = Plus_Jakarta_Sans({
+const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-inter',   // keep same CSS var so existing classes work
+  variable: '--font-inter',
   weight: ['400', '500', '600', '700', '800'],
   display: 'swap',
 })
 
-const geistMono = JetBrains_Mono({
+const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
-  display: 'swap',
-})
-
-const sora = Sora({
-  subsets: ['latin'],
-  variable: '--font-sora',
-  weight: ['600', '700', '800'],
   display: 'swap',
 })
 
@@ -30,19 +23,19 @@ export const metadata: Metadata = {
     icon: '/favicon.ico',
     apple: '/image.png',
   },
-  title: 'Beacon — Predictive Dependency Health',
+  title: 'Beacon — Security that ships with AI',
   description:
-    'Know which open source packages are dying before they become production incidents. Predictive dependency intelligence for engineering teams.',
+    'Beacon is the AI Security Engineer that lives inside your workflow — an IDE extension, MCP server, and CLI that quietly reviews AI-generated code before it reaches production. Local-first. Zero repo access.',
   openGraph: {
-    title: 'Beacon — Predictive Dependency Health',
-    description: 'Know which packages are dying — 60 days before they do.',
+    title: 'Beacon — Security that ships with AI',
+    description: 'The AI Security Engineer that watches over code as it\u2019s written, not after it ships.',
     type: 'website',
     siteName: 'Beacon',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Beacon — Predictive Dependency Health',
-    description: 'Know which packages are dying — 60 days before they do.',
+    title: 'Beacon — Security that ships with AI',
+    description: 'The AI Security Engineer that watches over code as it\u2019s written, not after it ships.',
   },
 }
 
@@ -50,9 +43,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('dl_theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.classList.add('dark')}catch(e){}` }} />
+        {/* Beacon defaults to dark — its native, premium surface. Users can opt into light for the dashboard. */}
+        <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('dl_theme');if(t!=='light')document.documentElement.classList.add('dark')}catch(e){document.documentElement.classList.add('dark')}` }} />
       </head>
-      <body className={`${plusJakarta.variable} ${geistMono.variable} ${sora.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
         {children}
         <Toaster
           position="bottom-right"

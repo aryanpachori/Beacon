@@ -6,31 +6,26 @@ import { inViewOptions, sectionReveal } from '@/components/marketing/motion'
 
 type CellValue = 'yes' | 'no' | 'partial'
 
-const ROWS: { feature: string; beacon: CellValue; snyk: CellValue; dependabot: CellValue; ossf: CellValue }[] = [
-  { feature: 'Predictive abandonment score', beacon: 'yes', snyk: 'no', dependabot: 'no', ossf: 'no' },
-  { feature: '60–90 day survival forecast', beacon: 'yes', snyk: 'no', dependabot: 'no', ossf: 'no' },
-  { feature: 'Migration recommendations', beacon: 'yes', snyk: 'partial', dependabot: 'partial', ossf: 'no' },
-  { feature: 'Known CVE detection', beacon: 'yes', snyk: 'yes', dependabot: 'yes', ossf: 'partial' },
-  { feature: 'Maintainer activity signals', beacon: 'yes', snyk: 'no', dependabot: 'no', ossf: 'yes' },
-  { feature: 'Funding gap detection', beacon: 'yes', snyk: 'no', dependabot: 'no', ossf: 'no' },
-  { feature: 'Slack + JIRA alerts', beacon: 'yes', snyk: 'yes', dependabot: 'partial', ossf: 'no' },
-  { feature: 'OSSF Scorecard integration', beacon: 'yes', snyk: 'partial', dependabot: 'no', ossf: 'yes' },
+const ROWS: { feature: string; beacon: CellValue; sast: CellValue; manual: CellValue }[] = [
+  { feature: 'Reviews code as it\u2019s written, not after', beacon: 'yes', sast: 'no', manual: 'no' },
+  { feature: 'Understands agent-generated diffs', beacon: 'yes', sast: 'no', manual: 'partial' },
+  { feature: 'Runs locally — zero repo access', beacon: 'yes', sast: 'partial', manual: 'yes' },
+  { feature: 'Inline fix suggestions', beacon: 'yes', sast: 'no', manual: 'partial' },
+  { feature: 'Works inside IDE, MCP, and CLI', beacon: 'yes', sast: 'no', manual: 'no' },
+  { feature: 'No dashboards to configure', beacon: 'yes', sast: 'no', manual: 'yes' },
+  { feature: 'Scales with agent-speed shipping', beacon: 'yes', sast: 'no', manual: 'no' },
 ]
 
 function Cell({ value, isBeacon }: { value: CellValue; isBeacon?: boolean }) {
   if (value === 'yes')
-    return (
-      <Check
-        className={`mx-auto ${isBeacon ? 'h-5 w-5 text-dl-teal' : 'h-4 w-4 text-dl-teal/70'}`}
-      />
-    )
-  if (value === 'partial') return <span className="text-neutral-500">partial</span>
+    return <Check className={`mx-auto ${isBeacon ? 'h-5 w-5 text-dl-blue' : 'h-4 w-4 text-dl-muted'}`} />
+  if (value === 'partial') return <span className="text-dl-muted">partial</span>
   return <Minus className="mx-auto h-4 w-4 text-dl-border" />
 }
 
 export function ComparisonTable() {
   return (
-    <section id="compare" className="section-light px-6 py-[100px]">
+    <section id="compare" className="section-light px-6 py-[120px]">
       <motion.div
         className="mx-auto max-w-[900px]"
         initial="hidden"
@@ -38,9 +33,9 @@ export function ComparisonTable() {
         viewport={inViewOptions}
         variants={sectionReveal}
       >
-        <p className="label-overline">How we compare</p>
-        <h2 className="mt-4 text-section-mobile font-medium text-dl-text lg:text-section">
-          Built for prediction, not reaction.
+        <p className="section-kicker"><span className="kicker-index">06</span> Not another dashboard</p>
+        <h2 className="mt-5 max-w-[560px] text-section-mobile font-medium text-dl-text lg:text-section">
+          Built to work at the speed AI writes code.
         </h2>
 
         <motion.div
@@ -48,42 +43,36 @@ export function ComparisonTable() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.28 }}
           viewport={inViewOptions}
-          className="mt-10 overflow-hidden rounded-[14px] border border-dl-border bg-dl-card"
+          className="mt-12 overflow-hidden rounded-[14px] border border-dl-border bg-dl-card"
         >
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[640px] text-center text-[13px] text-dl-forest">
+            <table className="w-full min-w-[560px] text-center text-[13px] text-dl-forest">
               <thead>
                 <tr className="border-b border-dl-border bg-dl-card">
-                  <th className="px-4 py-3 text-left font-medium text-dl-text">Feature</th>
-                  <th className="relative px-4 py-3 font-medium text-white">
-                    <div className="absolute inset-0 bg-dl-teal" />
+                  <th className="px-4 py-3 text-left font-medium text-dl-text">Capability</th>
+                  <th className="relative px-4 py-3 font-medium text-[#F6F1E6]">
+                    <div className="absolute inset-0 bg-dl-blue" />
                     <span className="relative z-10">Beacon</span>
                   </th>
-                  <th className="px-4 py-3 font-medium text-dl-muted">Snyk</th>
-                  <th className="px-4 py-3 font-medium text-dl-muted">Dependabot</th>
-                  <th className="px-4 py-3 font-medium text-dl-muted">OSSF Scorecard</th>
+                  <th className="px-4 py-3 font-medium text-dl-muted">Traditional SAST</th>
+                  <th className="px-4 py-3 font-medium text-dl-muted">Manual review</th>
                 </tr>
               </thead>
               <tbody>
                 {ROWS.map((row, i) => (
                   <tr
                     key={row.feature}
-                    className={`transition-colors hover:bg-dl-teal/[0.04] ${
-                      i % 2 === 0 ? 'bg-dl-card' : 'bg-dl-bg'
-                    }`}
+                    className={`transition-colors hover:bg-dl-blue/[0.04] ${i % 2 === 0 ? 'bg-dl-card' : 'bg-dl-bg'}`}
                   >
                     <td className="px-4 py-3 text-left font-medium text-dl-forest">{row.feature}</td>
-                    <td className="bg-dl-teal/[0.06] px-4 py-3">
+                    <td className="bg-dl-blue/[0.06] px-4 py-3">
                       <Cell value={row.beacon} isBeacon />
                     </td>
                     <td className="px-4 py-3">
-                      <Cell value={row.snyk} />
+                      <Cell value={row.sast} />
                     </td>
                     <td className="px-4 py-3">
-                      <Cell value={row.dependabot} />
-                    </td>
-                    <td className="px-4 py-3">
-                      <Cell value={row.ossf} />
+                      <Cell value={row.manual} />
                     </td>
                   </tr>
                 ))}
@@ -92,8 +81,8 @@ export function ComparisonTable() {
           </div>
         </motion.div>
 
-        <p className="mt-4 text-center text-[11px] text-neutral-500">
-          Comparison based on publicly available feature documentation as of March 2026.
+        <p className="mt-4 text-center text-[11px] text-dl-muted/70">
+          Categorical comparison — not a benchmark against any specific product.
         </p>
       </motion.div>
     </section>
