@@ -5,10 +5,11 @@ import { useEffect, useState } from 'react'
 type Theme = 'light' | 'dark'
 
 function readTheme(): Theme {
-  if (typeof window === 'undefined') return 'light'
+  if (typeof window === 'undefined') return 'dark'
   const stored = localStorage.getItem('dl_theme') as Theme | null
   if (stored === 'light' || stored === 'dark') return stored
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  // Beacon defaults to dark — its native, premium surface.
+  return 'dark'
 }
 
 function applyTheme(theme: Theme) {
@@ -16,7 +17,7 @@ function applyTheme(theme: Theme) {
 }
 
 export function useTheme(): [Theme, () => void, boolean] {
-  const [theme, setTheme] = useState<Theme>('light')
+  const [theme, setTheme] = useState<Theme>('dark')
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {

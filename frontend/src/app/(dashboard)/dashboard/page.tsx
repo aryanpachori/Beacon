@@ -20,8 +20,8 @@ function planLabel(plan: string) {
 }
 
 function planColor(plan: string) {
-  if (plan === 'pro') return { bg: 'rgba(47,126,218,0.2)', text: '#93c5fd', dot: '#60a5fa' }
-  if (plan === 'team') return { bg: 'rgba(22,163,74,0.2)', text: '#86efac', dot: '#22c55e' }
+  if (plan === 'pro') return { bg: 'rgba(163,188,140,0.18)', text: '#BBD1A5', dot: '#A3BC8C' }
+  if (plan === 'team') return { bg: 'rgba(169,128,90,0.18)', text: '#C9A47C', dot: '#A9805A' }
   return { bg: 'rgba(255,255,255,0.1)', text: 'rgba(255,255,255,0.7)', dot: 'rgba(255,255,255,0.5)' }
 }
 
@@ -62,21 +62,21 @@ export default function DashboardPage() {
     <div className="app-page">
 
       {/* ── Hero greeting banner ── */}
-      <div className="relative mb-8 overflow-hidden rounded-2xl bg-gradient-to-135 p-px"
+      <div className="relative mb-8 overflow-hidden rounded-2xl p-px"
         style={{
-          background: 'linear-gradient(135deg, #2f7eda 0%, #1a5fb4 100%)',
+          background: 'linear-gradient(135deg, rgba(163,188,140,0.35) 0%, rgba(255,255,255,0.06) 100%)',
         }}
       >
         <div className="relative overflow-hidden rounded-2xl px-8 py-7"
           style={{
-            background: 'linear-gradient(135deg, #1e3a6e 0%, #1a2f56 60%, #0f1e3a 100%)',
+            background: 'linear-gradient(135deg, #14171A 0%, #0E1012 60%, #0A0B0D 100%)',
           }}
         >
           {/* Decorative blobs */}
           <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full blur-3xl"
-            style={{ background: 'rgba(47,126,218,0.25)' }} />
+            style={{ background: 'rgba(163,188,140,0.16)' }} />
           <div className="pointer-events-none absolute -left-8 bottom-0 h-32 w-32 rounded-full blur-2xl"
-            style={{ background: 'rgba(91,159,232,0.15)' }} />
+            style={{ background: 'rgba(169,128,90,0.10)' }} />
           <div className="pointer-events-none absolute right-1/3 top-0 h-px w-64 opacity-30"
             style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)' }} />
 
@@ -84,9 +84,9 @@ export default function DashboardPage() {
             <div>
               <div className="mb-2 flex items-center gap-2">
                 <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white/10">
-                  <Zap className="h-3 w-3 text-[#5b9fe8]" />
+                  <Zap className="h-3 w-3 text-[#BBD1A5]" />
                 </div>
-                <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#5b9fe8]">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#BBD1A5]">
                   {greeting}
                 </span>
               </div>
@@ -95,8 +95,8 @@ export default function DashboardPage() {
               </h1>
               <p className="mt-1 text-sm text-white/50">
                 {scanComplete
-                  ? 'Your dependency health is being monitored in real-time.'
-                  : 'Connect GitHub to start monitoring your dependencies.'}
+                  ? 'Beacon is watching your stack in real time.'
+                  : 'Connect GitHub to let Beacon start watching your stack.'}
               </p>
             </div>
 
@@ -137,8 +137,8 @@ export default function DashboardPage() {
           </div>
           <p className="text-[15px] font-semibold text-dl-navy">No packages yet</p>
           <p className="mt-2 max-w-md text-sm text-dl-muted">
-            Complete GitHub onboarding to scan your repos. Packages appear here after signal
-            collection — SPS scores arrive once the intelligence service finishes scoring.
+            Complete GitHub onboarding to let Beacon scan your repos. Health scores appear here
+            once signal collection and scoring finish — usually within a few minutes.
           </p>
         </div>
       ) : (

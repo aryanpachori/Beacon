@@ -27,25 +27,25 @@ export function Nav() {
     <motion.header
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-      className="sticky top-0 z-50 h-[60px] bg-dl-nav"
+      transition={{ duration: 0.4 }}
+      className="sticky top-0 z-50 h-[68px] border-b border-dl-border bg-dl-bg/80 backdrop-blur-xl"
     >
-      <div className="mx-auto flex h-full max-w-[1200px] items-center justify-between px-6">
+      <div className="mx-auto flex h-full max-w-[1180px] items-center justify-between px-6">
         <SiteLogo
-          className="text-white"
+          className="text-dl-text"
           onClick={() => setOpen(false)}
         />
 
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="hidden items-center gap-10 md:flex">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.label}
               href={link.href}
               className={cn(
-                'text-sm transition-colors',
+                'text-[13.5px] transition-colors',
                 isActive(link.href)
-                  ? 'text-white'
-                  : 'text-white/70 hover:text-white'
+                  ? 'text-dl-text'
+                  : 'text-dl-muted hover:text-dl-text'
               )}
             >
               {link.label}
@@ -53,38 +53,48 @@ export function Nav() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-4 md:flex">
+        <div className="hidden items-center gap-5 md:flex">
           <button
             type="button"
             onClick={toggleTheme}
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-white/70 transition-colors hover:bg-white/5 hover:text-white"
-            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-dl-border bg-dl-surface text-dl-muted transition-all hover:border-dl-blue hover:text-dl-blue"
+            aria-label="Toggle dark mode"
           >
-            {themeMounted && theme === 'dark' ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
+            {themeMounted && theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
           </button>
           <Link
             href="/login"
-            className="text-sm text-white/70 transition-colors hover:text-white"
+            className="text-[13.5px] text-dl-muted transition-colors hover:text-dl-text"
           >
             Sign in
           </Link>
-          <Link href="/register" className="btn-primary px-5 py-2.5 text-sm">
-            Start free
+          <Link href="/register" className="btn-primary px-5 py-2.5 text-[13px]">
+            Install Beacon
           </Link>
         </div>
 
-        <button
-          type="button"
-          className="flex h-11 w-11 items-center justify-center md:hidden"
-          onClick={() => setOpen(!open)}
-          aria-label={open ? 'Close menu' : 'Open menu'}
-        >
-          {open ? (
-            <X className="h-5 w-5 text-white" />
-          ) : (
-            <Menu className="h-5 w-5 text-white" />
-          )}
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-dl-border bg-dl-surface text-dl-muted transition-all hover:border-dl-blue hover:text-dl-blue"
+            aria-label="Toggle dark mode"
+          >
+            {themeMounted && theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+          </button>
+          <button
+            type="button"
+            className="flex h-11 w-11 items-center justify-center"
+            onClick={() => setOpen(!open)}
+            aria-label={open ? 'Close menu' : 'Open menu'}
+          >
+            {open ? (
+              <X className="h-5 w-5 text-dl-text" />
+            ) : (
+              <Menu className="h-5 w-5 text-dl-text" />
+            )}
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>
@@ -94,33 +104,22 @@ export function Nav() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className="overflow-hidden border-t border-white/10 bg-dl-nav md:hidden"
+            className="overflow-hidden border-t border-dl-border bg-dl-bg md:hidden"
           >
             <nav className="flex flex-col px-6 py-4">
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="min-h-[44px] py-3 text-sm text-white/70 transition-colors hover:text-white"
+                  className="min-h-[44px] py-3 text-sm text-dl-muted transition-colors hover:text-dl-text"
                   onClick={() => setOpen(false)}
                 >
                   {link.label}
                 </Link>
               ))}
-              <div className="flex items-center justify-between min-h-[44px] py-3 text-sm text-white/70 border-b border-white/10">
-                <span>Theme</span>
-                <button
-                  type="button"
-                  onClick={toggleTheme}
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-white/70 transition-colors hover:text-white"
-                  aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-                >
-                  {themeMounted && theme === 'dark' ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
-                </button>
-              </div>
               <Link
                 href="/login"
-                className="min-h-[44px] py-3 text-sm text-white/70"
+                className="min-h-[44px] border-t border-dl-border py-3 text-sm text-dl-muted"
                 onClick={() => setOpen(false)}
               >
                 Sign in
@@ -130,7 +129,7 @@ export function Nav() {
                 className="btn-primary mt-2 justify-center"
                 onClick={() => setOpen(false)}
               >
-                Start free
+                Install Beacon
               </Link>
             </nav>
           </motion.div>

@@ -1,103 +1,118 @@
 'use client'
 
 import {
-  TrendingDown,
+  Sparkles,
+  Terminal,
+  Cpu,
   GitBranch,
-  Bell,
-  ArrowRightLeft,
-  BarChart2,
-  Shield,
+  KeyRound,
+  ScanLine,
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { inViewOptions, sectionReveal, staggerContainer, staggerFast } from '@/components/marketing/motion'
 
 const FEATURES = [
   {
-    icon: TrendingDown,
-    name: '60–90 day survival forecast',
+    icon: Sparkles,
+    name: 'Real-time inline review',
     description:
-      'Our XGBoost model predicts package abandonment probability before the signals become obvious.',
+      'Beacon annotates risky code the moment it\u2019s written — no waiting for CI, no separate dashboard to check.',
     hoverAnim: { y: [0, -3, 0], transition: { duration: 0.5, repeat: Infinity, repeatDelay: 0.8 } },
   },
   {
-    icon: GitBranch,
-    name: 'GitHub App integration',
+    icon: Terminal,
+    name: 'IDE, MCP, and CLI — your choice',
     description:
-      'One-click read-only connection. Supports monorepos, multiple manifest formats, and org-wide scanning.',
+      'Works as a native extension in your editor, an MCP server your agent calls directly, or a CLI step in CI.',
     hoverAnim: { scale: [1, 1.15, 1], transition: { duration: 0.6, repeat: Infinity, repeatDelay: 1 } },
   },
   {
-    icon: Bell,
-    name: 'Threshold alerts',
+    icon: Cpu,
+    name: 'Local-first, always',
     description:
-      'Configure SPS drop thresholds per org. Get notified in Slack, email, or JIRA the moment a package crosses your line.',
-    hoverAnim: { rotate: [0, -12, 12, -8, 6, 0], transition: { duration: 0.6 } },
+      'Analysis runs on your machine. Your source never leaves your environment — Beacon has zero repo access by design.',
+    hoverAnim: { rotate: [0, -8, 8, -5, 4, 0], transition: { duration: 0.6 } },
   },
   {
-    icon: ArrowRightLeft,
-    name: 'Migration recommendations',
+    icon: KeyRound,
+    name: 'Secret & credential detection',
     description:
-      'When a package falls, Beacon surfaces ranked replacement packages with estimated migration effort.',
+      'Catches hardcoded keys, tokens, and credentials the instant an agent writes them — before they\u2019re staged.',
     hoverAnim: { x: [0, 4, -4, 0], transition: { duration: 0.5, repeat: Infinity, repeatDelay: 0.8 } },
   },
   {
-    icon: BarChart2,
-    name: 'Signal breakdown',
+    icon: ScanLine,
+    name: 'Vulnerability pattern intelligence',
     description:
-      'Six weighted signal categories — commit velocity, maintainer activity, funding, issues, community, security — visualized per package.',
+      'Injection, broken auth, unsafe deserialization, and more — modeled from real-world CVEs, checked on every diff.',
     hoverAnim: { scaleY: [1, 1.2, 0.9, 1.1, 1], transition: { duration: 0.6 } },
   },
   {
-    icon: Shield,
-    name: 'Security hygiene tracking',
+    icon: GitBranch,
+    name: 'Agent-aware context',
     description:
-      'Days since last release, CVE age, and OSSF Scorecard delta tracked continuously alongside health signals.',
+      'Beacon understands agent-generated diffs specifically — tuned for the patterns Cursor, Claude Code, and Copilot actually produce.',
     hoverAnim: { scale: [1, 1.1, 1], transition: { duration: 0.4, repeat: Infinity, repeatDelay: 1.2 } },
   },
 ]
 
 export function FeatureGrid() {
+  const [featured, ...rest] = FEATURES
+
   return (
-    <section id="features" className="section-light px-6 py-[100px]">
+    <section id="features" className="section-light px-6 py-[120px]">
       <motion.div
-        className="mx-auto max-w-[1200px]"
+        className="mx-auto max-w-[1180px]"
         initial="hidden"
         whileInView="visible"
         viewport={inViewOptions}
         variants={staggerContainer}
       >
-        <motion.p variants={sectionReveal} className="label-overline">
-          Features
+        <motion.p variants={sectionReveal} className="section-kicker">
+          <span className="kicker-index">04</span> Features
         </motion.p>
         <motion.h2
           variants={sectionReveal}
-          className="mt-4 max-w-[640px] text-section-mobile font-medium text-dl-text lg:text-section"
+          className="mt-5 max-w-[560px] text-section-mobile font-medium text-dl-text lg:text-section"
         >
-          Everything engineering teams need to stay ahead of dependency rot.
+          Everything it takes to trust AI-generated code.
         </motion.h2>
 
         <motion.div
           variants={staggerFast}
-          className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          className="mt-14 grid grid-cols-1 gap-4 lg:grid-cols-3 lg:grid-rows-2"
         >
-          {FEATURES.map(({ icon: Icon, name, description, hoverAnim }) => (
+          {/* Featured tile — spans two rows, breaks the card-after-card rhythm */}
+          <motion.div
+            variants={sectionReveal}
+            className="group relative overflow-hidden rounded-[14px] border border-dl-border bg-dl-card p-8 transition-all duration-300 hover:border-dl-blue/20 lg:row-span-2 lg:flex lg:flex-col lg:justify-between"
+            whileHover="hovered"
+          >
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-dl-blue/[0.04] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <div className="relative">
+              <motion.div variants={{ hovered: featured.hoverAnim }} className="inline-block">
+                <featured.icon className="h-6 w-6 text-dl-blue" strokeWidth={1.75} />
+              </motion.div>
+              <h3 className="mt-6 text-[19px] font-medium leading-snug text-dl-text">{featured.name}</h3>
+              <p className="mt-3 max-w-[280px] text-[13.5px] leading-relaxed text-dl-muted">{featured.description}</p>
+            </div>
+            <span className="relative mt-10 font-serif italic text-sm text-dl-muted/60">Core</span>
+          </motion.div>
+
+          {rest.map(({ icon: Icon, name, description, hoverAnim }) => (
             <motion.div
               key={name}
               variants={sectionReveal}
-              className="group dl-card relative overflow-hidden transition-all duration-300 hover:border-dl-teal/30 hover:shadow-[0_0_30px_rgba(53,133,142,0.08)]"
+              className="group relative overflow-hidden rounded-[14px] border border-dl-border bg-dl-card p-6 transition-all duration-300 hover:border-dl-blue/20"
               whileHover="hovered"
             >
-              {/* Subtle gradient glow on hover */}
-              <div className="absolute inset-0 bg-gradient-to-br from-dl-teal/[0.02] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-dl-blue/[0.03] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               <div className="relative">
-                <motion.div
-                  variants={{ hovered: hoverAnim }}
-                  className="inline-block"
-                >
-                  <Icon className="h-[22px] w-[22px] text-dl-teal" />
+                <motion.div variants={{ hovered: hoverAnim }} className="inline-block">
+                  <Icon className="h-5 w-5 text-dl-blue" strokeWidth={1.75} />
                 </motion.div>
-                <h3 className="mt-4 text-[15px] font-medium text-dl-text">{name}</h3>
-                <p className="mt-2 text-[13px] text-neutral-600">{description}</p>
+                <h3 className="mt-4 text-[14.5px] font-medium text-dl-text">{name}</h3>
+                <p className="mt-2 text-[13px] leading-relaxed text-dl-muted">{description}</p>
               </div>
             </motion.div>
           ))}

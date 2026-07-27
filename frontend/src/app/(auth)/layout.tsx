@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Shield, TrendingDown, Bell, Zap, Sun, Moon, Lightbulb, RefreshCw } from 'lucide-react'
+import { Sparkles, Terminal, Cpu, GitBranch, Sun, Moon, Lightbulb, RefreshCw } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { SiteLogo } from '@/components/layout/SiteLogo'
 import { useTheme } from '@/hooks/useTheme'
@@ -30,16 +30,16 @@ function useFunFact() {
 }
 
 const FEATURES = [
-  { icon: TrendingDown, text: 'Predict package death up to 60 days early' },
-  { icon: Shield,       text: 'CVE & supply chain alerts in real-time' },
-  { icon: Bell,         text: 'Slack & Google Chat notifications' },
-  { icon: Zap,          text: 'XGBoost-powered SPS scoring engine' },
+  { icon: Sparkles, text: 'Reviews AI-generated code in real time' },
+  { icon: Terminal, text: 'Works as an IDE extension, MCP server, or CLI' },
+  { icon: Cpu,      text: 'Runs locally — nothing leaves your machine' },
+  { icon: GitBranch, text: 'Zero repo access, by design' },
 ]
 
 const STATS = [
-  { value: '500+', label: 'packages monitored' },
-  { value: '60d',  label: 'prediction window' },
-  { value: '6',    label: 'signal categories' },
+  { value: '340K+', label: 'diffs reviewed' },
+  { value: '<400ms', label: 'median review time' },
+  { value: '<60s', label: 'to install' },
 ]
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
@@ -58,9 +58,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
   if (checkingAuth) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#0f1e3a] text-sm text-white/60">
+      <div className="auth-brand-panel flex min-h-screen items-center justify-center text-sm text-dl-muted">
         <div className="flex flex-col items-center gap-3">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#5b9fe8] border-t-transparent" />
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-dl-blue border-t-transparent" />
           <span>Verifying session…</span>
         </div>
       </div>
@@ -70,23 +70,23 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="flex min-h-screen bg-dl-bg">
       {/* ── Left brand panel ── */}
-      <div className="relative hidden w-[480px] shrink-0 flex-col gap-12 overflow-hidden bg-[#0f1e3a] p-12 lg:flex xl:w-[520px]">
+      <div className="auth-brand-panel relative hidden w-[480px] shrink-0 flex-col gap-12 overflow-hidden p-12 lg:flex xl:w-[520px]">
         {/* Background decorations */}
         <div className="pointer-events-none absolute -right-32 -top-32 h-80 w-80 rounded-full blur-3xl"
-          style={{ background: 'rgba(47,126,218,0.2)' }} />
+          style={{ background: 'rgba(201,164,124,0.1)' }} />
         <div className="pointer-events-none absolute -bottom-24 -left-24 h-64 w-64 rounded-full blur-3xl"
-          style={{ background: 'rgba(47,126,218,0.12)' }} />
-        <div className="pointer-events-none absolute inset-x-0 top-1/2 h-px -translate-y-1/2 opacity-10"
-          style={{ background: 'linear-gradient(90deg, transparent, #2f7eda, transparent)' }} />
+          style={{ background: 'rgba(163,188,140,0.08)' }} />
+        <div className="pointer-events-none absolute inset-x-0 top-1/2 h-px -translate-y-1/2"
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(246,238,220,0.08), transparent)' }} />
 
         {/* Logo */}
         <div className="relative z-10">
           <SiteLogo
-            className="text-[18px] font-bold tracking-tight text-white"
-            iconClassName="rounded-lg bg-[#2f7eda]/20"
+            className="text-[18px] font-bold tracking-tight text-dl-navy"
+            iconClassName="rounded-lg bg-dl-blue-pale"
           />
-          <p className="mt-3 text-sm leading-relaxed text-white/50">
-            Predictive dependency intelligence for engineering teams.
+          <p className="mt-3 text-sm leading-relaxed text-dl-muted">
+            Your AI Security Engineer — reviewing code as it&apos;s written.
           </p>
         </div>
 
@@ -96,8 +96,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <div className="flex gap-6">
             {STATS.map(({ value, label }) => (
               <div key={label}>
-                <p className="text-2xl font-bold text-white">{value}</p>
-                <p className="text-[11px] text-white/40">{label}</p>
+                <p className="text-2xl font-bold text-dl-navy">{value}</p>
+                <p className="text-[11px] text-dl-muted">{label}</p>
               </div>
             ))}
           </div>
@@ -106,10 +106,10 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <div className="space-y-3">
             {FEATURES.map(({ icon: Icon, text }) => (
               <div key={text} className="flex items-center gap-3">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#2f7eda]/15">
-                  <Icon className="h-4 w-4 text-[#5b9fe8]" />
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-dl-blue-pale">
+                  <Icon className="h-4 w-4 text-dl-blue" />
                 </div>
-                <span className="text-[13px] text-white/70">{text}</span>
+                <span className="text-[13px] text-dl-forest">{text}</span>
               </div>
             ))}
           </div>
@@ -117,17 +117,17 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </div>
 
         {/* Fun fact */}
-        <div className="relative z-10 mt-auto rounded-xl border border-white/10 bg-white/5 p-4">
+        <div className="relative z-10 mt-auto rounded-xl border border-dl-border bg-dl-surface p-4">
           <div className="mb-2.5 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Lightbulb className="h-3.5 w-3.5 text-[#f59e0b]" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-white/40">Fun fact</span>
+              <Lightbulb className="h-3.5 w-3.5 text-dl-watch" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-dl-muted">Fun fact</span>
             </div>
             <button
               type="button"
               onClick={refresh}
               disabled={loading}
-              className="flex h-5 w-5 items-center justify-center rounded text-white/30 transition-colors hover:text-white/60 disabled:opacity-40"
+              className="flex h-5 w-5 items-center justify-center rounded text-dl-muted transition-colors hover:text-dl-forest disabled:opacity-40"
               aria-label="New fact"
             >
               <RefreshCw className={`h-3 w-3 ${loading ? 'animate-spin' : ''}`} />
@@ -135,16 +135,16 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </div>
           {loading && !fact ? (
             <div className="space-y-1.5">
-              <div className="h-2.5 w-full rounded-full bg-white/10 animate-pulse" />
-              <div className="h-2.5 w-4/5 rounded-full bg-white/10 animate-pulse" />
-              <div className="h-2.5 w-3/5 rounded-full bg-white/10 animate-pulse" />
+              <div className="h-2.5 w-full rounded-full bg-dl-sage-light animate-pulse" />
+              <div className="h-2.5 w-4/5 rounded-full bg-dl-sage-light animate-pulse" />
+              <div className="h-2.5 w-3/5 rounded-full bg-dl-sage-light animate-pulse" />
             </div>
           ) : fact ? (
-            <p className={`text-[12px] leading-relaxed text-white/60 transition-opacity duration-300 ${loading ? 'opacity-40' : 'opacity-100'}`}>
+            <p className={`text-[12px] leading-relaxed text-dl-muted transition-opacity duration-300 ${loading ? 'opacity-40' : 'opacity-100'}`}>
               {fact}
             </p>
           ) : (
-            <p className="text-[12px] text-white/30">Could not load a fact right now.</p>
+            <p className="text-[12px] text-dl-hint">Could not load a fact right now.</p>
           )}
         </div>
 

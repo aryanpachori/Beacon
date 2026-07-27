@@ -137,7 +137,7 @@ export default function MaintainersPage() {
                 {/* Header */}
                 <div className="flex items-start gap-3">
                   {/* Avatar (Initials) */}
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#2f7eda] to-[#1a5fb4] text-[12px] font-bold text-white shadow-sm">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#5B6E4C] to-[#40502F] text-[12px] font-bold text-white shadow-sm">
                     {initials}
                   </div>
                   <div className="flex-1 min-w-0">

@@ -31,7 +31,7 @@ export function MaintainerProfileCards({ pkg, className }: MaintainerProfileCard
           return (
             <div key={profile.handle} className="overflow-hidden rounded-2xl border border-dl-border bg-dl-bg p-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#2f7eda] to-[#1a5fb4] text-[14px] font-bold text-white">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#5B6E4C] to-[#40502F] text-[14px] font-bold text-white">
                   {initials(profile.name)}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -40,7 +40,7 @@ export function MaintainerProfileCards({ pkg, className }: MaintainerProfileCard
                     href={`https://github.com/${login}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 font-mono text-[11px] text-dl-muted hover:text-[#2f7eda] transition-colors"
+                    className="flex items-center gap-1 font-mono text-[11px] text-dl-muted hover:text-[#5B6E4C] transition-colors"
                   >
                     <ExternalLink className="h-3 w-3" />
                     {profile.handle}

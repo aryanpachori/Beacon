@@ -184,8 +184,8 @@ export default function BillingPage() {
         <div
           className="mb-6 rounded-xl px-5 py-3.5 text-[13px] font-semibold text-dl-text"
           style={{
-            background: 'rgba(47,126,218,0.08)',
-            border: '1.5px solid rgba(47,126,218,0.35)',
+            background: 'rgba(91,110,76,0.08)',
+            border: '1.5px solid rgba(91,110,76,0.35)',
           }}
         >
           ✓ {successMessage}
@@ -196,8 +196,8 @@ export default function BillingPage() {
       <div
         className="mb-6 rounded-xl px-6 py-5"
         style={{
-          background: 'rgba(47,126,218,0.08)',
-          border: '1.5px solid rgba(47,126,218,0.35)',
+          background: 'rgba(91,110,76,0.08)',
+          border: '1.5px solid rgba(91,110,76,0.35)',
         }}
       >
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">

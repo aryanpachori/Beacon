@@ -16,6 +16,7 @@ const config: Config = {
           "blue-light": "var(--dl-blue-light)",
           "blue-dark": "var(--dl-blue-dark)",
           "blue-pale": "var(--dl-blue-pale)",
+          aurora: "var(--dl-aurora)",
 
           bg: "var(--dl-bg)",
           surface: "var(--dl-surface)",
@@ -62,20 +63,21 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-inter)", "sans-serif"],
         mono: ["var(--font-mono)", "monospace"],
+        serif: ["Iowan Old Style", "Georgia", "Cambria", "serif"],
       },
       fontSize: {
         hero: [
-          "3.5rem",
-          { lineHeight: "1.15", letterSpacing: "-0.02em", fontWeight: "500" },
+          "4.25rem",
+          { lineHeight: "1.05", letterSpacing: "-0.025em", fontWeight: "500" },
         ],
         "hero-mobile": [
-          "2.25rem",
-          { lineHeight: "1.15", letterSpacing: "-0.02em", fontWeight: "500" },
+          "2.5rem",
+          { lineHeight: "1.08", letterSpacing: "-0.02em", fontWeight: "500" },
         ],
-        section: ["2.25rem", { lineHeight: "1.2", fontWeight: "500" }],
+        section: ["2.75rem", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "500" }],
         "section-mobile": [
-          "1.625rem",
-          { lineHeight: "1.2", fontWeight: "500" },
+          "1.75rem",
+          { lineHeight: "1.15", letterSpacing: "-0.015em", fontWeight: "500" },
         ],
       },
       keyframes: {
@@ -119,8 +121,12 @@ const config: Config = {
       boxShadow: {
         card: "0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)",
         "card-hover":
-          "0 8px 30px rgba(47,126,218,0.12), 0 2px 8px rgba(0,0,0,0.06)",
-        blue: "0 4px 20px rgba(47,126,218,0.25)",
+          "0 12px 32px rgba(0,0,0,0.18), 0 0 0 1px rgba(46,230,168,0.12)",
+        blue: "0 4px 20px rgba(46,230,168,0.25)",
+        glow: "0 0 40px rgba(46,230,168,0.18)",
+        "glow-aurora": "0 0 40px rgba(34,211,238,0.15)",
+        edge: "0 1px 0 0 rgba(255,255,255,0.04) inset",
+        panel: "0 24px 64px -20px rgba(0,0,0,0.5)",
       },
     },
   },

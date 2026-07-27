@@ -17,11 +17,11 @@ import { tierColor } from '@/lib/constants'
 import { buildChartSeries } from '@/lib/packageDetailData'
 
 const chartStyle = {
-  gridStroke: 'rgba(255,255,255,0.06)',
-  axisTickColor: '#4A7A72',
-  tooltipBg: '#182420',
-  tooltipBorder: 'rgba(53,133,142,0.25)',
-  tooltipText: '#D4EDE8',
+  gridStroke: 'rgba(246,238,220,0.08)',
+  axisTickColor: '#AB9F86',
+  tooltipBg: '#29241A',
+  tooltipBorder: 'rgba(163,188,140,0.25)',
+  tooltipText: '#EEE5D2',
 }
 
 const X_TICKS = [0, 30, 60, 89, 120, 150, 179]

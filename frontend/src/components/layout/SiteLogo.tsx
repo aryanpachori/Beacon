@@ -36,7 +36,7 @@ export function SiteLogo({
       </span>
       {showWordmark && (
         <span
-          className={`font-[family-name:var(--font-sora)] text-[20px] font-bold tracking-[-0.02em] ${wordmarkClass}`}
+          className={`text-[19px] font-semibold tracking-[-0.025em] ${wordmarkClass}`}
         >
           Beacon
         </span>
