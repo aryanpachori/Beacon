@@ -1,8 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { motion, useInView, useMotionValue, useSpring } from 'framer-motion'
-import { inViewOptions, sectionReveal, staggerContainer } from '@/components/marketing/motion'
+import { useInView, useMotionValue, useSpring } from 'framer-motion'
 
 interface Stat {
   label: string
@@ -22,7 +21,7 @@ function AnimatedNumber({ value, prefix, suffix }: { value: number; prefix: stri
   const ref = useRef<HTMLSpanElement>(null)
   const isInView = useInView(ref, { once: true, margin: '-80px' })
   const motionValue = useMotionValue(0)
-  const springValue = useSpring(motionValue, { stiffness: 80, damping: 30 })
+  const springValue = useSpring(motionValue, { stiffness: 120, damping: 28 })
   const [displayed, setDisplayed] = useState(0)
 
   useEffect(() => {
@@ -47,18 +46,9 @@ function AnimatedNumber({ value, prefix, suffix }: { value: number; prefix: stri
 
 export function StatsCounter() {
   return (
-    <section className="border-y border-dl-border bg-dl-page py-14 px-6">
-      <motion.div
-        className="mx-auto max-w-[1100px]"
-        initial="hidden"
-        whileInView="visible"
-        viewport={inViewOptions}
-        variants={staggerContainer}
-      >
-        <motion.div
-          variants={sectionReveal}
-          className="grid grid-cols-2 gap-y-10 md:grid-cols-4 md:divide-x md:divide-dl-border"
-        >
+    <section data-scroll-stats className="py-14 px-6">
+      <div className="mx-auto max-w-[1100px]">
+        <div className="grid grid-cols-2 gap-y-10 md:grid-cols-4 md:divide-x md:divide-dl-border">
           {STATS.map((stat) => (
             <div key={stat.label} className="flex flex-col px-6 first:pl-0 md:text-left">
               <span className="font-serif text-[32px] italic text-dl-navy md:text-[38px]">
@@ -67,8 +57,8 @@ export function StatsCounter() {
               <span className="mt-1.5 text-[13px] text-dl-muted">{stat.label}</span>
             </div>
           ))}
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </section>
   )
 }

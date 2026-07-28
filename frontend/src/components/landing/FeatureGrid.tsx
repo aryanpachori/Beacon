@@ -9,7 +9,6 @@ import {
   ScanLine,
 } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { inViewOptions, sectionReveal, staggerContainer, staggerFast } from '@/components/marketing/motion'
 
 const FEATURES = [
   {
@@ -57,67 +56,36 @@ const FEATURES = [
 ]
 
 export function FeatureGrid() {
-  const [featured, ...rest] = FEATURES
-
   return (
-    <section id="features" className="section-light px-6 py-[120px]">
-      <motion.div
-        className="mx-auto max-w-[1180px]"
-        initial="hidden"
-        whileInView="visible"
-        viewport={inViewOptions}
-        variants={staggerContainer}
-      >
-        <motion.p variants={sectionReveal} className="section-kicker">
+    <section id="features" data-scroll-features className="section-light px-6 py-[120px]">
+      <div className="mx-auto max-w-[1180px]">
+        <p data-scroll-reveal className="section-kicker">
           <span className="kicker-index">04</span> Features
-        </motion.p>
-        <motion.h2
-          variants={sectionReveal}
+        </p>
+        <h2
+          data-scroll-reveal
           className="mt-5 max-w-[560px] text-section-mobile font-medium text-dl-text lg:text-section"
         >
           Everything it takes to trust AI-generated code.
-        </motion.h2>
+        </h2>
 
-        <motion.div
-          variants={staggerFast}
-          className="mt-14 grid grid-cols-1 gap-4 lg:grid-cols-3 lg:grid-rows-2"
-        >
-          {/* Featured tile — spans two rows, breaks the card-after-card rhythm */}
-          <motion.div
-            variants={sectionReveal}
-            className="group relative overflow-hidden rounded-[14px] border border-dl-border bg-dl-card p-8 transition-all duration-300 hover:border-dl-blue/20 lg:row-span-2 lg:flex lg:flex-col lg:justify-between"
-            whileHover="hovered"
-          >
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-dl-blue/[0.04] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-            <div className="relative">
-              <motion.div variants={{ hovered: featured.hoverAnim }} className="inline-block">
-                <featured.icon className="h-6 w-6 text-dl-blue" strokeWidth={1.75} />
-              </motion.div>
-              <h3 className="mt-6 text-[19px] font-medium leading-snug text-dl-text">{featured.name}</h3>
-              <p className="mt-3 max-w-[280px] text-[13.5px] leading-relaxed text-dl-muted">{featured.description}</p>
-            </div>
-            <span className="relative mt-10 font-serif italic text-sm text-dl-muted/60">Core</span>
-          </motion.div>
-
-          {rest.map(({ icon: Icon, name, description, hoverAnim }) => (
+        <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {FEATURES.map(({ icon: Icon, name, description, hoverAnim }) => (
             <motion.div
               key={name}
-              variants={sectionReveal}
-              className="group relative overflow-hidden rounded-[14px] border border-dl-border bg-dl-card p-6 transition-all duration-300 hover:border-dl-blue/20"
+              data-scroll-feature-card
+              className="group flex h-full flex-col rounded-[14px] border border-dl-border/40 p-6 transition-colors duration-300 hover:border-dl-blue/30"
               whileHover="hovered"
             >
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-dl-blue/[0.03] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              <div className="relative">
-                <motion.div variants={{ hovered: hoverAnim }} className="inline-block">
-                  <Icon className="h-5 w-5 text-dl-blue" strokeWidth={1.75} />
-                </motion.div>
-                <h3 className="mt-4 text-[14.5px] font-medium text-dl-text">{name}</h3>
-                <p className="mt-2 text-[13px] leading-relaxed text-dl-muted">{description}</p>
-              </div>
+              <motion.div variants={{ hovered: hoverAnim }} className="inline-block">
+                <Icon className="h-5 w-5 text-dl-blue" strokeWidth={1.75} />
+              </motion.div>
+              <h3 className="mt-4 text-[15px] font-medium text-dl-text">{name}</h3>
+              <p className="mt-2 flex-1 text-[13px] leading-relaxed text-dl-muted">{description}</p>
             </motion.div>
           ))}
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </section>
   )
 }

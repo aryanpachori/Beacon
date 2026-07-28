@@ -20,7 +20,7 @@ const chartStyle = {
   gridStroke: 'rgba(246,238,220,0.08)',
   axisTickColor: '#AB9F86',
   tooltipBg: '#29241A',
-  tooltipBorder: 'rgba(163,188,140,0.25)',
+  tooltipBorder: 'rgba(122,134,68,0.25)',
   tooltipText: '#EEE5D2',
 }
 

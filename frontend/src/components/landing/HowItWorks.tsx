@@ -1,9 +1,5 @@
 'use client'
 
-import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { inViewOptions, sectionReveal, staggerContainer } from '@/components/marketing/motion'
-
 const STEPS = [
   {
     title: 'Add Beacon to your tools',
@@ -23,87 +19,70 @@ const STEPS = [
   },
 ]
 
-const stepCircle = {
-  hidden: { scale: 0, opacity: 0 },
-  visible: {
-    scale: 1,
-    opacity: 1,
-    transition: { type: 'spring' as const, stiffness: 200, damping: 18 },
-  },
-}
-
-const stepText = {
-  hidden: { opacity: 0, y: 8 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.28 } },
-}
-
 export function HowItWorks() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start 0.8', 'center center'],
-  })
-  const lineWidth = useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
-  const dotLeft = useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
-  const dotOpacity = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [0, 1, 1, 0])
-
   return (
-    <section ref={sectionRef} id="how-it-works" className="section-cream px-6 py-[120px]">
-      <motion.div
-        className="mx-auto max-w-[1080px]"
-        initial="hidden"
-        whileInView="visible"
-        viewport={inViewOptions}
-        variants={staggerContainer}
+    <section id="how-it-works">
+      {/* Desktop — pinned horizontal scroll */}
+      <div
+        data-scroll-horizontal
+        className="relative hidden h-screen overflow-hidden lg:block"
       >
-        <motion.p variants={sectionReveal} className="section-kicker">
-          <span className="kicker-index">03</span> How it works
-        </motion.p>
-        <motion.h2
-          variants={sectionReveal}
-          className="mt-5 max-w-[560px] text-section-mobile font-medium text-dl-text lg:text-section"
-        >
-          From install to invisible in under 60 seconds.
-        </motion.h2>
-
-        <div className="relative mt-16 grid grid-cols-1 gap-10 md:grid-cols-4 md:gap-8">
-          {/* Animated progress line */}
-          <div className="absolute left-0 right-[calc(25%)] top-[13px] hidden h-px bg-dl-border md:block">
-            <motion.div
-              className="absolute inset-y-0 left-0 bg-dl-blue/70"
-              style={{ width: lineWidth }}
-            />
-            {/* Traveling dot */}
-            <motion.div
-              className="absolute top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-dl-blue"
-              style={{ left: dotLeft, opacity: dotOpacity }}
-            />
+        <div className="mx-auto flex h-full max-w-[1180px] flex-col px-6 pb-16 pt-28">
+          <div data-scroll-horizontal-header className="shrink-0 pb-12">
+            <p className="section-kicker">
+              <span className="kicker-index">03</span> How it works
+            </p>
+            <h2 className="mt-5 max-w-[560px] text-section font-medium text-dl-text">
+              From install to invisible in under 60 seconds.
+            </h2>
           </div>
 
-          {STEPS.map((step, i) => (
-            <motion.div
-              key={step.title}
-              variants={staggerContainer}
-              custom={i}
-              className="relative flex flex-col items-start text-left"
+          <div data-scroll-horizontal-viewport className="flex min-h-0 flex-1 items-center overflow-hidden">
+            <div
+              data-scroll-horizontal-track
+              className="flex w-max items-stretch gap-8 pr-6"
             >
-              <motion.div
-                variants={stepCircle}
-                transition={{ delay: i * 0.15 }}
-                className="relative z-10 font-serif italic text-[15px] text-dl-blue"
-              >
-                {String(i + 1).padStart(2, '0')}
-              </motion.div>
-              <motion.h3 variants={stepText} className="mt-4 text-[15px] font-medium text-dl-text">
-                {step.title}
-              </motion.h3>
-              <motion.p variants={stepText} className="mt-2 text-[13px] leading-relaxed text-dl-muted">
-                {step.copy}
-              </motion.p>
-            </motion.div>
-          ))}
+              {STEPS.map((step, i) => (
+                <article
+                  key={step.title}
+                  data-scroll-panel
+                  className="flex w-[340px] shrink-0 flex-col xl:w-[380px]"
+                >
+                  <span className="font-serif text-[32px] italic text-dl-blue">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <h3 className="mt-5 text-[18px] font-medium text-dl-text">{step.title}</h3>
+                  <p className="mt-3 text-[14px] leading-relaxed text-dl-muted">{step.copy}</p>
+                </article>
+              ))}
+            </div>
+          </div>
         </div>
-      </motion.div>
+      </div>
+
+      {/* Mobile — vertical stack */}
+      <div className="px-6 py-[120px] lg:hidden">
+        <div className="mx-auto max-w-[1080px]">
+          <p className="section-kicker">
+            <span className="kicker-index">03</span> How it works
+          </p>
+          <h2 className="mt-5 max-w-[560px] text-section-mobile font-medium text-dl-text">
+            From install to invisible in under 60 seconds.
+          </h2>
+
+          <div className="mt-12 flex flex-col gap-10">
+            {STEPS.map((step, i) => (
+              <div key={step.title} className="border-l border-dl-border/50 pl-6">
+                <span className="font-serif italic text-[15px] text-dl-blue">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <h3 className="mt-3 text-[15px] font-medium text-dl-text">{step.title}</h3>
+                <p className="mt-2 text-[13px] leading-relaxed text-dl-muted">{step.copy}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </section>
   )
 }

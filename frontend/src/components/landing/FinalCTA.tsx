@@ -2,18 +2,13 @@
 
 import Link from 'next/link'
 import { Cpu, GitBranch, Terminal } from 'lucide-react'
-import { motion } from 'framer-motion'
-import { inViewOptions, sectionReveal } from '@/components/marketing/motion'
 
 export function FinalCTA() {
   return (
-    <section className="section-dark px-6 py-[140px]">
-      <motion.div
+    <section data-scroll-cta className="section-dark px-6 py-[140px]">
+      <div
+        data-scroll-cta-inner
         className="mx-auto max-w-[720px] text-center"
-        initial="hidden"
-        whileInView="visible"
-        viewport={inViewOptions}
-        variants={sectionReveal}
       >
         <h2 className="text-[34px] font-medium leading-[1.15] text-dl-text md:text-[42px]">
           Let your AI ship faster.<br /> Let <span className="font-serif italic font-normal text-dl-blue">Beacon</span> watch.
@@ -43,7 +38,7 @@ export function FinalCTA() {
             Zero repo access
           </span>
         </div>
-      </motion.div>
+      </div>
     </section>
   )
 }

@@ -1,10 +1,9 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Sparkles, Terminal, Cpu, GitBranch, Sun, Moon, Lightbulb, RefreshCw } from 'lucide-react'
+import { Sparkles, Terminal, Cpu, GitBranch, Lightbulb, RefreshCw } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { SiteLogo } from '@/components/layout/SiteLogo'
-import { useTheme } from '@/hooks/useTheme'
 import { isAuthenticated } from '@/lib/api'
 
 function useFunFact() {
@@ -45,7 +44,6 @@ const STATS = [
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const [checkingAuth, setCheckingAuth] = useState(true)
-  const [theme, toggleTheme, themeMounted] = useTheme()
   const { fact, loading, refresh } = useFunFact()
 
   useEffect(() => {
@@ -75,7 +73,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <div className="pointer-events-none absolute -right-32 -top-32 h-80 w-80 rounded-full blur-3xl"
           style={{ background: 'rgba(201,164,124,0.1)' }} />
         <div className="pointer-events-none absolute -bottom-24 -left-24 h-64 w-64 rounded-full blur-3xl"
-          style={{ background: 'rgba(163,188,140,0.08)' }} />
+          style={{ background: 'rgba(122,134,68,0.08)' }} />
         <div className="pointer-events-none absolute inset-x-0 top-1/2 h-px -translate-y-1/2"
           style={{ background: 'linear-gradient(90deg, transparent, rgba(246,238,220,0.08), transparent)' }} />
 
@@ -152,18 +150,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
       {/* ── Right form panel ── */}
       <div className="flex flex-1 flex-col">
-        {/* Header: mobile logo + theme toggle (desktop too) */}
-        <header className="flex h-[60px] items-center justify-between border-b border-dl-border px-6">
+        {/* Header: mobile logo */}
+        <header className="flex h-[60px] items-center border-b border-dl-border px-6">
           <SiteLogo className="text-[16px] font-bold text-dl-navy lg:hidden" />
-          <span className="hidden lg:block" />
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-dl-border bg-dl-surface text-dl-muted transition-all hover:border-dl-blue hover:text-dl-blue"
-            aria-label="Toggle dark mode"
-          >
-            {themeMounted && theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
-          </button>
         </header>
         <div className="flex flex-1 flex-col">{children}</div>
       </div>

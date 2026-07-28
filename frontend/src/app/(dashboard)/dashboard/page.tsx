@@ -20,7 +20,7 @@ function planLabel(plan: string) {
 }
 
 function planColor(plan: string) {
-  if (plan === 'pro') return { bg: 'rgba(163,188,140,0.18)', text: '#BBD1A5', dot: '#A3BC8C' }
+  if (plan === 'pro') return { bg: 'rgba(122,134,68,0.18)', text: '#9AA656', dot: '#7A8644' }
   if (plan === 'team') return { bg: 'rgba(169,128,90,0.18)', text: '#C9A47C', dot: '#A9805A' }
   return { bg: 'rgba(255,255,255,0.1)', text: 'rgba(255,255,255,0.7)', dot: 'rgba(255,255,255,0.5)' }
 }
@@ -64,7 +64,7 @@ export default function DashboardPage() {
       {/* ── Hero greeting banner ── */}
       <div className="relative mb-8 overflow-hidden rounded-2xl p-px"
         style={{
-          background: 'linear-gradient(135deg, rgba(163,188,140,0.35) 0%, rgba(255,255,255,0.06) 100%)',
+          background: 'linear-gradient(135deg, rgba(122,134,68,0.35) 0%, rgba(255,255,255,0.06) 100%)',
         }}
       >
         <div className="relative overflow-hidden rounded-2xl px-8 py-7"
@@ -74,7 +74,7 @@ export default function DashboardPage() {
         >
           {/* Decorative blobs */}
           <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full blur-3xl"
-            style={{ background: 'rgba(163,188,140,0.16)' }} />
+            style={{ background: 'rgba(122,134,68,0.16)' }} />
           <div className="pointer-events-none absolute -left-8 bottom-0 h-32 w-32 rounded-full blur-2xl"
             style={{ background: 'rgba(169,128,90,0.10)' }} />
           <div className="pointer-events-none absolute right-1/3 top-0 h-px w-64 opacity-30"
@@ -84,9 +84,9 @@ export default function DashboardPage() {
             <div>
               <div className="mb-2 flex items-center gap-2">
                 <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white/10">
-                  <Zap className="h-3 w-3 text-[#BBD1A5]" />
+                  <Zap className="h-3 w-3 text-[#9AA656]" />
                 </div>
-                <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#BBD1A5]">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#9AA656]">
                   {greeting}
                 </span>
               </div>

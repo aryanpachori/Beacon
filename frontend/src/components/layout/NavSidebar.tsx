@@ -7,9 +7,8 @@ import {
   LayoutDashboard, Package, Bell, GitBranch,
   CreditCard, User, LogOut, ChevronLeft, ChevronRight,
   BarChart2, Activity, HelpCircle, Zap, ScanLine, Users,
-  Command, ChevronDown, Sun, Moon, MessageSquarePlus,
+  Command, ChevronDown, MessageSquarePlus,
 } from 'lucide-react'
-import { useTheme } from '@/hooks/useTheme'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import { SiteLogo } from '@/components/layout/SiteLogo'
@@ -21,7 +20,7 @@ import { cn } from '@/lib/utils'
 
 /* ── Plan label/color ────────────────────────────────────────────────── */
 function planChip(plan: string) {
-  if (plan === 'pro')  return { label: 'Pro',  bg: 'rgba(91,110,76,0.15)', text: 'var(--dl-blue)' }
+  if (plan === 'pro')  return { label: 'Pro',  bg: 'rgba(79,97,40,0.15)', text: 'var(--dl-blue)' }
   if (plan === 'team') return { label: 'Team', bg: 'rgba(22,163,74,0.15)', text: 'var(--dl-healthy)' }
   return                      { label: 'Free', bg: 'var(--dl-surface)', text: 'var(--dl-muted)' }
 }
@@ -80,7 +79,6 @@ export function NavSidebar({
   const { user, alerts, signOut } = useAppData()
   const alertCount = getUnreadCount(alerts)
 
-  const [theme, toggleTheme, themeMounted] = useTheme()
   const [profileOpen, setProfileOpen] = useState(false)
   const [feedbackOpen, setFeedbackOpen] = useState(false)
   const profileRef = useRef<HTMLDivElement>(null)
@@ -139,7 +137,7 @@ export function NavSidebar({
             'text-[16px] font-bold tracking-tight text-dl-navy transition-all duration-200',
             isCollapsed ? 'md:hidden' : ''
           )}
-          iconClassName="rounded-lg bg-[#5B6E4C]/10"
+          iconClassName="rounded-lg bg-[#4F6128]/10"
         />
         {onToggleCollapse && (
           <button
@@ -219,7 +217,7 @@ export function NavSidebar({
                         >
                           {/* Active left bar */}
                           {active && !isCollapsed && (
-                            <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r bg-[#5B6E4C]" />
+                            <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r bg-[#4F6128]" />
                           )}
 
                           {/* Icon container */}
@@ -240,7 +238,7 @@ export function NavSidebar({
                               <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-dl-bg" />
                             )}
                             {showActivityBadge && alertCount > 0 && isCollapsed && (
-                              <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-[#5B6E4C] ring-2 ring-dl-bg" />
+                              <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-[#4F6128] ring-2 ring-dl-bg" />
                             )}
                           </div>
 
@@ -261,7 +259,7 @@ export function NavSidebar({
 
                           {/* Activity dot for new events */}
                           {showActivityBadge && alertCount > 0 && !isCollapsed && (
-                            <span className="h-2 w-2 rounded-full bg-[#5B6E4C] animate-pulse" />
+                            <span className="h-2 w-2 rounded-full bg-[#4F6128] animate-pulse" />
                           )}
 
                           {/* Soon badge */}
@@ -297,26 +295,6 @@ export function NavSidebar({
             <span className="flex items-center gap-0.5 rounded bg-dl-surface px-1 py-0.5 text-[10px] font-bold text-dl-text shadow-sm border border-dl-border">
               ⌘K
             </span>
-          </button>
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-dl-border bg-dl-surface text-dl-muted transition-all hover:border-dl-blue hover:text-dl-blue"
-            aria-label="Toggle dark mode"
-          >
-            {themeMounted && theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
-          </button>
-        </div>
-      )}
-      {isCollapsed && (
-        <div className="px-2 pb-2 flex justify-center">
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-dl-border bg-dl-surface text-dl-muted transition-all hover:border-dl-blue hover:text-dl-blue"
-            aria-label="Toggle dark mode"
-          >
-            {themeMounted && theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
           </button>
         </div>
       )}

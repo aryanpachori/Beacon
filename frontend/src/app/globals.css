@@ -7,13 +7,13 @@
    The same warm, editorial palette as the public site now
    runs through the whole product: warm ivory/linen by
    default, warm charcoal (never pure black) in dark mode,
-   muted moss as the one accent.
+   muted olive as the one accent.
    ═══════════════════════════════════════════════════════ */
 :root {
-  --dl-blue:        #5B6E4C;
-  --dl-blue-light:  #79905F;
-  --dl-blue-dark:   #40502F;
-  --dl-blue-pale:   #E7E9DA;
+  --dl-blue:        #4F6128;
+  --dl-blue-light:  #6B7A3A;
+  --dl-blue-dark:   #3E4A1F;
+  --dl-blue-pale:   #EBEDDF;
   --dl-aurora:      #A9805A;
 
   --dl-bg:      #F6F1E6;
@@ -23,16 +23,16 @@
   --dl-text:    #2E2A22;
   --dl-navy:    #211E17;
 
-  --dl-healthy:  #5B6E4C;
+  --dl-healthy:  #4F6128;
   --dl-watch:    #A87A2E;
   --dl-risk:     #B06430;
   --dl-critical: #A44636;
   --dl-danger:   #A44636;
   --dl-warning:  #A87A2E;
-  --dl-success:  #5B6E4C;
+  --dl-success:  #4F6128;
 
   /* Legacy aliases so old class-names still resolve */
-  --dl-teal:        #5B6E4C;
+  --dl-teal:        #4F6128;
   --dl-page:        #F6F1E6;
   --dl-card:        #FBF7EC;
   --dl-cream:       #EEE6D5;
@@ -45,7 +45,7 @@
   --dl-m-border:    #DDD2B9;
   --dl-m-text:      #2E2A22;
   --dl-m-muted:     #8A7F6A;
-  --dl-m-healthy:   #5B6E4C;
+  --dl-m-healthy:   #4F6128;
   --dl-m-watch:     #A87A2E;
   --dl-m-risk:      #B06430;
   --dl-m-critical:  #A44636;
@@ -66,10 +66,10 @@
   --dl-chart-grid: rgba(246,238,220,0.06);
   --dl-navy:       #F3ECDD;
 
-  --dl-blue:       #A3BC8C;
-  --dl-blue-light: #BBD1A5;
-  --dl-blue-dark:  #7E9868;
-  --dl-blue-pale:  rgba(163,188,140,0.14);
+  --dl-blue:       #7A8644;
+  --dl-blue-light: #9AA656;
+  --dl-blue-dark:  #5F6B35;
+  --dl-blue-pale:  rgba(122, 134, 68, 0.14);
   --dl-aurora:     #C9A47C;
 
   /* Legacy aliases */
@@ -85,9 +85,9 @@
   --dl-m-text:     #EEE5D2;
   --dl-m-muted:    #AB9F86;
   --dl-cream:      #2C2619;
-  --dl-teal:       #A3BC8C;
+  --dl-teal:       #7A8644;
 
-  --dl-healthy:  #A3BC8C;
+  --dl-healthy:  #7A8644;
   --dl-watch:    #D0A85C;
   --dl-risk:     #D18E60;
   --dl-critical: #D08877;
@@ -100,11 +100,11 @@
 .site-shell {
   color-scheme: light;
 
-  /* Accent — muted moss/sage. Used sparingly, as a guide, not a glow. */
-  --dl-blue:        #5B6E4C;
-  --dl-blue-light:  #79905F;
-  --dl-blue-dark:   #40502F;
-  --dl-blue-pale:   #E7E9DA;
+  /* Accent — muted olive. Used sparingly, as a guide, not a glow. */
+  --dl-blue:        #4F6128;
+  --dl-blue-light:  #6B7A3A;
+  --dl-blue-dark:   #3E4A1F;
+  --dl-blue-pale:   #EBEDDF;
   --dl-aurora:      #A9805A;
 
   --dl-bg:          #F6F1E6;
@@ -118,7 +118,7 @@
   --dl-hint:        #8A7F6A;
   --dl-forest:      #4A4436;
 
-  --dl-teal:        #5B6E4C;
+  --dl-teal:        #4F6128;
   --dl-page:        #F6F1E6;
   --dl-card:        #FBF7EC;
   --dl-cream:       #EEE6D5;
@@ -129,7 +129,7 @@
   --dl-m-text:      #2E2A22;
   --dl-m-muted:     #8A7F6A;
 
-  --dl-healthy:  #5B6E4C;
+  --dl-healthy:  #4F6128;
   --dl-watch:    #A87A2E;
   --dl-risk:     #B06430;
   --dl-critical: #A44636;
@@ -153,7 +153,7 @@
   --dl-hint:        #AB9F86;
   --dl-forest:      #DED2B7;
 
-  --dl-teal:        #A3BC8C;
+  --dl-teal:        #7A8644;
   --dl-page:        #241F17;
   --dl-cream:       #2C2619;
   --dl-nav:         #241F17;
@@ -163,12 +163,12 @@
   --dl-m-text:      #EEE5D2;
   --dl-m-muted:     #AB9F86;
 
-  --dl-blue:        #A3BC8C;
-  --dl-blue-light:  #BBD1A5;
-  --dl-blue-dark:   #7E9868;
-  --dl-blue-pale:   rgba(163,188,140,0.14);
+  --dl-blue:        #7A8644;
+  --dl-blue-light:  #9AA656;
+  --dl-blue-dark:   #5F6B35;
+  --dl-blue-pale:   rgba(122, 134, 68, 0.14);
 
-  --dl-healthy:  #A3BC8C;
+  --dl-healthy:  #7A8644;
   --dl-watch:    #D0A85C;
   --dl-risk:     #D18E60;
   --dl-critical: #D08877;
@@ -188,7 +188,7 @@
   --dl-sage:        #AB9F86;
   --dl-hint:        #AB9F86;
   --dl-forest:      #DED2B7;
-  --dl-teal:        #A3BC8C;
+  --dl-teal:        #7A8644;
   --dl-page:        #241F17;
   --dl-cream:       #2C2619;
   --dl-nav:         #241F17;
@@ -197,12 +197,12 @@
   --dl-m-border:    rgba(246,238,220,0.11);
   --dl-m-text:      #EEE5D2;
   --dl-m-muted:     #AB9F86;
-  --dl-blue:        #A3BC8C;
-  --dl-blue-light:  #BBD1A5;
-  --dl-blue-dark:   #7E9868;
-  --dl-blue-pale:   rgba(163,188,140,0.14);
+  --dl-blue:        #7A8644;
+  --dl-blue-light:  #9AA656;
+  --dl-blue-dark:   #5F6B35;
+  --dl-blue-pale:   rgba(122, 134, 68, 0.14);
   --dl-aurora:      #C9A47C;
-  --dl-healthy:     #A3BC8C;
+  --dl-healthy:     #7A8644;
   --dl-watch:       #D0A85C;
   --dl-risk:        #D18E60;
   --dl-critical:    #D08877;
@@ -232,7 +232,7 @@
   --dl-sage:        #AB9F86;
   --dl-hint:        #AB9F86;
   --dl-forest:      #DED2B7;
-  --dl-teal:        #A3BC8C;
+  --dl-teal:        #7A8644;
   --dl-page:        #241F17;
   --dl-cream:       #2C2619;
   --dl-nav:         #241F17;
@@ -241,12 +241,12 @@
   --dl-m-border:    rgba(246,238,220,0.11);
   --dl-m-text:      #EEE5D2;
   --dl-m-muted:     #AB9F86;
-  --dl-blue:        #A3BC8C;
-  --dl-blue-light:  #BBD1A5;
-  --dl-blue-dark:   #7E9868;
-  --dl-blue-pale:   rgba(163,188,140,0.14);
+  --dl-blue:        #7A8644;
+  --dl-blue-light:  #9AA656;
+  --dl-blue-dark:   #5F6B35;
+  --dl-blue-pale:   rgba(122, 134, 68, 0.14);
   --dl-aurora:      #C9A47C;
-  --dl-healthy:     #A3BC8C;
+  --dl-healthy:     #7A8644;
   --dl-watch:       #D0A85C;
   --dl-risk:        #D18E60;
   --dl-critical:    #D08877;
@@ -316,6 +316,109 @@ body {
   .section-light  { @apply bg-dl-bg; }
   .section-cream  { @apply bg-dl-surface; }
   .section-dark   { @apply bg-dl-nav; }
+
+  /* Landing — video background: high-contrast tokens + readable surfaces */
+  .landing-with-video {
+    color-scheme: dark;
+    --dl-text: #EEE5D2;
+    --dl-navy: #F6F1E6;
+    --dl-forest: #DED2B7;
+    --dl-muted: #B8AA92;
+    --dl-hint: #B8AA92;
+    --dl-sage: #B8AA92;
+    --dl-border: rgba(246, 238, 220, 0.2);
+    --dl-border-mid: rgba(246, 238, 220, 0.16);
+    --dl-blue: #7A8644;
+    --dl-blue-light: #9AA656;
+    --dl-blue-dark: #5F6B35;
+    --dl-blue-pale: rgba(122, 134, 68, 0.14);
+    --dl-bg: transparent;
+    --dl-surface: rgba(26, 22, 16, 0.55);
+    --dl-card: rgba(26, 22, 16, 0.78);
+    --dl-page: transparent;
+    --dl-nav: transparent;
+    --dl-cream: transparent;
+  }
+
+  .landing-with-video .section-light,
+  .landing-with-video .section-cream,
+  .landing-with-video .section-dark,
+  .landing-with-video [data-scroll-stats],
+  .landing-with-video #how-it-works,
+  .landing-with-video .landing-scroll-root > section:first-child {
+    background: transparent;
+  }
+
+  .landing-with-video header {
+    background: rgba(20, 17, 12, 0.62) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-color: rgba(246, 238, 220, 0.12) !important;
+  }
+
+  .landing-with-video footer.section-dark {
+    background: rgba(20, 17, 12, 0.72);
+    border-top: 1px solid rgba(246, 238, 220, 0.1);
+  }
+
+  .landing-with-video h1,
+  .landing-with-video h2,
+  .landing-with-video h3,
+  .landing-with-video .text-hero,
+  .landing-with-video .text-hero-mobile,
+  .landing-with-video .text-section,
+  .landing-with-video .text-section-mobile {
+    text-shadow: 0 1px 20px rgba(20, 17, 12, 0.55);
+  }
+
+  .landing-with-video .glass-panel {
+    background: rgba(22, 19, 14, 0.88);
+    border-color: rgba(246, 238, 220, 0.16);
+    box-shadow: 0 16px 48px rgba(20, 17, 12, 0.35);
+  }
+
+  .landing-with-video [data-scroll-feature-card] {
+    background: rgba(22, 19, 14, 0.72);
+    border-color: rgba(246, 238, 220, 0.16) !important;
+  }
+
+  .landing-with-video [data-scroll-feature-card]:hover {
+    background: rgba(22, 19, 14, 0.82);
+    border-color: rgba(122, 134, 68, 0.35) !important;
+  }
+
+  .landing-with-video #compare .mt-12.overflow-hidden {
+    background: rgba(22, 19, 14, 0.72);
+    border-color: rgba(246, 238, 220, 0.16) !important;
+  }
+
+  .landing-with-video #compare tbody tr:nth-child(even) {
+    background: rgba(246, 238, 220, 0.04);
+  }
+
+  .landing-with-video [data-scroll-panel-without] {
+    background: rgba(164, 70, 54, 0.14) !important;
+    border-color: rgba(208, 136, 119, 0.35) !important;
+  }
+
+  .landing-with-video [data-scroll-panel-with] {
+    background: rgba(79, 97, 40, 0.16) !important;
+    border-color: rgba(122, 134, 68, 0.35) !important;
+  }
+
+  .landing-with-video [data-scroll-stats] .md\\:divide-x > * + * {
+    border-color: rgba(246, 238, 220, 0.14);
+  }
+
+  .landing-with-video .section-kicker,
+  .landing-with-video .section-kicker .kicker-index {
+    color: var(--dl-muted);
+  }
+
+  .landing-with-video .btn-ghost,
+  .landing-with-video a.text-dl-forest {
+    color: var(--dl-forest);
+  }
 
   /* ── Cards ── */
   .dash-card {
@@ -709,7 +812,7 @@ body {
    the frame, like light falling across paper. No motion, no neon. ─── */
 .hero-mesh-gradient {
   background:
-    radial-gradient(ellipse 900px 500px at 85% 100%, rgba(91,110,76,0.06), transparent 65%),
+    radial-gradient(ellipse 900px 500px at 85% 100%, rgba(79, 97, 40, 0.06), transparent 65%),
     radial-gradient(ellipse 700px 500px at 0% 0%, rgba(169,128,90,0.05), transparent 65%);
 }
 
@@ -725,7 +828,7 @@ body {
 
 /* ─── Accent glow pill (used in hero badges) ─── */
 .blue-glow {
-  box-shadow: 0 0 0 1px rgba(91,110,76,0.18), 0 4px 16px rgba(91,110,76,0.12);
+  box-shadow: 0 0 0 1px rgba(79, 97, 40, 0.18), 0 4px 16px rgba(79, 97, 40, 0.12);
 }
 
 /* ─── Paper surface — a lifted panel with soft, warm depth ─── */

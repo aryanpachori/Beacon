@@ -147,7 +147,7 @@ function LoginForm() {
             <div>
               <p>{error}</p>
               {errorCode === 'USER_NOT_FOUND' && (
-                <Link href={registerHref} className="mt-1 inline-flex items-center gap-1 font-semibold text-[#5B6E4C] hover:underline">
+                <Link href={registerHref} className="mt-1 inline-flex items-center gap-1 font-semibold text-[#4F6128] hover:underline">
                   Create an account <ArrowRight className="h-3 w-3" />
                 </Link>
               )}
@@ -176,8 +176,8 @@ function LoginForm() {
                 emailTouched && emailError
                   ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100'
                   : emailTouched && !emailError && email
-                    ? 'border-[#5B6E4C] focus:ring-2 focus:ring-[#5B6E4C]/15'
-                    : 'border-[#c6d1d7] focus:border-[#5B6E4C] focus:ring-2 focus:ring-[#5B6E4C]/15'
+                    ? 'border-[#4F6128] focus:ring-2 focus:ring-[#4F6128]/15'
+                    : 'border-[#c6d1d7] focus:border-[#4F6128] focus:ring-2 focus:ring-[#4F6128]/15'
               )}
               autoComplete="email"
             />
@@ -205,7 +205,7 @@ function LoginForm() {
                   'w-full rounded-xl border bg-dl-bg px-4 py-3 pr-11 text-[14px] text-dl-navy placeholder:text-dl-muted outline-none transition-all duration-150',
                   passwordTouched && passwordError
                     ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100'
-                    : 'border-[#c6d1d7] focus:border-[#5B6E4C] focus:ring-2 focus:ring-[#5B6E4C]/15'
+                    : 'border-[#c6d1d7] focus:border-[#4F6128] focus:ring-2 focus:ring-[#4F6128]/15'
                 )}
                 autoComplete="current-password"
               />
@@ -225,10 +225,10 @@ function LoginForm() {
             type="submit"
             disabled={loading}
             className={cn(
-              'mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-[#5B6E4C] py-3 text-[14px] font-semibold text-white shadow-sm transition-all duration-150',
-              loading ? 'cursor-not-allowed opacity-70' : 'hover:bg-[#40502F] hover:shadow-md active:scale-[0.99]'
+              'mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-[#4F6128] py-3 text-[14px] font-semibold text-white shadow-sm transition-all duration-150',
+              loading ? 'cursor-not-allowed opacity-70' : 'hover:bg-[#3E4A1F] hover:shadow-md active:scale-[0.99]'
             )}
-            style={{ boxShadow: '0 2px 12px rgba(91,110,76,0.35)' }}
+            style={{ boxShadow: '0 2px 12px rgba(79,97,40,0.35)' }}
           >
             {loading ? (
               <>
@@ -252,7 +252,7 @@ function LoginForm() {
 
         <p className="mt-4 text-center text-[13px] text-dl-muted">
           No account?{' '}
-          <Link href={registerHref} className="font-semibold text-[#5B6E4C] hover:underline">
+          <Link href={registerHref} className="font-semibold text-[#4F6128] hover:underline">
             Create one for free
           </Link>
         </p>
@@ -265,7 +265,7 @@ export default function LoginPage() {
   return (
     <Suspense fallback={
       <div className="flex flex-1 items-center justify-center">
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#5B6E4C] border-t-transparent" />
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#4F6128] border-t-transparent" />
       </div>
     }>
       <LoginForm />

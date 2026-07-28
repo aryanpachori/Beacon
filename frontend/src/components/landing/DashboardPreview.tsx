@@ -2,7 +2,6 @@
 
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, useMotionTemplate } from 'framer-motion'
-import { inViewOptions, sectionReveal } from '@/components/marketing/motion'
 
 type Severity = 'critical' | 'high' | 'medium'
 type Status = 'fixed' | 'reviewing' | 'flagged'
@@ -48,13 +47,7 @@ export function DashboardPreview() {
 
   return (
     <section ref={sectionRef} className="section-dark px-6 py-[120px]">
-      <motion.div
-        className="mx-auto max-w-[1200px] text-center"
-        initial="hidden"
-        whileInView="visible"
-        viewport={inViewOptions}
-        variants={sectionReveal}
-      >
+      <div className="mx-auto max-w-[1200px] text-center" data-scroll-reveal>
         <p className="section-kicker justify-center"><span className="kicker-index">05</span> Visibility when you want it</p>
         <h2 className="mx-auto mt-5 max-w-[600px] text-section-mobile font-medium text-dl-text lg:text-section">
           Every finding, across every repo — one quiet feed.
@@ -66,10 +59,6 @@ export function DashboardPreview() {
 
         <motion.div
           style={{ rotateX, scale, transformPerspective: 1200, boxShadow }}
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-          viewport={inViewOptions}
           className="glass-panel mx-auto mt-14 w-full max-w-[860px] p-6"
         >
           <motion.div className="mb-5 flex flex-wrap items-center justify-between gap-3">
@@ -104,7 +93,7 @@ export function DashboardPreview() {
             </table>
           </div>
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   )
 }
