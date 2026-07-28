@@ -21,7 +21,7 @@ import { cn } from '@/lib/utils'
 
 /* ── Plan label/color ────────────────────────────────────────────────── */
 function planChip(plan: string) {
-  if (plan === 'pro')  return { label: 'Pro',  bg: 'rgba(91,110,76,0.15)', text: 'var(--dl-blue)' }
+  if (plan === 'pro')  return { label: 'Pro',  bg: 'rgba(79,97,40,0.15)', text: 'var(--dl-blue)' }
   if (plan === 'team') return { label: 'Team', bg: 'rgba(22,163,74,0.15)', text: 'var(--dl-healthy)' }
   return                      { label: 'Free', bg: 'var(--dl-surface)', text: 'var(--dl-muted)' }
 }
@@ -139,7 +139,7 @@ export function NavSidebar({
             'text-[16px] font-bold tracking-tight text-dl-navy transition-all duration-200',
             isCollapsed ? 'md:hidden' : ''
           )}
-          iconClassName="rounded-lg bg-[#5B6E4C]/10"
+          iconClassName="rounded-lg bg-[#4F6128]/10"
         />
         {onToggleCollapse && (
           <button
@@ -219,7 +219,7 @@ export function NavSidebar({
                         >
                           {/* Active left bar */}
                           {active && !isCollapsed && (
-                            <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r bg-[#5B6E4C]" />
+                            <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r bg-[#4F6128]" />
                           )}
 
                           {/* Icon container */}
@@ -240,7 +240,7 @@ export function NavSidebar({
                               <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-dl-bg" />
                             )}
                             {showActivityBadge && alertCount > 0 && isCollapsed && (
-                              <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-[#5B6E4C] ring-2 ring-dl-bg" />
+                              <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-[#4F6128] ring-2 ring-dl-bg" />
                             )}
                           </div>
 
@@ -261,7 +261,7 @@ export function NavSidebar({
 
                           {/* Activity dot for new events */}
                           {showActivityBadge && alertCount > 0 && !isCollapsed && (
-                            <span className="h-2 w-2 rounded-full bg-[#5B6E4C] animate-pulse" />
+                            <span className="h-2 w-2 rounded-full bg-[#4F6128] animate-pulse" />
                           )}
 
                           {/* Soon badge */}

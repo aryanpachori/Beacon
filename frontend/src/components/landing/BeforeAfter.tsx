@@ -1,8 +1,6 @@
 'use client'
 
 import { AlertTriangle, KeyRound, Bug, GitPullRequestArrow, Sparkles, CheckCircle, Zap } from 'lucide-react'
-import { motion } from 'framer-motion'
-import { inViewOptions, sectionReveal, staggerContainer } from '@/components/marketing/motion'
 
 const WITHOUT = [
   { icon: KeyRound, text: 'Secrets committed by an agent, caught in prod' },
@@ -18,44 +16,27 @@ const WITH = [
   { icon: Sparkles, text: 'Confidence to ship at agent speed' },
 ]
 
-const slideLeft = {
-  hidden: { opacity: 0, x: -30 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: 'easeOut' } },
-}
-
-const slideRight = {
-  hidden: { opacity: 0, x: 30 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: 'easeOut' } },
-}
-
 export function BeforeAfter() {
   return (
-    <section className="section-light px-6 py-[120px]">
-      <motion.div
-        className="mx-auto max-w-[1000px]"
-        initial="hidden"
-        whileInView="visible"
-        viewport={inViewOptions}
-        variants={staggerContainer}
-      >
-        <motion.p variants={sectionReveal} className="section-kicker justify-center">
+    <section data-scroll-before-after className="section-light px-6 py-[120px]">
+      <div className="mx-auto max-w-[1000px]">
+        <p data-scroll-reveal className="section-kicker justify-center">
           <span className="kicker-index">02</span> The difference
-        </motion.p>
-        <motion.h2
-          variants={sectionReveal}
+        </p>
+        <h2
+          data-scroll-reveal
           className="mx-auto mt-5 max-w-[600px] text-center text-section-mobile font-medium text-dl-text lg:text-section"
         >
           Not another gate. A quiet second pair of eyes.
-        </motion.h2>
+        </h2>
 
         <div className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-2">
-          {/* Without */}
-          <motion.div
-            variants={slideLeft}
+          <div
+            data-scroll-panel-without
             className="rounded-[14px] border p-8"
             style={{
-              borderColor: 'rgba(164,70,54,0.18)',
-              background: 'rgba(164,70,54,0.035)',
+              borderColor: 'rgba(164,70,54,0.22)',
+              background: 'rgba(164,70,54,0.06)',
             }}
           >
             <div className="mb-5 flex items-center gap-2.5">
@@ -72,15 +53,14 @@ export function BeforeAfter() {
                 </li>
               ))}
             </ul>
-          </motion.div>
+          </div>
 
-          {/* With */}
-          <motion.div
-            variants={slideRight}
+          <div
+            data-scroll-panel-with
             className="rounded-[14px] border p-8"
             style={{
-              borderColor: 'rgba(91,110,76,0.22)',
-              background: 'rgba(91,110,76,0.04)',
+              borderColor: 'rgba(79,97,40,0.28)',
+              background: 'rgba(79,97,40,0.06)',
             }}
           >
             <div className="mb-5 flex items-center gap-2.5">
@@ -97,9 +77,9 @@ export function BeforeAfter() {
                 </li>
               ))}
             </ul>
-          </motion.div>
+          </div>
         </div>
-      </motion.div>
+      </div>
     </section>
   )
 }

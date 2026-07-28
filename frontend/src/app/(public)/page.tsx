@@ -1,31 +1,17 @@
 import { Nav } from '@/components/layout/Nav'
 import { Footer } from '@/components/layout/Footer'
-import { Hero } from '@/components/landing/Hero'
-import { StatsCounter } from '@/components/landing/StatsCounter'
-import { ProblemSection } from '@/components/landing/ProblemSection'
-import { BeforeAfter } from '@/components/landing/BeforeAfter'
-import { HowItWorks } from '@/components/landing/HowItWorks'
-import { FeatureGrid } from '@/components/landing/FeatureGrid'
-import { DashboardPreview } from '@/components/landing/DashboardPreview'
-import { ComparisonTable } from '@/components/landing/ComparisonTable'
-import { FinalCTA } from '@/components/landing/FinalCTA'
+import { LandingMain } from '@/components/landing/LandingMain'
+import { LandingBackgroundVideo } from '@/components/landing/LandingBackgroundVideo'
 
 export default function HomePage() {
   return (
-    <>
-      <Nav />
-      <main>
-        <Hero />
-        <StatsCounter />
-        <ProblemSection />
-        <BeforeAfter />
-        <HowItWorks />
-        <FeatureGrid />
-        <DashboardPreview />
-        <ComparisonTable />
-        <FinalCTA />
-      </main>
-      <Footer />
-    </>
+    <div className="landing-with-video relative">
+      <LandingBackgroundVideo />
+      <div className="relative z-10">
+        <Nav />
+        <LandingMain />
+        <Footer />
+      </div>
+    </div>
   )
 }

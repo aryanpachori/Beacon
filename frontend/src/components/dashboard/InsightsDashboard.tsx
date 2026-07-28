@@ -292,7 +292,7 @@ export function InsightsDashboard() {
       value: totalPackages,
       icon: Package,
       color: "var(--dl-blue)",
-      bg: "rgba(91,110,76,0.15)",
+      bg: "rgba(79,97,40,0.15)",
       suffix: "",
     },
     {
@@ -489,7 +489,7 @@ export function InsightsDashboard() {
                       "#dc2626",
                       "#ea580c",
                       "#ca8a04",
-                      "#5B6E4C",
+                      "#4F6128",
                       "#16a34a",
                     ];
                     return <Cell key={i} fill={colors[i]} fillOpacity={0.85} />;

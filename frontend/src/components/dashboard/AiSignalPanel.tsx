@@ -12,8 +12,8 @@ import {
 /* Blue-scaled heatmap: 0=empty, 1=pale, 2=mid, 3=full */
 const HEATMAP_COLORS = [
   'var(--dl-border)',
-  'rgba(91,110,76,0.2)',
-  'rgba(91,110,76,0.5)',
+  'rgba(79,97,40,0.2)',
+  'rgba(79,97,40,0.5)',
   'var(--dl-blue)',
 ]
 

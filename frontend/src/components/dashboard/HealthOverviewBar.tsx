@@ -102,7 +102,7 @@ export function HealthOverviewBar() {
           <p className="text-[13px] leading-relaxed text-dl-text">{assessmentCopy}</p>
           <div className="mt-4 flex flex-wrap gap-3">
             {[
-              { label: 'Packages', value: totalPackages, color: 'var(--dl-blue)', bg: 'rgba(91,110,76,0.15)' },
+              { label: 'Packages', value: totalPackages, color: 'var(--dl-blue)', bg: 'rgba(79,97,40,0.15)' },
               { label: 'Repos',    value: repos.length,  color: '#8b5cf6', bg: 'rgba(139,92,246,0.15)' },
               { label: 'Alerts',   value: alertsThisWeek, color: 'var(--dl-watch)', bg: 'rgba(202,138,4,0.15)' },
             ].map(({ label, value, color, bg }) => (

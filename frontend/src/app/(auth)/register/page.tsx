@@ -164,7 +164,7 @@ function RegisterForm() {
         </div>
 
         {planParam === 'pro' && (
-          <div className="mb-5 rounded-xl border border-[#5B6E4C]/25 bg-[#E4FBF0] px-4 py-3 text-[13px] font-medium text-[#5B6E4C]">
+          <div className="mb-5 rounded-xl border border-[#4F6128]/25 bg-[#E4FBF0] px-4 py-3 text-[13px] font-medium text-[#4F6128]">
             You&apos;re signing up for <strong>Pro</strong> — billing starts after onboarding.
           </div>
         )}
@@ -178,7 +178,7 @@ function RegisterForm() {
             <div>
               <p>{error}</p>
               {errorCode === 'EMAIL_EXISTS' && (
-                <Link href={loginHref} className="mt-1 inline-flex items-center gap-1 font-semibold text-[#5B6E4C] hover:underline">
+                <Link href={loginHref} className="mt-1 inline-flex items-center gap-1 font-semibold text-[#4F6128] hover:underline">
                   Sign in instead <ArrowRight className="h-3 w-3" />
                 </Link>
               )}
@@ -246,7 +246,7 @@ function RegisterForm() {
                 emailTouched && emailError
                   ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100'
                   : emailTouched && !emailError && email
-                    ? 'border-[#5B6E4C] focus:ring-2 focus:ring-[#5B6E4C]/15'
+                    ? 'border-[#4F6128] focus:ring-2 focus:ring-[#4F6128]/15'
                     : 'border-dl-border focus:border-dl-blue focus:ring-2 focus:ring-dl-blue/15'
               )}
               autoComplete="email"
@@ -274,7 +274,7 @@ function RegisterForm() {
                   passwordTouched && passwordError
                     ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100'
                     : passwordTouched && !passwordError && password
-                      ? 'border-[#5B6E4C] focus:ring-2 focus:ring-[#5B6E4C]/15'
+                      ? 'border-[#4F6128] focus:ring-2 focus:ring-[#4F6128]/15'
                       : 'border-dl-border focus:border-dl-blue focus:ring-2 focus:ring-dl-blue/15'
                 )}
                 autoComplete="new-password"
@@ -299,10 +299,10 @@ function RegisterForm() {
             type="submit"
             disabled={loading}
             className={cn(
-              'mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-[#5B6E4C] py-3 text-[14px] font-semibold text-white transition-all duration-150',
-              loading ? 'cursor-not-allowed opacity-70' : 'hover:bg-[#40502F] hover:shadow-md active:scale-[0.99]'
+              'mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-[#4F6128] py-3 text-[14px] font-semibold text-white transition-all duration-150',
+              loading ? 'cursor-not-allowed opacity-70' : 'hover:bg-[#3E4A1F] hover:shadow-md active:scale-[0.99]'
             )}
-            style={{ boxShadow: '0 2px 12px rgba(91,110,76,0.35)' }}
+            style={{ boxShadow: '0 2px 12px rgba(79,97,40,0.35)' }}
           >
             {loading ? (
               <>
@@ -332,7 +332,7 @@ function RegisterForm() {
         </div>
 
         <p className="mt-4 text-center text-[13px] text-dl-muted">
-          <Link href={loginHref} className="font-semibold text-[#5B6E4C] hover:underline">
+          <Link href={loginHref} className="font-semibold text-[#4F6128] hover:underline">
             Sign in instead
           </Link>
         </p>
@@ -345,7 +345,7 @@ export default function RegisterPage() {
   return (
     <Suspense fallback={
       <div className="flex flex-1 items-center justify-center">
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#5B6E4C] border-t-transparent" />
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#4F6128] border-t-transparent" />
       </div>
     }>
       <RegisterForm />

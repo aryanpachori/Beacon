@@ -1,8 +1,6 @@
 'use client'
 
 import { Check, Minus } from 'lucide-react'
-import { motion } from 'framer-motion'
-import { inViewOptions, sectionReveal } from '@/components/marketing/motion'
 
 type CellValue = 'yes' | 'no' | 'partial'
 
@@ -26,29 +24,17 @@ function Cell({ value, isBeacon }: { value: CellValue; isBeacon?: boolean }) {
 export function ComparisonTable() {
   return (
     <section id="compare" className="section-light px-6 py-[120px]">
-      <motion.div
-        className="mx-auto max-w-[900px]"
-        initial="hidden"
-        whileInView="visible"
-        viewport={inViewOptions}
-        variants={sectionReveal}
-      >
+      <div data-scroll-reveal className="mx-auto max-w-[900px]">
         <p className="section-kicker"><span className="kicker-index">06</span> Not another dashboard</p>
         <h2 className="mt-5 max-w-[560px] text-section-mobile font-medium text-dl-text lg:text-section">
           Built to work at the speed AI writes code.
         </h2>
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.28 }}
-          viewport={inViewOptions}
-          className="mt-12 overflow-hidden rounded-[14px] border border-dl-border bg-dl-card"
-        >
+        <div className="mt-12 overflow-hidden rounded-[14px] border border-dl-border/40">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[560px] text-center text-[13px] text-dl-forest">
               <thead>
-                <tr className="border-b border-dl-border bg-dl-card">
+                <tr className="border-b border-dl-border bg-transparent">
                   <th className="px-4 py-3 text-left font-medium text-dl-text">Capability</th>
                   <th className="relative px-4 py-3 font-medium text-[#F6F1E6]">
                     <div className="absolute inset-0 bg-dl-blue" />
@@ -62,7 +48,7 @@ export function ComparisonTable() {
                 {ROWS.map((row, i) => (
                   <tr
                     key={row.feature}
-                    className={`transition-colors hover:bg-dl-blue/[0.04] ${i % 2 === 0 ? 'bg-dl-card' : 'bg-dl-bg'}`}
+                    className={`transition-colors hover:bg-dl-blue/[0.04] ${i % 2 === 0 ? 'bg-transparent' : 'bg-dl-bg/20'}`}
                   >
                     <td className="px-4 py-3 text-left font-medium text-dl-forest">{row.feature}</td>
                     <td className="bg-dl-blue/[0.06] px-4 py-3">
@@ -79,12 +65,12 @@ export function ComparisonTable() {
               </tbody>
             </table>
           </div>
-        </motion.div>
+        </div>
 
         <p className="mt-4 text-center text-[11px] text-dl-muted/70">
           Categorical comparison — not a benchmark against any specific product.
         </p>
-      </motion.div>
+      </div>
     </section>
   )
 }
