@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Sparkles, Terminal, Cpu, GitBranch, Lightbulb, RefreshCw } from 'lucide-react'
+import { Sparkles, Terminal, Cpu, GitBranch, Sun, Moon, Lightbulb, RefreshCw } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { SiteLogo } from '@/components/layout/SiteLogo'
+import { useTheme } from '@/hooks/useTheme'
 import { isAuthenticated } from '@/lib/api'
 
 function useFunFact() {
@@ -44,6 +45,7 @@ const STATS = [
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const [checkingAuth, setCheckingAuth] = useState(true)
+  const [theme, toggleTheme, themeMounted] = useTheme()
   const { fact, loading, refresh } = useFunFact()
 
   useEffect(() => {
@@ -150,9 +152,18 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
       {/* ── Right form panel ── */}
       <div className="flex flex-1 flex-col">
-        {/* Header: mobile logo */}
-        <header className="flex h-[60px] items-center border-b border-dl-border px-6">
+        {/* Header: mobile logo + theme toggle (desktop too) */}
+        <header className="flex h-[60px] items-center justify-between border-b border-dl-border px-6">
           <SiteLogo className="text-[16px] font-bold text-dl-navy lg:hidden" />
+          <span className="hidden lg:block" />
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-dl-border bg-dl-surface text-dl-muted transition-all hover:border-dl-blue hover:text-dl-blue"
+            aria-label="Toggle dark mode"
+          >
+            {themeMounted && theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+          </button>
         </header>
         <div className="flex flex-1 flex-col">{children}</div>
       </div>

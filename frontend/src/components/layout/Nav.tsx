@@ -4,9 +4,10 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { SiteLogo } from '@/components/layout/SiteLogo'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, Sun, Moon } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
+import { useTheme } from '@/hooks/useTheme'
 
 const NAV_LINKS = [
   { href: '/#features', label: 'Product' },
@@ -18,6 +19,7 @@ const NAV_LINKS = [
 export function Nav() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
+  const [theme, toggleTheme, themeMounted] = useTheme()
 
   const isActive = (href: string) => href === '/pricing' && pathname === '/pricing'
 
@@ -52,6 +54,14 @@ export function Nav() {
         </nav>
 
         <div className="hidden items-center gap-5 md:flex">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-dl-border bg-dl-surface text-dl-muted transition-all hover:border-dl-blue hover:text-dl-blue"
+            aria-label="Toggle dark mode"
+          >
+            {themeMounted && theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+          </button>
           <Link
             href="/login"
             className="text-[13.5px] text-dl-muted transition-colors hover:text-dl-text"
@@ -64,6 +74,14 @@ export function Nav() {
         </div>
 
         <div className="flex items-center gap-2 md:hidden">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-dl-border bg-dl-surface text-dl-muted transition-all hover:border-dl-blue hover:text-dl-blue"
+            aria-label="Toggle dark mode"
+          >
+            {themeMounted && theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+          </button>
           <button
             type="button"
             className="flex h-11 w-11 items-center justify-center"

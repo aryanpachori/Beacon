@@ -7,8 +7,9 @@ import {
   LayoutDashboard, Package, Bell, GitBranch,
   CreditCard, User, LogOut, ChevronLeft, ChevronRight,
   BarChart2, Activity, HelpCircle, Zap, ScanLine, Users,
-  Command, ChevronDown, MessageSquarePlus,
+  Command, ChevronDown, Sun, Moon, MessageSquarePlus,
 } from 'lucide-react'
+import { useTheme } from '@/hooks/useTheme'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import { SiteLogo } from '@/components/layout/SiteLogo'
@@ -79,6 +80,7 @@ export function NavSidebar({
   const { user, alerts, signOut } = useAppData()
   const alertCount = getUnreadCount(alerts)
 
+  const [theme, toggleTheme, themeMounted] = useTheme()
   const [profileOpen, setProfileOpen] = useState(false)
   const [feedbackOpen, setFeedbackOpen] = useState(false)
   const profileRef = useRef<HTMLDivElement>(null)
@@ -295,6 +297,26 @@ export function NavSidebar({
             <span className="flex items-center gap-0.5 rounded bg-dl-surface px-1 py-0.5 text-[10px] font-bold text-dl-text shadow-sm border border-dl-border">
               ⌘K
             </span>
+          </button>
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-dl-border bg-dl-surface text-dl-muted transition-all hover:border-dl-blue hover:text-dl-blue"
+            aria-label="Toggle dark mode"
+          >
+            {themeMounted && theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+          </button>
+        </div>
+      )}
+      {isCollapsed && (
+        <div className="px-2 pb-2 flex justify-center">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-dl-border bg-dl-surface text-dl-muted transition-all hover:border-dl-blue hover:text-dl-blue"
+            aria-label="Toggle dark mode"
+          >
+            {themeMounted && theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
           </button>
         </div>
       )}
