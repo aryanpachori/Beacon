@@ -1,0 +1,197 @@
+/* Beacon landing revamp — scoped under .beacon-landing */
+
+.beacon-landing {
+  --bl-bg: #08090a;
+  --bl-text: #f2f0ed;
+  --bl-accent: #ff6600;
+  --bl-accent-hover: #ff8533;
+  --bl-danger: #f2705c;
+  --bl-success: #6fd39a;
+  --bl-panel: #0e1012;
+  --bl-ink: #0b0a08;
+  --bl-border: rgba(255, 255, 255, 0.09);
+  --bl-muted: rgba(242, 240, 237, 0.55);
+  --bl-dim: rgba(242, 240, 237, 0.4);
+
+  background: var(--bl-bg);
+  color: var(--bl-text);
+  font-family: var(--font-instrument-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+.beacon-landing a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.beacon-landing ::selection {
+  background: rgba(255, 102, 0, 0.28);
+}
+
+.beacon-landing .bl-mono {
+  font-family: var(--font-mono), 'JetBrains Mono', monospace;
+}
+
+.beacon-landing .bl-serif {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+}
+
+.beacon-landing .bl-shell {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+@media (max-width: 768px) {
+  .beacon-landing .bl-shell {
+    padding: 0 20px;
+  }
+}
+
+.beacon-landing .bl-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 13px 22px;
+  border-radius: 999px;
+  background: var(--bl-accent);
+  color: var(--bl-ink);
+  transition: background 0.15s ease;
+}
+
+.beacon-landing .bl-btn-primary:hover {
+  background: var(--bl-accent-hover);
+  color: var(--bl-ink);
+}
+
+.beacon-landing .bl-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 13px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(242, 240, 237, 0.85);
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.beacon-landing .bl-btn-ghost:hover {
+  border-color: rgba(255, 102, 0, 0.5);
+  color: var(--bl-accent);
+}
+
+.beacon-landing .bl-kicker {
+  margin: 0 0 14px;
+  font-family: var(--font-mono), monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bl-accent);
+}
+
+.beacon-landing .bl-h2 {
+  margin: 0 0 12px;
+  font-size: clamp(32px, 4.2vw, 44px);
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+  max-width: 24ch;
+}
+
+.beacon-landing .bl-lede {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--bl-muted);
+}
+
+.beacon-landing [data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.beacon-landing [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes bl-orbCore {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(0.78); opacity: 1; }
+}
+
+@keyframes bl-orbRing {
+  0% { transform: scale(0.7); opacity: 0.55; }
+  70% { transform: scale(1.9); opacity: 0; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+
+@keyframes bl-wordIn {
+  from { opacity: 0; transform: translateY(0.42em) rotate(1.2deg); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes bl-caret {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes bl-scanSweep {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(1100%); }
+}
+
+@keyframes bl-annotIn {
+  from { opacity: 0; transform: translateY(-6px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes bl-railFlow {
+  0% { transform: translateX(-30%) scale(0.9); opacity: 0; }
+  12% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateX(118px) scale(0.9); opacity: 0; }
+}
+
+@keyframes bl-floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+.beacon-landing .bl-orb-core {
+  animation: bl-orbCore 2.6s ease-in-out infinite;
+}
+
+.beacon-landing .bl-orb-ring {
+  animation: bl-orbRing 2.6s ease-out infinite;
+}
+
+.beacon-landing .bl-float {
+  animation: bl-floatY 9s ease-in-out infinite;
+}
+
+.beacon-landing .bl-word-in {
+  animation: bl-wordIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.beacon-landing .bl-caret {
+  animation: bl-caret 1s step-end infinite;
+}
+
+.beacon-landing .bl-scan {
+  animation: bl-scanSweep 1s linear infinite;
+}
+
+.beacon-landing .bl-annot {
+  animation: bl-annotIn 0.28s ease-out;
+}
+
+.beacon-landing .bl-rail-chip {
+  animation: bl-railFlow 2.6s linear infinite;
+}

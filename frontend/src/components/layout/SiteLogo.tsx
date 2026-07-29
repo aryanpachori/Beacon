@@ -26,7 +26,7 @@ export function SiteLogo({
         className={`flex h-8 w-8 shrink-0 items-center justify-center ${iconClassName}`}
       >
         <Image
-          src="/image.png"
+          src="/beacon-mark.png"
           alt=""
           width={32}
           height={32}

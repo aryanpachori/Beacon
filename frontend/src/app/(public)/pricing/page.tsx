@@ -13,7 +13,7 @@ export default function PricingPage() {
   const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>('monthly')
 
   return (
-    <>
+    <div className="site-shell min-h-screen">
       <Nav />
       <main>
         <PricingHero />
@@ -23,6 +23,6 @@ export default function PricingPage() {
         <PricingCTA />
       </main>
       <Footer />
-    </>
+    </div>
   )
 }
