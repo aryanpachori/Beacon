@@ -35,7 +35,7 @@ export function LandingNav() {
 
       <Link
         href="/register"
-        className="rounded-full bg-[#ff6600] px-4 py-[9px] text-[14px] font-medium text-[#0b0a08] transition-colors hover:bg-[#ff8533]"
+        className="bl-on-orange rounded-full bg-[#ff6600] px-4 py-[9px] text-[14px] font-medium text-[#0b0a08] transition-colors hover:bg-[#ff8533] hover:text-[#0b0a08]"
       >
         Install Beacon
       </Link>

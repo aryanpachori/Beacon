@@ -119,12 +119,12 @@ const config: Config = {
         marquee: "marquee 35s linear infinite",
       },
       boxShadow: {
-        card: "0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)",
+        card: "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08)",
         "card-hover":
-          "0 12px 32px rgba(0,0,0,0.18), 0 0 0 1px rgba(46,230,168,0.12)",
-        blue: "0 4px 20px rgba(46,230,168,0.25)",
-        glow: "0 0 40px rgba(46,230,168,0.18)",
-        "glow-aurora": "0 0 40px rgba(34,211,238,0.15)",
+          "0 12px 32px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,102,0,0.12)",
+        blue: "0 4px 20px rgba(255,102,0,0.25)",
+        glow: "0 0 40px rgba(255,102,0,0.18)",
+        "glow-aurora": "0 0 40px rgba(255,133,51,0.15)",
         edge: "0 1px 0 0 rgba(255,255,255,0.04) inset",
         panel: "0 24px 64px -20px rgba(0,0,0,0.5)",
       },

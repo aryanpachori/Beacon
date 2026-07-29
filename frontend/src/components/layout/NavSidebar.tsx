@@ -139,7 +139,7 @@ export function NavSidebar({
             'text-[16px] font-bold tracking-tight text-dl-navy transition-all duration-200',
             isCollapsed ? 'md:hidden' : ''
           )}
-          iconClassName="rounded-lg bg-[#4F6128]/10"
+          iconClassName="rounded-lg bg-[#ff6600]/10"
         />
         {onToggleCollapse && (
           <button
@@ -219,7 +219,7 @@ export function NavSidebar({
                         >
                           {/* Active left bar */}
                           {active && !isCollapsed && (
-                            <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r bg-[#4F6128]" />
+                            <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r bg-[#ff6600]" />
                           )}
 
                           {/* Icon container */}
@@ -240,7 +240,7 @@ export function NavSidebar({
                               <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-dl-bg" />
                             )}
                             {showActivityBadge && alertCount > 0 && isCollapsed && (
-                              <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-[#4F6128] ring-2 ring-dl-bg" />
+                              <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-[#ff6600] ring-2 ring-dl-bg" />
                             )}
                           </div>
 
@@ -261,7 +261,7 @@ export function NavSidebar({
 
                           {/* Activity dot for new events */}
                           {showActivityBadge && alertCount > 0 && !isCollapsed && (
-                            <span className="h-2 w-2 rounded-full bg-[#4F6128] animate-pulse" />
+                            <span className="h-2 w-2 rounded-full bg-[#ff6600] animate-pulse" />
                           )}
 
                           {/* Soon badge */}

@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils'
 /* ── SPS color util ──────────────────────────────────────────────────── */
 function spsColor(sps: number): string {
   if (sps >= 75) return '#16a34a'
-  if (sps >= 60) return '#4F6128'
+  if (sps >= 60) return '#ff6600'
   if (sps >= 40) return '#ca8a04'
   return '#dc2626'
 }
@@ -43,7 +43,7 @@ const SIGNAL_LABELS: Record<string, string> = {
 
 function signalBarColor(value: number): string {
   if (value >= 70) return '#16a34a'
-  if (value >= 50) return '#4F6128'
+  if (value >= 50) return '#ff6600'
   if (value >= 35) return '#ca8a04'
   return '#dc2626'
 }

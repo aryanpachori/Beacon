@@ -89,7 +89,7 @@ function IdeMock() {
             Watching next diff…
           </div>
         </div>
-        <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-dl-blue px-3 py-1.5 text-[11.5px] font-medium text-[#F6F1E6]">
+        <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-dl-blue px-3 py-1.5 text-[11.5px] font-medium text-[#0b0a08]">
           <Sparkles className="h-3 w-3" />
           Hardcoded secret blocked
         </div>
@@ -100,12 +100,12 @@ function IdeMock() {
 
 function McpMock() {
   return (
-    <div className="overflow-hidden rounded-[16px] border border-dl-border/50 bg-[#241F17]/95 shadow-[0_24px_60px_-28px_rgba(20,17,12,0.7)]">
+    <div className="overflow-hidden rounded-[16px] border border-dl-border/50 bg-[#0e1012]/95 shadow-[0_24px_60px_-28px_rgba(0,0,0,0.7)]">
       <div className="grid grid-cols-[108px_1fr]">
         <aside className="border-r border-dl-border/30 bg-[#1A1610] px-3 py-4">
           <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-dl-muted/70">Tools</p>
           <div className="mt-3 space-y-1.5 text-[12px]">
-            <div className="rounded-md bg-[#EEE5D2]/90 px-2 py-1.5 font-medium text-[#241F17]">#beacon</div>
+            <div className="rounded-md bg-[#f2f0ed]/90 px-2 py-1.5 font-medium text-[#08090a]">#beacon</div>
             <div className="px-2 py-1.5 text-dl-muted">#agent</div>
             <div className="px-2 py-1.5 text-dl-muted">#ci</div>
           </div>
@@ -207,7 +207,7 @@ export function HowItWorks() {
 
         {/* Agent hub */}
         <div className="mx-auto flex w-fit items-center gap-3 rounded-full border border-dl-border/50 bg-[#1A1610]/80 px-4 py-3 shadow-[0_12px_40px_-20px_rgba(20,17,12,0.8)]">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-dl-blue text-[#F6F1E6]">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-dl-blue text-[#0b0a08]">
             <GitBranch className="h-4 w-4" />
           </span>
           <div>
@@ -232,7 +232,7 @@ export function HowItWorks() {
                 {name}
               </span>
             ))}
-            <span className="inline-flex items-center rounded-full bg-dl-blue px-3.5 py-1.5 text-[12.5px] font-medium text-[#F6F1E6]">
+            <span className="inline-flex items-center rounded-full bg-dl-blue px-3.5 py-1.5 text-[12.5px] font-medium text-[#0b0a08]">
               Local-first review
             </span>
           </div>

@@ -489,7 +489,7 @@ export function InsightsDashboard() {
                       "#dc2626",
                       "#ea580c",
                       "#ca8a04",
-                      "#4F6128",
+                      "#ff6600",
                       "#16a34a",
                     ];
                     return <Cell key={i} fill={colors[i]} fillOpacity={0.85} />;

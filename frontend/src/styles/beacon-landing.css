@@ -25,6 +25,25 @@
   text-decoration: none;
 }
 
+.beacon-landing a:hover {
+  color: var(--bl-accent);
+}
+
+/* All text on orange fills stays black (including <a> tags) */
+.beacon-landing .bl-btn-primary,
+.beacon-landing a.bl-btn-primary,
+.beacon-landing .bl-on-orange,
+.beacon-landing a.bl-on-orange {
+  color: #0b0a08 !important;
+}
+
+.beacon-landing .bl-btn-primary:hover,
+.beacon-landing a.bl-btn-primary:hover,
+.beacon-landing .bl-on-orange:hover,
+.beacon-landing a.bl-on-orange:hover {
+  color: #0b0a08 !important;
+}
+
 .beacon-landing ::selection {
   background: rgba(255, 102, 0, 0.28);
 }
@@ -58,13 +77,13 @@
   padding: 13px 22px;
   border-radius: 999px;
   background: var(--bl-accent);
-  color: var(--bl-ink);
+  color: #0b0a08 !important;
   transition: background 0.15s ease;
 }
 
 .beacon-landing .bl-btn-primary:hover {
   background: var(--bl-accent-hover);
-  color: var(--bl-ink);
+  color: #0b0a08 !important;
 }
 
 .beacon-landing .bl-btn-ghost {
@@ -164,6 +183,16 @@
   50% { transform: translateY(-7px); }
 }
 
+@keyframes bl-msgIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes bl-typingBounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
 .beacon-landing .bl-orb-core {
   animation: bl-orbCore 2.6s ease-in-out infinite;
 }
@@ -194,4 +223,16 @@
 
 .beacon-landing .bl-rail-chip {
   animation: bl-railFlow 2.6s linear infinite;
+}
+
+.beacon-landing .bl-msg-in {
+  animation: bl-msgIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.beacon-landing .bl-typing-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(242, 240, 237, 0.5);
+  animation: bl-typingBounce 1.1s ease-in-out infinite;
 }

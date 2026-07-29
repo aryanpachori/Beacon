@@ -3,253 +3,101 @@
 @tailwind utilities;
 
 /* ═══════════════════════════════════════════════════════
-   Beacon design tokens — Ivory & Charcoal
-   The same warm, editorial palette as the public site now
-   runs through the whole product: warm ivory/linen by
-   default, warm charcoal (never pure black) in dark mode,
-   muted olive as the one accent.
+   Beacon design tokens — Dark with orange accent
+   Matches the landing page: #08090a bg, #f2f0ed text,
+   #ff6600 accent. One cohesive brand across the platform.
    ═══════════════════════════════════════════════════════ */
 :root {
-  --dl-blue:        #4F6128;
-  --dl-blue-light:  #6B7A3A;
-  --dl-blue-dark:   #3E4A1F;
-  --dl-blue-pale:   #EBEDDF;
-  --dl-aurora:      #A9805A;
+  color-scheme: dark;
 
-  --dl-bg:      #F6F1E6;
-  --dl-surface: #EEE6D5;
-  --dl-border:  #DDD2B9;
-  --dl-muted:   #8A7F6A;
-  --dl-text:    #2E2A22;
-  --dl-navy:    #211E17;
+  --dl-blue:        #ff6600;
+  --dl-blue-light:  #ff8533;
+  --dl-blue-dark:   #e55c00;
+  --dl-blue-pale:   rgba(255, 102, 0, 0.12);
+  --dl-aurora:      #ff8533;
 
-  --dl-healthy:  #4F6128;
-  --dl-watch:    #A87A2E;
-  --dl-risk:     #B06430;
-  --dl-critical: #A44636;
-  --dl-danger:   #A44636;
-  --dl-warning:  #A87A2E;
-  --dl-success:  #4F6128;
+  --dl-bg:      #08090a;
+  --dl-surface: #0e1012;
+  --dl-border:  rgba(255, 255, 255, 0.09);
+  --dl-muted:   rgba(242, 240, 237, 0.55);
+  --dl-text:    #f2f0ed;
+  --dl-navy:    #f2f0ed;
 
-  /* Legacy aliases so old class-names still resolve */
-  --dl-teal:        #4F6128;
-  --dl-page:        #F6F1E6;
-  --dl-card:        #FBF7EC;
-  --dl-cream:       #EEE6D5;
-  --dl-nav:         #F6F1E6;
-  --dl-forest:      #4A4436;
-  --dl-hint:        #8A7F6A;
-  --dl-sage:        #8A7F6A;
-  --dl-sage-light:  #E4DAC4;
-  --dl-border-mid:  #DDD2B9;
-  --dl-m-border:    #DDD2B9;
-  --dl-m-text:      #2E2A22;
-  --dl-m-muted:     #8A7F6A;
-  --dl-m-healthy:   #4F6128;
-  --dl-m-watch:     #A87A2E;
-  --dl-m-risk:      #B06430;
-  --dl-m-critical:  #A44636;
-  --dl-chart-grid:  #E8E0CC;
+  --dl-healthy:  #6fd39a;
+  --dl-watch:    #f0c060;
+  --dl-risk:     #f2965c;
+  --dl-critical: #f2705c;
+  --dl-danger:   #f2705c;
+  --dl-warning:  #f0c060;
+  --dl-success:  #6fd39a;
+
+  --dl-teal:        #ff6600;
+  --dl-page:        #08090a;
+  --dl-card:        #111315;
+  --dl-cream:       #0e1012;
+  --dl-nav:         #08090a;
+  --dl-forest:      rgba(242, 240, 237, 0.82);
+  --dl-hint:        rgba(242, 240, 237, 0.4);
+  --dl-sage:        rgba(242, 240, 237, 0.4);
+  --dl-sage-light:  rgba(255, 255, 255, 0.06);
+  --dl-border-mid:  rgba(255, 255, 255, 0.09);
+  --dl-m-border:    rgba(255, 255, 255, 0.09);
+  --dl-m-text:      #f2f0ed;
+  --dl-m-muted:     rgba(242, 240, 237, 0.55);
+  --dl-m-healthy:   #6fd39a;
+  --dl-m-watch:     #f0c060;
+  --dl-m-risk:      #f2965c;
+  --dl-m-critical:  #f2705c;
+  --dl-chart-grid:  rgba(255, 255, 255, 0.05);
 }
 
-/* ═══════════════════════════════════════════════════════
-   Dark mode — the warm-charcoal break, matching the public
-   site's dark sections. Never pure black.
-   ═══════════════════════════════════════════════════════ */
+/* Dark mode — identical to :root since the platform is now dark-first */
 .dark {
   color-scheme: dark;
-  --dl-bg:         #241F17;
-  --dl-surface:    #2C2619;
-  --dl-border:     rgba(246,238,220,0.11);
-  --dl-muted:      #AB9F86;
-  --dl-text:       #EEE5D2;
-  --dl-chart-grid: rgba(246,238,220,0.06);
-  --dl-navy:       #F3ECDD;
+  --dl-bg:         #08090a;
+  --dl-surface:    #0e1012;
+  --dl-border:     rgba(255, 255, 255, 0.09);
+  --dl-muted:      rgba(242, 240, 237, 0.55);
+  --dl-text:       #f2f0ed;
+  --dl-chart-grid: rgba(255, 255, 255, 0.05);
+  --dl-navy:       #f2f0ed;
 
-  --dl-blue:       #7A8644;
-  --dl-blue-light: #9AA656;
-  --dl-blue-dark:  #5F6B35;
-  --dl-blue-pale:  rgba(122, 134, 68, 0.14);
-  --dl-aurora:     #C9A47C;
+  --dl-blue:       #ff6600;
+  --dl-blue-light: #ff8533;
+  --dl-blue-dark:  #e55c00;
+  --dl-blue-pale:  rgba(255, 102, 0, 0.12);
+  --dl-aurora:     #ff8533;
 
-  /* Legacy aliases */
-  --dl-page:       #241F17;
-  --dl-card:       #29241A;
-  --dl-nav:        #241F17;
-  --dl-forest:     #DED2B7;
-  --dl-hint:       #AB9F86;
-  --dl-sage:       #AB9F86;
-  --dl-sage-light: rgba(246,238,220,0.12);
-  --dl-border-mid: rgba(246,238,220,0.11);
-  --dl-m-border:   rgba(246,238,220,0.11);
-  --dl-m-text:     #EEE5D2;
-  --dl-m-muted:    #AB9F86;
-  --dl-cream:      #2C2619;
-  --dl-teal:       #7A8644;
+  --dl-page:       #08090a;
+  --dl-card:       #111315;
+  --dl-nav:        #08090a;
+  --dl-forest:     rgba(242, 240, 237, 0.82);
+  --dl-hint:       rgba(242, 240, 237, 0.4);
+  --dl-sage:       rgba(242, 240, 237, 0.4);
+  --dl-sage-light: rgba(255, 255, 255, 0.06);
+  --dl-border-mid: rgba(255, 255, 255, 0.09);
+  --dl-m-border:   rgba(255, 255, 255, 0.09);
+  --dl-m-text:     #f2f0ed;
+  --dl-m-muted:    rgba(242, 240, 237, 0.55);
+  --dl-cream:      #0e1012;
+  --dl-teal:       #ff6600;
 
-  --dl-healthy:  #7A8644;
-  --dl-watch:    #D0A85C;
-  --dl-risk:     #D18E60;
-  --dl-critical: #D08877;
+  --dl-healthy:  #6fd39a;
+  --dl-watch:    #f0c060;
+  --dl-risk:     #f2965c;
+  --dl-critical: #f2705c;
 }
 
-/* Landing / marketing — warm editorial surface.
-   Ivory, linen and stone by default; a small number of sections
-   dip into warm charcoal for contrast. Never pure black, never
-   neon — the palette of a paper-and-ink product, not a terminal. */
+/* Site shell — inherits :root dark tokens, no overrides needed */
 .site-shell {
-  color-scheme: light;
-
-  /* Accent — muted olive. Used sparingly, as a guide, not a glow. */
-  --dl-blue:        #4F6128;
-  --dl-blue-light:  #6B7A3A;
-  --dl-blue-dark:   #3E4A1F;
-  --dl-blue-pale:   #EBEDDF;
-  --dl-aurora:      #A9805A;
-
-  --dl-bg:          #F6F1E6;
-  --dl-surface:     #EEE6D5;
-  --dl-border:      #DDD2B9;
-  --dl-text:        #2E2A22;
-  --dl-navy:        #211E17;
-
-  --dl-muted:       #8A7F6A;
-  --dl-sage:        #8A7F6A;
-  --dl-hint:        #8A7F6A;
-  --dl-forest:      #4A4436;
-
-  --dl-teal:        #4F6128;
-  --dl-page:        #F6F1E6;
-  --dl-card:        #FBF7EC;
-  --dl-cream:       #EEE6D5;
-  --dl-nav:         #F6F1E6;
-  --dl-sage-light:  #E4DAC4;
-  --dl-border-mid:  #DDD2B9;
-  --dl-m-border:    #DDD2B9;
-  --dl-m-text:      #2E2A22;
-  --dl-m-muted:     #8A7F6A;
-
-  --dl-healthy:  #4F6128;
-  --dl-watch:    #A87A2E;
-  --dl-risk:     #B06430;
-  --dl-critical: #A44636;
-}
-
-/* The warm-charcoal break — used by a handful of sections
-   (hero, the dashboard preview, the closing CTA, the footer)
-   as an intentional, quiet contrast note, never the whole page. */
-.site-shell .section-dark {
   color-scheme: dark;
-
-  --dl-bg:          #241F17;
-  --dl-surface:     #2C2619;
-  --dl-card:        #29241A;
-  --dl-border:      rgba(246,238,220,0.11);
-  --dl-text:        #EEE5D2;
-  --dl-navy:        #F3ECDD;
-
-  --dl-muted:       #AB9F86;
-  --dl-sage:        #AB9F86;
-  --dl-hint:        #AB9F86;
-  --dl-forest:      #DED2B7;
-
-  --dl-teal:        #7A8644;
-  --dl-page:        #241F17;
-  --dl-cream:       #2C2619;
-  --dl-nav:         #241F17;
-  --dl-sage-light:  rgba(246,238,220,0.12);
-  --dl-border-mid:  rgba(246,238,220,0.11);
-  --dl-m-border:    rgba(246,238,220,0.11);
-  --dl-m-text:      #EEE5D2;
-  --dl-m-muted:     #AB9F86;
-
-  --dl-blue:        #7A8644;
-  --dl-blue-light:  #9AA656;
-  --dl-blue-dark:   #5F6B35;
-  --dl-blue-pale:   rgba(122, 134, 68, 0.14);
-
-  --dl-healthy:  #7A8644;
-  --dl-watch:    #D0A85C;
-  --dl-risk:     #D18E60;
-  --dl-critical: #D08877;
 }
 
-/* Landing dark mode — warm charcoal throughout, section contrast preserved */
-.dark .site-shell {
-  color-scheme: dark;
-
-  --dl-bg:          #241F17;
-  --dl-surface:     #2C2619;
-  --dl-card:        #29241A;
-  --dl-border:      rgba(246,238,220,0.11);
-  --dl-text:        #EEE5D2;
-  --dl-navy:        #F3ECDD;
-  --dl-muted:       #AB9F86;
-  --dl-sage:        #AB9F86;
-  --dl-hint:        #AB9F86;
-  --dl-forest:      #DED2B7;
-  --dl-teal:        #7A8644;
-  --dl-page:        #241F17;
-  --dl-cream:       #2C2619;
-  --dl-nav:         #241F17;
-  --dl-sage-light:  rgba(246,238,220,0.12);
-  --dl-border-mid:  rgba(246,238,220,0.11);
-  --dl-m-border:    rgba(246,238,220,0.11);
-  --dl-m-text:      #EEE5D2;
-  --dl-m-muted:     #AB9F86;
-  --dl-blue:        #7A8644;
-  --dl-blue-light:  #9AA656;
-  --dl-blue-dark:   #5F6B35;
-  --dl-blue-pale:   rgba(122, 134, 68, 0.14);
-  --dl-aurora:      #C9A47C;
-  --dl-healthy:     #7A8644;
-  --dl-watch:       #D0A85C;
-  --dl-risk:        #D18E60;
-  --dl-critical:    #D08877;
-}
-
-.dark .site-shell .section-dark {
-  --dl-bg:          #1A1610;
-  --dl-surface:     #241F17;
-  --dl-card:        #29241A;
-  --dl-nav:         #1A1610;
-  --dl-page:        #1A1610;
-}
-
-/* Auth — warm charcoal brand panel (matches landing section-dark) */
+/* Auth — brand panel, slightly elevated surface */
 .auth-brand-panel {
   color-scheme: dark;
-  background: #241F17;
-  color: #EEE5D2;
-
-  --dl-bg:          #241F17;
-  --dl-surface:     #2C2619;
-  --dl-card:        #29241A;
-  --dl-border:      rgba(246,238,220,0.11);
-  --dl-text:        #EEE5D2;
-  --dl-navy:        #F3ECDD;
-  --dl-muted:       #AB9F86;
-  --dl-sage:        #AB9F86;
-  --dl-hint:        #AB9F86;
-  --dl-forest:      #DED2B7;
-  --dl-teal:        #7A8644;
-  --dl-page:        #241F17;
-  --dl-cream:       #2C2619;
-  --dl-nav:         #241F17;
-  --dl-sage-light:  rgba(246,238,220,0.12);
-  --dl-border-mid:  rgba(246,238,220,0.11);
-  --dl-m-border:    rgba(246,238,220,0.11);
-  --dl-m-text:      #EEE5D2;
-  --dl-m-muted:     #AB9F86;
-  --dl-blue:        #7A8644;
-  --dl-blue-light:  #9AA656;
-  --dl-blue-dark:   #5F6B35;
-  --dl-blue-pale:   rgba(122, 134, 68, 0.14);
-  --dl-aurora:      #C9A47C;
-  --dl-healthy:     #7A8644;
-  --dl-watch:       #D0A85C;
-  --dl-risk:        #D18E60;
-  --dl-critical:    #D08877;
+  background: #0e1012;
+  color: #f2f0ed;
 }
 
 /* ─── Base reset ─── */
@@ -258,7 +106,7 @@
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-instrument-sans), var(--font-inter), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   background: var(--dl-bg);
   color: var(--dl-text);
@@ -317,107 +165,13 @@ body {
   .section-cream  { @apply bg-dl-surface; }
   .section-dark   { @apply bg-dl-nav; }
 
-  /* Landing — video background: high-contrast tokens + readable surfaces */
+  /* Landing — video background (legacy): inherits dark root tokens */
   .landing-with-video {
     color-scheme: dark;
-    --dl-text: #EEE5D2;
-    --dl-navy: #F6F1E6;
-    --dl-forest: #DED2B7;
-    --dl-muted: #B8AA92;
-    --dl-hint: #B8AA92;
-    --dl-sage: #B8AA92;
-    --dl-border: rgba(246, 238, 220, 0.2);
-    --dl-border-mid: rgba(246, 238, 220, 0.16);
-    --dl-blue: #7A8644;
-    --dl-blue-light: #9AA656;
-    --dl-blue-dark: #5F6B35;
-    --dl-blue-pale: rgba(122, 134, 68, 0.14);
     --dl-bg: transparent;
-    --dl-surface: rgba(26, 22, 16, 0.55);
-    --dl-card: rgba(26, 22, 16, 0.78);
     --dl-page: transparent;
     --dl-nav: transparent;
     --dl-cream: transparent;
-  }
-
-  .landing-with-video .section-light,
-  .landing-with-video .section-cream,
-  .landing-with-video .section-dark,
-  .landing-with-video [data-scroll-stats],
-  .landing-with-video #how-it-works,
-  .landing-with-video .landing-scroll-root > section:first-child {
-    background: transparent;
-  }
-
-  .landing-with-video header {
-    background: rgba(20, 17, 12, 0.62) !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    border-color: rgba(246, 238, 220, 0.12) !important;
-  }
-
-  .landing-with-video footer.section-dark {
-    background: rgba(20, 17, 12, 0.72);
-    border-top: 1px solid rgba(246, 238, 220, 0.1);
-  }
-
-  .landing-with-video h1,
-  .landing-with-video h2,
-  .landing-with-video h3,
-  .landing-with-video .text-hero,
-  .landing-with-video .text-hero-mobile,
-  .landing-with-video .text-section,
-  .landing-with-video .text-section-mobile {
-    text-shadow: 0 1px 20px rgba(20, 17, 12, 0.55);
-  }
-
-  .landing-with-video .glass-panel {
-    background: rgba(22, 19, 14, 0.88);
-    border-color: rgba(246, 238, 220, 0.16);
-    box-shadow: 0 16px 48px rgba(20, 17, 12, 0.35);
-  }
-
-  .landing-with-video [data-scroll-feature-card] {
-    background: rgba(22, 19, 14, 0.72);
-    border-color: rgba(246, 238, 220, 0.16) !important;
-  }
-
-  .landing-with-video [data-scroll-feature-card]:hover {
-    background: rgba(22, 19, 14, 0.82);
-    border-color: rgba(122, 134, 68, 0.35) !important;
-  }
-
-  .landing-with-video #compare .mt-12.overflow-hidden {
-    background: rgba(22, 19, 14, 0.72);
-    border-color: rgba(246, 238, 220, 0.16) !important;
-  }
-
-  .landing-with-video #compare tbody tr:nth-child(even) {
-    background: rgba(246, 238, 220, 0.04);
-  }
-
-  .landing-with-video [data-scroll-panel-without] {
-    background: rgba(164, 70, 54, 0.14) !important;
-    border-color: rgba(208, 136, 119, 0.35) !important;
-  }
-
-  .landing-with-video [data-scroll-panel-with] {
-    background: rgba(79, 97, 40, 0.16) !important;
-    border-color: rgba(122, 134, 68, 0.35) !important;
-  }
-
-  .landing-with-video [data-scroll-stats] .md\\:divide-x > * + * {
-    border-color: rgba(246, 238, 220, 0.14);
-  }
-
-  .landing-with-video .section-kicker,
-  .landing-with-video .section-kicker .kicker-index {
-    color: var(--dl-muted);
-  }
-
-  .landing-with-video .btn-ghost,
-  .landing-with-video a.text-dl-forest {
-    color: var(--dl-forest);
   }
 
   /* ── Cards ── */
@@ -429,8 +183,8 @@ body {
     transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
   }
   .dash-card:hover {
-    box-shadow: 0 12px 32px rgba(0,0,0,0.18), 0 0 0 1px rgba(46,230,168,0.12);
-    border-color: rgba(46,230,168,0.28);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,102,0,0.12);
+    border-color: rgba(255,102,0,0.28);
     transform: translateY(-1px);
   }
 
@@ -439,8 +193,8 @@ body {
     transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
   }
   .dl-card:hover {
-    box-shadow: 0 12px 32px rgba(0,0,0,0.18), 0 0 0 1px rgba(46,230,168,0.12);
-    border-color: rgba(46,230,168,0.28);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,102,0,0.12);
+    border-color: rgba(255,102,0,0.28);
     transform: translateY(-1px);
   }
 
@@ -458,12 +212,12 @@ body {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(46,230,168,0.03) 0%, transparent 60%);
+    background: linear-gradient(135deg, rgba(255,102,0,0.04) 0%, transparent 60%);
     pointer-events: none;
   }
   .insight-card:hover {
-    box-shadow: 0 8px 30px rgba(46,230,168,0.12), 0 2px 8px rgba(0,0,0,0.05);
-    border-color: rgba(46,230,168,0.35);
+    box-shadow: 0 8px 30px rgba(255,102,0,0.12), 0 2px 8px rgba(0,0,0,0.15);
+    border-color: rgba(255,102,0,0.35);
     transform: translateY(-1px);
   }
 
@@ -471,7 +225,7 @@ body {
      Tactile: a soft top highlight + grounded shadow so buttons read as
      physical surfaces, not flat CSS rectangles. */
   .btn-primary {
-    @apply relative inline-flex items-center gap-2 rounded-[9px] border-none bg-dl-blue px-6 py-3 text-[13.5px] font-medium text-[#F6F1E6] transition-all duration-200 ease-out;
+    @apply relative inline-flex items-center gap-2 rounded-[9px] border-none bg-dl-blue px-6 py-3 text-[13.5px] font-medium text-[#0b0a08] transition-all duration-200 ease-out;
     box-shadow:
       inset 0 1px 0 rgba(255,255,255,0.12),
       0 1px 1px rgba(30,25,15,0.12),
@@ -501,8 +255,8 @@ body {
   .btn-ghost:hover { @apply border-dl-muted; transform: translateY(-1px); }
 
   .btn-dash-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-dl-blue px-4 py-2.5 text-sm font-semibold text-[#052018] transition-all duration-150 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40;
-    box-shadow: 0 2px 12px rgba(46,230,168,0.25);
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-dl-blue px-4 py-2.5 text-sm font-semibold text-[#0b0a08] transition-all duration-150 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40;
+    box-shadow: 0 2px 12px rgba(255,102,0,0.25);
   }
   .btn-dash-secondary {
     @apply inline-flex items-center justify-center gap-2 rounded-xl border border-dl-border bg-dl-bg px-4 py-2.5 text-sm font-medium text-dl-text transition-colors hover:bg-dl-surface hover:border-dl-muted;
@@ -516,7 +270,7 @@ body {
   }
   .form-input:focus {
     border-color: var(--dl-blue);
-    box-shadow: 0 0 0 3px rgba(46,230,168,0.12);
+    box-shadow: 0 0 0 3px rgba(255,102,0,0.15);
   }
 
   .dash-input {
@@ -532,7 +286,7 @@ body {
   .dash-input::placeholder { color: var(--dl-muted); }
   .dash-input:focus {
     border-color: var(--dl-blue);
-    box-shadow: 0 0 0 3px rgba(46,230,168,0.1);
+    box-shadow: 0 0 0 3px rgba(255,102,0,0.12);
   }
 
   /* ── Filter tabs ── */
@@ -550,19 +304,19 @@ body {
   .filter-tab:hover {
     background: var(--dl-blue-pale);
     color: var(--dl-blue);
-    border-color: rgba(46,230,168,0.2);
+    border-color: rgba(255,102,0,0.25);
   }
   .filter-tab-active {
     font-size: 13px;
     padding: 6px 14px;
     border-radius: 99px;
     background: var(--dl-blue);
-    color: #052018;
+    color: #0b0a08;
     border: 1px solid transparent;
     cursor: pointer;
     font-weight: 600;
     white-space: nowrap;
-    box-shadow: 0 2px 8px rgba(46,230,168,0.3);
+    box-shadow: 0 2px 8px rgba(255,102,0,0.3);
   }
 
   /* ── Tier chips ── */
@@ -576,24 +330,24 @@ body {
     white-space: nowrap;
   }
   .tier-chip-healthy {
-    background: rgba(31,174,122,0.1);
-    color: #1FAE7A;
-    border: 1px solid rgba(31,174,122,0.25);
+    background: rgba(111,211,154,0.1);
+    color: #6fd39a;
+    border: 1px solid rgba(111,211,154,0.25);
   }
   .tier-chip-watch {
-    background: rgba(200,148,22,0.1);
-    color: #C89416;
-    border: 1px solid rgba(200,148,22,0.25);
+    background: rgba(240,192,96,0.1);
+    color: #f0c060;
+    border: 1px solid rgba(240,192,96,0.25);
   }
   .tier-chip-risk {
-    background: rgba(217,119,46,0.1);
-    color: #D9772E;
-    border: 1px solid rgba(217,119,46,0.25);
+    background: rgba(242,150,92,0.1);
+    color: #f2965c;
+    border: 1px solid rgba(242,150,92,0.25);
   }
   .tier-chip-critical {
-    background: rgba(214,72,63,0.1);
-    color: #D6483F;
-    border: 1px solid rgba(214,72,63,0.25);
+    background: rgba(242,112,92,0.1);
+    color: #f2705c;
+    border: 1px solid rgba(242,112,92,0.25);
   }
 
   /* ── Progress bars ── */
@@ -711,7 +465,7 @@ body {
     padding: 12px 14px;
     transition: border-color 0.15s;
   }
-  .stat-tile:hover { border-color: rgba(46,230,168,0.3); }
+  .stat-tile:hover { border-color: rgba(255,102,0,0.3); }
 
   /* ── Repo scan button ── */
   .repo-scan-btn {
@@ -766,7 +520,7 @@ body {
 }
 .form-input-default:focus {
   border-color: var(--dl-blue);
-  box-shadow: 0 0 0 3px rgba(46,230,168,0.12);
+  box-shadow: 0 0 0 3px rgba(255,102,0,0.12);
   outline: none;
 }
 .form-input-error {
@@ -775,7 +529,7 @@ body {
 }
 .form-input-success {
   border-color: var(--dl-healthy) !important;
-  box-shadow: 0 0 0 3px rgba(31,174,122,0.1) !important;
+  box-shadow: 0 0 0 3px rgba(111,211,154,0.12) !important;
 }
 .form-input-disabled {
   background: var(--dl-surface) !important;
@@ -812,23 +566,20 @@ body {
    the frame, like light falling across paper. No motion, no neon. ─── */
 .hero-mesh-gradient {
   background:
-    radial-gradient(ellipse 900px 500px at 85% 100%, rgba(79, 97, 40, 0.06), transparent 65%),
-    radial-gradient(ellipse 700px 500px at 0% 0%, rgba(169,128,90,0.05), transparent 65%);
+    radial-gradient(ellipse 900px 500px at 85% 100%, rgba(255, 102, 0, 0.06), transparent 65%),
+    radial-gradient(ellipse 700px 500px at 0% 0%, rgba(255,133,51,0.04), transparent 65%);
 }
 
 /* Fine paper grain — barely-there texture instead of a technical grid */
 .ambient-grid {
-  background-image: radial-gradient(rgba(46,40,25,0.05) 0.5px, transparent 0.5px);
+  background-image: radial-gradient(rgba(255,255,255,0.03) 0.5px, transparent 0.5px);
   background-size: 4px 4px;
   mask-image: radial-gradient(ellipse 70% 60% at 30% 10%, black, transparent);
-}
-.dark .ambient-grid {
-  background-image: radial-gradient(rgba(246,238,220,0.04) 0.5px, transparent 0.5px);
 }
 
 /* ─── Accent glow pill (used in hero badges) ─── */
 .blue-glow {
-  box-shadow: 0 0 0 1px rgba(79, 97, 40, 0.18), 0 4px 16px rgba(79, 97, 40, 0.12);
+  box-shadow: 0 0 0 1px rgba(255, 102, 0, 0.18), 0 4px 16px rgba(255, 102, 0, 0.12);
 }
 
 /* ─── Paper surface — a lifted panel with soft, warm depth ─── */

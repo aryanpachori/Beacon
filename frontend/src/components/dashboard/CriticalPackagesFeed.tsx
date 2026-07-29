@@ -62,7 +62,7 @@ export function CriticalPackagesFeed() {
             ? 'SCANNED PACKAGES'
             : 'NEEDS ATTENTION'}
         </p>
-        <Link href="/packages" className="text-[12px] font-medium text-[#4F6128] hover:text-[#3E4A1F] transition-colors">
+        <Link href="/packages" className="text-[12px] font-medium text-[#ff6600] hover:text-[#e55c00] transition-colors">
           View all →
         </Link>
       </div>

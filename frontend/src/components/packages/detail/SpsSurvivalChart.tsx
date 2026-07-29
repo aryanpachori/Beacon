@@ -18,10 +18,10 @@ import { buildChartSeries } from '@/lib/packageDetailData'
 
 const chartStyle = {
   gridStroke: 'rgba(246,238,220,0.08)',
-  axisTickColor: '#AB9F86',
-  tooltipBg: '#29241A',
+  axisTickColor: 'rgba(242,240,237,0.4)',
+  tooltipBg: '#111315',
   tooltipBorder: 'rgba(122,134,68,0.25)',
-  tooltipText: '#EEE5D2',
+  tooltipText: '#f2f0ed',
 }
 
 const X_TICKS = [0, 30, 60, 89, 120, 150, 179]
