@@ -20,7 +20,7 @@ function planLabel(plan: string) {
 }
 
 function planColor(plan: string) {
-  if (plan === 'pro') return { bg: 'rgba(122,134,68,0.18)', text: '#9AA656', dot: '#7A8644' }
+  if (plan === 'pro') return { bg: 'rgba(255,102,0,0.14)', text: '#ff8533', dot: '#ff6600' }
   if (plan === 'team') return { bg: 'rgba(169,128,90,0.18)', text: '#C9A47C', dot: '#A9805A' }
   return { bg: 'rgba(255,255,255,0.1)', text: 'rgba(255,255,255,0.7)', dot: 'rgba(255,255,255,0.5)' }
 }
@@ -84,9 +84,9 @@ export default function DashboardPage() {
             <div>
               <div className="mb-2 flex items-center gap-2">
                 <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white/10">
-                  <Zap className="h-3 w-3 text-[#9AA656]" />
+                  <Zap className="h-3 w-3 text-[#ff8533]" />
                 </div>
-                <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#9AA656]">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#ff8533]">
                   {greeting}
                 </span>
               </div>

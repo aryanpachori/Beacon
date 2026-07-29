@@ -73,11 +73,11 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="auth-brand-panel relative hidden w-[480px] shrink-0 flex-col gap-12 overflow-hidden p-12 lg:flex xl:w-[520px]">
         {/* Background decorations */}
         <div className="pointer-events-none absolute -right-32 -top-32 h-80 w-80 rounded-full blur-3xl"
-          style={{ background: 'rgba(201,164,124,0.1)' }} />
+          style={{ background: 'rgba(255,102,0,0.08)' }} />
         <div className="pointer-events-none absolute -bottom-24 -left-24 h-64 w-64 rounded-full blur-3xl"
-          style={{ background: 'rgba(122,134,68,0.08)' }} />
+          style={{ background: 'rgba(255,133,51,0.06)' }} />
         <div className="pointer-events-none absolute inset-x-0 top-1/2 h-px -translate-y-1/2"
-          style={{ background: 'linear-gradient(90deg, transparent, rgba(246,238,220,0.08), transparent)' }} />
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)' }} />
 
         {/* Logo */}
         <div className="relative z-10">

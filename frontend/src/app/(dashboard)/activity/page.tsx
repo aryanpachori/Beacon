@@ -104,7 +104,7 @@ export default function ActivityPage() {
           >
             {f.label}
             {f.key !== 'all' && (
-              <span className={`ml-1.5 text-[10px] ${filter === f.key ? 'opacity-70' : 'text-[#c6d1d7]'}`}>
+              <span className={`ml-1.5 text-[10px] ${filter === f.key ? 'opacity-70' : 'text-white/30'}`}>
                 {events.filter(e => e.type === f.key).length}
               </span>
             )}

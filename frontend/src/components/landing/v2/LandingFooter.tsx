@@ -55,16 +55,16 @@ export function LandingFooter() {
               height={24}
               className="h-6 w-6 shrink-0 object-contain"
             />
-            <span className="text-[20px] font-semibold tracking-[-0.025em]">beacon</span>
+            <span className="text-[20px] font-semibold tracking-[-0.025em] text-[#0b0a08]">beacon</span>
           </div>
           <div className="mb-[26px] flex gap-[18px] text-[14.5px] font-medium">
-            <a href="https://github.com" className="text-[#0b0a08] hover:opacity-60">
+            <a href="https://github.com" className="bl-on-orange text-[#0b0a08] hover:opacity-60">
               GitHub
             </a>
-            <a href="https://x.com" className="text-[#0b0a08] hover:opacity-60">
+            <a href="https://x.com" className="bl-on-orange text-[#0b0a08] hover:opacity-60">
               X
             </a>
-            <a href="https://linkedin.com" className="text-[#0b0a08] hover:opacity-60">
+            <a href="https://linkedin.com" className="bl-on-orange text-[#0b0a08] hover:opacity-60">
               LinkedIn
             </a>
           </div>
@@ -82,7 +82,7 @@ export function LandingFooter() {
               <Link
                 key={link.label}
                 href={link.href}
-                className="text-base font-medium text-[#0b0a08] hover:opacity-60"
+                className="bl-on-orange text-base font-medium text-[#0b0a08] hover:opacity-60"
               >
                 {link.label}
               </Link>

@@ -1,135 +1,261 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
-const BEATS = [
-  {
-    n: '01',
-    time: '09:41',
-    short: 'The prompt',
-    title: 'Maya ships a checkout endpoint.',
-    snippet: '@cursor add a /checkout route with Stripe',
-    caption: 'She is a product engineer, not a security engineer. She should not have to be one.',
-  },
-  {
-    n: '02',
-    time: '09:41',
-    short: 'The agent',
-    title: 'The agent writes 240 lines in 12 seconds.',
-    snippet: '+240 −18  ·  4 files changed',
-    caption: 'Working code. Also a live Stripe key, pasted straight into the handler.',
-  },
-  {
-    n: '03',
-    time: '09:41',
-    short: 'The catch',
-    title: 'Beacon flags it before the save lands.',
-    snippet: 'CRITICAL  hardcoded secret · line 2',
-    caption: 'No CI run, no scanner queue. The finding appears on the line that caused it.',
-  },
-  {
-    n: '04',
-    time: '09:42',
-    short: 'The fix',
-    title: 'One keystroke, and the risk is gone.',
-    snippet: 'const key = process.env.STRIPE_KEY',
-    caption: 'Beacon proposes the patch, Maya accepts it and keeps prompting. Nothing broke her flow.',
-  },
-  {
-    n: '05',
-    time: '09:44',
-    short: 'The ship',
-    title: 'PR #214 merges on time.',
-    snippet: '✓ 0 findings  ·  reviewed locally',
-    caption: 'The key never left her laptop, and the review never left the editor.',
-  },
-]
-
-function chipStyle(i: number) {
-  if (i === 2) {
-    return {
-      border: 'rgba(242,112,92,.4)',
-      bg: 'rgba(242,112,92,.09)',
-      color: '#f2705c',
-    }
-  }
-  if (i >= 3) {
-    return {
-      border: 'rgba(111,211,154,.4)',
-      bg: 'rgba(111,211,154,.08)',
-      color: '#6fd39a',
-    }
-  }
-  return {
-    border: 'rgba(255,255,255,.13)',
-    bg: 'rgba(255,255,255,.03)',
-    color: 'rgba(242,240,237,.8)',
+type Message = {
+  id: number
+  name: string
+  role: string
+  initials: string
+  avatarBg: string
+  avatarColor: string
+  time: string
+  text: string
+  chip?: {
+    border: string
+    bg: string
+    color: string
+    text: string
   }
 }
 
+const MESSAGES: Message[] = [
+  {
+    id: 1,
+    name: 'Beck Ostrander',
+    role: 'CEO, Loopr',
+    initials: 'BO',
+    avatarBg: 'rgba(255,102,0,.16)',
+    avatarColor: '#ff6600',
+    time: '9:41 AM',
+    text: 'just wire up stripe, we demo in an hour',
+  },
+  {
+    id: 2,
+    name: 'Jenna Cole',
+    role: 'Staff Eng',
+    initials: 'JC',
+    avatarBg: 'rgba(111,211,154,.16)',
+    avatarColor: '#6fd39a',
+    time: '9:41 AM',
+    text: 'an hour?? for a full checkout flow??',
+  },
+  {
+    id: 3,
+    name: 'Beck Ostrander',
+    role: 'CEO, Loopr',
+    initials: 'BO',
+    avatarBg: 'rgba(255,102,0,.16)',
+    avatarColor: '#ff6600',
+    time: '9:41 AM',
+    text: 'relax, cursor can knock this out in like 2 minutes',
+  },
+  {
+    id: 4,
+    name: 'cursor-agent',
+    role: 'bot',
+    initials: 'AI',
+    avatarBg: 'rgba(143,167,255,.16)',
+    avatarColor: '#8fa7ff',
+    time: '9:41 AM',
+    text: 'added checkout.ts to the branch',
+    chip: {
+      border: 'rgba(255,255,255,.13)',
+      bg: 'rgba(255,255,255,.03)',
+      color: 'rgba(242,240,237,.8)',
+      text: '+240 −18 · 4 files changed\nconst key = "sk_live_51H8xJ2…"',
+    },
+  },
+  {
+    id: 5,
+    name: 'Jenna Cole',
+    role: 'Staff Eng',
+    initials: 'JC',
+    avatarBg: 'rgba(111,211,154,.16)',
+    avatarColor: '#6fd39a',
+    time: '9:41 AM',
+    text: 'ok that actually worked. wait let me check something',
+  },
+  {
+    id: 6,
+    name: 'Beacon',
+    role: 'bot',
+    initials: '◆',
+    avatarBg: 'rgba(255,102,0,.16)',
+    avatarColor: '#ff6600',
+    time: '9:41 AM',
+    text: 'blocked before commit — this needs a look',
+    chip: {
+      border: 'rgba(242,112,92,.4)',
+      bg: 'rgba(242,112,92,.09)',
+      color: '#f2705c',
+      text: 'CRITICAL  hardcoded secret · line 2',
+    },
+  },
+  {
+    id: 7,
+    name: 'Jenna Cole',
+    role: 'Staff Eng',
+    initials: 'JC',
+    avatarBg: 'rgba(111,211,154,.16)',
+    avatarColor: '#6fd39a',
+    time: '9:42 AM',
+    text: 'oh no. OH NO. it hardcoded the live stripe key',
+  },
+  {
+    id: 8,
+    name: 'Jenna Cole',
+    role: 'Staff Eng',
+    initials: 'JC',
+    avatarBg: 'rgba(111,211,154,.16)',
+    avatarColor: '#6fd39a',
+    time: '9:42 AM',
+    text: 'ok, fixed, pushed. crisis averted. seen this one before.',
+    chip: {
+      border: 'rgba(111,211,154,.4)',
+      bg: 'rgba(111,211,154,.08)',
+      color: '#6fd39a',
+      text: 'const key = process.env.STRIPE_KEY',
+    },
+  },
+  {
+    id: 9,
+    name: 'Beck Ostrander',
+    role: 'CEO, Loopr',
+    initials: 'BO',
+    avatarBg: 'rgba(255,102,0,.16)',
+    avatarColor: '#ff6600',
+    time: '9:44 AM',
+    text: 'demo’d clean. calling it our robust security posture on the call',
+  },
+]
+
 export function StoryTimeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
-  const [beat, setBeat] = useState(0)
+  const [msgCount, setMsgCount] = useState(0)
+  const [typingIdx, setTypingIdx] = useState(-1)
+  const chatRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const id = setInterval(() => setBeat((b) => (b + 1) % BEATS.length), 3800 / demoSpeed)
-    return () => clearInterval(id)
+    const el = chatRef.current
+    if (el) el.scrollTop = el.scrollHeight
+  }, [msgCount, typingIdx])
+
+  useEffect(() => {
+    let cancelled = false
+    let timeout: ReturnType<typeof setTimeout> | null = null
+
+    const wait = (ms: number) =>
+      new Promise<void>((resolve) => {
+        timeout = setTimeout(resolve, ms / demoSpeed)
+      })
+
+    const loop = async () => {
+      while (!cancelled) {
+        setMsgCount(0)
+        setTypingIdx(-1)
+        await wait(700)
+
+        for (let i = 0; i < MESSAGES.length && !cancelled; i += 1) {
+          setTypingIdx(i)
+          await wait(700)
+          if (cancelled) break
+          setMsgCount(i + 1)
+          setTypingIdx(-1)
+          await wait(1150)
+        }
+
+        if (cancelled) break
+        await wait(3200)
+      }
+    }
+
+    loop()
+    return () => {
+      cancelled = true
+      if (timeout) clearTimeout(timeout)
+    }
   }, [demoSpeed])
 
-  const active = BEATS[beat]
-  const chip = chipStyle(beat)
+  const messages = MESSAGES.slice(0, msgCount)
+  const typingVisible = typingIdx > -1
+  const typingName = typingVisible ? MESSAGES[typingIdx].name : ''
 
   return (
     <section data-reveal className="pb-[118px]">
-      <p className="bl-kicker">A Tuesday afternoon</p>
-      <h2 className="bl-h2">How it actually plays out.</h2>
-      <p className="bl-lede mb-[46px] max-w-[52ch]">
-        One prompt, one leaked key that never leaves the laptop, one PR merged on time.
-      </p>
+      <div className="grid items-center gap-10 lg:grid-cols-[1fr_620px] lg:gap-14">
+        <div>
+          <p className="bl-kicker">Demo day at Loopr</p>
+          <h2 className="bl-h2 max-w-[16ch]">How it actually plays out.</h2>
+          <p className="bl-lede max-w-[42ch]">
+            A founder who overpromised, an engineer who&apos;s seen this before, and one leaked key
+            that never leaves the laptop — as it happened, in #loopr-eng.
+          </p>
+        </div>
 
-      <div className="relative min-h-[210px] overflow-hidden rounded-[18px] border border-white/[0.09] bg-[linear-gradient(160deg,rgba(255,255,255,.03),transparent)] px-6 py-8 md:px-11 md:py-10">
-        <div className="bl-mono relative mb-3.5 text-[11px] tracking-[0.08em] text-[#ff6600]">
-          {active.time} · {active.short}
-        </div>
-        <div className="relative mb-[18px] max-w-[26ch] text-[clamp(22px,2.8vw,28px)] font-semibold leading-[1.2] tracking-[-0.025em]">
-          {active.title}
-        </div>
-        <div
-          className="bl-mono relative inline-block rounded-[10px] border px-4 py-3 text-[13px]"
-          style={{
-            borderColor: chip.border,
-            background: chip.bg,
-            color: chip.color,
-          }}
-        >
-          {active.snippet}
-        </div>
-        <p className="relative mt-[18px] mb-0 max-w-[46ch] text-[15.5px] leading-relaxed text-[rgba(242,240,237,.58)]">
-          {active.caption}
-        </p>
-      </div>
+        <div className="overflow-hidden rounded-[14px] border border-white/[0.09] bg-[#0e1012] shadow-[0_20px_50px_rgba(0,0,0,.4)]">
+          <div className="flex items-center gap-2.5 border-b border-white/[0.07] px-5 py-3.5">
+            <span className="bl-mono text-[13.5px] font-medium text-[rgba(242,240,237,.85)]">
+              # loopr-eng
+            </span>
+            <span className="bl-mono ml-auto text-[11px] text-[rgba(242,240,237,.35)]">
+              3 members · 1 bot
+            </span>
+          </div>
 
-      <div className="relative mt-9 flex items-start">
-        <div className="absolute left-3.5 right-3.5 top-1.5 h-px bg-white/10" />
-        {BEATS.map((b, i) => {
-          const on = i === beat
-          return (
-            <div key={b.short} className="relative flex flex-1 flex-col items-center gap-2.5">
-              <div
-                className="h-[13px] w-[13px] rounded-full border-[3px] border-[#08090a] transition-[background,box-shadow] duration-400 ease-out"
-                style={{
-                  background: on ? '#ff6600' : '#2a2b2d',
-                  boxShadow: on ? '0 0 0 4px rgba(255,102,0,.18)' : 'none',
-                }}
-              />
-              <span
-                className="text-center text-[12px] font-medium tracking-[-0.01em] transition-colors duration-400 ease-out md:text-[13.5px]"
-                style={{ color: on ? '#ff6600' : 'rgba(242,240,237,.45)' }}
-              >
-                {b.short}
-              </span>
-            </div>
-          )
-        })}
+          <div
+            ref={chatRef}
+            className="flex h-[380px] flex-col gap-5 overflow-y-auto px-5 py-[22px]"
+          >
+            {messages.map((m) => (
+              <div key={m.id} className="bl-msg-in flex gap-3">
+                <div
+                  className="grid h-[30px] w-[30px] shrink-0 place-items-center rounded-lg bl-mono text-[11.5px] font-semibold"
+                  style={{ background: m.avatarBg, color: m.avatarColor }}
+                >
+                  {m.initials}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="mb-1 flex items-baseline gap-2">
+                    <span className="text-sm font-semibold tracking-[-0.01em]">{m.name}</span>
+                    <span className="text-[11px] text-[rgba(242,240,237,.35)]">{m.role}</span>
+                    <span className="bl-mono ml-auto text-[10.5px] text-[rgba(242,240,237,.3)]">
+                      {m.time}
+                    </span>
+                  </div>
+                  <p className="m-0 text-[14.5px] leading-[1.5] text-[rgba(242,240,237,.82)]">
+                    {m.text}
+                  </p>
+                  {m.chip && (
+                    <div
+                      className="bl-mono mt-[9px] inline-block whitespace-pre-wrap rounded-lg border px-[14px] py-[10px] text-[12.5px] leading-[1.6]"
+                      style={{
+                        borderColor: m.chip.border,
+                        background: m.chip.bg,
+                        color: m.chip.color,
+                      }}
+                    >
+                      {m.chip.text}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+
+            {typingVisible && (
+              <div className="flex items-center gap-3 opacity-65">
+                <div className="h-[30px] w-[30px] shrink-0 rounded-lg bg-white/[0.05]" />
+                <div className="flex items-center gap-2">
+                  <span className="text-[12.5px] text-[rgba(242,240,237,.45)]">{typingName}</span>
+                  <div className="flex gap-[3px]">
+                    <span className="bl-typing-dot" />
+                    <span className="bl-typing-dot" style={{ animationDelay: '.15s' }} />
+                    <span className="bl-typing-dot" style={{ animationDelay: '.3s' }} />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </section>
   )

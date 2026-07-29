@@ -36,7 +36,7 @@ export function ComparisonTable() {
               <thead>
                 <tr className="border-b border-dl-border bg-transparent">
                   <th className="px-4 py-3 text-left font-medium text-dl-text">Capability</th>
-                  <th className="relative px-4 py-3 font-medium text-[#F6F1E6]">
+                  <th className="relative px-4 py-3 font-medium text-[#0b0a08]">
                     <div className="absolute inset-0 bg-dl-blue" />
                     <span className="relative z-10">Beacon</span>
                   </th>

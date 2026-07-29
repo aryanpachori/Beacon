@@ -137,7 +137,7 @@ export default function MaintainersPage() {
                 {/* Header */}
                 <div className="flex items-start gap-3">
                   {/* Avatar (Initials) */}
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#4F6128] to-[#3E4A1F] text-[12px] font-bold text-white shadow-sm">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#ff6600] to-[#e55c00] text-[12px] font-bold text-white shadow-sm">
                     {initials}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -196,7 +196,7 @@ export default function MaintainersPage() {
                         key={pkg.id}
                         href={`/packages/${pkg.id}`}
                         className="rounded-lg border border-dl-border bg-dl-surface px-2 py-1 text-[11px] font-semibold text-dl-text hover:border-dl-blue/30 hover:bg-dl-blue-pale hover:text-dl-blue transition-all"
-                        style={{ borderLeft: `2px solid ${TIER_COLOR[pkg.tier ?? 'watch'] ?? '#c6d1d7'}` }}
+                        style={{ borderLeft: `2px solid ${TIER_COLOR[pkg.tier ?? 'watch'] ?? 'rgba(255,255,255,0.12)'}` }}
                       >
                         {pkg.name}
                       </Link>
