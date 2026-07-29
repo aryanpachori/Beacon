@@ -5,13 +5,6 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 const SCRUB = 0.35
-const HORIZONTAL_SCRUB = 0.7
-const HORIZONTAL_SETTLE = 0.22
-/* How much the horizontal pan overlaps the tail of the vertical settle
-   phase — with an eased (not linear) pan, the overlap means the pan's
-   near-zero starting velocity blends into the settle instead of the
-   two phases meeting at a hard, dead-stop handoff. */
-const HORIZONTAL_OVERLAP = 0.08
 
 function playReveal(
   elements: gsap.TweenTarget,
@@ -95,78 +88,6 @@ export function useLandingScroll(rootRef: RefObject<HTMLElement | null>) {
             0
           )
       }
-
-      const mm = gsap.matchMedia()
-
-      mm.add('(min-width: 1024px)', () => {
-        const horizontal = root.querySelector<HTMLElement>('[data-scroll-horizontal]')
-        const viewport = horizontal?.querySelector<HTMLElement>('[data-scroll-horizontal-viewport]')
-        const track = horizontal?.querySelector<HTMLElement>('[data-scroll-horizontal-track]')
-
-        if (horizontal && track && viewport) {
-          const panels = gsap.utils.toArray<HTMLElement>('[data-scroll-panel]', track)
-
-          const getScrollDistance = () => {
-            const lastPanel = panels[panels.length - 1]
-            if (!lastPanel) return 0
-            const padding = 24
-            return Math.max(
-              0,
-              lastPanel.offsetLeft + lastPanel.offsetWidth - viewport.clientWidth + padding
-            )
-          }
-
-          const setupHorizontal = () => {
-            const scrollDistance = getScrollDistance()
-            if (scrollDistance <= 40) return
-
-            const header = horizontal.querySelector<HTMLElement>('[data-scroll-horizontal-header]')
-
-            gsap.set(track, { x: 0 })
-            gsap.set(panels, { opacity: 1, y: 0 })
-            if (header) gsap.set(header, { opacity: 1, y: 0 })
-
-            const settleScroll = window.innerHeight * HORIZONTAL_SETTLE
-            const totalScroll = settleScroll + scrollDistance
-            const horizontalStart = settleScroll / totalScroll
-
-            const tl = gsap.timeline({
-              scrollTrigger: {
-                trigger: horizontal,
-                start: 'top top',
-                end: () => `+=${totalScroll}`,
-                pin: true,
-                scrub: HORIZONTAL_SCRUB,
-                invalidateOnRefresh: true,
-                anticipatePin: 1,
-              },
-            })
-
-            if (header) {
-              tl.fromTo(
-                header,
-                { y: 28, opacity: 0.6 },
-                { y: 0, opacity: 1, ease: 'power2.out', duration: horizontalStart },
-                0
-              )
-            }
-
-            // Start the pan slightly before the settle phase ends. Because
-            // it's eased (not linear), its opening velocity is near zero —
-            // that overlap is what makes the hand-off read as one continuous
-            // motion instead of a dead stop followed by a sideways yank.
-            const panStart = Math.max(0, horizontalStart - HORIZONTAL_OVERLAP)
-            tl.fromTo(
-              track,
-              { x: 0 },
-              { x: () => -getScrollDistance(), ease: 'power1.inOut', duration: 1 - panStart },
-              panStart
-            )
-          }
-
-          setupHorizontal()
-        }
-      })
 
       const beforeAfter = root.querySelector<HTMLElement>('[data-scroll-before-after]')
       const withoutPanel = root.querySelector<HTMLElement>('[data-scroll-panel-without]')

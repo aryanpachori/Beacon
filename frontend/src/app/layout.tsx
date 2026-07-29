@@ -20,22 +20,25 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   icons: {
-    icon: '/favicon.ico',
-    apple: '/image.png',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/beacon-mark.png', type: 'image/png', sizes: '713x713' },
+    ],
+    apple: '/apple-touch-icon.png',
   },
-  title: 'Beacon — Security that ships with AI',
+  title: 'Beacon — Security that ships at agent speed',
   description:
-    'Beacon is the AI Security Engineer that lives inside your workflow — an IDE extension, MCP server, and CLI that quietly reviews AI-generated code before it reaches production. Local-first. Zero repo access.',
+    'Beacon rides along with Cursor, Claude Code and Copilot, reviewing every line the moment it\u2019s written — inside your editor, on your machine. Local-first. Zero repo access.',
   openGraph: {
-    title: 'Beacon — Security that ships with AI',
-    description: 'The AI Security Engineer that watches over code as it\u2019s written, not after it ships.',
+    title: 'Beacon — Security that ships at agent speed',
+    description: 'Beacon catches secrets, SQL injection, and broken auth before commit — inline, locally.',
     type: 'website',
     siteName: 'Beacon',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Beacon — Security that ships with AI',
-    description: 'The AI Security Engineer that watches over code as it\u2019s written, not after it ships.',
+    title: 'Beacon — Security that ships at agent speed',
+    description: 'Beacon catches secrets, SQL injection, and broken auth before commit — inline, locally.',
   },
 }
 

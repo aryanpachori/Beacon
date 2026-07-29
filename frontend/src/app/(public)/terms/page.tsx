@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function TermsPage() {
   return (
-    <>
+    <div className="site-shell min-h-screen">
       <Nav />
       <main className="section-light">
         <div className="mx-auto max-w-2xl px-6 py-24">
@@ -49,6 +49,6 @@ export default function TermsPage() {
         </div>
       </main>
       <Footer />
-    </>
+    </div>
   )
 }
