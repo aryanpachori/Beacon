@@ -34,8 +34,8 @@ export default function TermsPage() {
               <h2 className="mb-2 text-lg font-semibold text-dl-forest">Contact</h2>
               <p>
                 Questions? Email{' '}
-                <a href="mailto:hello@beaconapp.dev" className="text-dl-teal underline-offset-2 hover:underline">
-                  hello@beaconapp.dev
+                <a href="mailto:founders@beacon.forgefastlabs.com" className="text-dl-teal underline-offset-2 hover:underline">
+                  founders@beacon.forgefastlabs.com
                 </a>
                 .
               </p>

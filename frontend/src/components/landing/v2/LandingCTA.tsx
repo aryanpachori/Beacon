@@ -16,7 +16,7 @@ export function LandingCTA() {
         <Link href="/register" className="bl-btn-primary !px-6 !py-3.5">
           Install Beacon — free
         </Link>
-        <a href="mailto:hello@beaconapp.dev" className="bl-btn-ghost !px-[22px] !py-3.5">
+        <a href="mailto:founders@beacon.forgefastlabs.com" className="bl-btn-ghost !px-[22px] !py-3.5">
           Talk to us
         </a>
       </div>

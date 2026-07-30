@@ -20,7 +20,7 @@ export function FinalCTA() {
           <Link href="/register" className="btn-primary">
             Install Beacon — free
           </Link>
-          <a href="mailto:hello@beaconapp.dev" className="text-[13.5px] text-dl-muted underline decoration-dl-border underline-offset-4 transition-colors hover:text-dl-text hover:decoration-dl-muted">
+          <a href="mailto:founders@beacon.forgefastlabs.com" className="text-[13.5px] text-dl-muted underline decoration-dl-border underline-offset-4 transition-colors hover:text-dl-text hover:decoration-dl-muted">
             Talk to us
           </a>
         </div>

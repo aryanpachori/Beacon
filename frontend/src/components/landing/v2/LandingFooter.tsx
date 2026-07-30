@@ -28,7 +28,7 @@ const COLUMNS = [
       { label: 'About', href: '#' },
       { label: 'Blog', href: '#' },
       { label: 'Careers', href: '#' },
-      { label: 'Contact', href: 'mailto:hello@beaconapp.dev' },
+      { label: 'Contact', href: 'mailto:founders@beacon.forgefastlabs.com' },
     ],
   },
   {
