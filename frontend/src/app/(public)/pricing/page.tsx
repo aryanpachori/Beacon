@@ -73,7 +73,7 @@ export default function PricingPage() {
           <Link href="/" className="text-[14.5px] text-[rgba(242,240,237,.62)] hover:text-[#ff8533]">
             Home
           </Link>
-          <Link href="/#how" className="text-[14.5px] text-[rgba(242,240,237,.62)] hover:text-[#ff8533]">
+          <Link href="/docs" className="text-[14.5px] text-[rgba(242,240,237,.62)] hover:text-[#ff8533]">
             Docs
           </Link>
           <span className="text-[14.5px] font-semibold text-[#ff6600]">Pricing</span>
