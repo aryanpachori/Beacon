@@ -10,7 +10,6 @@ const COLUMNS = [
       { label: 'How it works', href: '#how' },
       { label: 'Features', href: '#features' },
       { label: 'Pricing', href: '/pricing' },
-      { label: 'Changelog', href: '#' },
     ],
   },
   {
@@ -22,6 +21,7 @@ const COLUMNS = [
       { label: 'CLI', href: '/register' },
     ],
   },
+<<<<<<< Updated upstream
   {
     title: 'Company',
     links: [
@@ -40,12 +40,14 @@ const COLUMNS = [
       { label: 'Subprocessors', href: '#' },
     ],
   },
+=======
+>>>>>>> Stashed changes
 ]
 
 export function LandingFooter() {
   return (
     <footer className="overflow-hidden bg-[#ff6600] pt-[74px] text-[#0b0a08]">
-      <div className="bl-shell grid gap-10 pb-0 md:grid-cols-2 lg:grid-cols-[1.5fr_repeat(4,1fr)] lg:gap-10">
+      <div className="mx-auto grid max-w-[1280px] gap-10 px-5 pb-0 md:grid-cols-2 md:px-10 lg:grid-cols-[1fr_auto_auto] lg:gap-14">
         <div>
           <div className="mb-[26px] flex items-center gap-2.5">
             <Image
@@ -57,24 +59,13 @@ export function LandingFooter() {
             />
             <span className="text-[20px] font-semibold tracking-[-0.025em] text-[#0b0a08]">beacon</span>
           </div>
-          <div className="mb-[26px] flex gap-[18px] text-[14.5px] font-medium">
-            <a href="https://github.com" className="bl-on-orange text-[#0b0a08] hover:opacity-60">
-              GitHub
-            </a>
-            <a href="https://x.com" className="bl-on-orange text-[#0b0a08] hover:opacity-60">
-              X
-            </a>
-            <a href="https://linkedin.com" className="bl-on-orange text-[#0b0a08] hover:opacity-60">
-              LinkedIn
-            </a>
-          </div>
           <p className="m-0 text-[14px] text-[rgba(11,10,8,.72)]">
             © 2026 Beacon. All rights reserved.
           </p>
         </div>
 
         {COLUMNS.map((col) => (
-          <div key={col.title} className="flex flex-col gap-3.5">
+          <div key={col.title} className="flex flex-col gap-3.5 lg:justify-self-end">
             <span className="text-xs font-semibold uppercase tracking-[0.1em] text-[rgba(11,10,8,.85)]">
               {col.title}
             </span>
@@ -82,7 +73,7 @@ export function LandingFooter() {
               <Link
                 key={link.label}
                 href={link.href}
-                className="bl-on-orange text-base font-medium text-[#0b0a08] hover:opacity-60"
+                className="text-base font-medium text-[#0b0a08] hover:opacity-60"
               >
                 {link.label}
               </Link>
