@@ -8,7 +8,6 @@ import { AlertCircle, Eye, EyeOff, ArrowRight, CheckCircle2 } from 'lucide-react
 import { ApiError, apiFetch, setAuthTokens } from '@/lib/api'
 import { cn } from '@/lib/utils'
 
-const FULL_NAME_MAX = 50
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 function useRedirectParam(): string | null {
@@ -64,8 +63,6 @@ function RegisterForm() {
   const [passwordTouched, setPasswordTouched] = useState(false)
   const [passwordError, setPasswordError] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const [fullName, setFullName] = useState('')
-  const [nickname, setNickname] = useState('')
   const [error, setError] = useState('')
   const [errorCode, setErrorCode] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -76,20 +73,6 @@ function RegisterForm() {
     if (!val) return 'Email is required'
     if (!EMAIL_RE.test(val)) return 'Enter a valid email address'
     return ''
-  }
-
-  // Auto-fill name + handle from email local part if user hasn't typed them yet
-  function autofillFromEmail(val: string) {
-    const local = val.split('@')[0] ?? ''
-    if (!local) return
-    // Split on dots, underscores, hyphens → capitalize each word → join as full name
-    const parts = local.split(/[._-]/).map(p => p.replace(/\d+/g, '').trim()).filter(Boolean)
-    const suggested = parts.length > 1
-      ? parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ')
-      : local.replace(/\d+/g, '').charAt(0).toUpperCase() + local.replace(/\d+/g, '').slice(1)
-    if (!fullName.trim() && suggested) setFullName(suggested)
-    // Handle: lowercase local part, strip special chars, max 20 chars
-    if (!nickname.trim()) setNickname(local.toLowerCase().replace(/[^a-z0-9._-]/g, '').slice(0, 20))
   }
 
   const validatePassword = (val: string) => {
@@ -126,8 +109,6 @@ function RegisterForm() {
         body: JSON.stringify({
           email: email.trim(),
           password,
-          fullName: fullName.trim() || undefined,
-          nickname: nickname.trim() || undefined,
         }),
       })
       setAuthTokens(data.accessToken, data.refreshToken)
@@ -142,8 +123,6 @@ function RegisterForm() {
       setLoading(false)
     }
   }
-
-  const nameCount = fullName.length
 
   return (
     <motion.div
@@ -187,46 +166,6 @@ function RegisterForm() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <div className="mb-1.5 flex items-center justify-between">
-                <label className="text-[12px] font-semibold text-dl-text" htmlFor="fullName">
-                  Full name
-                </label>
-                <span className={cn('text-[10px] tabular-nums',
-                  nameCount >= FULL_NAME_MAX ? 'text-red-500' : nameCount >= 40 ? 'text-orange-500' : 'text-[rgba(255,255,255,0.2)]'
-                )}>
-                  {nameCount}/{FULL_NAME_MAX}
-                </span>
-              </div>
-              <input
-                id="fullName"
-                type="text"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value.slice(0, FULL_NAME_MAX))}
-                placeholder="John Doe"
-                className="w-full rounded-xl border border-dl-border bg-dl-bg px-3.5 py-3 text-[14px] text-dl-navy placeholder:text-dl-muted outline-none transition-all focus:border-dl-blue focus:ring-2 focus:ring-dl-blue/15"
-                autoComplete="name"
-                maxLength={FULL_NAME_MAX}
-              />
-            </div>
-            <div>
-              <label className="mb-1.5 block text-[12px] font-semibold text-dl-text" htmlFor="nickname">
-                Handle
-              </label>
-              <input
-                id="nickname"
-                type="text"
-                value={nickname}
-                onChange={(e) => setNickname(e.target.value)}
-                placeholder="dev-handle"
-                className="w-full rounded-xl border border-dl-border bg-dl-bg px-3.5 py-3 text-[14px] text-dl-navy placeholder:text-dl-muted outline-none transition-all focus:border-dl-blue focus:ring-2 focus:ring-dl-blue/15"
-                pattern="[a-zA-Z0-9._-]*"
-                autoComplete="nickname"
-              />
-            </div>
-          </div>
-
           <div>
             <label className="mb-1.5 block text-[12px] font-semibold text-dl-text" htmlFor="email">
               Email address
@@ -239,7 +178,7 @@ function RegisterForm() {
                 setEmail(e.target.value)
                 if (emailTouched) setEmailError(validateEmail(e.target.value))
               }}
-              onBlur={() => { setEmailTouched(true); setEmailError(validateEmail(email)); autofillFromEmail(email) }}
+              onBlur={() => { setEmailTouched(true); setEmailError(validateEmail(email)) }}
               placeholder="you@company.com"
               className={cn(
                 'w-full rounded-xl border bg-dl-bg px-4 py-3 text-[14px] text-dl-navy placeholder:text-dl-muted outline-none transition-all duration-150',

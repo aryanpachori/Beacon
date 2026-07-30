@@ -1,5 +1,5 @@
 import { Nav } from '@/components/layout/Nav'
-import { Footer } from '@/components/layout/Footer'
+import { LandingFooter } from '@/components/landing/v2/LandingFooter'
 import Link from 'next/link'
 
 export const metadata = {
@@ -48,7 +48,7 @@ export default function TermsPage() {
           </div>
         </div>
       </main>
-      <Footer />
+      <LandingFooter />
     </div>
   )
 }
