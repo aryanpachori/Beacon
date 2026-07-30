@@ -7,7 +7,7 @@
     "engine"
   ],
   "scripts": {
-    "prepare": "husky",
+    "prepare": "husky || true",
     "check": "npm --prefix frontend run check && npm --prefix backend run check && bun run --cwd engine check"
   },
   "devDependencies": {
