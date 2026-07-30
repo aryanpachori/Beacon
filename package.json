@@ -1,9 +1,14 @@
 {
   "name": "beacon",
   "private": true,
+  "workspaces": [
+    "backend",
+    "frontend",
+    "engine"
+  ],
   "scripts": {
     "prepare": "husky",
-    "check": "npm --prefix frontend run check && npm --prefix backend run check"
+    "check": "npm --prefix frontend run check && npm --prefix backend run check && bun run --cwd engine check"
   },
   "devDependencies": {
     "husky": "^9.1.7"
