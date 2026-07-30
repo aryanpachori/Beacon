@@ -28,9 +28,9 @@ export function LandingNav() {
         <Link href="/pricing" className="text-[14.5px] text-[rgba(242,240,237,.62)] transition-colors hover:text-[#ff6600]">
           Pricing
         </Link>
-        <a href="https://docs.beaconapp.dev" className="text-[14.5px] text-[rgba(242,240,237,.62)] transition-colors hover:text-[#ff6600]">
+        <Link href="/docs" className="text-[14.5px] text-[rgba(242,240,237,.62)] transition-colors hover:text-[#ff6600]">
           Docs
-        </a>
+        </Link>
       </div>
 
       <Link

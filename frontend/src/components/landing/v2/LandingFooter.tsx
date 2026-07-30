@@ -21,24 +21,6 @@ const COLUMNS = [
       { label: 'CLI', href: '/register' },
     ],
   },
-  {
-    title: 'Company',
-    links: [
-      { label: 'About', href: '#' },
-      { label: 'Blog', href: '#' },
-      { label: 'Careers', href: '#' },
-      { label: 'Contact', href: 'mailto:founders@beacon.forgefastlabs.com' },
-    ],
-  },
-  {
-    title: 'Legal',
-    links: [
-      { label: 'Privacy', href: '/privacy' },
-      { label: 'Terms', href: '/terms' },
-      { label: 'Security', href: '#' },
-      { label: 'Subprocessors', href: '#' },
-    ],
-  },
 ]
 
 export function LandingFooter() {
