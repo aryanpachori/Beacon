@@ -21,7 +21,6 @@ const COLUMNS = [
       { label: 'CLI', href: '/register' },
     ],
   },
-<<<<<<< Updated upstream
   {
     title: 'Company',
     links: [
@@ -40,8 +39,6 @@ const COLUMNS = [
       { label: 'Subprocessors', href: '#' },
     ],
   },
-=======
->>>>>>> Stashed changes
 ]
 
 export function LandingFooter() {
