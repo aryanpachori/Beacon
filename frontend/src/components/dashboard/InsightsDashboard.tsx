@@ -340,35 +340,35 @@ export function InsightsDashboard() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {isMock && (
-        <div className="flex items-center gap-2.5 rounded-xl border border-dl-blue/20 bg-dl-blue-pale px-4 py-3 text-[12px] font-medium text-dl-blue">
-          <Zap className="h-3.5 w-3.5 shrink-0" />
+        <div className="flex items-center gap-2 rounded-lg border border-dl-blue/20 bg-dl-blue-pale px-3 py-2 text-[11px] font-medium text-dl-blue">
+          <Zap className="h-3 w-3 shrink-0" />
           Showing sample data — connect GitHub and run a scan to see your real
           analytics.
         </div>
       )}
 
       {/* ── KPI strip ── */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6">
         {STAT_CARDS.map(
           ({ label, value, icon: Icon, color, bg, suffix }, i) => (
             <motion.div
               key={label}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05 }}
+              transition={{ delay: i * 0.04 }}
               className="dash-stat-card"
             >
               <div
-                className="mb-3 flex h-9 w-9 items-center justify-center rounded-xl"
+                className="mb-2 flex h-7 w-7 items-center justify-center rounded-lg"
                 style={{ background: bg }}
               >
-                <Icon className="h-4.5 w-4.5" style={{ color }} />
+                <Icon className="h-3.5 w-3.5" style={{ color }} />
               </div>
-              <div className="text-[22px] font-bold leading-none tracking-tight text-dl-navy">
+              <div className="text-[17px] font-bold leading-none tracking-tight text-dl-navy">
                 {analyticsLoading ? (
-                  <Skeleton className="h-6 w-12" />
+                  <Skeleton className="h-5 w-10" />
                 ) : (
                   <>
                     <CountUp to={value} />
@@ -376,7 +376,7 @@ export function InsightsDashboard() {
                   </>
                 )}
               </div>
-              <p className="mt-1 text-[11px] font-medium text-dl-muted">
+              <p className="mt-1 text-[10.5px] font-medium text-dl-muted">
                 {label}
               </p>
             </motion.div>

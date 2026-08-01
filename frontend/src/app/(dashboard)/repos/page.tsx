@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Plus, RefreshCw, ExternalLink, GitBranch } from 'lucide-react'
+import { Plus, RefreshCw, ExternalLink, GitBranch, Lock } from 'lucide-react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { useAppData } from '@/context/AppDataContext'
 import { fetchGithubInstallUrl } from '@/lib/api'
@@ -120,8 +120,9 @@ export default function ReposPage() {
                   {!installing && <ExternalLink className="h-3.5 w-3.5 opacity-60" />}
                 </button>
 
-                <p className="mt-4 text-center text-[12px] text-dl-muted">
-                  🔒 Read-only access — Beacon never writes to your repos.
+                <p className="mt-4 flex items-center justify-center gap-1.5 text-center text-[12px] text-dl-muted">
+                  <Lock className="h-3 w-3 shrink-0" />
+                  Read-only access — Beacon never writes to your repos.
                 </p>
                 <Dialog.Close asChild>
                   <button

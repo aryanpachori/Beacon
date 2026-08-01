@@ -1,6 +1,6 @@
 'use client'
 
-import { Zap, Package as PackageIcon } from 'lucide-react'
+import { Package as PackageIcon } from 'lucide-react'
 import { useAppData } from '@/context/AppDataContext'
 import { HealthOverviewBar } from '@/components/dashboard/HealthOverviewBar'
 import { InsightsDashboard } from '@/components/dashboard/InsightsDashboard'
@@ -61,71 +61,30 @@ export default function DashboardPage() {
   return (
     <div className="app-page">
 
-      {/* ── Hero greeting banner ── */}
-      <div className="relative mb-8 overflow-hidden rounded-2xl p-px"
-        style={{
-          background: 'linear-gradient(135deg, rgba(122,134,68,0.35) 0%, rgba(255,255,255,0.06) 100%)',
-        }}
-      >
-        <div className="relative overflow-hidden rounded-2xl px-8 py-7"
-          style={{
-            background: 'linear-gradient(135deg, #14171A 0%, #0E1012 60%, #0A0B0D 100%)',
-          }}
-        >
-          {/* Decorative blobs */}
-          <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full blur-3xl"
-            style={{ background: 'rgba(122,134,68,0.16)' }} />
-          <div className="pointer-events-none absolute -left-8 bottom-0 h-32 w-32 rounded-full blur-2xl"
-            style={{ background: 'rgba(169,128,90,0.10)' }} />
-          <div className="pointer-events-none absolute right-1/3 top-0 h-px w-64 opacity-30"
-            style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)' }} />
-
-          <div className="relative z-10 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <div className="mb-2 flex items-center gap-2">
-                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white/10">
-                  <Zap className="h-3 w-3 text-[#ff8533]" />
-                </div>
-                <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#ff8533]">
-                  {greeting}
-                </span>
-              </div>
-              <h1 className="text-2xl font-bold tracking-tight text-white">
-                Welcome back, {firstName}!
-              </h1>
-              <p className="mt-1 text-sm text-white/50">
-                {scanComplete
-                  ? 'Beacon is watching your stack in real time.'
-                  : 'Connect GitHub to let Beacon start watching your stack.'}
-              </p>
-            </div>
-
-            <div className="mt-5 flex flex-col items-start gap-2 sm:mt-0 sm:items-end">
-              <div className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 backdrop-blur-sm">
-                <div className="h-2 w-2 rounded-full bg-[#22c55e] animate-pulse" />
-                <span className="text-[12px] font-semibold text-white/90">{user?.email}</span>
-              </div>
-              <span
-                className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold"
-                style={{ background: planColors.bg, color: planColors.text }}
-              >
-                <span className="h-1.5 w-1.5 rounded-full" style={{ background: planColors.dot }} />
-                {planLabel(plan)}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Section header ── */}
-      <div className="mb-6 flex items-center justify-between">
+      {/* ── Header row: greeting + plan/account, single compact line ── */}
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="page-heading">Overview</h2>
+          <h1 className="text-[17px] font-semibold tracking-tight text-dl-navy">
+            {greeting}, {firstName}
+          </h1>
           <p className="page-description">
             {scanComplete
-              ? 'Live data from your connected repositories'
-              : 'Connect GitHub to start monitoring your dependencies'}
+              ? 'Beacon is watching your stack in real time.'
+              : 'Connect GitHub to let Beacon start watching your stack.'}
           </p>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <span className="flex items-center gap-1.5 rounded-lg border border-dl-border bg-dl-bg px-2.5 py-1.5 text-[11px] font-medium text-dl-text">
+            <span className="h-1.5 w-1.5 rounded-full bg-dl-healthy" />
+            {user?.email}
+          </span>
+          <span
+            className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px] font-semibold"
+            style={{ background: planColors.bg, color: planColors.text }}
+          >
+            {planLabel(plan)}
+          </span>
         </div>
       </div>
 

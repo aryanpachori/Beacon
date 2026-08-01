@@ -56,34 +56,34 @@ export function HealthOverviewBar() {
         : 'Connect GitHub to start monitoring your dependency health.'
 
   const tierBars = [
-    { label: 'Healthy',  count: healthy, color: '#16a34a', bg: 'rgba(22,163,74,0.15)',  pct: totalPackages > 0 ? (healthy / totalPackages) * 100 : 0 },
-    { label: 'Watch',    count: watch,   color: '#ca8a04', bg: 'rgba(202,138,4,0.15)',  pct: totalPackages > 0 ? (watch / totalPackages) * 100 : 0 },
-    { label: 'At-risk',  count: atRisk,  color: '#ea580c', bg: 'rgba(234,88,12,0.15)',  pct: totalPackages > 0 ? (atRisk / totalPackages) * 100 : 0 },
-    { label: 'Critical', count: critical, color: '#dc2626', bg: 'rgba(220,38,38,0.15)', pct: totalPackages > 0 ? (critical / totalPackages) * 100 : 0 },
+    { label: 'Healthy',  count: healthy,   color: '#ff6600', pct: totalPackages > 0 ? (healthy / totalPackages) * 100 : 0 },
+    { label: 'Watch',    count: watch,     color: '#a3a6b0', pct: totalPackages > 0 ? (watch / totalPackages) * 100 : 0 },
+    { label: 'At-risk',  count: atRisk,    color: '#8a8d99', pct: totalPackages > 0 ? (atRisk / totalPackages) * 100 : 0 },
+    { label: 'Critical', count: critical,  color: '#5c5f68', pct: totalPackages > 0 ? (critical / totalPackages) * 100 : 0 },
   ]
 
   return (
-    <div className="dash-panel mb-6">
+    <div className="dash-panel mb-5">
       <div className="flex flex-col gap-0 lg:flex-row lg:items-stretch">
 
         {/* ── Health ring ── */}
-        <div className="flex shrink-0 flex-col items-center justify-center gap-3 border-b border-dl-border px-8 py-6 lg:border-b-0 lg:border-r">
+        <div className="flex shrink-0 flex-col items-center justify-center gap-2 border-b border-dl-border px-6 py-4 lg:border-b-0 lg:border-r">
           <StackHealthRing percentage={healthyPct} strokeColor={ringColor} />
-          <p className="text-center text-[12px] font-medium text-dl-muted">Stack health</p>
+          <p className="text-center text-[11px] font-medium text-dl-muted">Stack health</p>
         </div>
 
         {/* ── Tier distribution ── */}
-        <div className="flex flex-col justify-center gap-3 border-b border-dl-border px-6 py-5 lg:w-[220px] lg:border-b-0 lg:border-r">
+        <div className="flex flex-col justify-center gap-2 border-b border-dl-border px-5 py-4 lg:w-[200px] lg:border-b-0 lg:border-r">
           <p className="dash-section-label">Distribution</p>
-          {tierBars.map(({ label, count, color, bg, pct }) => (
-            <div key={label} className="flex items-center gap-3">
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-[10px] font-bold" style={{ background: bg, color }}>
+          {tierBars.map(({ label, count, color, pct }) => (
+            <div key={label} className="flex items-center gap-2.5">
+              <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-dl-surface text-[9.5px] font-bold" style={{ color }}>
                 {count}
               </div>
               <div className="flex-1">
                 <div className="mb-0.5 flex items-center justify-between">
-                  <span className="text-[11px] font-medium text-dl-text">{label}</span>
-                  <span className="text-[10px] text-dl-muted">{Math.round(pct)}%</span>
+                  <span className="text-[10.5px] font-medium text-dl-text">{label}</span>
+                  <span className="text-[9.5px] text-dl-muted">{Math.round(pct)}%</span>
                 </div>
                 <div className="progress-track">
                   <div
@@ -97,28 +97,28 @@ export function HealthOverviewBar() {
         </div>
 
         {/* ── Assessment copy ── */}
-        <div className="flex flex-1 flex-col justify-center border-b border-dl-border px-6 py-5 lg:border-b-0 lg:border-r">
-          <p className="dash-section-label mb-2">Stack status</p>
-          <p className="text-[13px] leading-relaxed text-dl-text">{assessmentCopy}</p>
-          <div className="mt-4 flex flex-wrap gap-3">
+        <div className="flex flex-1 flex-col justify-center border-b border-dl-border px-5 py-4 lg:border-b-0 lg:border-r">
+          <p className="dash-section-label mb-1.5">Stack status</p>
+          <p className="text-[12px] leading-relaxed text-dl-text">{assessmentCopy}</p>
+          <div className="mt-3 flex flex-wrap gap-2">
             {[
-              { label: 'Packages', value: totalPackages, color: 'var(--dl-blue)', bg: 'rgba(79,97,40,0.15)' },
-              { label: 'Repos',    value: repos.length,  color: '#8b5cf6', bg: 'rgba(139,92,246,0.15)' },
-              { label: 'Alerts',   value: alertsThisWeek, color: 'var(--dl-watch)', bg: 'rgba(202,138,4,0.15)' },
-            ].map(({ label, value, color, bg }) => (
-              <div key={label} className="flex items-center gap-1.5 rounded-lg px-3 py-1.5" style={{ background: bg }}>
-                <span className="text-[13px] font-bold" style={{ color }}>{value}</span>
-                <span className="text-[11px] font-medium opacity-70" style={{ color }}>{label}</span>
+              { label: 'Packages', value: totalPackages },
+              { label: 'Repos',    value: repos.length },
+              { label: 'Alerts',   value: alertsThisWeek },
+            ].map(({ label, value }) => (
+              <div key={label} className="flex items-center gap-1.5 rounded-lg bg-dl-surface px-2.5 py-1">
+                <span className="text-[12px] font-bold text-dl-text">{value}</span>
+                <span className="text-[10.5px] font-medium text-dl-muted">{label}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* ── 14-day trend chart ── */}
-        <div className="flex w-full flex-col justify-center px-6 py-5 lg:w-[260px]">
-          <p className="dash-section-label mb-3">14-day SPS trend</p>
+        <div className="flex w-full flex-col justify-center px-5 py-4 lg:w-[220px]">
+          <p className="dash-section-label mb-2">14-day SPS trend</p>
           {dashboard && dashboard.avgSps > 0 ? (
-            <ResponsiveContainer width="100%" height={90}>
+            <ResponsiveContainer width="100%" height={72}>
               <AreaChart data={trendData} margin={{ top: 4, right: 4, left: -24, bottom: 0 }}>
                 <defs>
                   <linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1">
@@ -141,8 +141,8 @@ export function HealthOverviewBar() {
               </AreaChart>
             </ResponsiveContainer>
           ) : (
-            <div className="flex h-[90px] items-center justify-center rounded-xl bg-dl-surface">
-              <p className="text-[12px] text-dl-muted">Trend available after scoring</p>
+            <div className="flex h-[72px] items-center justify-center rounded-xl bg-dl-surface">
+              <p className="text-[11px] text-dl-muted">Trend available after scoring</p>
             </div>
           )}
         </div>

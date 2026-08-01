@@ -374,7 +374,7 @@ body {
   }
 
   .dash-panel {
-    @apply overflow-hidden rounded-2xl border border-dl-border bg-dl-bg shadow-sm;
+    @apply overflow-hidden rounded-xl border border-dl-border bg-dl-bg shadow-sm;
   }
 
   .dash-stat-card {
@@ -414,9 +414,9 @@ body {
   }
   .card-heading { @apply text-[13px] font-semibold tracking-tight text-dl-navy; }
   .dash-section-label {
-    font-size: 11px;
+    font-size: 10px;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.07em;
     font-weight: 600;
     color: var(--dl-muted);
   }
