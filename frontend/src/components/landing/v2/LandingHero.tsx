@@ -4,7 +4,15 @@ import { useEffect, useState, type ReactNode } from 'react'
 import Link from 'next/link'
 import { BeaconOrb } from './BeaconOrb'
 
-const WORDS = ['secrets', 'SQL injection', 'broken auth', 'leaked keys', 'unsafe redirects']
+const WORDS = [
+  'hardcoded secrets',
+  'IDOR & broken auth',
+  'open security groups',
+  'slopsquatted packages',
+  'SSRF in webhooks',
+  'disabled RLS',
+  'runtime drift',
+]
 const KEY = 'sk_live_51H8xJ2eZvKYlo2C…'
 
 const ORB = [
