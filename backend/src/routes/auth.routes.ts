@@ -8,6 +8,7 @@ import { createRazorpayCustomer } from '../services/razorpay.service'
 import { AppError } from '../middleware/error.middleware'
 import { getPlanLimits } from '../lib/planLimits'
 import { Plan } from '@prisma/client'
+import { verifyGoogleIdToken } from '../lib/googleAuth'
 
 export const authRouter = Router()
 
@@ -135,6 +136,14 @@ authRouter.post('/login', async (req, res, next) => {
       )
     }
 
+    if (!user.passwordHash) {
+      throw new AppError(
+        400,
+        'This account uses Google sign-in. Use "Sign in with Google" instead.',
+        'GOOGLE_ONLY_ACCOUNT'
+      )
+    }
+
     const valid = await bcrypt.compare(password, user.passwordHash)
     if (!valid) {
       throw new AppError(401, 'Incorrect password. Please try again.', 'INVALID_PASSWORD')
@@ -146,6 +155,75 @@ authRouter.post('/login', async (req, res, next) => {
         data: { email: normalizedEmail },
       })
       user = { ...user, email: normalizedEmail }
+    }
+
+    const payload = { userId: user.id, email: user.email }
+    const accessToken = signAccessToken(payload)
+    const refreshToken = signRefreshToken(payload)
+    await storeRefreshToken(user.id, refreshToken)
+
+    res.json({
+      user: {
+        id: user.id,
+        email: user.email,
+        plan: user.plan,
+        onboardingStep: user.onboardingStep,
+      },
+      accessToken,
+      refreshToken,
+    })
+  } catch (err) {
+    next(err)
+  }
+})
+
+authRouter.post('/google', async (req, res, next) => {
+  try {
+    const { idToken } = req.body as { idToken?: string }
+    if (!idToken) {
+      throw new AppError(400, 'Google ID token is required')
+    }
+
+    const profile = await verifyGoogleIdToken(idToken)
+
+    let user = await prisma.user.findUnique({
+      where: { googleId: profile.googleId },
+      select: { id: true, email: true, plan: true, onboardingStep: true },
+    })
+
+    if (!user) {
+      const existing = await prisma.user.findUnique({
+        where: { email: profile.email },
+        select: { id: true, email: true, plan: true, onboardingStep: true },
+      })
+
+      if (existing) {
+        // Link Google to an existing email/password account
+        user = await prisma.user.update({
+          where: { id: existing.id },
+          data: { googleId: profile.googleId, authProvider: 'google' },
+          select: { id: true, email: true, plan: true, onboardingStep: true },
+        })
+      } else {
+        const razorpayCustomerId = await createRazorpayCustomer({
+          email: profile.email,
+          fullName: profile.fullName ?? undefined,
+        })
+        const starterLimits = getPlanLimits(Plan.starter)
+        user = await prisma.user.create({
+          data: {
+            email: profile.email,
+            passwordHash: null,
+            authProvider: 'google',
+            googleId: profile.googleId,
+            fullName: profile.fullName,
+            razorpayCustomerId,
+            repoLimit: starterLimits.repoLimit,
+            packageLimit: starterLimits.packageLimit,
+          },
+          select: { id: true, email: true, plan: true, onboardingStep: true },
+        })
+      }
     }
 
     const payload = { userId: user.id, email: user.email }

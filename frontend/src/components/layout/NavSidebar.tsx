@@ -7,7 +7,7 @@ import {
   LayoutDashboard, Package, Bell, GitBranch,
   CreditCard, User, LogOut, ChevronLeft, ChevronRight,
   BarChart2, Activity, HelpCircle, Zap, ScanLine, Users,
-  Command, ChevronDown, Sun, Moon, MessageSquarePlus,
+  Command, ChevronDown, Sun, Moon, MessageSquarePlus, Radar,
 } from 'lucide-react'
 import { useTheme } from '@/hooks/useTheme'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -31,16 +31,17 @@ const NAV_SECTIONS = [
     label: 'Overview',
     defaultOpen: true,
     items: [
-      { label: 'Dashboard',  href: '/dashboard',    icon: LayoutDashboard },
-      { label: 'Analytics',  href: '/analytics',    icon: BarChart2 },
-      { label: 'Activity',   href: '/activity',     icon: Activity, showActivityBadge: true },
+      { label: 'Overview',        href: '/dashboard',       icon: LayoutDashboard },
+      { label: 'Analytics',       href: '/analytics',       icon: BarChart2 },
+      { label: 'Agent Activity',  href: '/agent-activity',  icon: Radar },
+      { label: 'Activity',        href: '/activity',        icon: Activity, showActivityBadge: true },
     ],
   },
   {
     label: 'Monitoring',
     defaultOpen: true,
     items: [
-      { label: 'Packages',     href: '/packages',     icon: Package },
+      { label: 'Dependencies', href: '/packages',     icon: Package },
       { label: 'Alerts',       href: '/alerts',       icon: Bell, showBadge: true },
       { label: 'Repos',        href: '/repos',        icon: GitBranch },
     ],

@@ -7,6 +7,7 @@ import { motion } from 'framer-motion'
 import { AlertCircle, Eye, EyeOff, ArrowRight, CheckCircle2 } from 'lucide-react'
 import { ApiError, apiFetch, setAuthTokens } from '@/lib/api'
 import { cn } from '@/lib/utils'
+import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -112,7 +113,7 @@ function RegisterForm() {
         }),
       })
       setAuthTokens(data.accessToken, data.refreshToken)
-      router.push('/onboarding')
+      router.push(redirectTo || '/dashboard')
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message)
@@ -256,6 +257,20 @@ function RegisterForm() {
             )}
           </button>
         </form>
+
+        <div className="mt-5 flex items-center gap-4">
+          <div className="flex-1 border-t border-[#e4e8ee]" />
+          <span className="text-[11px] font-medium text-dl-muted">OR</span>
+          <div className="flex-1 border-t border-[#e4e8ee]" />
+        </div>
+
+        <div className="mt-4">
+          <GoogleSignInButton
+            mode="register"
+            redirectTo={redirectTo}
+            onError={(message) => setError(message)}
+          />
+        </div>
 
         <p className="mt-5 text-center text-[11px] leading-relaxed text-dl-muted">
           By creating an account you agree to our{' '}

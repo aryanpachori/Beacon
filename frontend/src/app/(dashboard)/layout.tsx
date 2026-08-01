@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { DashboardShell } from "@/components/layout/DashboardShell";
 import { AppDataProvider } from "@/context/AppDataContext";
-import { isAuthenticated, fetchOnboardingState } from "@/lib/api";
+import { isAuthenticated } from "@/lib/api";
 import { removeExpiredCache } from "@/lib/apiCache";
 
 function DashboardLayoutFallback({ message }: { message: string }) {
@@ -41,26 +41,9 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // Guard: new users must complete onboarding before accessing dashboard.
-    // Once complete the flag is permanent in localStorage (cleared on logout).
-    if (localStorage.getItem("beacon_onboarded") === "1") {
-      setCheckingAuth(false);
-      return;
-    }
-
-    fetchOnboardingState()
-      .then((state) => {
-        if (!state.onboardingComplete) {
-          router.replace("/onboarding");
-        } else {
-          localStorage.setItem("beacon_onboarded", "1");
-          setCheckingAuth(false);
-        }
-      })
-      .catch(() => {
-        // If we can't fetch state, let through (avoids locking out users on network error)
-        setCheckingAuth(false);
-      });
+    // GitHub-connect onboarding is optional (see Settings > Integrations),
+    // not a gate on dashboard access — just confirm auth and let the user in.
+    setCheckingAuth(false);
   }, [router, pathname, searchParams]);
 
   if (checkingAuth) {

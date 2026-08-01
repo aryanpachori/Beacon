@@ -11,7 +11,9 @@ datasource db {
 model User {
   id                     String               @id @default(uuid())
   email                  String               @unique
-  passwordHash           String
+  passwordHash           String?
+  authProvider           AuthProvider         @default(email)
+  googleId               String?              @unique
   fullName               String?
   nickname               String?
   avatarThemeIndex       Int                  @default(0)
@@ -30,6 +32,7 @@ model User {
   notifications          Notification[]
   refreshTokens          RefreshToken[]
   subscriptions          Subscription[]
+  agentEvents            AgentEvent[]
 
   @@map("users")
 }
@@ -84,6 +87,7 @@ model Repo {
   createdAt      DateTime           @default(now())
   repoPackages   RepoPackage[]
   installation   GithubInstallation @relation(fields: [installationId], references: [id], onDelete: Cascade)
+  agentEvents    AgentEvent[]
 
   @@unique([installationId, githubRepoId])
   @@index([installationId])
@@ -412,4 +416,68 @@ enum DigestFrequency {
   daily
   weekly
   never
+}
+
+enum AuthProvider {
+  email
+  google
+}
+
+model AgentEvent {
+  id             String         @id @default(uuid())
+  userId         String
+  repoId         String?
+  triggeredBy    TriggerSource
+  eventType      AgentEventType @default(scan)
+  scanType       String?
+  severity       Severity?
+  category       String?
+  filePath       String?
+  lineRangeStart Int?
+  lineRangeEnd   Int?
+  description    String?
+  suggestedFix   String?
+  autoFixable    Boolean        @default(false)
+  status         FindingStatus  @default(open)
+  rawFinding     Json?
+  detectedAt     DateTime       @default(now())
+  createdAt      DateTime       @default(now())
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  repo           Repo?          @relation(fields: [repoId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([repoId])
+  @@index([status])
+  @@index([triggeredBy])
+  @@map("agent_events")
+}
+
+enum TriggerSource {
+  cli
+  mcp
+  extension
+  github_oauth
+}
+
+enum AgentEventType {
+  scan
+  finding
+  auto_fix
+  deploy_blocked
+  deploy_passed
+  alert_sent
+}
+
+enum Severity {
+  critical
+  high
+  medium
+  low
+}
+
+enum FindingStatus {
+  open
+  fixed
+  ignored
+  resolved
 }

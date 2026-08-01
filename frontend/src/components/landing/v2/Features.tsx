@@ -45,6 +45,34 @@ const FEATURES = [
     body: 'Tuned for the patterns Cursor, Claude Code and Copilot actually produce.',
     snippet: `source  cursor.diff\nagent   claude-code\nmatch   found · scored .94`,
   },
+  {
+    n: '07',
+    tag: 'infra',
+    title: 'Infra & config scanning',
+    body: 'Terraform, Docker and nginx configs checked for open security groups, missing TLS, and disabled RLS.',
+    snippet: `CRITICAL  0.0.0.0/0 on port 5432\nfile: main.tf:42`,
+  },
+  {
+    n: '08',
+    tag: 'deploy-gate',
+    title: 'Blocks the deploy, not just the PR',
+    body: 'A pre-deploy check that fails the pipeline when critical findings exist — before it ships.',
+    snippet: `$ beacon gate\n✗ 1 critical finding — deploy blocked`,
+  },
+  {
+    n: '09',
+    tag: 'supply-chain',
+    title: 'Catches AI-hallucinated packages',
+    body: 'Slopsquatting detection flags typosquatted or hallucinated dependency names before install.',
+    snippet: `WARNING  package not found on npm\n"reqeusts-http" · did agent hallucinate this?`,
+  },
+  {
+    n: '10',
+    tag: 'drift',
+    title: 'Watches for runtime drift',
+    body: 'A scheduled re-check diffs live infra posture against last-known-good — alerts only when it matters.',
+    snippet: `drift detected\nRLS silently disabled · prod-db`,
+  },
 ]
 
 export function Features() {

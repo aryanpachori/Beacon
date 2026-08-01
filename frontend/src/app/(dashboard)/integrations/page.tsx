@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { MessageSquare, MessageCircle, RefreshCw, CheckCircle, AlertTriangle, Loader2 } from 'lucide-react'
-import { apiFetch } from '@/lib/api'
+import Link from 'next/link'
+import { MessageSquare, MessageCircle, RefreshCw, CheckCircle, AlertTriangle, Loader2, GitBranch, ArrowRight } from 'lucide-react'
+import { apiFetch, fetchOnboardingState, type OnboardingState } from '@/lib/api'
 import { cn } from '@/lib/utils'
 
 type WebhookStatus = { type: 'success' | 'error'; text: string } | null
@@ -52,6 +53,16 @@ export default function IntegrationsPage() {
   const [digestStatus, setDigestStatus] = useState<WebhookStatus>(null)
 
   const [loading, setLoading] = useState(true)
+
+  const [githubState, setGithubState] = useState<OnboardingState | null>(null)
+  const [githubLoading, setGithubLoading] = useState(true)
+
+  useEffect(() => {
+    fetchOnboardingState()
+      .then(setGithubState)
+      .catch(() => setGithubState(null))
+      .finally(() => setGithubLoading(false))
+  }, [])
 
   // Load saved settings from DB on mount
   const loadSettings = useCallback(async () => {
@@ -152,6 +163,41 @@ export default function IntegrationsPage() {
             Configure external alerting channels. Settings are saved to your account.
           </p>
         </div>
+      </div>
+
+      {/* Connected Surfaces */}
+      <div className="dl-card mb-6 flex flex-col gap-4">
+        <div className="flex items-center gap-2">
+          <GitBranch className="h-5 w-5 text-dl-teal" />
+          <h2 className="card-heading">Connected Surfaces</h2>
+        </div>
+        <p className="text-[13px] leading-relaxed text-dl-muted">
+          Connecting GitHub is optional — it enables package-health prediction for your repos.
+          CLI, MCP, and IDE-extension scans run locally and never require repo access.
+        </p>
+
+        {githubLoading ? (
+          <div className="flex items-center gap-2 text-[13px] text-dl-muted">
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            Checking connection status…
+          </div>
+        ) : githubState?.connected ? (
+          <div className="flex items-center gap-2 rounded-lg border border-dl-healthy/30 bg-dl-healthy/10 p-3 text-[13px] text-dl-healthy">
+            <CheckCircle className="h-4 w-4 shrink-0" />
+            <span>
+              Connected as <strong>{githubState.accountLogin}</strong>
+              {githubState.selectedRepoCount > 0 && ` — ${githubState.selectedRepoCount} repo(s) monitored`}
+            </span>
+          </div>
+        ) : (
+          <Link
+            href="/onboarding"
+            className="btn-dash-primary flex w-fit items-center gap-2"
+          >
+            Connect GitHub
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        )}
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">

@@ -7,6 +7,7 @@ import { motion } from 'framer-motion'
 import { AlertCircle, Info, Eye, EyeOff, ArrowRight } from 'lucide-react'
 import { ApiError, apiFetch, setAuthTokens } from '@/lib/api'
 import { cn } from '@/lib/utils'
+import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -89,13 +90,7 @@ function LoginForm() {
       const intended = localStorage.getItem('dl_intended_url')
       localStorage.removeItem('dl_intended_url')
 
-      if (redirectTo || intended) {
-        router.push(redirectTo || intended!)
-        return
-      }
-
-      const step = data.user?.onboardingStep ?? 1
-      router.push(step >= 4 ? '/dashboard' : '/onboarding')
+      router.push(redirectTo || intended || '/dashboard')
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message)
@@ -243,6 +238,20 @@ function LoginForm() {
             )}
           </button>
         </form>
+
+        <div className="mt-6 flex items-center gap-4">
+          <div className="flex-1 border-t border-[#e4e8ee]" />
+          <span className="text-[11px] font-medium text-dl-muted">OR</span>
+          <div className="flex-1 border-t border-[#e4e8ee]" />
+        </div>
+
+        <div className="mt-4">
+          <GoogleSignInButton
+            mode="login"
+            redirectTo={redirectTo}
+            onError={(message) => setError(message)}
+          />
+        </div>
 
         <div className="mt-6 flex items-center gap-4">
           <div className="flex-1 border-t border-[#e4e8ee]" />
