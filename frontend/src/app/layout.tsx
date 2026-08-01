@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter, JetBrains_Mono } from 'next/font/google'
+import { Inter, JetBrains_Mono, Space_Grotesk, Source_Serif_4 } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Toaster } from 'sonner'
@@ -18,11 +18,24 @@ const jetbrainsMono = JetBrains_Mono({
   display: 'swap',
 })
 
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  variable: '--font-sidebar',
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+})
+
+const sourceSerif = Source_Serif_4({
+  subsets: ['latin'],
+  variable: '--font-heading',
+  weight: ['400', '600', '700'],
+  display: 'swap',
+})
+
 export const metadata: Metadata = {
   icons: {
     icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/beacon-mark.png', type: 'image/png', sizes: '713x713' },
+      { url: '/beacon-mark.png', type: 'image/png', sizes: '1240x1240' },
     ],
     apple: '/apple-touch-icon.png',
   },
@@ -49,7 +62,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Beacon defaults to dark — its native, premium surface. Users can opt into light for the dashboard. */}
         <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('dl_theme');if(t!=='light')document.documentElement.classList.add('dark')}catch(e){document.documentElement.classList.add('dark')}` }} />
       </head>
-      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} ${sourceSerif.variable} font-sans antialiased`}>
         {children}
         <Toaster
           position="bottom-right"

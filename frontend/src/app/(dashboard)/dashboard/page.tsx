@@ -22,10 +22,8 @@ function planLabel(plan: string) {
   return 'Free Plan'
 }
 
-function planColor(plan: string) {
-  if (plan === 'pro') return { bg: 'rgba(220,47,47,0.14)', text: '#e55555', dot: '#dc2f2f' }
-  if (plan === 'team') return { bg: 'rgba(169,128,90,0.18)', text: '#C9A47C', dot: '#A9805A' }
-  return { bg: 'rgba(255,255,255,0.1)', text: 'rgba(255,255,255,0.7)', dot: 'rgba(255,255,255,0.5)' }
+function planColor() {
+  return { bg: '#111111', text: '#ffffff' }
 }
 
 
@@ -35,7 +33,7 @@ export default function DashboardPage() {
   const displayName = user?.fullName || user?.email?.split('@')[0] || 'there'
   const firstName = displayName.split(' ')[0]
   const plan = user?.plan ?? 'free'
-  const planColors = planColor(plan)
+  const planColors = planColor()
   const [githubConnected, setGithubConnected] = useState(false)
 
   useEffect(() => {
@@ -72,7 +70,7 @@ export default function DashboardPage() {
       {/* ── Header row: greeting + plan/account, single compact line ── */}
       <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="page-heading">
+          <h1 className="page-heading !text-[34px]">
             {greeting}, {firstName}
           </h1>
           <p className="page-description">
@@ -83,13 +81,13 @@ export default function DashboardPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="flex items-center gap-1.5 rounded-lg border border-dl-border bg-dl-bg px-2.5 py-1.5 text-[11px] font-medium text-dl-text">
-            <span className="h-1.5 w-1.5 rounded-full bg-dl-healthy" />
+          <span className="flex items-center gap-2 rounded-full border border-dl-border px-3.5 py-2 text-[13px] text-dl-muted">
+            <span className="h-1.5 w-1.5 rounded-full bg-dl-navy" />
             {user?.email}
           </span>
           <span
-            className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px] font-semibold"
-            style={{ background: planColors.bg, color: planColors.text }}
+            className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[12.5px] font-semibold"
+            style={{ background: planColors.bg, color: planColors.text, fontFamily: 'var(--font-heading)' }}
           >
             {planLabel(plan)}
           </span>

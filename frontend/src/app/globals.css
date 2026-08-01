@@ -3,102 +3,110 @@
 @tailwind utilities;
 
 /* ═══════════════════════════════════════════════════════
-   Beacon design tokens — colorhunt.co/palette/363636dc2f2fff894cf8f8f8
-   Black and white as the main theme. #363636 cards. #F8F8F8 text.
-   #DC2F2F (red) is the ONLY accent — hover states, CTAs, active nav,
-   logo, and specific bold/emphasis moments. No orange.
+   Beacon design tokens — Beacon Dashboard.dc.html reference.
+   Strict black / white / gray. White main content, black
+   floating sidebar. No color accent — black IS the accent.
+   Subtle gray shadows for depth where needed, nothing more.
    ═══════════════════════════════════════════════════════ */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  /* Single accent — hover/CTAs/active nav/logo/bold emphasis only. */
-  --dl-blue:        #dc2f2f;
-  --dl-blue-light:  #e55555;
-  --dl-blue-dark:   #b02323;
-  --dl-blue-pale:   rgba(220, 47, 47, 0.12);
-  --dl-aurora:      #dc2f2f;
+  /* Accent = black. Used for CTAs, active nav, critical severity. */
+  --dl-blue:        #111111;
+  --dl-blue-light:  #333333;
+  --dl-blue-dark:   #000000;
+  --dl-blue-pale:   rgba(17, 17, 17, 0.06);
+  --dl-aurora:      #111111;
 
-  /* Softened dark surface system — charcoal bg, elevated card tone */
-  --dl-bg:      #0d0d10;
-  --dl-surface: #17171b;
-  --dl-border: #242429;
-  --dl-muted:   #a3a3a3;
-  --dl-card-shadow: 0 1px 3px rgba(0,0,0,0.4);
-  --dl-text:    #f8f8f8;
-  --dl-navy:    #f8f8f8;
-  --dl-chip-bg: rgba(255, 255, 255, 0.06);
+  /* Strict light surface system */
+  --dl-bg:      #ffffff;
+  --dl-surface: #ffffff;
+  --dl-border:  #e4e4e4;
+  --dl-muted:   #9a9a9a;
+  --dl-card-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  --dl-text:    #111111;
+  --dl-navy:    #111111;
+  --dl-chip-bg: #f5f5f5;
 
-  /* Severity — reserved exclusively for real finding/health status */
-  --dl-healthy:  #f8f8f8;
-  --dl-watch:    #a3a3a3;
-  --dl-risk:     #dc2f2f;
-  --dl-critical: #dc2f2f;
-  --dl-danger:   #dc2f2f;
-  --dl-warning:  #a3a3a3;
-  --dl-success:  #f8f8f8;
+  /* Sidebar is always black regardless of page theme */
+  --dl-sidebar-bg:    #0d0d0d;
+  --dl-sidebar-text:  rgba(255,255,255,0.75);
+  --dl-sidebar-muted: rgba(255,255,255,0.45);
+  --dl-sidebar-border: rgba(255,255,255,0.1);
+  --dl-sidebar-active-bg: #ffffff;
+  --dl-sidebar-active-text: #0d0d0d;
 
-  --dl-teal:        #dc2f2f;
-  --dl-page:        #000000;
-  --dl-card:        #0d0d0d;
-  --dl-cream:       #0d0d0d;
-  --dl-nav:         #000000;
-  --dl-forest:      #f8f8f8;
-  --dl-hint:        #a3a3a3;
-  --dl-sage:        #a3a3a3;
-  --dl-sage-light:  rgba(255, 255, 255, 0.06);
-  --dl-border-mid:  #262626;
-  --dl-m-border:    #262626;
-  --dl-m-text:      #f8f8f8;
-  --dl-m-muted:     #a3a3a3;
-  --dl-m-healthy:   #f8f8f8;
-  --dl-m-watch:     #a3a3a3;
-  --dl-m-risk:      #dc2f2f;
-  --dl-m-critical:  #dc2f2f;
-  --dl-chart-grid:  #262626;
+  /* Severity — monochrome. Critical=solid black, watch=light gray. */
+  --dl-healthy:  #9a9a9a;
+  --dl-watch:    #9a9a9a;
+  --dl-risk:     #111111;
+  --dl-critical: #111111;
+  --dl-danger:   #111111;
+  --dl-warning:  #9a9a9a;
+  --dl-success:  #111111;
+
+  --dl-teal:        #111111;
+  --dl-page:        #ffffff;
+  --dl-card:        #ffffff;
+  --dl-cream:       #f5f5f5;
+  --dl-nav:         #0d0d0d;
+  --dl-forest:      #111111;
+  --dl-hint:        #9a9a9a;
+  --dl-sage:        #9a9a9a;
+  --dl-sage-light:  rgba(0, 0, 0, 0.04);
+  --dl-border-mid:  #e4e4e4;
+  --dl-m-border:    #e4e4e4;
+  --dl-m-text:      #111111;
+  --dl-m-muted:     #9a9a9a;
+  --dl-m-healthy:   #9a9a9a;
+  --dl-m-watch:     #9a9a9a;
+  --dl-m-risk:      #111111;
+  --dl-m-critical:  #111111;
+  --dl-chart-grid:  #eeeeee;
 }
 
-/* Dark mode — identical to :root since the platform is now dark-first */
+/* Single theme — .dark kept as an alias so any lingering toggle is a no-op */
 .dark {
-  color-scheme: dark;
-  --dl-bg:         #0d0d10;
-  --dl-surface: #17171b;
-  --dl-border: #242429;
-  --dl-muted:      #a3a3a3;
-  --dl-card-shadow: 0 1px 3px rgba(0,0,0,0.4);
-  --dl-text:       #f8f8f8;
-  --dl-chart-grid: #262626;
-  --dl-navy:       #f8f8f8;
-  --dl-chip-bg:    rgba(255, 255, 255, 0.06);
+  color-scheme: light;
+  --dl-bg:         #ffffff;
+  --dl-surface: #ffffff;
+  --dl-border: #e4e4e4;
+  --dl-muted:      #9a9a9a;
+  --dl-card-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  --dl-text:       #111111;
+  --dl-chart-grid: #eeeeee;
+  --dl-navy:       #111111;
+  --dl-chip-bg:    #f5f5f5;
 
-  --dl-blue:       #dc2f2f;
-  --dl-blue-light: #e55555;
-  --dl-blue-dark:  #b02323;
-  --dl-blue-pale:  rgba(220, 47, 47, 0.12);
-  --dl-aurora:     #dc2f2f;
+  --dl-blue:       #111111;
+  --dl-blue-light: #333333;
+  --dl-blue-dark:  #000000;
+  --dl-blue-pale:  rgba(17, 17, 17, 0.06);
+  --dl-aurora:     #111111;
 
-  --dl-page:       #000000;
-  --dl-card:       #0d0d0d;
-  --dl-nav:        #000000;
-  --dl-forest:     #f8f8f8;
-  --dl-hint:       #a3a3a3;
-  --dl-sage:       #a3a3a3;
-  --dl-sage-light: rgba(255, 255, 255, 0.06);
-  --dl-border-mid: #262626;
-  --dl-m-border:   #262626;
-  --dl-m-text:     #f8f8f8;
-  --dl-m-muted:    #a3a3a3;
-  --dl-cream:      #0d0d0d;
-  --dl-teal:       #dc2f2f;
+  --dl-page:       #ffffff;
+  --dl-card:       #ffffff;
+  --dl-nav:        #0d0d0d;
+  --dl-forest:     #111111;
+  --dl-hint:       #9a9a9a;
+  --dl-sage:       #9a9a9a;
+  --dl-sage-light: rgba(0, 0, 0, 0.04);
+  --dl-border-mid: #e4e4e4;
+  --dl-m-border:   #e4e4e4;
+  --dl-m-text:     #111111;
+  --dl-m-muted:    #9a9a9a;
+  --dl-cream:      #f5f5f5;
+  --dl-teal:       #111111;
 
-  --dl-healthy:  #f8f8f8;
-  --dl-watch:    #a3a3a3;
-  --dl-risk:     #dc2f2f;
-  --dl-critical: #dc2f2f;
+  --dl-healthy:  #9a9a9a;
+  --dl-watch:    #9a9a9a;
+  --dl-risk:     #111111;
+  --dl-critical: #111111;
 }
 
-/* Site shell — inherits :root dark tokens, no overrides needed */
+/* Site shell — inherits :root tokens, no overrides needed */
 .site-shell {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 /* Auth — brand panel, slightly elevated surface */
@@ -159,7 +167,7 @@ body {
     max-width: 80rem;
     margin-left: auto;
     margin-right: auto;
-    padding: 1.5rem;
+    padding: 48px 56px 64px;
   }
   .app-page-narrow {
     max-width: 56rem;
@@ -192,7 +200,7 @@ body {
     transition: box-shadow 0.2s ease, border-color 0.2s ease;
   }
   .dash-card:hover {
-    border-color: #333338;
+    border-color: #c9c9c9;
   }
 
   .dl-card {
@@ -201,7 +209,7 @@ body {
     transition: box-shadow 0.2s ease, border-color 0.2s ease;
   }
   .dl-card:hover {
-    border-color: #333338;
+    border-color: #c9c9c9;
   }
 
   /* Insight / stat card */
@@ -216,7 +224,7 @@ body {
     overflow: hidden;
   }
   .insight-card:hover {
-    border-color: #333338;
+    border-color: #c9c9c9;
   }
 
   /* ── Buttons ──
@@ -377,7 +385,7 @@ body {
   }
 
   .dash-stat-card {
-    @apply rounded-2xl border border-dl-border bg-dl-surface p-5 transition-colors hover:border-[#333338];
+    @apply rounded-2xl border border-dl-border bg-dl-surface p-5 transition-colors hover:border-[#c9c9c9];
     box-shadow: var(--dl-card-shadow);
   }
 
@@ -402,17 +410,21 @@ body {
   }
 
   .page-heading {
-    font-size: 1.05rem;
+    font-family: var(--font-heading), var(--font-inter), sans-serif;
+    font-size: 30px;
     font-weight: 600;
     color: var(--dl-navy);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
   }
   .page-description {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--dl-muted);
-    margin-top: 2px;
+    margin-top: 4px;
   }
-  .card-heading { @apply text-[13px] font-semibold tracking-tight text-dl-navy; }
+  .card-heading {
+    @apply text-[15px] font-semibold tracking-tight text-dl-navy;
+    font-family: var(--font-heading), var(--font-inter), sans-serif;
+  }
   .dash-section-label {
     font-size: 10px;
     text-transform: uppercase;

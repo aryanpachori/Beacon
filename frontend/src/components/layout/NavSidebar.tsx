@@ -7,9 +7,8 @@ import {
   LayoutDashboard, Package,
   CreditCard, User, LogOut, ChevronLeft, ChevronRight,
   HelpCircle,
-  Command, Sun, Moon, MessageSquarePlus, Radar,
+  Command, MessageSquarePlus, Radar,
 } from 'lucide-react'
-import { useTheme } from '@/hooks/useTheme'
 import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
 import { SiteLogo } from '@/components/layout/SiteLogo'
@@ -18,11 +17,11 @@ import { useAppData } from '@/context/AppDataContext'
 import { avatarUrl } from '@/lib/gravatar'
 import { cn } from '@/lib/utils'
 
-/* ── Plan label/color ────────────────────────────────────────────────── */
+/* ── Plan label ──────────────────────────────────────────────────────── */
 function planChip(plan: string) {
-  if (plan === 'pro')  return { label: 'Pro',  bg: 'rgba(79,97,40,0.15)', text: 'var(--dl-blue)' }
-  if (plan === 'team') return { label: 'Team', bg: 'rgba(22,163,74,0.15)', text: 'var(--dl-healthy)' }
-  return                      { label: 'Free', bg: 'var(--dl-surface)', text: 'var(--dl-muted)' }
+  if (plan === 'pro')  return { label: 'Pro' }
+  if (plan === 'team') return { label: 'Team' }
+  return { label: 'Free' }
 }
 
 const NAV_ITEMS = [
@@ -48,7 +47,6 @@ export function NavSidebar({
   const pathname = usePathname()
   const { user, signOut } = useAppData()
 
-  const [theme, toggleTheme, themeMounted] = useTheme()
   const [profileOpen, setProfileOpen] = useState(false)
   const [feedbackOpen, setFeedbackOpen] = useState(false)
   const profileRef = useRef<HTMLDivElement>(null)
@@ -67,37 +65,37 @@ export function NavSidebar({
   return (
     <aside
       className={cn(
-        'fixed top-3 left-3 bottom-3 z-30 flex flex-col rounded-2xl border border-dl-border bg-dl-surface transition-[width,transform] duration-300 ease-in-out',
-        open ? 'translate-x-0' : '-translate-x-[calc(100%+12px)] md:translate-x-0',
-        isCollapsed ? 'w-[216px] md:w-[56px]' : 'w-[216px] md:w-[216px]'
+        'fixed top-4 left-4 bottom-4 z-30 flex flex-col rounded-[26px] bg-[#0d0d0d] transition-[width,transform] duration-300 ease-in-out',
+        open ? 'translate-x-0' : '-translate-x-[calc(100%+16px)] md:translate-x-0',
+        isCollapsed ? 'w-[250px] md:w-[84px]' : 'w-[250px] md:w-[250px]'
       )}
-      style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.35)' }}
+      style={{ fontFamily: 'var(--font-sidebar), var(--font-inter), sans-serif' }}
     >
       {/* ── Logo row ── */}
       <div className={cn(
-        'flex h-[48px] shrink-0 items-center justify-between rounded-t-2xl border-b border-dl-border px-3.5',
+        'flex h-[52px] shrink-0 items-center justify-between px-4',
         isCollapsed ? 'md:justify-center md:px-3' : ''
       )}>
         <SiteLogo
           className={cn(
-            'text-[13.5px] font-semibold tracking-tight text-dl-navy transition-all duration-200',
+            'text-[14px] font-semibold tracking-tight text-white transition-all duration-200',
             isCollapsed ? 'md:hidden' : ''
           )}
-          iconClassName="rounded-md bg-[#ff894c]/10"
+          iconClassName="rounded-[10px] overflow-hidden"
         />
         {onToggleCollapse && (
           <button
             type="button"
             onClick={onToggleCollapse}
             className={cn(
-              'flex items-center justify-center rounded-lg p-1.5 text-dl-muted hover:bg-dl-surface hover:text-dl-blue transition-all duration-150 focus:outline-none',
+              'flex items-center justify-center rounded-lg p-1.5 text-white/50 hover:bg-white/10 hover:text-white transition-all duration-150 focus:outline-none',
               isCollapsed ? 'md:mt-0' : 'hidden md:flex'
             )}
             aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             {isCollapsed
-              ? <ChevronRight className="h-4 w-4" />
-              : <ChevronLeft className="h-4 w-4" />
+              ? <ChevronRight className="h-3.5 w-3.5" />
+              : <ChevronLeft className="h-3.5 w-3.5" />
             }
           </button>
         )}
@@ -105,8 +103,8 @@ export function NavSidebar({
 
       {/* ── Nav items (flat, no sections) ── */}
       <nav className={cn(
-        'flex flex-1 flex-col overflow-y-auto py-3 transition-all duration-200',
-        isCollapsed ? 'px-2 md:px-2 gap-1' : 'px-2.5 gap-0.5'
+        'flex flex-1 flex-col overflow-y-auto py-2 transition-all duration-200',
+        isCollapsed ? 'px-3.5 gap-1' : 'px-3.5 gap-1'
       )}>
         {NAV_ITEMS.map(({ label: itemLabel, href, icon: Icon }) => {
           const active = pathname === href || pathname.startsWith(href + '/')
@@ -118,30 +116,20 @@ export function NavSidebar({
               onClick={onClose}
               title={isCollapsed ? itemLabel : undefined}
               className={cn(
-                'group relative flex items-center gap-2 rounded-lg py-[7px] text-[12.5px] font-medium transition-all duration-150',
+                'group flex items-center gap-3 rounded-2xl py-[11px] text-[13.5px] font-medium transition-all duration-150',
                 active
-                  ? 'bg-dl-blue-pale/70 text-dl-blue'
-                  : 'text-dl-text/75 hover:bg-dl-surface hover:text-dl-navy',
-                isCollapsed ? 'md:justify-center md:px-0 md:py-2' : 'px-2'
+                  ? 'bg-white text-[#0d0d0d] font-semibold'
+                  : 'text-white/75 hover:bg-white/8 hover:text-white',
+                isCollapsed ? 'md:justify-center md:px-0' : 'px-3.5'
               )}
             >
-              {/* Active left bar */}
-              {active && !isCollapsed && (
-                <span className="absolute left-0 top-1/2 h-3.5 w-[2px] -translate-y-1/2 rounded-r bg-dl-blue" />
+              <Icon className={cn(
+                'h-[17px] w-[17px] shrink-0 transition-colors',
+                active ? 'text-[#0d0d0d]' : 'text-white/55 group-hover:text-white'
               )}
-
-              {/* Icon */}
-              <div className="relative flex h-4 w-4 shrink-0 items-center justify-center">
-                <Icon className={cn(
-                  'h-[13px] w-[13px] transition-colors',
-                  active ? 'text-dl-blue' : 'text-dl-muted group-hover:text-dl-text'
-                )}
-                />
-              </div>
-
-              {/* Label */}
+              />
               <span className={cn(
-                'flex-1 transition-all duration-200',
+                'flex-1 whitespace-nowrap transition-all duration-200',
                 isCollapsed ? 'md:hidden' : ''
               )}>
                 {itemLabel}
@@ -151,63 +139,43 @@ export function NavSidebar({
         })}
       </nav>
 
-      {/* ── ⌘K hint + theme toggle ── */}
+      {/* ── Quick search ── */}
       {!isCollapsed && (
-        <div className="border-t border-dl-border px-3 pt-2.5 pb-2 flex items-center gap-2">
+        <div className="px-3.5 pb-3.5">
           <button
             type="button"
             onClick={() => {
               window.dispatchEvent(new CustomEvent('toggle-command-palette'))
               onClose()
             }}
-            className="flex flex-1 items-center gap-2 rounded-lg bg-dl-surface px-2.5 py-[7px] hover:text-dl-blue transition-all cursor-pointer text-left focus:outline-none group"
+            className="flex w-full items-center gap-2.5 rounded-2xl border border-white/[0.14] bg-white/[0.04] px-3.5 py-[11px] hover:bg-white/[0.08] transition-all cursor-pointer text-left focus:outline-none group"
           >
-            <Command className="h-3 w-3 shrink-0 text-dl-muted group-hover:text-dl-blue transition-colors" />
-            <span className="flex-1 text-[11px] text-dl-muted group-hover:text-dl-blue transition-colors">Quick search</span>
-            <span className="flex items-center gap-0.5 rounded bg-dl-bg px-1 py-0.5 text-[9.5px] font-semibold text-dl-muted">
+            <Command className="h-3.5 w-3.5 shrink-0 text-white/50" />
+            <span className="flex-1 text-[12.5px] text-white/45">Quick search</span>
+            <span className="rounded-[5px] border border-white/[0.18] px-1.5 py-0.5 text-[10.5px] text-white/35">
               ⌘K
             </span>
-          </button>
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-dl-border bg-dl-surface text-dl-muted transition-all hover:border-dl-blue hover:text-dl-blue"
-            aria-label="Toggle dark mode"
-          >
-            {themeMounted && theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
-          </button>
-        </div>
-      )}
-      {isCollapsed && (
-        <div className="px-2 pb-2 flex justify-center">
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-dl-border bg-dl-surface text-dl-muted transition-all hover:border-dl-blue hover:text-dl-blue"
-            aria-label="Toggle dark mode"
-          >
-            {themeMounted && theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
           </button>
         </div>
       )}
 
+      <div className="mx-3.5 h-px bg-white/10" />
+
       {/* ── Help + Feedback ── */}
       <div className={cn(
-        'border-t border-dl-border px-2.5 py-1.5 flex flex-col gap-px',
-        isCollapsed ? 'md:px-2' : ''
+        'px-3.5 py-2 flex flex-col gap-0.5',
+        isCollapsed ? 'md:px-3' : ''
       )}>
         <button
           type="button"
           onClick={() => setFeedbackOpen(true)}
           title={isCollapsed ? 'Share Feedback' : undefined}
           className={cn(
-            'flex items-center gap-2 rounded-lg py-[7px] text-[11.5px] font-medium text-dl-muted hover:bg-dl-surface hover:text-dl-text transition-all duration-150',
-            isCollapsed ? 'md:justify-center md:px-0' : 'px-2'
+            'flex items-center gap-2.5 rounded-xl py-2 text-[12px] font-medium text-white/50 hover:bg-white/8 hover:text-white transition-all duration-150',
+            isCollapsed ? 'md:justify-center md:px-0' : 'px-2.5'
           )}
         >
-          <div className="flex h-4 w-4 shrink-0 items-center justify-center">
-            <MessageSquarePlus className="h-[13px] w-[13px]" />
-          </div>
+          <MessageSquarePlus className="h-[14px] w-[14px] shrink-0" />
           <span className={cn('transition-all duration-200', isCollapsed ? 'md:hidden' : '')}>
             Share Feedback
           </span>
@@ -216,13 +184,11 @@ export function NavSidebar({
           href="mailto:aryanpachori03@gmail.com"
           title={isCollapsed ? 'Help & Support' : undefined}
           className={cn(
-            'flex items-center gap-2 rounded-lg py-[7px] text-[11.5px] font-medium text-dl-muted hover:bg-dl-surface hover:text-dl-text transition-all duration-150',
-            isCollapsed ? 'md:justify-center md:px-0' : 'px-2'
+            'flex items-center gap-2.5 rounded-xl py-2 text-[12px] font-medium text-white/50 hover:bg-white/8 hover:text-white transition-all duration-150',
+            isCollapsed ? 'md:justify-center md:px-0' : 'px-2.5'
           )}
         >
-          <div className="flex h-4 w-4 shrink-0 items-center justify-center">
-            <HelpCircle className="h-[13px] w-[13px]" />
-          </div>
+          <HelpCircle className="h-[14px] w-[14px] shrink-0" />
           <span className={cn('transition-all duration-200', isCollapsed ? 'md:hidden' : '')}>
             Help &amp; Support
           </span>
@@ -231,10 +197,7 @@ export function NavSidebar({
       <FeedbackModal open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
 
       {/* ── Profile ── */}
-      <div className={cn(
-        'rounded-b-2xl border-t border-dl-border p-2.5',
-        isCollapsed ? 'md:px-2' : ''
-      )}>
+      <div className={cn('p-3.5 pt-1.5', isCollapsed ? 'md:px-3' : '')}>
         <div ref={profileRef} className="relative w-full">
           {/* Profile popover */}
           <AnimatePresence>
@@ -250,7 +213,7 @@ export function NavSidebar({
                 )}
               >
                 {/* Profile header */}
-                <div className="px-4 py-3 bg-dl-surface border-b border-dl-border">
+                <div className="px-4 py-3 bg-dl-chip-bg border-b border-dl-border">
                   <div className="flex items-center gap-3">
                     <Image
                       src={avatarUrl(user?.fullName ?? '', user?.email ?? '')}
@@ -267,11 +230,7 @@ export function NavSidebar({
                       <p className="truncate text-[11px] text-dl-muted">{user?.email}</p>
                     </div>
                   </div>
-                  <span
-                    className="mt-2.5 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-semibold"
-                    style={{ background: chip.bg, color: chip.text }}
-                  >
-                    <span className="h-1.5 w-1.5 rounded-full" style={{ background: chip.text }} />
+                  <span className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-dl-blue px-2.5 py-1 text-[10px] font-semibold text-white">
                     {chip.label} Plan
                   </span>
                 </div>
@@ -280,7 +239,7 @@ export function NavSidebar({
                   <Link
                     href="/profile"
                     onClick={() => { setProfileOpen(false); onClose() }}
-                    className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-[12px] font-medium text-dl-text hover:bg-dl-surface hover:text-dl-blue transition-colors"
+                    className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-[12px] font-medium text-dl-text hover:bg-dl-chip-bg transition-colors"
                   >
                     <User className="h-3.5 w-3.5" />
                     Profile settings
@@ -288,7 +247,7 @@ export function NavSidebar({
                   <button
                     type="button"
                     onClick={() => { setProfileOpen(false); onClose(); signOut() }}
-                    className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-[12px] font-medium text-red-500 hover:bg-red-500/10 transition-colors"
+                    className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-[12px] font-medium text-dl-text hover:bg-dl-chip-bg transition-colors"
                   >
                     <LogOut className="h-3.5 w-3.5" />
                     Sign out
@@ -303,26 +262,26 @@ export function NavSidebar({
             type="button"
             onClick={() => setProfileOpen(p => !p)}
             className={cn(
-              'flex w-full items-center gap-2 rounded-lg p-1.5 text-left transition-all duration-150 hover:bg-dl-surface focus:outline-none',
+              'flex w-full items-center gap-2.5 rounded-2xl p-1.5 text-left transition-all duration-150 hover:bg-white/8 focus:outline-none',
               isCollapsed ? 'md:justify-center' : ''
             )}
           >
             <Image
               src={avatarUrl(user?.fullName ?? '', user?.email ?? '')}
               alt="Avatar"
-              width={26}
-              height={26}
-              className="h-[26px] w-[26px] shrink-0 rounded-full shadow-sm"
+              width={30}
+              height={30}
+              className="h-[30px] w-[30px] shrink-0 rounded-full"
               unoptimized
             />
             <div className={cn('flex-1 min-w-0', isCollapsed ? 'md:hidden' : '')}>
-              <p className="truncate text-[11.5px] font-semibold text-dl-navy">
+              <p className="truncate text-[12.5px] font-semibold text-white">
                 {user?.nickname ?? user?.fullName ?? user?.email ?? '…'}
               </p>
-              <p className="truncate text-[10px] text-dl-muted">{user?.email}</p>
+              <p className="truncate text-[11px] text-white/40">{user?.email}</p>
             </div>
             <ChevronRight className={cn(
-              'h-3.5 w-3.5 text-dl-muted transition-transform duration-150',
+              'h-3.5 w-3.5 text-white/40 transition-transform duration-150',
               profileOpen ? 'rotate-90' : '',
               isCollapsed ? 'md:hidden' : ''
             )} />
