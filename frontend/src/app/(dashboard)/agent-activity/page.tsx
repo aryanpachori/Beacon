@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { Radar, Copy, Check, Sparkles, Terminal, Blocks, HelpCircle } from 'lucide-react'
-import { NotificationBell } from '@/components/dashboard/NotificationBell'
 import { cn } from '@/lib/utils'
 
 // TODO: wire to GET /api/agent-activity once POST /api/v1/scans ingestion ships
@@ -39,7 +38,6 @@ export default function AgentActivityPage() {
             Findings from CLI, MCP, and IDE-extension scans, as they happen.
           </p>
         </div>
-        <NotificationBell />
       </div>
 
       {!skipped && (

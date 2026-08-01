@@ -7,7 +7,6 @@ import { useAppData } from '@/context/AppDataContext'
 import { fetchOnboardingState, fetchMaintainers, type MaintainerOverview } from '@/lib/api'
 import { PackageListRow } from '@/components/packages/PackageListRow'
 import { RepoCard } from '@/components/repos/RepoCard'
-import { NotificationBell } from '@/components/dashboard/NotificationBell'
 import { InsightsDashboard } from '@/components/dashboard/InsightsDashboard'
 import { cn } from '@/lib/utils'
 
@@ -89,7 +88,6 @@ export default function DependencyTrackerPage() {
           <h2 className="page-heading">Dependency Tracker</h2>
           <p className="page-description">Packages, repos, maintainers and analytics — one combined view</p>
         </div>
-        <NotificationBell />
       </div>
 
       <div className="mb-5 flex items-center gap-1.5 overflow-x-auto pb-1">

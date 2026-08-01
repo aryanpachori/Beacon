@@ -293,7 +293,7 @@ export default function BillingPage() {
 
       {/* Payment info */}
       <div
-        className="mt-6 rounded-xl px-6 py-5 bg-white dark:bg-[#0d131f] border border-dl-border dark:border-blue-500/20"
+        className="mt-6 rounded-xl border border-dl-border bg-dl-bg px-6 py-5"
       >
         <div className="flex items-start gap-3">
           <CreditCard className="mt-0.5 h-5 w-5 shrink-0 text-dl-teal" />
@@ -355,16 +355,16 @@ function PlanCard({
 }) {
   return (
     <div
-      className={`flex flex-col rounded-xl p-6 border ${
+      className={`flex flex-col rounded-xl border p-6 ${
         highlighted
           ? 'bg-dl-blue/5 border-dl-blue/20'
-          : 'bg-white dark:bg-[#0d131f] border-dl-border dark:border-blue-500/20'
+          : 'bg-dl-bg border-dl-border'
       }`}
     >
       <div className="mb-4 flex items-center justify-between">
         <span className="text-[15px] font-semibold text-dl-forest">{name}</span>
         {isCurrent && (
-          <span className="rounded-md px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-dl-muted border border-dl-border dark:border-white/10 bg-dl-surface dark:bg-white/5">
+          <span className="rounded-md border border-dl-border bg-dl-surface px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-dl-muted">
             Current
           </span>
         )}

@@ -72,22 +72,24 @@ const SIGNAL_LABELS: Record<string, string> = {
   community_health: "Community health",
 };
 
-/* ── Ecosystem colors ────────────────────────────────────────────────── */
+/* ── Ecosystem colors — monochrome gray scale, theme-safe ──────────────── */
 const ECO_COLORS: Record<string, string> = {
-  npm: "#f7df1e",
-  pypi: "#3776ab",
-  cargo: "#dea584",
-  maven: "#c71a36",
-  gem: "#cc342d",
-  go: "#00add8",
+  npm: "#8a8d99",
+  pypi: "#71747f",
+  cargo: "#9a9da8",
+  maven: "#5c5f68",
+  gem: "#adb0b9",
+  go: "#4a4d55",
 };
 
+/* Single accent (brand orange) reserved for genuine severity signal;
+   everything else reads as neutral gray, per "keep it monotonous" direction. */
 const TIER_COLOR: Record<string, string> = {
-  critical: "#dc2626",
-  at_risk: "#ea580c",
-  "at-risk": "#ea580c",
-  watch: "#ca8a04",
-  healthy: "#16a34a",
+  critical: "#ff6600",
+  at_risk: "#8a8d99",
+  "at-risk": "#8a8d99",
+  watch: "#a3a6b0",
+  healthy: "#c2c4cb",
 };
 
 /* ── Mock fallback data ──────────────────────────────────────────────── */
@@ -291,48 +293,48 @@ export function InsightsDashboard() {
       label: "Total packages",
       value: totalPackages,
       icon: Package,
-      color: "var(--dl-blue)",
-      bg: "rgba(79,97,40,0.15)",
+      color: "var(--dl-muted)",
+      bg: "var(--dl-surface)",
       suffix: "",
     },
     {
       label: "Stack health",
       value: healthyPct,
       icon: ShieldCheck,
-      color: "var(--dl-healthy)",
-      bg: "rgba(22,163,74,0.15)",
+      color: "var(--dl-muted)",
+      bg: "var(--dl-surface)",
       suffix: "%",
     },
     {
       label: "Needs attention",
       value: critical + atRisk,
       icon: AlertTriangle,
-      color: critical > 0 ? "var(--dl-critical)" : "var(--dl-risk)",
-      bg: critical > 0 ? "rgba(220,38,38,0.15)" : "rgba(234,88,12,0.15)",
+      color: critical > 0 ? "var(--dl-blue)" : "var(--dl-muted)",
+      bg: critical > 0 ? "var(--dl-blue-pale)" : "var(--dl-surface)",
       suffix: "",
     },
     {
       label: "Alerts this week",
       value: alertsThisWeek,
       icon: Activity,
-      color: "var(--dl-watch)",
-      bg: "rgba(202,138,4,0.15)",
+      color: "var(--dl-muted)",
+      bg: "var(--dl-surface)",
       suffix: "",
     },
     {
       label: "Repos monitored",
       value: repos.length,
       icon: Zap,
-      color: "#8b5cf6",
-      bg: "rgba(139,92,246,0.15)",
+      color: "var(--dl-muted)",
+      bg: "var(--dl-surface)",
       suffix: "",
     },
     {
       label: "Avg SPS",
       value: dashboard?.avgSps ? Math.round(dashboard.avgSps) : 0,
       icon: TrendingUp,
-      color: "#0ea5e9",
-      bg: "rgba(14,165,233,0.15)",
+      color: "var(--dl-muted)",
+      bg: "var(--dl-surface)",
       suffix: "",
     },
   ];

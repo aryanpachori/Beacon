@@ -3,7 +3,6 @@
 import { Zap, Package as PackageIcon } from 'lucide-react'
 import { useAppData } from '@/context/AppDataContext'
 import { HealthOverviewBar } from '@/components/dashboard/HealthOverviewBar'
-import { NotificationBell } from '@/components/dashboard/NotificationBell'
 import { InsightsDashboard } from '@/components/dashboard/InsightsDashboard'
 import { OverviewIntegrations } from '@/components/dashboard/OverviewIntegrations'
 
@@ -128,7 +127,6 @@ export default function DashboardPage() {
               : 'Connect GitHub to start monitoring your dependencies'}
           </p>
         </div>
-        <NotificationBell />
       </div>
 
       {packages.length === 0 ? (

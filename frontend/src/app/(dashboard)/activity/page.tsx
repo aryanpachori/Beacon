@@ -8,7 +8,6 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { fetchActivity, type ActivityEvent } from '@/lib/api'
-import { NotificationBell } from '@/components/dashboard/NotificationBell'
 
 /* ── Ecosystem color map ─────────────────────────────────────────────── */
 const ECO_COLORS: Record<string, string> = {
@@ -87,7 +86,6 @@ export default function ActivityPage() {
               : 'Chronological feed of dependency health events'}
           </p>
         </div>
-        <NotificationBell />
       </div>
 
       {/* Filter tabs */}

@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from 'react'
 import { useAppData } from '@/context/AppDataContext'
 import { PackageListRow } from '@/components/packages/PackageListRow'
 import { PackageCard } from '@/components/packages/PackageCard'
-import { NotificationBell } from '@/components/dashboard/NotificationBell'
 import {
   RefreshCw, LayoutList, LayoutGrid, ArrowUpDown, Search, Package as PackageIcon,
 } from 'lucide-react'
@@ -201,7 +200,6 @@ export default function PackagesPage() {
               <button type="button" onClick={refresh} className="flex h-8 w-8 items-center justify-center rounded-xl border border-dl-border text-dl-muted hover:bg-dl-surface hover:text-dl-text transition-colors">
                 <RefreshCw className="h-3.5 w-3.5" />
               </button>
-              <NotificationBell />
             </div>
           </div>
 

@@ -4,19 +4,18 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect, useRef } from 'react'
 import {
-  LayoutDashboard, Package, Bell,
+  LayoutDashboard, Package,
   CreditCard, User, LogOut, ChevronLeft, ChevronRight,
-  Activity, HelpCircle, ScanLine,
-  Command, ChevronDown, Sun, Moon, MessageSquarePlus, Radar,
+  HelpCircle, ScanLine,
+  Command, Sun, Moon, MessageSquarePlus, Radar,
 } from 'lucide-react'
 import { useTheme } from '@/hooks/useTheme'
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
 import { SiteLogo } from '@/components/layout/SiteLogo'
 import { FeedbackModal } from '@/components/layout/FeedbackModal'
 import { useAppData } from '@/context/AppDataContext'
 import { avatarUrl } from '@/lib/gravatar'
-import { getUnreadCount } from '@/lib/alertsData'
 import { cn } from '@/lib/utils'
 
 /* ── Plan label/color ────────────────────────────────────────────────── */
@@ -26,32 +25,12 @@ function planChip(plan: string) {
   return                      { label: 'Free', bg: 'var(--dl-surface)', text: 'var(--dl-muted)' }
 }
 
-const NAV_SECTIONS = [
-  {
-    label: 'Overview',
-    defaultOpen: true,
-    items: [
-      { label: 'Overview',            href: '/dashboard',          icon: LayoutDashboard },
-      { label: 'Agent Activity',      href: '/agent-activity',     icon: Radar },
-      { label: 'Activity',            href: '/activity',           icon: Activity, showActivityBadge: true },
-    ],
-  },
-  {
-    label: 'Monitoring',
-    defaultOpen: true,
-    items: [
-      { label: 'Dependency Tracker',  href: '/dependency-tracker', icon: Package },
-      { label: 'Alerts',              href: '/alerts',             icon: Bell, showBadge: true },
-    ],
-  },
-  {
-    label: 'System',
-    defaultOpen: false,
-    items: [
-      { label: 'Code review',  href: '/security',     icon: ScanLine,  soon: true },
-      { label: 'Billing',      href: '/billing',      icon: CreditCard },
-    ],
-  },
+const NAV_ITEMS = [
+  { label: 'Overview',            href: '/dashboard',          icon: LayoutDashboard },
+  { label: 'Agent Activity',      href: '/agent-activity',     icon: Radar },
+  { label: 'Dependency Tracker',  href: '/dependency-tracker', icon: Package },
+  { label: 'Code review',         href: '/security',           icon: ScanLine, soon: true },
+  { label: 'Billing',             href: '/billing',             icon: CreditCard },
 ]
 
 interface NavSidebarProps {
@@ -68,38 +47,12 @@ export function NavSidebar({
   onToggleCollapse,
 }: NavSidebarProps) {
   const pathname = usePathname()
-  const { user, alerts, signOut } = useAppData()
-  const alertCount = getUnreadCount(alerts)
+  const { user, signOut } = useAppData()
 
   const [theme, toggleTheme, themeMounted] = useTheme()
   const [profileOpen, setProfileOpen] = useState(false)
   const [feedbackOpen, setFeedbackOpen] = useState(false)
   const profileRef = useRef<HTMLDivElement>(null)
-
-  const defaultOpenSections = Object.fromEntries(
-    NAV_SECTIONS.map((s) => [s.label, s.defaultOpen])
-  )
-
-  // Defaults on SSR; hydrate from localStorage after mount to avoid mismatch
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>(defaultOpenSections)
-
-  useEffect(() => {
-    const saved = localStorage.getItem('dl_nav_sections')
-    if (!saved) return
-    try {
-      setOpenSections(JSON.parse(saved))
-    } catch {
-      /* ignore */
-    }
-  }, [])
-
-  function toggleSection(label: string) {
-    setOpenSections(prev => {
-      const next = { ...prev, [label]: !prev[label] }
-      localStorage.setItem('dl_nav_sections', JSON.stringify(next))
-      return next
-    })
-  }
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -150,118 +103,58 @@ export function NavSidebar({
         )}
       </div>
 
-      {/* ── Nav sections ── */}
+      {/* ── Nav items (flat, no sections) ── */}
       <nav className={cn(
         'flex flex-1 flex-col overflow-y-auto py-3 transition-all duration-200',
-        isCollapsed ? 'px-2 md:px-2 gap-1' : 'px-2.5 gap-3'
+        isCollapsed ? 'px-2 md:px-2 gap-1' : 'px-2.5 gap-0.5'
       )}>
-        {NAV_SECTIONS.map(({ label, items }) => {
-          const sectionOpen = openSections[label] !== false
+        {NAV_ITEMS.map(({ label: itemLabel, href, icon: Icon, soon }) => {
+          const active = pathname === href || pathname.startsWith(href + '/')
 
           return (
-            <div key={label} className="flex flex-col gap-px">
-              {/* Section header */}
-              {!isCollapsed && (
-                <button
-                  type="button"
-                  onClick={() => toggleSection(label)}
-                  className="group mb-0.5 flex w-full items-center justify-between px-1.5 py-0.5 focus:outline-none"
-                >
-                  <span className="text-[9.5px] font-semibold uppercase tracking-[0.1em] text-dl-muted/80 group-hover:text-dl-text transition-colors">
-                    {label}
-                  </span>
-                  <ChevronDown className={cn(
-                    'h-2.5 w-2.5 text-dl-muted transition-transform duration-200 group-hover:text-dl-text',
-                    sectionOpen ? 'rotate-0' : '-rotate-90'
-                  )} />
-                </button>
+            <Link
+              key={href}
+              href={soon ? '/dashboard' : href}
+              onClick={!soon ? onClose : undefined}
+              title={isCollapsed ? itemLabel : undefined}
+              className={cn(
+                'group relative flex items-center gap-2 rounded-lg py-[7px] text-[12.5px] font-medium transition-all duration-150',
+                active
+                  ? 'bg-dl-blue-pale/70 text-dl-blue'
+                  : 'text-dl-text/75 hover:bg-dl-surface hover:text-dl-navy',
+                isCollapsed ? 'md:justify-center md:px-0 md:py-2' : 'px-2',
+                soon ? 'cursor-not-allowed' : ''
+              )}
+            >
+              {/* Active left bar */}
+              {active && !isCollapsed && (
+                <span className="absolute left-0 top-1/2 h-3.5 w-[2px] -translate-y-1/2 rounded-r bg-[#ff6600]" />
               )}
 
-              {/* Section items */}
-              <AnimatePresence initial={false}>
-                {(sectionOpen || isCollapsed) && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.18, ease: 'easeInOut' }}
-                    className="flex flex-col gap-0.5 overflow-hidden"
-                  >
-                    {items.map(({ label: itemLabel, href, icon: Icon, showBadge, showActivityBadge, soon }: {
-                      label: string; href: string; icon: React.ElementType
-                      showBadge?: boolean; showActivityBadge?: boolean; soon?: boolean
-                    }) => {
-                      const active = pathname === href || pathname.startsWith(href + '/')
-
-                      return (
-                        <Link
-                          key={href}
-                          href={soon ? '/dashboard' : href}
-                          onClick={!soon ? onClose : undefined}
-                          title={isCollapsed ? itemLabel : undefined}
-                          className={cn(
-                            'group relative flex items-center gap-2 rounded-lg py-[7px] text-[12.5px] font-medium transition-all duration-150',
-                            active
-                              ? 'bg-dl-blue-pale/70 text-dl-blue'
-                              : 'text-dl-text/75 hover:bg-dl-surface hover:text-dl-navy',
-                            isCollapsed ? 'md:justify-center md:px-0 md:py-2' : 'px-2',
-                            soon ? 'cursor-not-allowed' : ''
-                          )}
-                        >
-                          {/* Active left bar */}
-                          {active && !isCollapsed && (
-                            <span className="absolute left-0 top-1/2 h-3.5 w-[2px] -translate-y-1/2 rounded-r bg-[#ff6600]" />
-                          )}
-
-                          {/* Icon */}
-                          <div className="relative flex h-4 w-4 shrink-0 items-center justify-center">
-                            <Icon className={cn(
-                              'h-[13px] w-[13px] transition-colors',
-                              active ? 'text-dl-blue' : 'text-dl-muted group-hover:text-dl-text'
-                            )}
-                            />
-                            {/* Collapsed alert dot */}
-                            {showBadge && alertCount > 0 && isCollapsed && (
-                              <span className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-red-500 ring-2 ring-dl-bg" />
-                            )}
-                            {showActivityBadge && alertCount > 0 && isCollapsed && (
-                              <span className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-[#ff6600] ring-2 ring-dl-bg" />
-                            )}
-                          </div>
-
-                          {/* Label */}
-                          <span className={cn(
-                            'flex-1 transition-all duration-200',
-                            isCollapsed ? 'md:hidden' : ''
-                          )}>
-                            {itemLabel}
-                          </span>
-
-                          {/* Alert count badge */}
-                          {showBadge && alertCount > 0 && !isCollapsed && (
-                            <span className="flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[9.5px] font-bold text-white">
-                              {alertCount > 99 ? '99+' : alertCount}
-                            </span>
-                          )}
-
-                          {/* Activity dot for new events */}
-                          {showActivityBadge && alertCount > 0 && !isCollapsed && (
-                            <span className="h-1.5 w-1.5 rounded-full bg-[#ff6600] animate-pulse" />
-                          )}
-
-                          {/* Soon badge */}
-                          {soon && !isCollapsed && (
-                            <span className="rounded-md bg-dl-surface px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-dl-muted">
-                              Soon
-                            </span>
-                          )}
-                        </Link>
-                      )
-                    })}
-                  </motion.div>
+              {/* Icon */}
+              <div className="relative flex h-4 w-4 shrink-0 items-center justify-center">
+                <Icon className={cn(
+                  'h-[13px] w-[13px] transition-colors',
+                  active ? 'text-dl-blue' : 'text-dl-muted group-hover:text-dl-text'
                 )}
-              </AnimatePresence>
-            </div>
+                />
+              </div>
+
+              {/* Label */}
+              <span className={cn(
+                'flex-1 transition-all duration-200',
+                isCollapsed ? 'md:hidden' : ''
+              )}>
+                {itemLabel}
+              </span>
+
+              {/* Soon badge */}
+              {soon && !isCollapsed && (
+                <span className="rounded-md bg-dl-surface px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-dl-muted">
+                  Soon
+                </span>
+              )}
+            </Link>
           )
         })}
       </nav>
@@ -275,11 +168,11 @@ export function NavSidebar({
               window.dispatchEvent(new CustomEvent('toggle-command-palette'))
               onClose()
             }}
-            className="flex flex-1 items-center gap-2 rounded-lg border border-dl-border bg-dl-surface px-3 py-2 hover:border-dl-blue/60 hover:text-dl-blue transition-all cursor-pointer text-left focus:outline-none focus:ring-1 focus:ring-dl-blue/30 group"
+            className="flex flex-1 items-center gap-2 rounded-lg bg-dl-surface px-2.5 py-[7px] hover:text-dl-blue transition-all cursor-pointer text-left focus:outline-none group"
           >
             <Command className="h-3 w-3 shrink-0 text-dl-muted group-hover:text-dl-blue transition-colors" />
             <span className="flex-1 text-[11px] text-dl-muted group-hover:text-dl-blue transition-colors">Quick search</span>
-            <span className="flex items-center gap-0.5 rounded bg-dl-surface px-1 py-0.5 text-[10px] font-bold text-dl-text shadow-sm border border-dl-border">
+            <span className="flex items-center gap-0.5 rounded bg-dl-bg px-1 py-0.5 text-[9.5px] font-semibold text-dl-muted">
               ⌘K
             </span>
           </button>

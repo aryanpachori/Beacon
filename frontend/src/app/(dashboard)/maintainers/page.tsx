@@ -8,7 +8,6 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { fetchMaintainers, type MaintainerOverview } from '@/lib/api'
-import { NotificationBell } from '@/components/dashboard/NotificationBell'
 
 const TIER_COLOR: Record<string, string> = {
   critical: '#dc2626', at_risk: '#ea580c', 'at-risk': '#ea580c',
@@ -55,7 +54,6 @@ export default function MaintainersPage() {
             Activity health of all primary maintainers across your monitored packages
           </p>
         </div>
-        <NotificationBell />
       </div>
 
       {/* KPI strip */}
