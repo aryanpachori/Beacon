@@ -14,7 +14,7 @@ export function LandingCTA() {
       </p>
       <div className="relative flex flex-wrap justify-center gap-3">
         <Link href="/register" className="bl-btn-primary !px-6 !py-3.5">
-          Install Beacon — free
+          Install Beacon - free
         </Link>
         <a href="mailto:founders@beacon.forgefastlabs.com" className="bl-btn-ghost !px-[22px] !py-3.5">
           Talk to us

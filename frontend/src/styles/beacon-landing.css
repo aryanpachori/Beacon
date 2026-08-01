@@ -58,8 +58,7 @@
 .beacon-landing a.bl-btn-primary,
 .beacon-landing .bl-on-orange,
 .beacon-landing a.bl-on-orange,
-.beacon-landing a[class*='bg-[#ff6600]'],
-.beacon-landing [class*='bg-[#ff6600]'] {
+.beacon-landing a[class*='bg-[#ff6600]'] {
   color: #0b0a08 !important;
 }
 
@@ -67,8 +66,21 @@
 .beacon-landing a.bl-btn-primary:hover,
 .beacon-landing .bl-on-orange:hover,
 .beacon-landing a.bl-on-orange:hover,
-.beacon-landing a[class*='bg-[#ff6600]']:hover,
-.beacon-landing [class*='bg-[#ff6600]']:hover {
+.beacon-landing a[class*='bg-[#ff6600]']:hover {
+  color: #0b0a08 !important;
+}
+
+/* Orange text on black fills (e.g. Enterprise CTA on orange panel) */
+.beacon-landing .bl-on-black,
+.beacon-landing a.bl-on-black,
+.beacon-landing .bl-on-black:hover,
+.beacon-landing a.bl-on-black:hover {
+  color: #ff6600 !important;
+}
+
+/* Footer links sit on orange — never turn orange on hover */
+.beacon-landing footer a,
+.beacon-landing footer a:hover {
   color: #0b0a08 !important;
 }
 

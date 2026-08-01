@@ -26,7 +26,7 @@ export function Hero() {
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-5">
               <Link href="/register" className="btn-primary">
-                Install Beacon — free
+                Install Beacon - free
               </Link>
               <a href="#how-it-works" className="text-[13.5px] text-dl-forest underline decoration-dl-border/70 underline-offset-4 transition-colors hover:text-dl-navy hover:decoration-dl-muted">
                 See it in action

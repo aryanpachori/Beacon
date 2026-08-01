@@ -52,7 +52,7 @@ export function LandingFooter() {
               <Link
                 key={link.label}
                 href={link.href}
-                className="text-base font-medium text-[#0b0a08] hover:opacity-60"
+                className="bl-on-orange text-base font-medium text-[#0b0a08] transition-opacity hover:opacity-55"
               >
                 {link.label}
               </Link>

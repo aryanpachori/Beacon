@@ -124,7 +124,7 @@ export default function PricingPage() {
               </p>
               <a
                 href="mailto:hello@beaconapp.dev?subject=Beacon%20Enterprise%20Demo"
-                className="mb-12 flex h-[62px] items-center justify-center bg-[#0b0a08] px-6 text-center text-[17px] font-bold leading-none text-[#f2f0ed] hover:opacity-90"
+                className="bl-on-black mb-12 flex h-[62px] items-center justify-center bg-[#0b0a08] px-6 text-center text-[17px] font-bold leading-none text-[#ff6600] hover:opacity-90"
               >
                 Request a demo →
               </a>
