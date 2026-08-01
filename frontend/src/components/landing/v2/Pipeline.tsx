@@ -6,6 +6,9 @@ import { BeaconOrb } from './BeaconOrb'
 const CHECKS = ['secret scan', 'injection shapes', 'authz paths', 'unsafe sinks']
 const MCP_STATUS = ['reading diff', 'matching patterns', 'drafting fixes', 'returning patch']
 
+const DANGER = '#c4675c'
+const SUCCESS = '#6f9c82'
+
 export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
   const [step, setStep] = useState(0)
 
@@ -24,19 +27,32 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
       </p>
 
       <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_118px_250px_118px_minmax(0,1fr)] lg:gap-0">
-        {/* Faulty input */}
         <div>
-          <div className="bl-mono mb-3 flex items-center gap-[9px] text-[11px] uppercase tracking-[0.08em] text-[rgba(220,47,47,.9)]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#dc2f2f]" />
+          <div
+            className="bl-mono mb-3 flex items-center gap-[9px] text-[11px] uppercase tracking-[0.08em]"
+            style={{ color: 'rgba(196,103,92,.9)' }}
+          >
+            <span className="h-1.5 w-1.5 rounded-full" style={{ background: DANGER }} />
             agent output
           </div>
-          <div className="overflow-hidden rounded-[13px] border border-[rgba(220,47,47,.28)] bg-[#ffffff]">
+          <div
+            className="overflow-hidden rounded-[13px] bg-white"
+            style={{ border: '1px solid rgba(196,103,92,.3)' }}
+          >
             <div className="bl-mono flex border-b border-black/[0.06] px-3.5 py-[11px] text-[11px] text-[rgba(8,9,10,.45)]">
               <span>checkout.ts</span>
-              <span className="ml-auto text-[rgba(220,47,47,.9)]">2 findings</span>
+              <span className="ml-auto" style={{ color: 'rgba(196,103,92,.9)' }}>
+                2 findings
+              </span>
             </div>
             <div className="bl-mono py-3.5 text-[12.5px] leading-[2.2]">
-              <div className="bg-[rgba(220,47,47,.12)] px-3.5 text-[rgba(8,9,10,.9)] shadow-[inset_2px_0_0_#dc2f2f]">
+              <div
+                className="px-3.5 text-[rgba(8,9,10,.9)]"
+                style={{
+                  background: 'rgba(196,103,92,.13)',
+                  boxShadow: `inset 2px 0 0 ${DANGER}`,
+                }}
+              >
                 const key = &quot;sk_live_51H8xJ2…&quot;
               </div>
               <div className="px-3.5 text-[rgba(8,9,10,.5)]">app.post(&quot;/refund&quot;, handler)</div>
@@ -44,9 +60,8 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
           </div>
         </div>
 
-        {/* Danger rail */}
         <Rail
-          line="linear-gradient(90deg,rgba(220,47,47,.1),rgba(220,47,47,.55))"
+          line="linear-gradient(90deg,rgba(196,103,92,.12),rgba(196,103,92,.55))"
           chips={[
             { label: 'secret', top: 'calc(50% - 16px)', delay: '0s', tone: 'danger' },
             { label: 'sqli', top: 'calc(50% + 6px)', delay: '0.9s', tone: 'danger' },
@@ -54,13 +69,24 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
           ]}
         />
 
-        {/* MCP center */}
         <div className="relative grid h-[290px] place-items-center">
-          <div className="relative w-[250px] rounded-[18px] border border-[rgba(220,47,47,.42)] bg-[linear-gradient(180deg,rgba(220,47,47,.09),rgba(220,47,47,.02))] px-[18px] pb-4 pt-[18px] backdrop-blur-[2px]">
+          <div
+            className="bl-orb-ring absolute h-[210px] w-[210px] rounded-full"
+            style={{ border: '1px solid rgba(8,9,10,.22)', animationDuration: '3.4s' }}
+          />
+          <div
+            className="bl-orb-ring absolute h-[210px] w-[210px] rounded-full"
+            style={{
+              border: '1px solid rgba(8,9,10,.16)',
+              animationDuration: '3.4s',
+              animationDelay: '1.7s',
+            }}
+          />
+          <div className="relative w-[250px] rounded-[18px] border border-[rgba(8,9,10,.42)] bg-[linear-gradient(180deg,rgba(8,9,10,.09),rgba(8,9,10,.02))] px-[18px] pb-4 pt-[18px]">
             <div className="mb-3.5 flex items-center gap-[9px]">
               <BeaconOrb size={16} core={7} duration={1.6} />
               <span className="text-[15px] font-semibold tracking-[-0.015em]">beacon mcp</span>
-              <span className="bl-mono ml-auto text-[9.5px] tracking-[0.06em] text-[rgba(220,47,47,.9)]">
+              <span className="bl-mono ml-auto text-[9.5px] tracking-[0.06em] text-[rgba(8,9,10,.9)]">
                 LOCAL
               </span>
             </div>
@@ -73,28 +99,27 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
                     className="bl-mono flex items-center gap-2 text-[11px] transition-[opacity,color] duration-[350ms] ease-out"
                     style={{
                       opacity: on ? 1 : 0.45,
-                      color: on ? '#dc2f2f' : 'rgba(8,9,10,.6)',
+                      color: on ? '#08090a' : 'rgba(8,9,10,.6)',
                     }}
                   >
                     <span
                       className="h-[5px] w-[5px] rounded-full"
-                      style={{ background: on ? '#dc2f2f' : 'rgba(220,47,47,.35)' }}
+                      style={{ background: on ? '#08090a' : 'rgba(8,9,10,.35)' }}
                     />
                     {label}
                   </div>
                 )
               })}
             </div>
-            <div className="bl-mono mt-3.5 flex border-t border-[rgba(220,47,47,.2)] pt-3 text-[10px] text-[rgba(8,9,10,.5)]">
+            <div className="bl-mono mt-3.5 flex border-t border-black/20 pt-3 text-[10px] text-[rgba(8,9,10,.5)]">
               <span>{MCP_STATUS[step]}</span>
               <span className="ml-auto">38ms</span>
             </div>
           </div>
         </div>
 
-        {/* Success rail */}
         <Rail
-          line="linear-gradient(90deg,rgba(8,9,10,.55),rgba(8,9,10,.12))"
+          line="linear-gradient(90deg,rgba(111,156,130,.55),rgba(111,156,130,.12))"
           chips={[
             { label: 'env var', top: 'calc(50% - 30px)', delay: '0.35s', tone: 'success' },
             { label: 'params', top: 'calc(50% - 8px)', delay: '1.2s', tone: 'success' },
@@ -102,19 +127,29 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
           ]}
         />
 
-        {/* Clean output */}
         <div>
           <div className="bl-mono mb-3 flex items-center gap-[9px] text-[11px] uppercase tracking-[0.08em] text-[rgba(8,9,10,.9)]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#08090a]" />
+            <span className="h-1.5 w-1.5 rounded-full" style={{ background: SUCCESS }} />
             ready to commit
           </div>
-          <div className="overflow-hidden rounded-[13px] border border-[rgba(8,9,10,.28)] bg-[#ffffff]">
+          <div
+            className="overflow-hidden rounded-[13px] bg-white"
+            style={{ border: '1px solid rgba(111,156,130,.3)' }}
+          >
             <div className="bl-mono flex border-b border-black/[0.06] px-3.5 py-[11px] text-[11px] text-[rgba(8,9,10,.45)]">
               <span>checkout.ts</span>
-              <span className="ml-auto text-[rgba(8,9,10,.9)]">clean</span>
+              <span className="ml-auto" style={{ color: 'rgba(111,156,130,.9)' }}>
+                clean
+              </span>
             </div>
             <div className="bl-mono py-3.5 text-[12.5px] leading-[2.2]">
-              <div className="bg-[rgba(8,9,10,.1)] px-3.5 text-[rgba(8,9,10,.9)] shadow-[inset_2px_0_0_#08090a]">
+              <div
+                className="px-3.5 text-[rgba(8,9,10,.9)]"
+                style={{
+                  background: 'rgba(111,156,130,.12)',
+                  boxShadow: `inset 2px 0 0 ${SUCCESS}`,
+                }}
+              >
                 const key = process.env.STRIPE_KEY
               </div>
               <div className="px-3.5 text-[rgba(8,9,10,.5)]">
@@ -145,11 +180,11 @@ function Rail({
           style={{
             top: chip.top,
             animationDelay: chip.delay,
-            color: chip.tone === 'danger' ? '#dc2f2f' : '#08090a',
+            color: chip.tone === 'danger' ? DANGER : SUCCESS,
             background:
-              chip.tone === 'danger' ? 'rgba(220,47,47,.16)' : 'rgba(8,9,10,.14)',
+              chip.tone === 'danger' ? 'rgba(196,103,92,.16)' : 'rgba(111,156,130,.15)',
             borderColor:
-              chip.tone === 'danger' ? 'rgba(220,47,47,.4)' : 'rgba(8,9,10,.4)',
+              chip.tone === 'danger' ? 'rgba(196,103,92,.4)' : 'rgba(111,156,130,.4)',
           }}
         >
           {chip.label}

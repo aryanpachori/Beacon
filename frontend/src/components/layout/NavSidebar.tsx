@@ -5,30 +5,35 @@ import { usePathname } from 'next/navigation'
 import { useState, useEffect, useRef } from 'react'
 import {
   LayoutDashboard, Package,
-  CreditCard, User, LogOut, ChevronLeft, ChevronRight,
-  HelpCircle,
+  CreditCard, User, LogOut, ChevronRight,
   Command, MessageSquarePlus, Radar,
 } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
-import { SiteLogo } from '@/components/layout/SiteLogo'
 import { FeedbackModal } from '@/components/layout/FeedbackModal'
+import { SiteLogo } from '@/components/layout/SiteLogo'
 import { useAppData } from '@/context/AppDataContext'
 import { avatarUrl } from '@/lib/gravatar'
 import { cn } from '@/lib/utils'
 
-/* ── Plan label ──────────────────────────────────────────────────────── */
 function planChip(plan: string) {
-  if (plan === 'pro')  return { label: 'Pro' }
+  if (plan === 'pro') return { label: 'Pro' }
   if (plan === 'team') return { label: 'Team' }
   return { label: 'Free' }
 }
 
+function initialsFrom(user: { fullName?: string | null; nickname?: string | null; email?: string | null } | null) {
+  const name = user?.fullName?.trim() || user?.nickname?.trim() || user?.email?.trim() || 'U'
+  const parts = name.split(/\s+/).filter(Boolean)
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase()
+  return name.slice(0, 2).toUpperCase()
+}
+
 const NAV_ITEMS = [
-  { label: 'Overview',            href: '/dashboard',          icon: LayoutDashboard },
-  { label: 'Agent Activity',      href: '/agent-activity',     icon: Radar },
-  { label: 'Dependency Tracker',  href: '/dependency-tracker', icon: Package },
-  { label: 'Billing',             href: '/billing',             icon: CreditCard },
+  { label: 'Overview', href: '/dashboard', icon: LayoutDashboard },
+  { label: 'Agent Activity', href: '/agent-activity', icon: Radar },
+  { label: 'Dependency Tracker', href: '/dependency-tracker', icon: Package },
+  { label: 'Billing', href: '/billing', icon: CreditCard },
 ]
 
 interface NavSidebarProps {
@@ -61,52 +66,71 @@ export function NavSidebar({
 
   const plan = user?.plan ?? 'free'
   const chip = planChip(plan)
+  const initials = initialsFrom(user)
 
   return (
     <aside
       className={cn(
-        'fixed top-4 left-4 bottom-4 z-30 flex flex-col rounded-[26px] bg-[#0d0d0d] transition-[width,transform] duration-300 ease-in-out',
+        'fixed z-30 flex flex-col bg-[#0d0d0d] transition-[width,transform,padding] duration-200 ease-out',
+        'top-4 bottom-4 left-4 rounded-[26px]',
         open ? 'translate-x-0' : '-translate-x-[calc(100%+16px)] md:translate-x-0',
-        isCollapsed ? 'w-[250px] md:w-[84px]' : 'w-[250px] md:w-[250px]'
+        isCollapsed
+          ? 'w-[250px] px-[14px] py-[26px] md:w-[84px]'
+          : 'w-[250px] px-[18px] py-[26px]'
       )}
-      style={{ fontFamily: 'var(--font-sidebar), var(--font-inter), sans-serif' }}
+      style={{ fontFamily: 'var(--font-sidebar), sans-serif' }}
     >
-      {/* ── Logo row ── */}
-      <div className={cn(
-        'flex h-[52px] shrink-0 items-center justify-between px-4',
-        isCollapsed ? 'md:justify-center md:px-3' : ''
-      )}>
+      {/* Logo + collapse */}
+      <div
+        className={cn(
+          'mb-[30px] flex items-center gap-2 px-1.5',
+          isCollapsed ? 'md:flex-col md:justify-center' : 'justify-between'
+        )}
+      >
         <SiteLogo
-          className={cn(
-            'text-[14px] font-semibold tracking-tight text-white transition-all duration-200',
-            isCollapsed ? 'md:hidden' : ''
+          href="/dashboard"
+          onClick={onClose}
+          variant="onDark"
+          wordmark="Beacon"
+          wordmarkClassName={cn(
+            'whitespace-nowrap text-[18px] font-bold tracking-[-0.01em] text-white',
+            isCollapsed && 'md:hidden'
           )}
         />
+
         {onToggleCollapse && (
           <button
             type="button"
             onClick={onToggleCollapse}
             className={cn(
-              'flex items-center justify-center rounded-lg p-1.5 text-white/50 hover:bg-white/10 hover:text-white transition-all duration-150 focus:outline-none',
-              isCollapsed ? 'md:mt-0' : 'hidden md:flex'
+              'flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-[7px] bg-white/[0.06] text-white/70 transition-colors hover:bg-white/10 hover:text-white focus:outline-none',
+              isCollapsed ? 'md:mt-2.5' : 'hidden md:flex'
             )}
             aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
-            {isCollapsed
-              ? <ChevronRight className="h-3.5 w-3.5" />
-              : <ChevronLeft className="h-3.5 w-3.5" />
-            }
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              className={cn('transition-transform duration-200', isCollapsed ? '' : 'rotate-180')}
+            >
+              <path
+                d="M9 6l6 6-6 6"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </button>
         )}
       </div>
 
-      {/* ── Nav items (flat, no sections) ── */}
-      <nav className={cn(
-        'flex flex-1 flex-col overflow-y-auto py-2 transition-all duration-200',
-        isCollapsed ? 'px-3.5 gap-1' : 'px-3.5 gap-1'
-      )}>
+      {/* Nav */}
+      <nav className="flex flex-1 flex-col gap-1 overflow-y-auto">
         {NAV_ITEMS.map(({ label: itemLabel, href, icon: Icon }) => {
-          const active = pathname === href || pathname.startsWith(href + '/')
+          const active = pathname === href || pathname.startsWith(`${href}/`)
 
           return (
             <Link
@@ -115,22 +139,21 @@ export function NavSidebar({
               onClick={onClose}
               title={isCollapsed ? itemLabel : undefined}
               className={cn(
-                'group flex items-center gap-3 rounded-2xl py-[11px] text-[13.5px] font-medium transition-all duration-150',
+                'beacon-nav-row group flex items-center gap-3 rounded-[14px] py-[11px] text-[13.5px] transition-colors duration-150',
                 active
-                  ? 'bg-white text-[#0d0d0d] font-semibold'
-                  : 'text-white/75 hover:bg-white/8 hover:text-white',
+                  ? 'bg-white font-semibold text-[#0d0d0d]'
+                  : 'font-medium text-white/75 hover:bg-white/[0.08] hover:text-white',
                 isCollapsed ? 'md:justify-center md:px-0' : 'px-3.5'
               )}
             >
-              <Icon className={cn(
-                'h-[17px] w-[17px] shrink-0 transition-colors',
-                active ? 'text-[#0d0d0d]' : 'text-white/55 group-hover:text-white'
-              )}
+              <Icon
+                className={cn(
+                  'h-[17px] w-[17px] shrink-0',
+                  active ? 'text-[#0d0d0d]' : 'text-white/55 group-hover:text-white'
+                )}
+                strokeWidth={active ? 2.2 : 2.1}
               />
-              <span className={cn(
-                'flex-1 whitespace-nowrap transition-all duration-200',
-                isCollapsed ? 'md:hidden' : ''
-              )}>
+              <span className={cn('whitespace-nowrap', isCollapsed ? 'md:hidden' : '')}>
                 {itemLabel}
               </span>
             </Link>
@@ -138,67 +161,37 @@ export function NavSidebar({
         })}
       </nav>
 
-      {/* ── Quick search ── */}
-      {!isCollapsed && (
-        <div className="px-3.5 pb-3.5">
-          <button
-            type="button"
-            onClick={() => {
-              window.dispatchEvent(new CustomEvent('toggle-command-palette'))
-              onClose()
-            }}
-            className="flex w-full items-center gap-2.5 rounded-2xl border border-white/[0.14] bg-white/[0.04] px-3.5 py-[11px] hover:bg-white/[0.08] transition-all cursor-pointer text-left focus:outline-none group"
-          >
-            <Command className="h-3.5 w-3.5 shrink-0 text-white/50" />
-            <span className="flex-1 text-[12.5px] text-white/45">Quick search</span>
-            <span className="rounded-[5px] border border-white/[0.18] px-1.5 py-0.5 text-[10.5px] text-white/35">
-              ⌘K
-            </span>
-          </button>
-        </div>
-      )}
-
-      <div className="mx-3.5 h-px bg-white/10" />
-
-      {/* ── Help + Feedback ── */}
-      <div className={cn(
-        'px-3.5 py-2 flex flex-col gap-0.5',
-        isCollapsed ? 'md:px-3' : ''
-      )}>
+      {/* Bottom: search + profile */}
+      <div className="mt-auto flex flex-col gap-3.5">
         <button
           type="button"
-          onClick={() => setFeedbackOpen(true)}
-          title={isCollapsed ? 'Share Feedback' : undefined}
+          onClick={() => {
+            window.dispatchEvent(new CustomEvent('toggle-command-palette'))
+            onClose()
+          }}
+          title={isCollapsed ? 'Quick search' : undefined}
           className={cn(
-            'flex items-center gap-2.5 rounded-xl py-2 text-[12px] font-medium text-white/50 hover:bg-white/8 hover:text-white transition-all duration-150',
-            isCollapsed ? 'md:justify-center md:px-0' : 'px-2.5'
+            'flex items-center gap-2.5 rounded-[14px] border border-white/[0.14] bg-white/[0.04] py-[11px] text-left transition-colors hover:bg-white/[0.08] focus:outline-none',
+            isCollapsed ? 'md:justify-center md:px-0' : 'px-[13px]'
           )}
         >
-          <MessageSquarePlus className="h-[14px] w-[14px] shrink-0" />
-          <span className={cn('transition-all duration-200', isCollapsed ? 'md:hidden' : '')}>
-            Share Feedback
+          <Command className="h-[15px] w-[15px] shrink-0 text-white/50" strokeWidth={2} />
+          <span className={cn('flex-1 text-[12.5px] text-white/45', isCollapsed ? 'md:hidden' : '')}>
+            Quick search
+          </span>
+          <span
+            className={cn(
+              'rounded-[5px] border border-white/[0.18] px-1.5 py-px text-[10.5px] text-white/35',
+              isCollapsed ? 'md:hidden' : ''
+            )}
+          >
+            ⌘K
           </span>
         </button>
-        <a
-          href="mailto:aryanpachori03@gmail.com"
-          title={isCollapsed ? 'Help & Support' : undefined}
-          className={cn(
-            'flex items-center gap-2.5 rounded-xl py-2 text-[12px] font-medium text-white/50 hover:bg-white/8 hover:text-white transition-all duration-150',
-            isCollapsed ? 'md:justify-center md:px-0' : 'px-2.5'
-          )}
-        >
-          <HelpCircle className="h-[14px] w-[14px] shrink-0" />
-          <span className={cn('transition-all duration-200', isCollapsed ? 'md:hidden' : '')}>
-            Help &amp; Support
-          </span>
-        </a>
-      </div>
-      <FeedbackModal open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
 
-      {/* ── Profile ── */}
-      <div className={cn('p-3.5 pt-1.5', isCollapsed ? 'md:px-3' : '')}>
-        <div ref={profileRef} className="relative w-full">
-          {/* Profile popover */}
+        <div className="h-px bg-white/10" />
+
+        <div ref={profileRef} className="relative">
           <AnimatePresence>
             {profileOpen && (
               <motion.div
@@ -207,46 +200,59 @@ export function NavSidebar({
                 exit={{ opacity: 0, y: 6, scale: 0.97 }}
                 transition={{ duration: 0.14, ease: [0.22, 1, 0.36, 1] }}
                 className={cn(
-                  'absolute bottom-16 left-0 z-50 flex flex-col rounded-2xl border border-dl-border bg-dl-bg shadow-2xl overflow-hidden',
-                  isCollapsed ? 'md:left-full md:ml-2 md:bottom-0 w-52' : 'w-full'
+                  'absolute bottom-14 left-0 z-50 flex w-full flex-col overflow-hidden rounded-2xl border border-[#e4e4e4] bg-white shadow-2xl',
+                  isCollapsed ? 'md:bottom-0 md:left-full md:ml-2 md:w-52' : ''
                 )}
               >
-                {/* Profile header */}
-                <div className="px-4 py-3 bg-dl-chip-bg border-b border-dl-border">
+                <div className="border-b border-[#e4e4e4] bg-[#f5f5f5] px-4 py-3">
                   <div className="flex items-center gap-3">
                     <Image
                       src={avatarUrl(user?.fullName ?? '', user?.email ?? '')}
                       alt="Avatar"
                       width={36}
                       height={36}
-                      className="h-9 w-9 shrink-0 rounded-full shadow-sm"
+                      className="h-9 w-9 shrink-0 rounded-full"
                       unoptimized
                     />
                     <div className="min-w-0">
-                      <p className="truncate text-[13px] font-semibold text-dl-navy">
+                      <p className="truncate text-[13px] font-semibold text-[#111]">
                         {user?.fullName ?? user?.nickname ?? 'User'}
                       </p>
-                      <p className="truncate text-[11px] text-dl-muted">{user?.email}</p>
+                      <p className="truncate text-[11px] text-[#8a8a8a]">{user?.email}</p>
                     </div>
                   </div>
-                  <span className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-dl-blue px-2.5 py-1 text-[10px] font-semibold text-white">
+                  <span className="mt-2.5 inline-flex items-center rounded-full bg-[#111] px-2.5 py-1 text-[10px] font-semibold text-white">
                     {chip.label} Plan
                   </span>
                 </div>
-                {/* Actions */}
                 <div className="p-1.5">
                   <Link
                     href="/profile"
-                    onClick={() => { setProfileOpen(false); onClose() }}
-                    className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-[12px] font-medium text-dl-text hover:bg-dl-chip-bg transition-colors"
+                    onClick={() => {
+                      setProfileOpen(false)
+                      onClose()
+                    }}
+                    className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-[12px] font-medium text-[#111] hover:bg-[#f5f5f5]"
                   >
                     <User className="h-3.5 w-3.5" />
                     Profile settings
                   </Link>
                   <button
                     type="button"
-                    onClick={() => { setProfileOpen(false); onClose(); signOut() }}
-                    className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-[12px] font-medium text-dl-text hover:bg-dl-chip-bg transition-colors"
+                    onClick={() => setFeedbackOpen(true)}
+                    className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-[12px] font-medium text-[#111] hover:bg-[#f5f5f5]"
+                  >
+                    <MessageSquarePlus className="h-3.5 w-3.5" />
+                    Share feedback
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setProfileOpen(false)
+                      onClose()
+                      signOut()
+                    }}
+                    className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-[12px] font-medium text-[#111] hover:bg-[#f5f5f5]"
                   >
                     <LogOut className="h-3.5 w-3.5" />
                     Sign out
@@ -256,37 +262,28 @@ export function NavSidebar({
             )}
           </AnimatePresence>
 
-          {/* Profile trigger button */}
           <button
             type="button"
-            onClick={() => setProfileOpen(p => !p)}
+            onClick={() => setProfileOpen((p) => !p)}
             className={cn(
-              'flex w-full items-center gap-2.5 rounded-2xl p-1.5 text-left transition-all duration-150 hover:bg-white/8 focus:outline-none',
+              'flex w-full items-center gap-2.5 rounded-[14px] px-1.5 py-1.5 text-left transition-colors hover:bg-white/[0.08] focus:outline-none',
               isCollapsed ? 'md:justify-center' : ''
             )}
           >
-            <Image
-              src={avatarUrl(user?.fullName ?? '', user?.email ?? '')}
-              alt="Avatar"
-              width={30}
-              height={30}
-              className="h-[30px] w-[30px] shrink-0 rounded-full"
-              unoptimized
-            />
-            <div className={cn('flex-1 min-w-0', isCollapsed ? 'md:hidden' : '')}>
-              <p className="truncate text-[12.5px] font-semibold text-white">
+            <span className="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full bg-white text-[13px] font-bold text-[#0d0d0d]">
+              {initials}
+            </span>
+            <div className={cn('min-w-0 flex-1', isCollapsed ? 'md:hidden' : '')}>
+              <p className="truncate text-[13.5px] font-semibold text-white">
                 {user?.nickname ?? user?.fullName ?? user?.email ?? '…'}
               </p>
-              <p className="truncate text-[11px] text-white/40">{user?.email}</p>
+              <p className="max-w-[145px] truncate text-[11px] text-white/40">{user?.email}</p>
             </div>
-            <ChevronRight className={cn(
-              'h-3.5 w-3.5 text-white/40 transition-transform duration-150',
-              profileOpen ? 'rotate-90' : '',
-              isCollapsed ? 'md:hidden' : ''
-            )} />
           </button>
         </div>
       </div>
+
+      <FeedbackModal open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
     </aside>
   )
 }

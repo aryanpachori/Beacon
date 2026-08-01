@@ -200,7 +200,7 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
                   A live key would be committed to the repo. Read it from the environment instead.
                 </p>
                 <div className="flex gap-2">
-                  <span className="bl-on-orange rounded-[7px] bg-[#08090a] px-3 py-[7px] text-[12.5px] font-medium text-[#f2f0ed]">
+                  <span className="rounded-[7px] bg-[#08090a] px-3 py-[7px] text-[12.5px] font-medium text-[#f2f0ed]">
                     Accept fix
                   </span>
                   <span className="rounded-[7px] border border-black/[0.13] px-3 py-[7px] text-[12.5px] text-[rgba(8,9,10,.7)]">

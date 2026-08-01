@@ -82,8 +82,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         {/* Logo */}
         <div className="relative z-10">
           <SiteLogo
-            className="text-[18px] font-bold tracking-tight text-dl-navy"
-            iconClassName="rounded-lg bg-dl-blue-pale"
+            variant="onDark"
+            wordmarkClassName="text-[18px] font-bold tracking-tight text-dl-navy"
           />
           <p className="mt-3 text-sm leading-relaxed text-dl-muted">
             Your AI Security Engineer — reviewing code as it&apos;s written.
@@ -154,7 +154,10 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="flex flex-1 flex-col">
         {/* Header: mobile logo + theme toggle (desktop too) */}
         <header className="flex h-[60px] items-center justify-between border-b border-dl-border px-6">
-          <SiteLogo className="text-[16px] font-bold text-dl-navy lg:hidden" />
+          <SiteLogo
+            className="lg:hidden"
+            wordmarkClassName="text-[16px] font-bold text-dl-navy"
+          />
           <span className="hidden lg:block" />
           <button
             type="button"

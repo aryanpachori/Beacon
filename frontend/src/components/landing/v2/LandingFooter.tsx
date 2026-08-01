@@ -1,14 +1,14 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
+import { SiteLogo } from '@/components/layout/SiteLogo'
 
 const COLUMNS = [
   {
     title: 'Product',
     links: [
-      { label: 'How it works', href: '#how' },
-      { label: 'Features', href: '#features' },
+      { label: 'How it works', href: '/#how' },
+      { label: 'Features', href: '/#features' },
       { label: 'Pricing', href: '/pricing' },
     ],
   },
@@ -28,15 +28,12 @@ export function LandingFooter() {
     <footer className="overflow-hidden border-t border-white/10 bg-black pt-[74px] text-[#f8f8f8]">
       <div className="mx-auto grid max-w-[1280px] gap-10 px-5 pb-0 md:grid-cols-2 md:px-10 lg:grid-cols-[1fr_auto_auto] lg:gap-14">
         <div>
-          <div className="mb-[26px] flex items-center gap-2.5">
-            <Image
-              src="/beacon-mark.png"
-              alt=""
-              width={24}
-              height={24}
-              className="h-6 w-6 shrink-0 object-contain"
+          <div className="mb-[26px]">
+            <SiteLogo
+              variant="onDark"
+              size={40}
+              wordmarkClassName="text-[22px] font-semibold tracking-[-0.025em] text-[#f8f8f8]"
             />
-            <span className="text-[20px] font-semibold tracking-[-0.025em] text-[#f8f8f8]">beacon</span>
           </div>
           <p className="m-0 text-[14px] text-[rgba(248,248,248,.55)]">
             © 2026 Beacon. All rights reserved.

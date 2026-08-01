@@ -82,18 +82,22 @@ export default function PricingPage() {
 
           <section className="mb-6 grid border-2 border-[#08090a] lg:grid-cols-2 lg:items-stretch">
             <div className="flex flex-col border-b-2 border-[#08090a] p-8 md:p-12 lg:border-b-0 lg:border-r-2">
-              <p className="mb-8 min-h-[18px] text-[13px] font-bold uppercase tracking-[.06em] text-[rgba(8,9,10,.5)]">
-                01 · Core
-              </p>
-              <div className="mb-2 flex min-h-[88px] items-end md:min-h-[104px]">
-                <span className="text-[72px] font-bold leading-none tracking-[-.04em] md:text-[104px]">$29</span>
+              <div className="mb-8 flex h-[30px] items-center">
+                <p className="text-[13px] font-bold uppercase tracking-[.06em] text-[rgba(8,9,10,.5)]">
+                  01 · Core
+                </p>
               </div>
-              <p className="bl-mono mb-10 min-h-[23px] text-[15px] font-semibold leading-none text-[rgba(8,9,10,.4)]">
+              <div className="mb-2 flex h-[72px] items-end md:h-[104px]">
+                <span className="text-[72px] font-bold leading-none tracking-[-.04em] md:text-[104px]">
+                  $29
+                </span>
+              </div>
+              <p className="bl-mono mb-10 h-[15px] text-[15px] font-semibold leading-none text-[rgba(8,9,10,.4)]">
                 per seat / month
               </p>
               <Link
                 href="/register"
-                className="mb-12 flex h-[62px] items-center justify-center bg-[#08090a] px-6 text-center text-[17px] font-bold leading-none text-[#f2f0ed] hover:opacity-90"
+                className="mb-12 box-border flex h-[52px] shrink-0 items-center justify-center bg-[#08090a] px-6 text-center text-[17px] font-bold leading-none text-[#f2f0ed] hover:opacity-90"
               >
                 Start with Core →
               </Link>
@@ -108,23 +112,25 @@ export default function PricingPage() {
             </div>
 
             <div className="relative flex flex-col bg-[#08090a] p-8 md:p-12">
-              <div className="absolute right-8 top-8 bg-[#f2f0ed] px-[14px] py-[6px] text-[12px] font-bold uppercase tracking-[.04em] text-[#08090a] md:right-12 md:top-7">
-                Most requested
+              <div className="mb-8 flex h-[30px] items-center justify-between gap-3">
+                <p className="text-[13px] font-bold uppercase tracking-[.06em] text-[rgba(242,240,237,.6)]">
+                  02 · Enterprise
+                </p>
+                <span className="shrink-0 bg-[#f2f0ed] px-[14px] py-[6px] text-[12px] font-bold uppercase tracking-[.04em] text-[#08090a]">
+                  Most requested
+                </span>
               </div>
-              <p className="mb-8 mt-7 min-h-[18px] text-[13px] font-bold uppercase tracking-[.06em] text-[rgba(242,240,237,.6)]">
-                02 · Enterprise
-              </p>
-              <div className="mb-2 flex min-h-[88px] items-end md:min-h-[104px]">
+              <div className="mb-2 flex h-[72px] items-end md:h-[104px]">
                 <span className="text-[72px] font-bold leading-none tracking-[-.04em] text-[#f2f0ed] md:text-[104px]">
                   Custom
                 </span>
               </div>
-              <p className="mb-10 min-h-[23px] text-[15px] font-semibold leading-none text-[rgba(242,240,237,.55)]">
+              <p className="bl-mono mb-10 h-[15px] text-[15px] font-semibold leading-none text-[rgba(242,240,237,.55)]">
                 volume-based terms
               </p>
               <a
                 href="mailto:hello@beaconapp.dev?subject=Beacon%20Enterprise%20Demo"
-                className="bl-on-black mb-12 flex h-[62px] items-center justify-center bg-[#f2f0ed] px-6 text-center text-[17px] font-bold leading-none text-[#08090a] hover:opacity-90"
+                className="pricing-btn-light mb-12 box-border flex h-[52px] shrink-0 items-center justify-center bg-[#f2f0ed] px-6 text-center text-[17px] font-bold leading-none hover:opacity-90"
               >
                 Request a demo →
               </a>
@@ -188,29 +194,29 @@ export default function PricingPage() {
             </div>
           </section>
 
-          <section className="bg-[#08090a] px-8 py-20 text-center md:px-16">
+          <section className="pricing-cta-panel bg-[#08090a] px-8 py-20 text-center text-[#f2f0ed] md:px-16">
             <h2 className="mb-6 text-[44px] font-bold leading-none tracking-[-.04em] text-[#f2f0ed] md:text-[68px]">
               Ready to ship securely?
             </h2>
-            <p className="mb-10 text-[18px] font-semibold text-[rgba(242,240,237,.7)]">
+            <p className="mb-10 text-[18px] font-semibold text-[rgba(242,240,237,.72)]">
               Start with Core, or talk to us about Enterprise.
             </p>
             <div className="mb-11 flex flex-wrap justify-center gap-4">
               <Link
                 href="/register"
-                className="px-8 py-[18px] text-[16px] font-bold text-[#08090a]"
+                className="pricing-btn-light px-8 py-[18px] text-[16px] font-bold"
                 style={{ background: '#f2f0ed' }}
               >
                 Start with Core
               </Link>
               <a
                 href="mailto:hello@beaconapp.dev?subject=Beacon%20Enterprise%20Demo"
-                className="border-2 border-[#f2f0ed] px-8 py-[18px] text-[16px] font-bold text-[#f2f0ed]"
+                className="pricing-btn-ghost border-2 border-[#f2f0ed] px-8 py-[18px] text-[16px] font-bold"
               >
                 Contact sales
               </a>
             </div>
-            <div className="bl-mono flex flex-wrap justify-center gap-[26px] text-[12.5px] font-semibold tracking-[.02em] text-[rgba(242,240,237,.55)]">
+            <div className="bl-mono flex flex-wrap justify-center gap-[26px] text-[12.5px] font-semibold tracking-[.02em] text-[rgba(242,240,237,.65)]">
               <span>End-to-end encryption</span>
               <span>·</span>
               <span>Zero data retention</span>

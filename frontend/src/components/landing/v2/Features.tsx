@@ -70,7 +70,7 @@ export function Features() {
               >
                 <span
                   className="bl-mono pt-[3px] text-[13px] transition-colors duration-300"
-                  style={{ color: on ? '#dc2f2f' : 'rgba(8,9,10,.35)' }}
+                  style={{ color: on ? '#08090a' : 'rgba(8,9,10,.35)' }}
                 >
                   {f.n}
                 </span>
@@ -92,16 +92,13 @@ export function Features() {
         </div>
 
         <div className="sticky top-8">
-          <div className="relative min-h-[300px] overflow-hidden rounded-[14px] border border-black/[0.09] bg-[#ffffff] px-[26px] pb-[26px] pt-7">
-            <span className="bl-mono pointer-events-none absolute right-4 top-0.5 select-none text-[96px] font-semibold leading-none text-white/[0.035]">
+          <div className="relative min-h-[300px] overflow-hidden rounded-[14px] border border-black/[0.09] bg-white px-[26px] pb-[26px] pt-7">
+            <span className="bl-feat-ghost bl-mono pointer-events-none absolute right-4 top-0.5 select-none text-[96px] font-semibold leading-none text-[rgba(8,9,10,.035)]">
               {active.n}
             </span>
             <div className="relative mb-5 flex items-center gap-2">
-              <span
-                className="bl-orb-core h-1.5 w-1.5 rounded-full bg-[#dc2f2f]"
-                style={{ boxShadow: '0 0 10px rgba(220,47,47,.8)', animationDuration: '2s' }}
-              />
-              <span className="bl-mono text-[11px] uppercase tracking-[0.08em] text-[#dc2f2f]">
+              <span className="bl-orb-core h-1.5 w-1.5 rounded-full bg-[#08090a]" />
+              <span className="bl-mono text-[11px] uppercase tracking-[0.08em] text-[#08090a]">
                 {active.tag}
               </span>
             </div>
