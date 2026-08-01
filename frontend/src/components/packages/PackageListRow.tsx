@@ -13,17 +13,13 @@ import { cn } from '@/lib/utils'
 
 /* ── SPS color util ──────────────────────────────────────────────────── */
 function spsColor(sps: number): string {
-  if (sps >= 75) return '#16a34a'
-  if (sps >= 60) return '#ff6600'
-  if (sps >= 40) return '#ca8a04'
-  return '#dc2626'
+  if (sps >= 40) return '#f8f8f8'
+  return '#dc2f2f'
 }
 
 function spsBg(sps: number): string {
-  if (sps >= 75) return 'rgba(22, 163, 74, 0.15)'
-  if (sps >= 60) return 'rgba(79,97,40, 0.15)'
-  if (sps >= 40) return 'rgba(202, 138, 4, 0.15)'
-  return 'rgba(220, 38, 38, 0.15)'
+  if (sps >= 40) return 'rgba(255, 255, 255, 0.06)'
+  return 'rgba(220, 47, 47, 0.15)'
 }
 
 /* ── Signal mini-bars ────────────────────────────────────────────────── */
@@ -42,10 +38,8 @@ const SIGNAL_LABELS: Record<string, string> = {
 }
 
 function signalBarColor(value: number): string {
-  if (value >= 70) return '#16a34a'
-  if (value >= 50) return '#ff6600'
-  if (value >= 35) return '#ca8a04'
-  return '#dc2626'
+  if (value >= 35) return '#a3a3a3'
+  return '#dc2f2f'
 }
 
 function SignalMiniBar({ pkg }: { pkg: Package }) {

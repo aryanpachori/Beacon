@@ -26,7 +26,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex min-h-screen bg-dl-surface">
+    <div className="flex min-h-screen bg-dl-bg">
       {sidebarOpen && (
         <button
           type="button"

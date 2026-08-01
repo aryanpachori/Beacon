@@ -85,7 +85,7 @@ const ECO_COLORS: Record<string, string> = {
 /* Single accent (brand orange) reserved for genuine severity signal;
    everything else reads as neutral gray, per "keep it monotonous" direction. */
 const TIER_COLOR: Record<string, string> = {
-  critical: "#ff6600",
+  critical: "#8a8d99",
   at_risk: "#8a8d99",
   "at-risk": "#8a8d99",
   watch: "#a3a6b0",
@@ -309,8 +309,8 @@ export function InsightsDashboard() {
       label: "Needs attention",
       value: critical + atRisk,
       icon: AlertTriangle,
-      color: critical > 0 ? "var(--dl-blue)" : "var(--dl-muted)",
-      bg: critical > 0 ? "var(--dl-blue-pale)" : "var(--dl-surface)",
+      color: critical > 0 ? "var(--dl-navy)" : "var(--dl-muted)",
+      bg: "var(--dl-surface)",
       suffix: "",
     },
     {
@@ -403,7 +403,7 @@ export function InsightsDashboard() {
           title="Alert Activity"
           subtitle="Daily alerts fired over the past 14 days"
           badge={
-            <span className="rounded-full bg-red-500/10 px-2.5 py-1 text-[10px] font-bold text-red-500">
+            <span className="rounded-full bg-dl-surface px-2.5 py-1 text-[10px] font-bold text-dl-muted">
               14 days
             </span>
           }
@@ -418,8 +418,8 @@ export function InsightsDashboard() {
               >
                 <defs>
                   <linearGradient id="alertGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#dc2626" stopOpacity={0.15} />
-                    <stop offset="100%" stopColor="#dc2626" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#8a8d99" stopOpacity={0.15} />
+                    <stop offset="100%" stopColor="#8a8d99" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid
@@ -441,13 +441,13 @@ export function InsightsDashboard() {
                 <Area
                   type="monotone"
                   dataKey="count"
-                  stroke="#dc2626"
+                  stroke="#8a8d99"
                   strokeWidth={2}
                   fill="url(#alertGrad)"
                   dot={false}
                   activeDot={{
                     r: 4,
-                    fill: "#dc2626",
+                    fill: "#8a8d99",
                     strokeWidth: 2,
                     stroke: "var(--dl-bg)",
                   }}
@@ -485,18 +485,7 @@ export function InsightsDashboard() {
                   allowDecimals={false}
                 />
                 <Tooltip content={<ChartTooltip />} cursor={{ fill: "var(--dl-blue-pale)", fillOpacity: 0.5 }} />
-                <Bar dataKey="count" radius={[4, 4, 0, 0]}>
-                  {analytics?.spsHistogram.map((entry, i) => {
-                    const colors = [
-                      "#dc2626",
-                      "#ea580c",
-                      "#ca8a04",
-                      "#ff6600",
-                      "#16a34a",
-                    ];
-                    return <Cell key={i} fill={colors[i]} fillOpacity={0.85} />;
-                  })}
-                </Bar>
+                <Bar dataKey="count" radius={[4, 4, 0, 0]} fill="#8a8d99" fillOpacity={0.85} />
               </BarChart>
             </ResponsiveContainer>
           )}
@@ -527,8 +516,8 @@ export function InsightsDashboard() {
                 />
                 <Radar
                   dataKey="avg"
-                  stroke="var(--dl-blue)"
-                  fill="var(--dl-blue)"
+                  stroke="var(--dl-muted)"
+                  fill="var(--dl-muted)"
                   fillOpacity={0.15}
                   strokeWidth={2}
                 />
@@ -602,10 +591,10 @@ export function InsightsDashboard() {
                   const pct = total > 0 ? Math.round((count / total) * 100) : 0;
                   const colors: Record<string, { text: string; bar: string }> =
                     {
-                      tier_change: { text: "#dc2626", bar: "#dc2626" },
-                      threshold: { text: "#ea580c", bar: "#ea580c" },
-                      recovery: { text: "#16a34a", bar: "#16a34a" },
-                      supply_chain: { text: "#ca8a04", bar: "#ca8a04" },
+                      tier_change: { text: "#4a4d55", bar: "#4a4d55" },
+                      threshold: { text: "#71747f", bar: "#71747f" },
+                      recovery: { text: "#9a9da8", bar: "#9a9da8" },
+                      supply_chain: { text: "#c2c4cb", bar: "#c2c4cb" },
                     };
                   const c = colors[type] ?? {
                     text: "var(--dl-muted)",

@@ -29,7 +29,6 @@ const NAV_ITEMS = [
   { label: 'Overview',            href: '/dashboard',          icon: LayoutDashboard },
   { label: 'Agent Activity',      href: '/agent-activity',     icon: Radar },
   { label: 'Dependency Tracker',  href: '/dependency-tracker', icon: Package },
-  { label: 'Code review',         href: '/security',           icon: ScanLine, soon: true },
   { label: 'Billing',             href: '/billing',             icon: CreditCard },
 ]
 
@@ -83,7 +82,7 @@ export function NavSidebar({
             'text-[13.5px] font-semibold tracking-tight text-dl-navy transition-all duration-200',
             isCollapsed ? 'md:hidden' : ''
           )}
-          iconClassName="rounded-md bg-[#ff6600]/10"
+          iconClassName="rounded-md bg-[#ff894c]/10"
         />
         {onToggleCollapse && (
           <button
@@ -108,27 +107,26 @@ export function NavSidebar({
         'flex flex-1 flex-col overflow-y-auto py-3 transition-all duration-200',
         isCollapsed ? 'px-2 md:px-2 gap-1' : 'px-2.5 gap-0.5'
       )}>
-        {NAV_ITEMS.map(({ label: itemLabel, href, icon: Icon, soon }) => {
+        {NAV_ITEMS.map(({ label: itemLabel, href, icon: Icon }) => {
           const active = pathname === href || pathname.startsWith(href + '/')
 
           return (
             <Link
               key={href}
-              href={soon ? '/dashboard' : href}
-              onClick={!soon ? onClose : undefined}
+              href={href}
+              onClick={onClose}
               title={isCollapsed ? itemLabel : undefined}
               className={cn(
                 'group relative flex items-center gap-2 rounded-lg py-[7px] text-[12.5px] font-medium transition-all duration-150',
                 active
                   ? 'bg-dl-blue-pale/70 text-dl-blue'
                   : 'text-dl-text/75 hover:bg-dl-surface hover:text-dl-navy',
-                isCollapsed ? 'md:justify-center md:px-0 md:py-2' : 'px-2',
-                soon ? 'cursor-not-allowed' : ''
+                isCollapsed ? 'md:justify-center md:px-0 md:py-2' : 'px-2'
               )}
             >
               {/* Active left bar */}
               {active && !isCollapsed && (
-                <span className="absolute left-0 top-1/2 h-3.5 w-[2px] -translate-y-1/2 rounded-r bg-[#ff6600]" />
+                <span className="absolute left-0 top-1/2 h-3.5 w-[2px] -translate-y-1/2 rounded-r bg-[#ff894c]" />
               )}
 
               {/* Icon */}
@@ -147,13 +145,6 @@ export function NavSidebar({
               )}>
                 {itemLabel}
               </span>
-
-              {/* Soon badge */}
-              {soon && !isCollapsed && (
-                <span className="rounded-md bg-dl-surface px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-dl-muted">
-                  Soon
-                </span>
-              )}
             </Link>
           )
         })}

@@ -1,10 +1,10 @@
 'use client'
 
-import { Package as PackageIcon } from 'lucide-react'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 import { useAppData } from '@/context/AppDataContext'
-import { HealthOverviewBar } from '@/components/dashboard/HealthOverviewBar'
-import { InsightsDashboard } from '@/components/dashboard/InsightsDashboard'
 import { OverviewIntegrations } from '@/components/dashboard/OverviewIntegrations'
+import { AgentActivityHeatmap } from '@/components/dashboard/AgentActivityHeatmap'
 
 function getGreeting() {
   const hour = new Date().getHours()
@@ -20,7 +20,7 @@ function planLabel(plan: string) {
 }
 
 function planColor(plan: string) {
-  if (plan === 'pro') return { bg: 'rgba(255,102,0,0.14)', text: '#ff8533', dot: '#ff6600' }
+  if (plan === 'pro') return { bg: 'rgba(255,137,76,0.14)', text: '#ffa06b', dot: '#ff894c' }
   if (plan === 'team') return { bg: 'rgba(169,128,90,0.18)', text: '#C9A47C', dot: '#A9805A' }
   return { bg: 'rgba(255,255,255,0.1)', text: 'rgba(255,255,255,0.7)', dot: 'rgba(255,255,255,0.5)' }
 }
@@ -88,33 +88,27 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {packages.length === 0 ? (
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_320px]">
-          <div className="dash-card flex flex-col items-center justify-center px-6 py-16 text-center">
-            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-dl-blue-pale">
-              <PackageIcon className="h-7 w-7 text-dl-blue" />
-            </div>
-            <p className="text-[15px] font-semibold text-dl-navy">No packages yet</p>
-            <p className="mt-2 max-w-md text-sm text-dl-muted">
-              Complete GitHub onboarding to let Beacon scan your repos. Health scores appear here
-              once signal collection and scoring finish — usually within a few minutes.
-            </p>
-          </div>
-          <OverviewIntegrations />
-        </div>
-      ) : (
-        <>
-          {/* ── Health overview (ring + trend + stats) ── */}
-          <div className="mb-6">
-            <HealthOverviewBar />
-          </div>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_320px]">
+        <AgentActivityHeatmap />
+        <OverviewIntegrations />
+      </div>
 
-          <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-[1fr_320px]">
-            {/* ── Full analytics dashboard ── */}
-            <InsightsDashboard />
-            <OverviewIntegrations />
+      {packages.length > 0 && (
+        <Link
+          href="/dependency-tracker"
+          className="dl-card mt-4 flex items-center justify-between transition-colors hover:border-dl-muted"
+        >
+          <div className="flex items-center gap-4 text-[12.5px] text-dl-text">
+            <span className="font-semibold text-dl-navy">{dashboard?.totalPackages ?? packages.length} packages</span>
+            <span className="text-dl-muted">·</span>
+            <span>{dashboard?.healthCounts?.critical ?? 0} critical</span>
+            <span className="text-dl-muted">·</span>
+            <span>{dashboard?.healthCounts?.atRisk ?? 0} at-risk</span>
           </div>
-        </>
+          <span className="flex items-center gap-1 text-[11px] font-medium text-dl-blue">
+            View Dependency Tracker <ArrowRight className="h-3 w-3" />
+          </span>
+        </Link>
       )}
     </div>
   )

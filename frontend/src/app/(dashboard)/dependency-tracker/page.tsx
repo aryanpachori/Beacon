@@ -128,7 +128,7 @@ export default function DependencyTrackerPage() {
         ) : repos.length === 0 ? (
           <LockedCard label="repo monitoring" />
         ) : (
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="flex flex-col gap-3">
             {repos.map((repo) => (
               <RepoCard key={repo.id} repo={repo} />
             ))}

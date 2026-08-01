@@ -31,26 +31,26 @@ const TIER_CONFIG: Record<
 > = {
   healthy: {
     label: 'Healthy',
-    color: '#16a34a',
-    bg: 'rgba(22,163,74,0.15)',
+    color: '#c2c4cb',
+    bg: 'var(--dl-surface)',
     barClass: 'tier-bar-fill-healthy',
   },
   watch: {
     label: 'Watch',
-    color: '#ca8a04',
-    bg: 'rgba(202,138,4,0.15)',
+    color: '#a3a6b0',
+    bg: 'var(--dl-surface)',
     barClass: 'tier-bar-fill-watch',
   },
   'at-risk': {
     label: 'At risk',
-    color: '#ea580c',
-    bg: 'rgba(234,88,12,0.15)',
+    color: '#71747f',
+    bg: 'var(--dl-surface)',
     barClass: 'tier-bar-fill-at-risk',
   },
   critical: {
     label: 'Critical',
-    color: '#dc2626',
-    bg: 'rgba(220,38,38,0.15)',
+    color: '#4a4d55',
+    bg: 'var(--dl-surface)',
     barClass: 'tier-bar-fill-critical',
   },
 }

@@ -3,89 +3,95 @@
 @tailwind utilities;
 
 /* ═══════════════════════════════════════════════════════
-   Beacon design tokens — Dark with orange accent
-   Matches the landing page: #08090a bg, #f2f0ed text,
-   #ff6600 accent. One cohesive brand across the platform.
+   Beacon design tokens — colorhunt.co/palette/363636dc2f2fff894cf8f8f8
+   Black background everywhere. #363636 cards. #F8F8F8 text.
+   #FF894C is the ONLY accent (CTAs, active nav, logo).
+   #DC2F2F is reserved exclusively for critical/danger severity.
    ═══════════════════════════════════════════════════════ */
 :root {
   color-scheme: dark;
 
-  --dl-blue:        #ff6600;
-  --dl-blue-light:  #ff8533;
-  --dl-blue-dark:   #e55c00;
-  --dl-blue-pale:   rgba(255, 102, 0, 0.12);
-  --dl-aurora:      #ff8533;
+  /* Single accent — CTAs, active nav, logo only. Never charts/icons/decoration. */
+  --dl-blue:        #ff894c;
+  --dl-blue-light:  #ffa06b;
+  --dl-blue-dark:   #e5713a;
+  --dl-blue-pale:   rgba(255, 137, 76, 0.12);
+  --dl-aurora:      #ff894c;
 
-  --dl-bg:      #08090a;
-  --dl-surface: #0e1012;
-  --dl-border:  rgba(255, 255, 255, 0.09);
-  --dl-muted:   rgba(242, 240, 237, 0.55);
-  --dl-text:    #f2f0ed;
-  --dl-navy:    #f2f0ed;
+  /* Strict grayscale surface system — black bg, one card tone */
+  --dl-bg:      #000000;
+  --dl-surface: #363636;
+  --dl-border:  #454545;
+  --dl-muted:   #a3a3a3;
+  --dl-text:    #f8f8f8;
+  --dl-navy:    #f8f8f8;
+  --dl-chip-bg: rgba(255, 255, 255, 0.06);
 
-  --dl-healthy:  #6fd39a;
-  --dl-watch:    #f0c060;
-  --dl-risk:     #f2965c;
-  --dl-critical: #f2705c;
-  --dl-danger:   #f2705c;
-  --dl-warning:  #f0c060;
-  --dl-success:  #6fd39a;
+  /* Severity — reserved exclusively for real finding/health status */
+  --dl-healthy:  #f8f8f8;
+  --dl-watch:    #a3a3a3;
+  --dl-risk:     #ff894c;
+  --dl-critical: #dc2f2f;
+  --dl-danger:   #dc2f2f;
+  --dl-warning:  #ff894c;
+  --dl-success:  #f8f8f8;
 
-  --dl-teal:        #ff6600;
-  --dl-page:        #08090a;
-  --dl-card:        #111315;
-  --dl-cream:       #0e1012;
-  --dl-nav:         #08090a;
-  --dl-forest:      rgba(242, 240, 237, 0.82);
-  --dl-hint:        rgba(242, 240, 237, 0.4);
-  --dl-sage:        rgba(242, 240, 237, 0.4);
+  --dl-teal:        #ff894c;
+  --dl-page:        #000000;
+  --dl-card:        #363636;
+  --dl-cream:       #363636;
+  --dl-nav:         #000000;
+  --dl-forest:      #f8f8f8;
+  --dl-hint:        #a3a3a3;
+  --dl-sage:        #a3a3a3;
   --dl-sage-light:  rgba(255, 255, 255, 0.06);
-  --dl-border-mid:  rgba(255, 255, 255, 0.09);
-  --dl-m-border:    rgba(255, 255, 255, 0.09);
-  --dl-m-text:      #f2f0ed;
-  --dl-m-muted:     rgba(242, 240, 237, 0.55);
-  --dl-m-healthy:   #6fd39a;
-  --dl-m-watch:     #f0c060;
-  --dl-m-risk:      #f2965c;
-  --dl-m-critical:  #f2705c;
-  --dl-chart-grid:  rgba(255, 255, 255, 0.05);
+  --dl-border-mid:  #454545;
+  --dl-m-border:    #454545;
+  --dl-m-text:      #f8f8f8;
+  --dl-m-muted:     #a3a3a3;
+  --dl-m-healthy:   #f8f8f8;
+  --dl-m-watch:     #a3a3a3;
+  --dl-m-risk:      #ff894c;
+  --dl-m-critical:  #dc2f2f;
+  --dl-chart-grid:  #262626;
 }
 
 /* Dark mode — identical to :root since the platform is now dark-first */
 .dark {
   color-scheme: dark;
-  --dl-bg:         #08090a;
-  --dl-surface:    #0e1012;
-  --dl-border:     rgba(255, 255, 255, 0.09);
-  --dl-muted:      rgba(242, 240, 237, 0.55);
-  --dl-text:       #f2f0ed;
-  --dl-chart-grid: rgba(255, 255, 255, 0.05);
-  --dl-navy:       #f2f0ed;
+  --dl-bg:         #000000;
+  --dl-surface:    #363636;
+  --dl-border:     #454545;
+  --dl-muted:      #a3a3a3;
+  --dl-text:       #f8f8f8;
+  --dl-chart-grid: #262626;
+  --dl-navy:       #f8f8f8;
+  --dl-chip-bg:    rgba(255, 255, 255, 0.06);
 
-  --dl-blue:       #ff6600;
-  --dl-blue-light: #ff8533;
-  --dl-blue-dark:  #e55c00;
-  --dl-blue-pale:  rgba(255, 102, 0, 0.12);
-  --dl-aurora:     #ff8533;
+  --dl-blue:       #ff894c;
+  --dl-blue-light: #ffa06b;
+  --dl-blue-dark:  #e5713a;
+  --dl-blue-pale:  rgba(255, 137, 76, 0.12);
+  --dl-aurora:     #ff894c;
 
-  --dl-page:       #08090a;
-  --dl-card:       #111315;
-  --dl-nav:        #08090a;
-  --dl-forest:     rgba(242, 240, 237, 0.82);
-  --dl-hint:       rgba(242, 240, 237, 0.4);
-  --dl-sage:       rgba(242, 240, 237, 0.4);
+  --dl-page:       #000000;
+  --dl-card:       #363636;
+  --dl-nav:        #000000;
+  --dl-forest:     #f8f8f8;
+  --dl-hint:       #a3a3a3;
+  --dl-sage:       #a3a3a3;
   --dl-sage-light: rgba(255, 255, 255, 0.06);
-  --dl-border-mid: rgba(255, 255, 255, 0.09);
-  --dl-m-border:   rgba(255, 255, 255, 0.09);
-  --dl-m-text:     #f2f0ed;
-  --dl-m-muted:    rgba(242, 240, 237, 0.55);
-  --dl-cream:      #0e1012;
-  --dl-teal:       #ff6600;
+  --dl-border-mid: #454545;
+  --dl-m-border:   #454545;
+  --dl-m-text:     #f8f8f8;
+  --dl-m-muted:    #a3a3a3;
+  --dl-cream:      #363636;
+  --dl-teal:       #ff894c;
 
-  --dl-healthy:  #6fd39a;
-  --dl-watch:    #f0c060;
-  --dl-risk:     #f2965c;
-  --dl-critical: #f2705c;
+  --dl-healthy:  #f8f8f8;
+  --dl-watch:    #a3a3a3;
+  --dl-risk:     #ff894c;
+  --dl-critical: #dc2f2f;
 }
 
 /* Site shell — inherits :root dark tokens, no overrides needed */
@@ -176,49 +182,36 @@ body {
 
   /* ── Cards ── */
   .dash-card {
-    background: var(--dl-bg);
+    background: var(--dl-surface);
     border: 1px solid var(--dl-border);
-    border-radius: 13px;
-    padding: 15px;
-    transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+    border-radius: 12px;
+    padding: 16px;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
   }
   .dash-card:hover {
-    box-shadow: 0 12px 32px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,102,0,0.12);
-    border-color: rgba(255,102,0,0.28);
-    transform: translateY(-1px);
+    border-color: #333338;
   }
 
   .dl-card {
-    @apply rounded-[13px] border border-dl-border bg-dl-bg p-4;
-    transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+    @apply rounded-xl border border-dl-border bg-dl-surface p-4;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
   }
   .dl-card:hover {
-    box-shadow: 0 12px 32px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,102,0,0.12);
-    border-color: rgba(255,102,0,0.28);
-    transform: translateY(-1px);
+    border-color: #333338;
   }
 
   /* Insight / stat card */
   .insight-card {
-    background: var(--dl-bg);
+    background: var(--dl-surface);
     border: 1px solid var(--dl-border);
     border-radius: 12px;
-    padding: 15px 16px;
-    transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    padding: 16px;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
     position: relative;
     overflow: hidden;
   }
-  .insight-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255,102,0,0.04) 0%, transparent 60%);
-    pointer-events: none;
-  }
   .insight-card:hover {
-    box-shadow: 0 8px 30px rgba(255,102,0,0.12), 0 2px 8px rgba(0,0,0,0.15);
-    border-color: rgba(255,102,0,0.35);
-    transform: translateY(-1px);
+    border-color: #333338;
   }
 
   /* ── Buttons ──
@@ -330,24 +323,24 @@ body {
     white-space: nowrap;
   }
   .tier-chip-healthy {
-    background: rgba(111,211,154,0.1);
-    color: #6fd39a;
-    border: 1px solid rgba(111,211,154,0.25);
+    background: rgba(255,255,255,0.06);
+    color: #f8f8f8;
+    border: 1px solid rgba(255,255,255,0.14);
   }
   .tier-chip-watch {
-    background: rgba(240,192,96,0.1);
-    color: #f0c060;
-    border: 1px solid rgba(240,192,96,0.25);
+    background: rgba(255,255,255,0.05);
+    color: #a3a3a3;
+    border: 1px solid rgba(255,255,255,0.1);
   }
   .tier-chip-risk {
-    background: rgba(242,150,92,0.1);
-    color: #f2965c;
-    border: 1px solid rgba(242,150,92,0.25);
+    background: rgba(255,137,76,0.1);
+    color: #ff894c;
+    border: 1px solid rgba(255,137,76,0.25);
   }
   .tier-chip-critical {
-    background: rgba(242,112,92,0.1);
-    color: #f2705c;
-    border: 1px solid rgba(242,112,92,0.25);
+    background: rgba(220,47,47,0.12);
+    color: #dc2f2f;
+    border: 1px solid rgba(220,47,47,0.3);
   }
 
   /* ── Progress bars ── */
@@ -374,15 +367,15 @@ body {
   }
 
   .dash-panel {
-    @apply overflow-hidden rounded-xl border border-dl-border bg-dl-bg shadow-sm;
+    @apply overflow-hidden rounded-xl border border-dl-border bg-dl-surface shadow-sm;
   }
 
   .dash-stat-card {
-    @apply rounded-xl border border-dl-border bg-dl-bg p-3 transition-shadow hover:shadow-md;
+    @apply rounded-xl border border-dl-border bg-dl-surface p-3 transition-colors hover:border-[#333338];
   }
 
   .chart-tooltip {
-    @apply rounded-xl border border-dl-border bg-dl-bg px-3 py-2 shadow-xl;
+    @apply rounded-xl border border-dl-border bg-dl-surface px-3 py-2 shadow-xl;
   }
 
   /* ── Typography helpers ── */
