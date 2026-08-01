@@ -35,10 +35,11 @@ const sourceSerif = Source_Serif_4({
 export const metadata: Metadata = {
   icons: {
     icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/beacon-mark.png', type: 'image/png', sizes: '1240x1240' },
+      // ?v= busts sticky browser/CDN favicon caches after logo updates
+      { url: '/favicon.ico?v=3', sizes: 'any' },
+      { url: '/beacon-mark.png?v=3', type: 'image/png', sizes: '1024x1024' },
     ],
-    apple: '/apple-touch-icon.png',
+    apple: [{ url: '/apple-touch-icon.png?v=3', sizes: '180x180', type: 'image/png' }],
   },
   title: 'Beacon — Security that ships at agent speed',
   description:
