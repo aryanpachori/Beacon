@@ -120,7 +120,7 @@ export function FeedbackModal({ open, onClose }: Props) {
                 <button
                   type="submit"
                   disabled={loading || !message.trim()}
-                  className="flex items-center justify-center gap-2 rounded-xl bg-dl-navy text-white dark:bg-dl-blue dark:text-[#0b0a08] py-2.5 text-[13px] font-semibold transition-all hover:opacity-90 disabled:opacity-50"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-dl-navy text-white dark:bg-dl-blue dark:text-[#f8f8f8] py-2.5 text-[13px] font-semibold transition-all hover:opacity-90 disabled:opacity-50"
                 >
                   <Send className="h-3.5 w-3.5" />
                   {loading ? 'Sending…' : 'Send feedback'}

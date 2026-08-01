@@ -101,7 +101,7 @@ export default function ReposPage() {
                 {repos.length > 0 && (
                   <button
                     type="button"
-                    className="mb-3 flex w-full items-center justify-center gap-2 rounded-xl border border-dl-blue bg-dl-blue-pale py-2.5 text-[13px] font-semibold text-dl-blue transition-colors hover:bg-dl-blue hover:text-[#0b0a08]"
+                    className="mb-3 flex w-full items-center justify-center gap-2 rounded-xl border border-dl-blue bg-dl-blue-pale py-2.5 text-[13px] font-semibold text-dl-blue transition-colors hover:bg-dl-blue hover:text-[#f8f8f8]"
                     onClick={handleSelectRepo}
                   >
                     Select a different repo to scan
@@ -110,7 +110,7 @@ export default function ReposPage() {
 
                 <button
                   type="button"
-                  className="flex w-full items-center justify-center gap-2.5 rounded-xl bg-dl-navy text-dl-bg dark:bg-dl-blue dark:text-[#0b0a08] py-3 text-[13px] font-semibold transition-all hover:opacity-90 disabled:opacity-60"
+                  className="flex w-full items-center justify-center gap-2.5 rounded-xl bg-dl-navy text-dl-bg dark:bg-dl-blue dark:text-[#f8f8f8] py-3 text-[13px] font-semibold transition-all hover:opacity-90 disabled:opacity-60"
                   disabled={installing}
                   onClick={handleInstallGithub}
                   style={{ boxShadow: '0 2px 8px rgba(30,42,60,0.25)' }}

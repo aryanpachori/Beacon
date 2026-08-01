@@ -110,7 +110,7 @@ export default function PackagesPage() {
           </div>
           <p className="text-[15px] font-semibold text-dl-navy">No packages monitored yet</p>
           <p className="mt-1.5 max-w-sm text-sm text-dl-muted">Connect a repository to start monitoring your dependencies.</p>
-          <Link href="/repos" className="mt-5 inline-flex items-center gap-2 rounded-xl bg-dl-blue px-5 py-2.5 text-[13px] font-semibold text-[#0b0a08] hover:bg-dl-blue-dark transition-colors">
+          <Link href="/repos" className="mt-5 inline-flex items-center gap-2 rounded-xl bg-dl-blue px-5 py-2.5 text-[13px] font-semibold text-[#f8f8f8] hover:bg-dl-blue-dark transition-colors">
             Connect a repository
           </Link>
         </div>
@@ -123,33 +123,33 @@ export default function PackagesPage() {
               <button onClick={() => setFilter('all')}
                 className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${
                   filter === 'all'
-                    ? 'bg-dl-navy text-dl-bg dark:bg-dl-blue dark:text-[#0b0a08] shadow-sm'
+                    ? 'bg-dl-navy text-dl-bg dark:bg-dl-blue dark:text-[#f8f8f8] shadow-sm'
                     : 'border border-dl-border bg-dl-bg text-dl-muted hover:text-dl-text'
                 }`}>
                 All
               </button>
               <button onClick={() => setFilter(filter === 'critical' ? 'all' : 'critical')}
-                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'critical' ? 'bg-red-500 text-[#0b0a08]' : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'}`}>
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'critical' ? 'bg-red-500 text-[#f8f8f8]' : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'}`}>
                 <span className="h-1.5 w-1.5 rounded-full bg-current" />
                 {tierCounts.critical} critical
               </button>
               {tierCounts['at-risk'] > 0 && (
                 <button onClick={() => setFilter(filter === 'at-risk' ? 'all' : 'at-risk')}
-                  className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'at-risk' ? 'bg-orange-500 text-[#0b0a08]' : 'bg-orange-500/10 text-orange-500 hover:bg-orange-500/20'}`}>
+                  className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'at-risk' ? 'bg-orange-500 text-[#f8f8f8]' : 'bg-orange-500/10 text-orange-500 hover:bg-orange-500/20'}`}>
                   <span className="h-1.5 w-1.5 rounded-full bg-current" />
                   {tierCounts['at-risk']} at-risk
                 </button>
               )}
               {tierCounts.watch > 0 && (
                 <button onClick={() => setFilter(filter === 'watch' ? 'all' : 'watch')}
-                  className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'watch' ? 'bg-yellow-500 text-[#0b0a08]' : 'bg-yellow-500/10 text-yellow-600 hover:bg-yellow-500/20'}`}>
+                  className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'watch' ? 'bg-yellow-500 text-[#f8f8f8]' : 'bg-yellow-500/10 text-yellow-600 hover:bg-yellow-500/20'}`}>
                   <span className="h-1.5 w-1.5 rounded-full bg-current" />
                   {tierCounts.watch} watch
                 </button>
               )}
               {tierCounts.healthy > 0 && (
                 <button onClick={() => setFilter(filter === 'healthy' ? 'all' : 'healthy')}
-                  className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'healthy' ? 'bg-green-500 text-[#0b0a08]' : 'bg-green-500/10 text-green-600 hover:bg-green-500/20'}`}>
+                  className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${filter === 'healthy' ? 'bg-green-500 text-[#f8f8f8]' : 'bg-green-500/10 text-green-600 hover:bg-green-500/20'}`}>
                   <span className="h-1.5 w-1.5 rounded-full bg-current" />
                   {tierCounts.healthy} healthy
                 </button>
@@ -189,11 +189,11 @@ export default function PackagesPage() {
               </div>
               <div className="flex overflow-hidden rounded-xl border border-dl-border">
                 <button onClick={() => setView('list')}
-                  className={`flex h-8 w-8 items-center justify-center transition-colors ${view === 'list' ? 'bg-dl-navy text-dl-bg dark:bg-dl-blue dark:text-[#0b0a08]' : 'bg-dl-bg text-dl-muted hover:bg-dl-surface'}`}>
+                  className={`flex h-8 w-8 items-center justify-center transition-colors ${view === 'list' ? 'bg-dl-navy text-dl-bg dark:bg-dl-blue dark:text-[#f8f8f8]' : 'bg-dl-bg text-dl-muted hover:bg-dl-surface'}`}>
                   <LayoutList className="h-3.5 w-3.5" />
                 </button>
                 <button onClick={() => setView('grid')}
-                  className={`flex h-8 w-8 items-center justify-center transition-colors ${view === 'grid' ? 'bg-dl-navy text-dl-bg dark:bg-dl-blue dark:text-[#0b0a08]' : 'bg-dl-bg text-dl-muted hover:bg-dl-surface'}`}>
+                  className={`flex h-8 w-8 items-center justify-center transition-colors ${view === 'grid' ? 'bg-dl-navy text-dl-bg dark:bg-dl-blue dark:text-[#f8f8f8]' : 'bg-dl-bg text-dl-muted hover:bg-dl-surface'}`}>
                   <LayoutGrid className="h-3.5 w-3.5" />
                 </button>
               </div>

@@ -56,7 +56,7 @@ export default function AgentActivityPage() {
                   className={cn(
                     'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-medium transition-colors',
                     agent === key
-                      ? 'bg-dl-blue text-[#0b0a08]'
+                      ? 'bg-dl-blue text-[#f8f8f8]'
                       : 'border border-dl-border text-dl-muted hover:border-[#333338] hover:text-dl-text'
                   )}
                 >

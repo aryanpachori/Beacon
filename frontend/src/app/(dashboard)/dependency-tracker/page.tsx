@@ -98,7 +98,7 @@ export default function DependencyTrackerPage() {
             className={cn(
               'flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-medium transition-all',
               tab === key
-                ? 'bg-dl-navy text-dl-bg dark:bg-dl-blue dark:text-[#0b0a08]'
+                ? 'bg-dl-navy text-dl-bg dark:bg-dl-blue dark:text-[#f8f8f8]'
                 : 'border border-dl-border text-dl-muted hover:border-dl-muted hover:text-dl-text'
             )}
           >

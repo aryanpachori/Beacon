@@ -4,24 +4,24 @@
 
 /* ═══════════════════════════════════════════════════════
    Beacon design tokens — colorhunt.co/palette/363636dc2f2fff894cf8f8f8
-   Black background everywhere. #363636 cards. #F8F8F8 text.
-   #FF894C is the ONLY accent (CTAs, active nav, logo).
-   #DC2F2F is reserved exclusively for critical/danger severity.
+   Black and white as the main theme. #363636 cards. #F8F8F8 text.
+   #DC2F2F (red) is the ONLY accent — hover states, CTAs, active nav,
+   logo, and specific bold/emphasis moments. No orange.
    ═══════════════════════════════════════════════════════ */
 :root {
   color-scheme: dark;
 
-  /* Single accent — CTAs, active nav, logo only. Never charts/icons/decoration. */
-  --dl-blue:        #ff894c;
-  --dl-blue-light:  #ffa06b;
-  --dl-blue-dark:   #e5713a;
-  --dl-blue-pale:   rgba(255, 137, 76, 0.12);
-  --dl-aurora:      #ff894c;
+  /* Single accent — hover/CTAs/active nav/logo/bold emphasis only. */
+  --dl-blue:        #dc2f2f;
+  --dl-blue-light:  #e55555;
+  --dl-blue-dark:   #b02323;
+  --dl-blue-pale:   rgba(220, 47, 47, 0.12);
+  --dl-aurora:      #dc2f2f;
 
   /* Strict grayscale surface system — black bg, one card tone */
   --dl-bg:      #000000;
-  --dl-surface: #363636;
-  --dl-border:  #454545;
+  --dl-surface: #0d0d0d;
+  --dl-border: #262626;
   --dl-muted:   #a3a3a3;
   --dl-text:    #f8f8f8;
   --dl-navy:    #f8f8f8;
@@ -30,28 +30,28 @@
   /* Severity — reserved exclusively for real finding/health status */
   --dl-healthy:  #f8f8f8;
   --dl-watch:    #a3a3a3;
-  --dl-risk:     #ff894c;
+  --dl-risk:     #dc2f2f;
   --dl-critical: #dc2f2f;
   --dl-danger:   #dc2f2f;
-  --dl-warning:  #ff894c;
+  --dl-warning:  #a3a3a3;
   --dl-success:  #f8f8f8;
 
-  --dl-teal:        #ff894c;
+  --dl-teal:        #dc2f2f;
   --dl-page:        #000000;
-  --dl-card:        #363636;
-  --dl-cream:       #363636;
+  --dl-card:        #0d0d0d;
+  --dl-cream:       #0d0d0d;
   --dl-nav:         #000000;
   --dl-forest:      #f8f8f8;
   --dl-hint:        #a3a3a3;
   --dl-sage:        #a3a3a3;
   --dl-sage-light:  rgba(255, 255, 255, 0.06);
-  --dl-border-mid:  #454545;
-  --dl-m-border:    #454545;
+  --dl-border-mid:  #262626;
+  --dl-m-border:    #262626;
   --dl-m-text:      #f8f8f8;
   --dl-m-muted:     #a3a3a3;
   --dl-m-healthy:   #f8f8f8;
   --dl-m-watch:     #a3a3a3;
-  --dl-m-risk:      #ff894c;
+  --dl-m-risk:      #dc2f2f;
   --dl-m-critical:  #dc2f2f;
   --dl-chart-grid:  #262626;
 }
@@ -60,37 +60,37 @@
 .dark {
   color-scheme: dark;
   --dl-bg:         #000000;
-  --dl-surface:    #363636;
-  --dl-border:     #454545;
+  --dl-surface: #0d0d0d;
+  --dl-border: #262626;
   --dl-muted:      #a3a3a3;
   --dl-text:       #f8f8f8;
   --dl-chart-grid: #262626;
   --dl-navy:       #f8f8f8;
   --dl-chip-bg:    rgba(255, 255, 255, 0.06);
 
-  --dl-blue:       #ff894c;
-  --dl-blue-light: #ffa06b;
-  --dl-blue-dark:  #e5713a;
-  --dl-blue-pale:  rgba(255, 137, 76, 0.12);
-  --dl-aurora:     #ff894c;
+  --dl-blue:       #dc2f2f;
+  --dl-blue-light: #e55555;
+  --dl-blue-dark:  #b02323;
+  --dl-blue-pale:  rgba(220, 47, 47, 0.12);
+  --dl-aurora:     #dc2f2f;
 
   --dl-page:       #000000;
-  --dl-card:       #363636;
+  --dl-card:       #0d0d0d;
   --dl-nav:        #000000;
   --dl-forest:     #f8f8f8;
   --dl-hint:       #a3a3a3;
   --dl-sage:       #a3a3a3;
   --dl-sage-light: rgba(255, 255, 255, 0.06);
-  --dl-border-mid: #454545;
-  --dl-m-border:   #454545;
+  --dl-border-mid: #262626;
+  --dl-m-border:   #262626;
   --dl-m-text:     #f8f8f8;
   --dl-m-muted:    #a3a3a3;
-  --dl-cream:      #363636;
-  --dl-teal:       #ff894c;
+  --dl-cream:      #0d0d0d;
+  --dl-teal:       #dc2f2f;
 
   --dl-healthy:  #f8f8f8;
   --dl-watch:    #a3a3a3;
-  --dl-risk:     #ff894c;
+  --dl-risk:     #dc2f2f;
   --dl-critical: #dc2f2f;
 }
 
@@ -218,7 +218,7 @@ body {
      Tactile: a soft top highlight + grounded shadow so buttons read as
      physical surfaces, not flat CSS rectangles. */
   .btn-primary {
-    @apply relative inline-flex items-center gap-2 rounded-[9px] border-none bg-dl-blue px-6 py-3 text-[13.5px] font-medium text-[#0b0a08] transition-all duration-200 ease-out;
+    @apply relative inline-flex items-center gap-2 rounded-[9px] border-none bg-dl-blue px-6 py-3 text-[13.5px] font-medium text-[#f8f8f8] transition-all duration-200 ease-out;
     box-shadow:
       inset 0 1px 0 rgba(255,255,255,0.12),
       0 1px 1px rgba(30,25,15,0.12),
@@ -248,8 +248,8 @@ body {
   .btn-ghost:hover { @apply border-dl-muted; transform: translateY(-1px); }
 
   .btn-dash-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-dl-blue px-4 py-2.5 text-sm font-semibold text-[#0b0a08] transition-all duration-150 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40;
-    box-shadow: 0 2px 12px rgba(255,102,0,0.25);
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-dl-blue px-4 py-2.5 text-sm font-semibold text-[#f8f8f8] transition-all duration-150 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40;
+    box-shadow: 0 2px 12px rgba(220,47,47,0.25);
   }
   .btn-dash-secondary {
     @apply inline-flex items-center justify-center gap-2 rounded-xl border border-dl-border bg-dl-bg px-4 py-2.5 text-sm font-medium text-dl-text transition-colors hover:bg-dl-surface hover:border-dl-muted;
@@ -263,7 +263,7 @@ body {
   }
   .form-input:focus {
     border-color: var(--dl-blue);
-    box-shadow: 0 0 0 3px rgba(255,102,0,0.15);
+    box-shadow: 0 0 0 3px rgba(220,47,47,0.15);
   }
 
   .dash-input {
@@ -279,7 +279,7 @@ body {
   .dash-input::placeholder { color: var(--dl-muted); }
   .dash-input:focus {
     border-color: var(--dl-blue);
-    box-shadow: 0 0 0 3px rgba(255,102,0,0.12);
+    box-shadow: 0 0 0 3px rgba(220,47,47,0.12);
   }
 
   /* ── Filter tabs ── */
@@ -297,19 +297,19 @@ body {
   .filter-tab:hover {
     background: var(--dl-blue-pale);
     color: var(--dl-blue);
-    border-color: rgba(255,102,0,0.25);
+    border-color: rgba(220,47,47,0.25);
   }
   .filter-tab-active {
     font-size: 13px;
     padding: 6px 14px;
     border-radius: 99px;
     background: var(--dl-blue);
-    color: #0b0a08;
+    color: #f8f8f8;
     border: 1px solid transparent;
     cursor: pointer;
     font-weight: 600;
     white-space: nowrap;
-    box-shadow: 0 2px 8px rgba(255,102,0,0.3);
+    box-shadow: 0 2px 8px rgba(220,47,47,0.3);
   }
 
   /* ── Tier chips ── */
@@ -458,7 +458,7 @@ body {
     padding: 12px 14px;
     transition: border-color 0.15s;
   }
-  .stat-tile:hover { border-color: rgba(255,102,0,0.3); }
+  .stat-tile:hover { border-color: rgba(220,47,47,0.3); }
 
   /* ── Repo scan button ── */
   .repo-scan-btn {
@@ -513,7 +513,7 @@ body {
 }
 .form-input-default:focus {
   border-color: var(--dl-blue);
-  box-shadow: 0 0 0 3px rgba(255,102,0,0.12);
+  box-shadow: 0 0 0 3px rgba(220,47,47,0.12);
   outline: none;
 }
 .form-input-error {
@@ -559,7 +559,7 @@ body {
    the frame, like light falling across paper. No motion, no neon. ─── */
 .hero-mesh-gradient {
   background:
-    radial-gradient(ellipse 900px 500px at 85% 100%, rgba(255, 102, 0, 0.06), transparent 65%),
+    radial-gradient(ellipse 900px 500px at 85% 100%, rgba(220, 47, 47, 0.06), transparent 65%),
     radial-gradient(ellipse 700px 500px at 0% 0%, rgba(255,133,51,0.04), transparent 65%);
 }
 
@@ -572,7 +572,7 @@ body {
 
 /* ─── Accent glow pill (used in hero badges) ─── */
 .blue-glow {
-  box-shadow: 0 0 0 1px rgba(255, 102, 0, 0.18), 0 4px 16px rgba(255, 102, 0, 0.12);
+  box-shadow: 0 0 0 1px rgba(220, 47, 47, 0.18), 0 4px 16px rgba(220, 47, 47, 0.12);
 }
 
 /* ─── Paper surface — a lifted panel with soft, warm depth ─── */
