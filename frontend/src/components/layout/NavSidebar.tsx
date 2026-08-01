@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useState, useEffect, useRef } from 'react'
 import {
   LayoutDashboard, Package,
-  CreditCard, User, LogOut, ChevronRight,
+  CreditCard, User, LogOut,
   Command, MessageSquarePlus, Radar,
 } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
