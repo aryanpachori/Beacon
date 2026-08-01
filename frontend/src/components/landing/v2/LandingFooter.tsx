@@ -52,7 +52,7 @@ export function LandingFooter() {
               <Link
                 key={link.label}
                 href={link.href}
-                className="text-base font-medium text-[#f8f8f8] transition-colors hover:text-[#dc2f2f]"
+                className="text-base font-medium text-[#f8f8f8] transition-colors hover:text-white/60"
               >
                 {link.label}
               </Link>

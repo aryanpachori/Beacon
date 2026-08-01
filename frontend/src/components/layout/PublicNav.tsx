@@ -24,7 +24,7 @@ export function PublicNav() {
           className="h-7 w-7 shrink-0 object-contain"
           priority
         />
-        <span className="text-[19px] font-semibold tracking-[-0.02em] text-[#f2f0ed]">Beacon</span>
+        <span className="text-[19px] font-semibold tracking-[-0.02em] text-[#f2f0ed]">beacon</span>
       </Link>
 
       <div className="hidden items-center gap-9 md:flex">

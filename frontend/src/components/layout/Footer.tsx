@@ -114,7 +114,7 @@ export function Footer() {
                 height={32}
                 className="h-8 w-8 shrink-0 rounded-md"
               />
-              <span className="text-[17px] font-semibold text-dl-text">Beacon</span>
+              <span className="text-[17px] font-semibold text-dl-text">beacon</span>
             </Link>
             <p className="mt-4 max-w-[220px] text-[13.5px] leading-relaxed text-dl-muted">
               The AI Security Engineer that watches your code as it&apos;s written.

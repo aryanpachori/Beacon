@@ -35,6 +35,7 @@ const sourceSerif = Source_Serif_4({
 export const metadata: Metadata = {
   icons: {
     icon: [
+      { url: '/favicon.ico', sizes: 'any' },
       { url: '/beacon-mark.png', type: 'image/png', sizes: '1240x1240' },
     ],
     apple: '/apple-touch-icon.png',

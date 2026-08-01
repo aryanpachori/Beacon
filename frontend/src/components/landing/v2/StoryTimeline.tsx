@@ -62,7 +62,7 @@ const MESSAGES: Message[] = [
     chip: {
       border: 'rgba(255,255,255,.13)',
       bg: 'rgba(255,255,255,.03)',
-      color: 'rgba(242,240,237,.8)',
+      color: 'rgba(8,9,10,.8)',
       text: '+240 −18 · 4 files changed\nconst key = "sk_live_51H8xJ2…"',
     },
   },
@@ -192,12 +192,12 @@ export function StoryTimeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
           </p>
         </div>
 
-        <div className="overflow-hidden rounded-[14px] border border-white/[0.09] bg-[#0e1012] shadow-[0_20px_50px_rgba(0,0,0,.4)]">
-          <div className="flex items-center gap-2.5 border-b border-white/[0.07] px-5 py-3.5">
-            <span className="bl-mono text-[13.5px] font-medium text-[rgba(242,240,237,.85)]">
+        <div className="overflow-hidden rounded-[14px] border border-black/[0.09] bg-[#ffffff] shadow-[0_20px_50px_rgba(0,0,0,.4)]">
+          <div className="flex items-center gap-2.5 border-b border-black/[0.07] px-5 py-3.5">
+            <span className="bl-mono text-[13.5px] font-medium text-[rgba(8,9,10,.85)]">
               # loopr-eng
             </span>
-            <span className="bl-mono ml-auto text-[11px] text-[rgba(242,240,237,.35)]">
+            <span className="bl-mono ml-auto text-[11px] text-[rgba(8,9,10,.35)]">
               3 members · 1 bot
             </span>
           </div>
@@ -217,12 +217,12 @@ export function StoryTimeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
                 <div className="min-w-0 flex-1">
                   <div className="mb-1 flex items-baseline gap-2">
                     <span className="text-sm font-semibold tracking-[-0.01em]">{m.name}</span>
-                    <span className="text-[11px] text-[rgba(242,240,237,.35)]">{m.role}</span>
-                    <span className="bl-mono ml-auto text-[10.5px] text-[rgba(242,240,237,.3)]">
+                    <span className="text-[11px] text-[rgba(8,9,10,.35)]">{m.role}</span>
+                    <span className="bl-mono ml-auto text-[10.5px] text-[rgba(8,9,10,.3)]">
                       {m.time}
                     </span>
                   </div>
-                  <p className="m-0 text-[14.5px] leading-[1.5] text-[rgba(242,240,237,.82)]">
+                  <p className="m-0 text-[14.5px] leading-[1.5] text-[rgba(8,9,10,.82)]">
                     {m.text}
                   </p>
                   {m.chip && (
@@ -243,9 +243,9 @@ export function StoryTimeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
 
             {typingVisible && (
               <div className="flex items-center gap-3 opacity-65">
-                <div className="h-[30px] w-[30px] shrink-0 rounded-lg bg-white/[0.05]" />
+                <div className="h-[30px] w-[30px] shrink-0 rounded-lg bg-black/[0.05]" />
                 <div className="flex items-center gap-2">
-                  <span className="text-[12.5px] text-[rgba(242,240,237,.45)]">{typingName}</span>
+                  <span className="text-[12.5px] text-[rgba(8,9,10,.45)]">{typingName}</span>
                   <div className="flex gap-[3px]">
                     <span className="bl-typing-dot" />
                     <span className="bl-typing-dot" style={{ animationDelay: '.15s' }} />

@@ -30,16 +30,16 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
             <span className="h-1.5 w-1.5 rounded-full bg-[#f2705c]" />
             agent output
           </div>
-          <div className="overflow-hidden rounded-[13px] border border-[rgba(242,112,92,.28)] bg-[#0e1012] shadow-[0_20px_50px_rgba(0,0,0,.45)]">
-            <div className="bl-mono flex border-b border-white/[0.06] px-3.5 py-[11px] text-[11px] text-[rgba(242,240,237,.45)]">
+          <div className="overflow-hidden rounded-[13px] border border-[rgba(242,112,92,.28)] bg-[#ffffff] shadow-[0_20px_50px_rgba(0,0,0,.45)]">
+            <div className="bl-mono flex border-b border-black/[0.06] px-3.5 py-[11px] text-[11px] text-[rgba(8,9,10,.45)]">
               <span>checkout.ts</span>
               <span className="ml-auto text-[rgba(242,112,92,.9)]">2 findings</span>
             </div>
             <div className="bl-mono py-3.5 text-[12.5px] leading-[2.2]">
-              <div className="bg-[rgba(242,112,92,.12)] px-3.5 text-[rgba(242,240,237,.9)] shadow-[inset_2px_0_0_#f2705c]">
+              <div className="bg-[rgba(242,112,92,.12)] px-3.5 text-[rgba(8,9,10,.9)] shadow-[inset_2px_0_0_#f2705c]">
                 const key = &quot;sk_live_51H8xJ2…&quot;
               </div>
-              <div className="px-3.5 text-[rgba(242,240,237,.5)]">app.post(&quot;/refund&quot;, handler)</div>
+              <div className="px-3.5 text-[rgba(8,9,10,.5)]">app.post(&quot;/refund&quot;, handler)</div>
             </div>
           </div>
         </div>
@@ -92,7 +92,7 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
                     className="bl-mono flex items-center gap-2 text-[11px] transition-[opacity,color] duration-[350ms] ease-out"
                     style={{
                       opacity: on ? 1 : 0.45,
-                      color: on ? '#dc2f2f' : 'rgba(242,240,237,.6)',
+                      color: on ? '#dc2f2f' : 'rgba(8,9,10,.6)',
                     }}
                   >
                     <span
@@ -104,7 +104,7 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
                 )
               })}
             </div>
-            <div className="bl-mono mt-3.5 flex border-t border-[rgba(220,47,47,.2)] pt-3 text-[10px] text-[rgba(242,240,237,.5)]">
+            <div className="bl-mono mt-3.5 flex border-t border-[rgba(220,47,47,.2)] pt-3 text-[10px] text-[rgba(8,9,10,.5)]">
               <span>{MCP_STATUS[step]}</span>
               <span className="ml-auto">38ms</span>
             </div>
@@ -127,16 +127,16 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
             <span className="h-1.5 w-1.5 rounded-full bg-[#6fd39a]" />
             ready to commit
           </div>
-          <div className="overflow-hidden rounded-[13px] border border-[rgba(111,211,154,.28)] bg-[#0e1012] shadow-[0_20px_50px_rgba(0,0,0,.45)]">
-            <div className="bl-mono flex border-b border-white/[0.06] px-3.5 py-[11px] text-[11px] text-[rgba(242,240,237,.45)]">
+          <div className="overflow-hidden rounded-[13px] border border-[rgba(111,211,154,.28)] bg-[#ffffff] shadow-[0_20px_50px_rgba(0,0,0,.45)]">
+            <div className="bl-mono flex border-b border-black/[0.06] px-3.5 py-[11px] text-[11px] text-[rgba(8,9,10,.45)]">
               <span>checkout.ts</span>
               <span className="ml-auto text-[rgba(111,211,154,.9)]">clean</span>
             </div>
             <div className="bl-mono py-3.5 text-[12.5px] leading-[2.2]">
-              <div className="bg-[rgba(111,211,154,.1)] px-3.5 text-[rgba(242,240,237,.9)] shadow-[inset_2px_0_0_#6fd39a]">
+              <div className="bg-[rgba(111,211,154,.1)] px-3.5 text-[rgba(8,9,10,.9)] shadow-[inset_2px_0_0_#6fd39a]">
                 const key = process.env.STRIPE_KEY
               </div>
-              <div className="px-3.5 text-[rgba(242,240,237,.5)]">
+              <div className="px-3.5 text-[rgba(8,9,10,.5)]">
                 app.post(&quot;/refund&quot;, requireOwner, handler)
               </div>
             </div>

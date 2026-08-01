@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#ffffff;color:#08090a;font-family:"Instrument Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:#08090a;text-decoration:none}
+  a:hover{color:#08090a}
+  ::selection{background:rgba(8,9,10,.28)}
+  @keyframes orbCore{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(.78);opacity:1}}
+  @keyframes orbRing{0%{transform:scale(.7);opacity:.55}70%{transform:scale(1.9);opacity:0}100%{transform:scale(1.9);opacity:0}}
+  @keyframes wordIn{from{opacity:0;transform:translateY(0.42em) rotate(1.2deg)}to{opacity:1;transform:none}}
+  @keyframes capIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @keyframes caret{0%,49%{opacity:1}50%,100%{opacity:0}}
+  @keyframes scanSweep{0%{transform:translateY(-100%)}100%{transform:translateY(1100%)}}
+  @keyframes annotIn{from{opacity:0;transform:translateY(-6px) scale(.985)}to{opacity:1;transform:none}}
+  @keyframes travel{0%{left:0;opacity:0}8%{opacity:1}92%{opacity:1}100%{left:100%;opacity:0}}
+  @keyframes railFlow{0%{transform:translateX(-30%) scale(.9);opacity:0}12%{opacity:1}80%{opacity:1}100%{transform:translateX(118px) scale(.9);opacity:0}}
+  @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  @keyframes msgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  @keyframes typingBounce{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
+  @keyframes riskGaugeStrike{0%{opacity:.3}40%{opacity:1}60%{opacity:1}100%{opacity:.3}}
+  @keyframes scoreScale{0%{transform:scale(.8);opacity:0}15%{transform:scale(1.15)}20%{transform:scale(1);opacity:1}to{transform:scale(1);opacity:1}}
+  @keyframes labelSlideIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+  @keyframes editorHighlight{0%,100%{box-shadow:inset 2px 0 0 rgba(8,9,10,.0)}50%{box-shadow:inset 2px 0 0 rgba(8,9,10,.6)}}
+  @keyframes annotPulse{0%,100%{opacity:0;transform:translateY(-4px) scale(.9)}50%{opacity:1;transform:translateY(0) scale(1)}}
+</style>
+</helmet>
+
+<div style="max-width:1280px;margin:0 auto;padding:0 40px">
+
+  <nav style="display:flex;align-items:center;gap:36px;padding:26px 0;position:relative;z-index:5">
+    <div style="display:flex;align-items:center;gap:11px;margin-right:auto">
+      <div style="position:relative;width:22px;height:22px;display:grid;place-items:center">
+        <div style="position:absolute;inset:0;border-radius:50%;border:1px solid rgba(8,9,10,.55);animation:orbRing 2.6s ease-out infinite"></div>
+        <div style="width:9px;height:9px;border-radius:50%;background:#08090a;animation:orbCore 2.6s ease-in-out infinite"></div>
+      </div>
+      <span style="font-size:19px;font-weight:600;letter-spacing:-.02em">beacon</span>
+    </div>
+    <a href="#how" style="font-size:14.5px;color:rgba(8,9,10,.62)">How it works</a>
+    <a href="#features" style="font-size:14.5px;color:rgba(8,9,10,.62)">Features</a>
+    <a href="#" style="font-size:14.5px;color:rgba(8,9,10,.62)">Pricing</a>
+    <a href="#" style="font-size:14.5px;color:rgba(8,9,10,.62)">Docs</a>
+    <a href="#" style="font-size:14px;font-weight:500;padding:9px 16px;border-radius:999px;background:#08090a;color:#f2f0ed">Install Beacon</a>
+  </nav>
+
+  <header style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;padding:64px 0 96px;position:relative">
+
+    <div style="position:relative">
+      <div style="display:inline-flex;align-items:center;gap:9px;padding:6px 13px 6px 10px;border:1px solid rgba(8,9,10,.11);border-radius:999px;font-size:12.5px;color:rgba(8,9,10,.7);margin-bottom:30px">
+        <span style="width:6px;height:6px;border-radius:50%;background:#08090a;animation:orbCore 2s ease-in-out infinite"></span>
+        Local-first · zero repo access
+      </div>
+      <h1 style="margin:0 0 22px;font-size:66px;line-height:1.02;letter-spacing:-.035em;font-weight:600">
+        Security that ships<br>at agent speed.
+      </h1>
+      <p style="margin:0 0 14px;font-size:22px;line-height:1.35;letter-spacing:-.02em;color:rgba(8,9,10,.9)">
+        Beacon catches {{ heroWord }} before commit.
+      </p>
+      <p style="margin:0 0 34px;font-size:16.5px;line-height:1.6;color:rgba(8,9,10,.56);max-width:44ch">
+        It rides along with Cursor, Claude Code and Copilot, reviewing every line the moment it's written — inside your editor, on your machine.
+      </p>
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:30px">
+        <a href="#" style="font-size:15px;font-weight:500;padding:13px 22px;border-radius:999px;background:#08090a;color:#f2f0ed" style-hover="background:rgba(8,9,10,.8)">Install Beacon — free</a>
+        <a href="#how" style="font-size:15px;font-weight:500;padding:13px 20px;border-radius:999px;border:1px solid rgba(8,9,10,.14);color:rgba(8,9,10,.85)" style-hover="border-color:rgba(8,9,10,.4);color:#08090a">See how it works →</a>
+      </div>
+      <div style="display:flex;gap:22px;font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:rgba(8,9,10,.4)">
+        <span>IDE</span><span>MCP</span><span>CLI</span><span>·</span><span>&lt;40ms review</span>
+      </div>
+    </div>
+
+    <div style="position:relative;animation:floatY 9s ease-in-out infinite">
+      <div style="position:relative;border:1px solid rgba(8,9,10,.09);border-radius:14px;background:#ffffff;overflow:hidden">
+        <div style="display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid rgba(8,9,10,.07)">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(8,9,10,.55)">routes/payments.ts</span>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+            <div style="position:relative;width:16px;height:16px;display:grid;place-items:center">
+              <div style="position:absolute;inset:0;border-radius:50%;border:1px solid {{ orbRingColor }};animation:orbRing 1.8s ease-out infinite"></div>
+              <div style="width:7px;height:7px;border-radius:50%;background:{{ orbColor }};animation:orbCore 1.8s ease-in-out infinite"></div>
+            </div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.03em;color:rgba(8,9,10,.55)">{{ orbLabel }}</span>
+          </div>
+        </div>
+
+        <div style="position:relative;padding:18px 0 4px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:2.05">
+          <sc-if value="{{ scanning }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;left:0;right:0;top:0;height:34px;background:linear-gradient(180deg,transparent,rgba(8,9,10,.13),transparent);animation:scanSweep 1s linear infinite;pointer-events:none"></div>
+          </sc-if>
+
+          <div style="display:grid;grid-template-columns:44px 1fr;color:rgba(8,9,10,.82)">
+            <span style="text-align:right;padding-right:16px;color:rgba(8,9,10,.25)">1</span>
+            <span><span style="color:rgba(8,9,10,.85)">export async function</span> <span style="color:rgba(8,9,10,.7)">chargeCard</span>(req, res) {</span>
+          </div>
+
+          <sc-if value="{{ typing }}" hint-placeholder-val="{{ true }}">
+            <div style="display:grid;grid-template-columns:44px 1fr;color:rgba(8,9,10,.82)">
+              <span style="text-align:right;padding-right:16px;color:rgba(8,9,10,.25)">2</span>
+              <span style="padding-left:18px"><span style="color:rgba(8,9,10,.85)">const</span> key = <span style="color:rgba(8,9,10,.6)">"{{ typed }}</span><span style="display:inline-block;width:7px;height:15px;background:#08090a;vertical-align:-2px;animation:caret 1s step-end infinite"></span></span>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ risky }}" hint-placeholder-val="{{ false }}">
+            <div style="display:grid;grid-template-columns:44px 1fr;background:rgba(196,103,92,.12);box-shadow:inset 2px 0 0 #c4675c">
+              <span style="text-align:right;padding-right:16px;color:rgba(196,103,92,.8)">2</span>
+              <span style="padding-left:18px;color:rgba(8,9,10,.9)"><span style="color:rgba(8,9,10,.85)">const</span> key = <span style="color:rgba(8,9,10,.6)">"sk_live_51H8xJ2eZvKYlo2C…"</span></span>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ fixed }}" hint-placeholder-val="{{ false }}">
+            <div style="display:grid;grid-template-columns:44px 1fr;background:rgba(111,156,130,.11);box-shadow:inset 2px 0 0 #6f9c82">
+              <span style="text-align:right;padding-right:16px;color:rgba(111,156,130,.85)">2</span>
+              <span style="padding-left:18px;color:rgba(8,9,10,.9)"><span style="color:rgba(8,9,10,.85)">const</span> key = process.env.<span style="color:rgba(8,9,10,.7)">STRIPE_SECRET_KEY</span></span>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ flagged }}" hint-placeholder-val="{{ false }}">
+            <div style="margin:8px 18px 12px 44px;padding:14px 15px;border:1px solid rgba(196,103,92,.35);border-radius:10px;background:rgba(196,103,92,.07);animation:annotIn .28s ease-out;font-family:'Instrument Sans',sans-serif">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                <span style="width:6px;height:6px;border-radius:50%;background:#c4675c"></span>
+                <span style="font-size:12.5px;font-weight:600;letter-spacing:-.01em">Hardcoded Stripe secret</span>
+                <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.04em;color:rgba(196,103,92,.9)">CRITICAL</span>
+              </div>
+              <p style="margin:0 0 11px;font-size:13px;line-height:1.5;color:rgba(8,9,10,.62)">A live key would be committed to the repo. Read it from the environment instead.</p>
+              <div style="display:flex;gap:8px">
+                <span style="font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:7px;background:#08090a;color:#f2f0ed">Accept fix</span>
+                <span style="font-size:12.5px;padding:7px 12px;border-radius:7px;border:1px solid rgba(8,9,10,.13);color:rgba(8,9,10,.7)">Explain</span>
+              </div>
+            </div>
+          </sc-if>
+
+          <div style="display:grid;grid-template-columns:44px 1fr;color:rgba(8,9,10,.82)">
+            <span style="text-align:right;padding-right:16px;color:rgba(8,9,10,.25)">3</span>
+            <span style="padding-left:18px"><span style="color:rgba(8,9,10,.85)">const</span> client = <span style="color:rgba(8,9,10,.85)">new</span> <span style="color:rgba(8,9,10,.7)">Stripe</span>(key)</span>
+          </div>
+          <div style="display:grid;grid-template-columns:44px 1fr;color:rgba(8,9,10,.82)">
+            <span style="text-align:right;padding-right:16px;color:rgba(8,9,10,.25)">4</span>
+            <span style="padding-left:18px">res.<span style="color:rgba(8,9,10,.7)">json</span>(<span style="color:rgba(8,9,10,.85)">await</span> client.charges.<span style="color:rgba(8,9,10,.7)">create</span>(req.body))</span>
+          </div>
+          <div style="display:grid;grid-template-columns:44px 1fr;color:rgba(8,9,10,.82)">
+            <span style="text-align:right;padding-right:16px;color:rgba(8,9,10,.25)">5</span>
+            <span>}</span>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-top:1px solid rgba(8,9,10,.07);font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(8,9,10,.42)">
+          <span>{{ statusLine }}</span>
+          <span style="margin-left:auto">nothing left this machine</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <sc-if value="{{ showTrustStrip }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;align-items:center;gap:34px;padding:26px 0 74px;border-top:1px solid rgba(8,9,10,.07);flex-wrap:wrap">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(8,9,10,.35)">Reviews code from</span>
+      <span style="font-size:15.5px;color:rgba(8,9,10,.62)">Cursor</span>
+      <span style="font-size:15.5px;color:rgba(8,9,10,.62)">Claude Code</span>
+      <span style="font-size:15.5px;color:rgba(8,9,10,.62)">Copilot</span>
+      <span style="font-size:15.5px;color:rgba(8,9,10,.62)">Windsurf</span>
+      <span style="font-size:15.5px;color:rgba(8,9,10,.62)">Zed</span>
+      <span style="font-size:15.5px;color:rgba(8,9,10,.62)">any MCP agent</span>
+    </div>
+  </sc-if>
+
+  <section id="how" data-reveal style="padding:20px 0 118px">
+    <p style="margin:0 0 14px;font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:#08090a">The pipeline</p>
+    <h2 style="margin:0 0 12px;font-size:44px;line-height:1.06;letter-spacing:-.03em;font-weight:600;max-width:24ch">Faulty code in. Reviewed code out.</h2>
+    <p style="margin:0 0 60px;font-size:17px;line-height:1.6;color:rgba(8,9,10,.55);max-width:56ch">Your agent's diff streams through the Beacon MCP server on your machine. Findings come back as fixes, not tickets.</p>
+
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) 118px 250px 118px minmax(0,1fr);align-items:center;gap:0">
+
+      <div>
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(196,103,92,.9)">
+          <span style="width:6px;height:6px;border-radius:50%;background:#c4675c"></span>agent output
+        </div>
+        <div style="border:1px solid rgba(196,103,92,.3);border-radius:13px;background:#ffffff;overflow:hidden;">
+          <div style="padding:11px 14px;border-bottom:1px solid rgba(8,9,10,.06);font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(8,9,10,.45);display:flex">
+            <span>checkout.ts</span><span style="margin-left:auto;color:rgba(196,103,92,.9)">2 findings</span>
+          </div>
+          <div style="padding:14px 0;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:2.2">
+            <div style="padding:0 14px;background:rgba(196,103,92,.13);box-shadow:inset 2px 0 0 #c4675c;color:rgba(8,9,10,.9)">const key = "sk_live_51H8xJ2…"</div>
+            <div style="padding:0 14px;color:rgba(8,9,10,.5)">app.post("/refund", handler)</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="position:relative;height:150px;overflow:hidden">
+        <div style="position:absolute;left:0;right:0;top:50%;height:1px;background:linear-gradient(90deg,rgba(196,103,92,.12),rgba(196,103,92,.55))"></div>
+        <span style="position:absolute;top:calc(50% - 16px);left:0;padding:3px 8px;border-radius:6px;background:rgba(196,103,92,.16);border:1px solid rgba(196,103,92,.4);font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#c4675c;white-space:nowrap;animation:railFlow 2.6s linear infinite">secret</span>
+        <span style="position:absolute;top:calc(50% + 6px);left:0;padding:3px 8px;border-radius:6px;background:rgba(196,103,92,.16);border:1px solid rgba(196,103,92,.4);font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#c4675c;white-space:nowrap;animation:railFlow 2.6s linear .9s infinite">sqli</span>
+        <span style="position:absolute;top:calc(50% - 34px);left:0;padding:3px 8px;border-radius:6px;background:rgba(196,103,92,.16);border:1px solid rgba(196,103,92,.4);font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#c4675c;white-space:nowrap;animation:railFlow 2.6s linear 1.75s infinite">authz</span>
+      </div>
+
+      <div style="position:relative;display:grid;place-items:center;height:290px">
+        <div style="position:absolute;width:210px;height:210px;border-radius:50%;border:1px solid rgba(8,9,10,.22);animation:orbRing 3.4s ease-out infinite"></div>
+        <div style="position:absolute;width:210px;height:210px;border-radius:50%;border:1px solid rgba(8,9,10,.16);animation:orbRing 3.4s ease-out 1.7s infinite"></div>
+        <div style="position:relative;width:250px;border:1px solid rgba(8,9,10,.42);border-radius:18px;background:linear-gradient(180deg,rgba(8,9,10,.09),rgba(8,9,10,.02));backdrop-filter:blur(2px);padding:18px 18px 16px">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px">
+            <div style="position:relative;width:16px;height:16px;display:grid;place-items:center">
+              <div style="position:absolute;inset:0;border-radius:50%;border:1px solid rgba(8,9,10,.6);animation:orbRing 1.6s ease-out infinite"></div>
+              <div style="width:7px;height:7px;border-radius:50%;background:#08090a;animation:orbCore 1.6s ease-in-out infinite"></div>
+            </div>
+            <span style="font-size:15px;font-weight:600;letter-spacing:-.015em">beacon mcp</span>
+            <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.06em;color:rgba(8,9,10,.9)">LOCAL</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <sc-for list="{{ checkList }}" as="c" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;transition:opacity .35s ease,color .35s ease;opacity:{{ c.op }};color:{{ c.color }}">
+                <span style="width:5px;height:5px;border-radius:50%;background:{{ c.dot }}"></span>{{ c.label }}
+              </div>
+            </sc-for>
+          </div>
+          <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(8,9,10,.2);display:flex;font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(8,9,10,.5)">
+            <span>{{ mcpStatus }}</span><span style="margin-left:auto">38ms</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="position:relative;height:150px;overflow:hidden">
+        <div style="position:absolute;left:0;right:0;top:50%;height:1px;background:linear-gradient(90deg,rgba(111,156,130,.55),rgba(111,156,130,.12))"></div>
+        <span style="position:absolute;top:calc(50% - 30px);left:0;padding:3px 8px;border-radius:6px;background:rgba(111,156,130,.15);border:1px solid rgba(111,156,130,.4);font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#6f9c82;white-space:nowrap;animation:railFlow 2.6s linear .35s infinite">env var</span>
+        <span style="position:absolute;top:calc(50% - 8px);left:0;padding:3px 8px;border-radius:6px;background:rgba(111,156,130,.15);border:1px solid rgba(111,156,130,.4);font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#6f9c82;white-space:nowrap;animation:railFlow 2.6s linear 1.2s infinite">params</span>
+        <span style="position:absolute;top:calc(50% + 14px);left:0;padding:3px 8px;border-radius:6px;background:rgba(111,156,130,.15);border:1px solid rgba(111,156,130,.4);font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#6f9c82;white-space:nowrap;animation:railFlow 2.6s linear 2s infinite">guard</span>
+      </div>
+
+      <div>
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(8,9,10,.9)">
+          <span style="width:6px;height:6px;border-radius:50%;background:#6f9c82"></span>ready to commit
+        </div>
+        <div style="border:1px solid rgba(111,156,130,.3);border-radius:13px;background:#ffffff;overflow:hidden;">
+          <div style="padding:11px 14px;border-bottom:1px solid rgba(8,9,10,.06);font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(8,9,10,.45);display:flex">
+            <span>checkout.ts</span><span style="margin-left:auto;color:rgba(111,156,130,.9)">clean</span>
+          </div>
+          <div style="padding:14px 0;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:2.2">
+            <div style="padding:0 14px;background:rgba(111,156,130,.12);box-shadow:inset 2px 0 0 #6f9c82;color:rgba(8,9,10,.9)">const key = process.env.STRIPE_KEY</div>
+            <div style="padding:0 14px;color:rgba(8,9,10,.5)">app.post("/refund", requireOwner, handler)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" data-reveal style="padding:0 0 110px">
+    <p style="margin:0 0 14px;font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:#08090a">Features</p>
+    <h2 style="margin:0 0 8px;font-size:44px;line-height:1.06;letter-spacing:-.03em;font-weight:600;max-width:24ch">Everything it takes to trust AI-written code.</h2>
+    <div style="display:grid;grid-template-columns:1fr 380px;gap:70px;align-items:start;margin-top:40px">
+      <div>
+        <sc-for list="{{ features }}" as="f" hint-placeholder-count="6">
+          <div onMouseEnter="{{ f.onEnter }}" style="display:grid;grid-template-columns:44px 1fr;gap:22px;padding:27px 0;border-top:1px solid rgba(8,9,10,.09);cursor:default">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;padding-top:3px;transition:color .3s ease;color:{{ f.numColor }}">{{ f.n }}</span>
+            <div>
+              <div style="font-size:19px;font-weight:600;letter-spacing:-.02em;margin-bottom:6px;transition:color .3s ease;color:{{ f.titleColor }}">{{ f.title }}</div>
+              <p style="margin:0;font-size:14.5px;line-height:1.55;color:rgba(8,9,10,.5);max-width:44ch">{{ f.body }}</p>
+            </div>
+          </div>
+        </sc-for>
+        <div style="border-top:1px solid rgba(8,9,10,.09)"></div>
+      </div>
+      <div style="position:sticky;top:32px;animation:msgIn .7s cubic-bezier(.2,.8,.2,1) forwards">
+        <div style="position:relative;border:1px solid rgba(8,9,10,.09);border-radius:14px;background:#ffffff;overflow:hidden;padding:28px 26px 26px;min-height:300px;">
+          <span style="position:absolute;right:16px;top:2px;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:96px;color:rgba(8,9,10,.035);line-height:1;user-select:none;animation:riskGaugeStrike 1.2s ease-in-out infinite">{{ activeFeature.n }}</span>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;position:relative">
+            <span style="width:6px;height:6px;border-radius:50%;background:#08090a;animation:orbCore 2s ease-in-out infinite"></span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#08090a">{{ activeFeature.tag }}</span>
+          </div>
+          <div style="font-size:22px;font-weight:600;letter-spacing:-.02em;line-height:1.25;margin-bottom:18px;position:relative;max-width:20ch">{{ activeFeature.title }}</div>
+          <div style="padding:13px 15px;border-radius:9px;background:rgba(8,9,10,.03);border:1px solid rgba(8,9,10,.07);font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.75;color:rgba(8,9,10,.75);position:relative;white-space:pre-wrap">{{ activeFeature.snippet }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-reveal style="padding:26px 0 120px;text-align:center;position:relative">
+    <h2 style="margin:0 auto 18px;font-size:58px;line-height:1.05;letter-spacing:-.035em;font-weight:600;max-width:20ch;position:relative">
+      Let your AI ship faster. Let Beacon <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:#08090a">watch</span>.
+    </h2>
+    <p style="margin:0 auto 32px;font-size:17px;color:rgba(8,9,10,.55);max-width:46ch;position:relative">Free to install. No repo access. Live in your editor before your next prompt finishes.</p>
+    <div style="display:flex;gap:12px;justify-content:center;position:relative">
+      <a href="#" style="font-size:15px;font-weight:500;padding:14px 24px;border-radius:999px;background:#08090a;color:#f2f0ed" style-hover="background:rgba(8,9,10,.8)">Install Beacon — free</a>
+      <a href="#" style="font-size:15px;font-weight:500;padding:14px 22px;border-radius:999px;border:1px solid rgba(8,9,10,.14);color:rgba(8,9,10,.85)" style-hover="border-color:rgba(8,9,10,.4);color:#08090a">Talk to us</a>
+    </div>
+  </section>
+
+</div>
+
+<footer style="background:#08090a;color:#f2f0ed;padding:74px 0 0;overflow:hidden">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1.5fr repeat(4,1fr);gap:40px">
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:26px">
+        <div style="position:relative;width:20px;height:20px;display:grid;place-items:center">
+          <div style="position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(11,10,8,.35);animation:orbRing 2.6s ease-out infinite"></div>
+          <div style="width:8px;height:8px;border-radius:50%;background:#f2f0ed"></div>
+        </div>
+        <span style="font-size:20px;font-weight:600;letter-spacing:-.025em">beacon</span>
+      </div>
+      <div style="display:flex;gap:18px;margin-bottom:26px;font-size:14.5px;font-weight:500">
+        <a href="#" style="color:#f2f0ed" style-hover="opacity:.6">GitHub</a>
+        <a href="#" style="color:#f2f0ed" style-hover="opacity:.6">X</a>
+        <a href="#" style="color:#f2f0ed" style-hover="opacity:.6">LinkedIn</a>
+      </div>
+      <p style="margin:0;font-size:14px;color:rgba(11,10,8,.72)">© 2026 Beacon. All rights reserved.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <span style="font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(11,10,8,.85)">Product</span>
+      <a href="#how" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">How it works</a>
+      <a href="#features" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">Features</a>
+      <a href="#" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">Pricing</a>
+      <a href="#" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">Changelog</a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <span style="font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(11,10,8,.85)">Install</span>
+      <a href="#" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">VS Code</a>
+      <a href="#" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">Cursor</a>
+      <a href="#" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">MCP server</a>
+      <a href="#" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">CLI</a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <span style="font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(11,10,8,.85)">Company</span>
+      <a href="#" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">About</a>
+      <a href="#" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">Blog</a>
+      <a href="#" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">Careers</a>
+      <a href="#" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">Contact</a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <span style="font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(11,10,8,.85)">Legal</span>
+      <a href="#" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">Privacy</a>
+      <a href="#" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">Terms</a>
+      <a href="#" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">Security</a>
+      <a href="#" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">Subprocessors</a>
+    </div>
+  </div>
+  <div style="margin-top:78px;height:clamp(130px,14vw,250px);overflow:hidden;display:flex;justify-content:center">
+    <span style="font-size:clamp(190px,24vw,440px);line-height:.74;letter-spacing:-.055em;font-weight:600;color:#f2f0ed;white-space:nowrap">beacon</span>
+  </div>
+</footer>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;demoSpeed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:0.5,&quot;max&quot;:2,&quot;step&quot;:0.25,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;showTrustStrip&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+const WORDS = ["secrets", "SQL injection", "broken auth", "leaked keys", "unsafe redirects"];
+const KEY = 'sk_live_51H8xJ2eZvKYlo2C…';
+const CHECKS = ['secret scan', 'injection shapes', 'authz paths', 'unsafe sinks'];
+const MCP_STATUS = ['reading diff', 'matching patterns', 'drafting fixes', 'returning patch'];
+const MESSAGES = [
+  { id: 1, name: 'Beck Ostrander', tag: 'HUMAN', time: '9:41 AM', text: 'just wire up stripe, we demo in an hour', risk: 5, label: 'nominal' },
+  { id: 2, name: 'Jenna Cole', tag: 'HUMAN', time: '9:41 AM', text: 'an hour?? for a full checkout flow??', risk: 10, label: 'nominal' },
+  { id: 3, name: 'Beck Ostrander', tag: 'HUMAN', time: '9:42 AM', text: 'relax, cursor can knock this out in like 2 minutes', risk: 14, label: 'forming' },
+  { id: 4, name: 'cursor-agent', tag: 'AGENT', time: '9:43 AM', text: 'wrote checkout.ts · +240 −18, 4 files changed', risk: 38, label: 'building' },
+  { id: 5, name: 'Jenna Cole', tag: 'HUMAN', time: '9:43 AM', text: 'ok that actually worked. wait let me check something', risk: 42, label: 'building' },
+  { id: 6, name: 'Beacon', tag: 'BEACON', time: '9:44 AM', text: 'blocked commit — critical: hardcoded secret, line 2', risk: 92, label: 'critical' },
+  { id: 7, name: 'Marcus Lin', tag: 'HUMAN', time: '9:44 AM', text: 'we really about to leak a stripe key 20 min before demo lol', risk: 90, label: 'critical' },
+  { id: 8, name: 'Jenna Cole', tag: 'HUMAN', time: '9:45 AM', text: 'oh no. OH NO. it hardcoded the live stripe key', risk: 88, label: 'critical' },
+  { id: 9, name: 'Jenna Cole', tag: 'FIX', time: '9:46 AM', text: 'patched · key moved to process.env.STRIPE_KEY', risk: 22, label: 'containing' },
+  { id: 10, name: 'Beck Ostrander', tag: 'HUMAN', time: '10:38 AM', text: 'demo\u2019d clean. calling it our robust security posture on the call', risk: 6, label: 'resolved' },
+  { id: 11, name: 'Dana Voss', tag: 'HUMAN', time: '10:39 AM', text: 'that was way too close. nice catch team.', risk: 3, label: 'resolved' }
+];
+const TAG_COLORS = { HUMAN: ['rgba(8,9,10,.08)', 'rgba(8,9,10,.65)'], AGENT: ['rgba(8,9,10,.16)', 'rgba(8,9,10,.85)'], BEACON: ['rgba(8,9,10,.16)', '#08090a'], FIX: ['rgba(8,9,10,.16)', '#08090a'] };
+
+const FEATURES = [
+  { n: '01', tag: 'inline', title: 'Real-time inline review', body: 'Risky lines are annotated the moment an agent writes them — not in CI, not in a report.', snippet: '// annotated the instant it\'s written\nconst key = "sk_live_51H8xJ2…"\n                              ↑ flagged' },
+  { n: '02', tag: 'integrations', title: 'IDE, MCP and CLI', body: 'A native editor extension, an MCP server your agent calls, or a step in your pipeline.', snippet: '$ beacon mcp --serve\n> listening on stdio\n> 3 agents connected' },
+  { n: '03', tag: 'local', title: 'Local-first, always', body: 'Analysis runs on your machine. Beacon has zero repo access by design.', snippet: 'repo access   none\nnetwork out   0 req\nanalysis      on-device' },
+  { n: '04', tag: 'secrets', title: 'Secret detection', body: 'Hardcoded keys, tokens and credentials caught before the diff is even staged.', snippet: 'CRITICAL  hardcoded secret\nline 2 · stripe live key' },
+  { n: '05', tag: 'cve-modeled', title: 'Vulnerability intelligence', body: 'Injection, broken auth and unsafe deserialization, modeled from real-world CVEs.', snippet: 'pattern: unsafe deserialization\nref: shape matches CVE-2024-38821' },
+  { n: '06', tag: 'agent-aware', title: 'Agent-aware context', body: 'Tuned for the patterns Cursor, Claude Code and Copilot actually produce.', snippet: 'source  cursor.diff\nagent   claude-code\nmatch   found · scored .94' }
+];
+
+class Component extends DCLogic {
+  state = { word: 0, phase: 0, typed: '', step: 0, feature: 0, msgCount: 0, typingIdx: -1 };
+  chatRef = React.createRef();
+
+  componentDidMount() {
+    this._mounted = true;
+    const speed = this.props.demoSpeed ?? 1;
+    this.timers = [];
+    this.timers.push(setInterval(() => this.setState(s => ({ word: (s.word + 1) % WORDS.length })), 2300));
+    this.timers.push(setInterval(() => this.setState(s => ({ step: (s.step + 1) % CHECKS.length })), 1150 / speed));
+    this.runDemo(speed);
+    this.runChat(speed);
+    this.reveal();
+  }
+
+  componentDidUpdate() {
+    const el = this.chatRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }
+
+  componentWillUnmount() { this._mounted = false; (this.timers || []).forEach(clearInterval); clearTimeout(this._t); clearTimeout(this._ct); }
+
+  runChat(speed) {
+    if (this._chatRunning) return;
+    this._chatRunning = true;
+    const wait = ms => new Promise(r => { this._ct = setTimeout(r, ms / speed); });
+    const loop = async () => {
+      while (this._mounted) {
+        this.setState({ msgCount: 0, typingIdx: -1 });
+        await wait(700);
+        for (let i = 0; i < MESSAGES.length && this._mounted;) {
+          if (this._jumpTo != null) { i = this._jumpTo; this._jumpTo = null; }
+          this.setState({ typingIdx: i });
+          await wait(700);
+          if (!this._mounted) break;
+          this.setState({ msgCount: i + 1, typingIdx: -1 });
+          await wait(1150);
+          i++;
+        }
+        if (!this._mounted) break;
+        await wait(3200);
+      }
+      this._chatRunning = false;
+    };
+    loop();
+  }
+
+  runDemo(speed) {
+    if (this._demoRunning) return;
+    this._demoRunning = true;
+    const wait = ms => new Promise(r => { this._t = setTimeout(r, ms / speed); });
+    const loop = async () => {
+      while (this._mounted) {
+        this.setState({ phase: 0, typed: '' });
+        for (let i = 1; i <= KEY.length && this._mounted; i += 2) { this.setState({ typed: KEY.slice(0, i) }); await wait(80); }
+        if (!this._mounted) break;
+        this.setState({ typed: KEY });
+        await wait(360);
+        if (!this._mounted) break;
+        this.setState({ phase: 1 });
+        await wait(900);
+        if (!this._mounted) break;
+        this.setState({ phase: 2 });
+        await wait(2600);
+        if (!this._mounted) break;
+        this.setState({ phase: 3 });
+        await wait(2100);
+      }
+      this._demoRunning = false;
+    };
+    loop();
+  }
+
+  reveal() {
+    const els = Array.from(document.querySelectorAll('[data-reveal]'));
+    els.forEach(el => { el.style.opacity = '0'; el.style.transform = 'translateY(16px)'; el.style.transition = 'opacity .7s ease, transform .7s cubic-bezier(.4,0,.2,1)'; });
+    const show = el => { el.style.opacity = '1'; el.style.transform = 'none'; };
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { show(e.target); io.unobserve(e.target); } }), { threshold: 0.08 });
+      els.forEach(el => io.observe(el));
+    }
+    setTimeout(() => els.forEach(show), 2500);
+  }
+
+  getCheckList(step) {
+    if (this._checkStep === step && this._checkCache) return this._checkCache;
+    this._checkStep = step;
+    this._checkCache = CHECKS.map((label, i) => ({
+      label,
+      op: i === step ? 1 : 0.45,
+      color: i === step ? '#08090a' : 'rgba(8,9,10,.6)',
+      dot: i === step ? '#08090a' : 'rgba(8,9,10,.35)'
+    }));
+    return this._checkCache;
+  }
+
+  getEditorState(msgCount) {
+    if (msgCount < 4) {
+      return { editorWaiting: true, editorShowCode: false, editorBadge: 'waiting for agent…', editorDotColor: 'rgba(8,9,10,.4)', editorLastLineNum: 3 };
+    }
+    if (msgCount < 6) {
+      return { editorWaiting: false, editorShowCode: true, editorShowAnnotation: false, editorKeyValue: '"sk_live_51H8xJ2…"', editorLineColor: 'rgba(8,9,10,.82)', editorLineBg: 'transparent', editorAnnotSpace: '0', editorBadge: 'agent writing…', editorDotColor: '#08090a', editorLastLineNum: 5 };
+    }
+    if (msgCount < 8) {
+      return { editorWaiting: false, editorShowCode: true, editorShowAnnotation: true, editorKeyValue: '"sk_live_51H8xJ2…"', editorLineColor: '#08090a', editorLineBg: 'rgba(8,9,10,.1)', editorAnnotSpace: '26px', editorBadge: '1 critical finding', editorDotColor: '#08090a', editorLastLineNum: 5 };
+    }
+    if (msgCount < 10) {
+      return { editorWaiting: false, editorShowCode: true, editorShowAnnotation: false, editorKeyValue: 'process.env.STRIPE_KEY', editorLineColor: '#08090a', editorLineBg: 'rgba(8,9,10,.08)', editorAnnotSpace: '0', editorBadge: 'fixed inline', editorDotColor: '#08090a', editorLastLineNum: 5 };
+    }
+    return { editorWaiting: false, editorShowCode: true, editorShowAnnotation: false, editorKeyValue: 'process.env.STRIPE_KEY', editorLineColor: '#08090a', editorLineBg: 'transparent', editorAnnotSpace: '0', editorBadge: '✓ 0 findings · shipped', editorDotColor: '#08090a', editorLastLineNum: 5 };
+  }
+
+  getFeatures(idx) {
+    if (this._featIdx === idx && this._featCache) return this._featCache;
+    this._featIdx = idx;
+    this._featCache = FEATURES.map((f, i) => ({
+      n: f.n, title: f.title, body: f.body,
+      onEnter: () => this.setState({ feature: i }),
+      numColor: i === idx ? '#08090a' : 'rgba(8,9,10,.35)',
+      titleColor: i === idx ? '#08090a' : 'rgba(8,9,10,.7)'
+    }));
+    return this._featCache;
+  }
+
+  renderVals() {
+    const { word, phase, typed, step, feature, msgCount, typingIdx } = this.state;
+    const orb = [
+      { c: '#08090a', r: 'rgba(8,9,10,.5)', l: 'watching' },
+      { c: '#08090a', r: 'rgba(8,9,10,.6)', l: 'reviewing' },
+      { c: '#c4675c', r: 'rgba(196,103,92,.6)', l: '1 issue' },
+      { c: '#6f9c82', r: 'rgba(111,156,130,.55)', l: 'clear' }
+    ][phase];
+    const status = ['agent writing…', 'scanning diff locally', 'blocked before commit', 'fixed inline · 38ms'][phase];
+
+    return {
+      heroWord: React.createElement('span', {
+        key: word,
+        style: { display: 'inline-block', fontFamily: '"Instrument Serif", serif', fontStyle: 'italic', fontWeight: 400, color: '#08090a', animation: 'wordIn .5s cubic-bezier(.2,.8,.2,1)' }
+      }, WORDS[word]),
+      typed, typing: phase === 0, scanning: phase === 1,
+      risky: phase === 1 || phase === 2, flagged: phase === 2, fixed: phase === 3,
+      orbColor: orb.c, orbRingColor: orb.r, orbLabel: orb.l, statusLine: status,
+      showTrustStrip: this.props.showTrustStrip ?? true,
+      mcpStatus: MCP_STATUS[step],
+      checkList: this.getCheckList(step),
+      chatRef: this.chatRef,
+      messages: MESSAGES.map((m, i) => {
+        const [tagBg, tagColor] = TAG_COLORS[m.tag];
+        const active = i === msgCount - 1;
+        return {
+          id: m.id, name: m.name, tag: m.tag, tagBg, tagColor, time: m.time, text: m.text,
+          onJump: () => { this._jumpTo = i + 1; this.setState({ msgCount: i + 1, typingIdx: -1 }); },
+          op: i < msgCount ? 1 : 0.32,
+          rowBg: active ? 'rgba(8,9,10,.08)' : 'transparent'
+        };
+      }),
+      typingVisible: typingIdx > -1,
+      typingName: typingIdx > -1 ? MESSAGES[typingIdx].name : '',
+      riskScore: msgCount === 0 ? 0 : MESSAGES[msgCount - 1].risk,
+      riskLabel: msgCount === 0 ? 'idle' : MESSAGES[msgCount - 1].label,
+      riskHeight: `${msgCount === 0 ? 0 : MESSAGES[msgCount - 1].risk}%`,
+      riskColor: (() => { const r = msgCount === 0 ? 0 : MESSAGES[msgCount - 1].risk; return r >= 80 ? '#08090a' : r >= 30 ? '#08090a' : '#08090a'; })(),
+      ...this.getEditorState(msgCount),
+      features: this.getFeatures(feature),
+      activeFeature: FEATURES[feature],
+    };
+  }
+}
+
+</script>
+</body>
+</html>

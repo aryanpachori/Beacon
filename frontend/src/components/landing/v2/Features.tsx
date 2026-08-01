@@ -66,33 +66,33 @@ export function Features() {
                 onMouseEnter={() => setFeature(i)}
                 onFocus={() => setFeature(i)}
                 tabIndex={0}
-                className="grid cursor-default grid-cols-[44px_1fr] gap-[22px] border-t border-white/[0.09] py-[27px] outline-none"
+                className="grid cursor-default grid-cols-[44px_1fr] gap-[22px] border-t border-black/[0.09] py-[27px] outline-none"
               >
                 <span
                   className="bl-mono pt-[3px] text-[13px] transition-colors duration-300"
-                  style={{ color: on ? '#dc2f2f' : 'rgba(242,240,237,.35)' }}
+                  style={{ color: on ? '#dc2f2f' : 'rgba(8,9,10,.35)' }}
                 >
                   {f.n}
                 </span>
                 <div>
                   <div
                     className="mb-1.5 text-[19px] font-semibold tracking-[-0.02em] transition-colors duration-300"
-                    style={{ color: on ? '#f2f0ed' : 'rgba(242,240,237,.7)' }}
+                    style={{ color: on ? '#08090a' : 'rgba(8,9,10,.7)' }}
                   >
                     {f.title}
                   </div>
-                  <p className="m-0 max-w-[44ch] text-[14.5px] leading-[1.55] text-[rgba(242,240,237,.5)]">
+                  <p className="m-0 max-w-[44ch] text-[14.5px] leading-[1.55] text-[rgba(8,9,10,.5)]">
                     {f.body}
                   </p>
                 </div>
               </div>
             )
           })}
-          <div className="border-t border-white/[0.09]" />
+          <div className="border-t border-black/[0.09]" />
         </div>
 
         <div className="sticky top-8">
-          <div className="relative min-h-[300px] overflow-hidden rounded-[14px] border border-white/[0.09] bg-[#0e1012] px-[26px] pb-[26px] pt-7 shadow-[0_20px_50px_rgba(0,0,0,.4)]">
+          <div className="relative min-h-[300px] overflow-hidden rounded-[14px] border border-black/[0.09] bg-[#ffffff] px-[26px] pb-[26px] pt-7 shadow-[0_20px_50px_rgba(0,0,0,.4)]">
             <span className="bl-mono pointer-events-none absolute right-4 top-0.5 select-none text-[96px] font-semibold leading-none text-white/[0.035]">
               {active.n}
             </span>
@@ -108,7 +108,7 @@ export function Features() {
             <div className="relative mb-[18px] max-w-[20ch] text-[22px] font-semibold leading-[1.25] tracking-[-0.02em]">
               {active.title}
             </div>
-            <div className="bl-mono relative whitespace-pre-wrap rounded-[9px] border border-white/[0.07] bg-white/[0.03] px-[15px] py-[13px] text-[12.5px] leading-[1.75] text-[rgba(242,240,237,.75)]">
+            <div className="bl-mono relative whitespace-pre-wrap rounded-[9px] border border-black/[0.07] bg-black/[0.03] px-[15px] py-[13px] text-[12.5px] leading-[1.75] text-[rgba(8,9,10,.75)]">
               {active.snippet}
             </div>
           </div>

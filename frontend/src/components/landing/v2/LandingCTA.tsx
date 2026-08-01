@@ -9,7 +9,7 @@ export function LandingCTA() {
         Let your AI ship faster. Let Beacon{' '}
         <span className="bl-serif font-normal italic text-[#dc2f2f]">watch</span>.
       </h2>
-      <p className="relative mx-auto mb-8 max-w-[46ch] text-[17px] text-[rgba(242,240,237,.55)]">
+      <p className="relative mx-auto mb-8 max-w-[46ch] text-[17px] text-[rgba(8,9,10,.55)]">
         Free to install. No repo access. Live in your editor before your next prompt finishes.
       </p>
       <div className="relative flex flex-wrap justify-center gap-3">

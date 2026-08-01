@@ -94,18 +94,18 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
           at agent speed.
         </h1>
 
-        <p className="mb-3.5 text-[clamp(18px,2.4vw,22px)] leading-[1.35] tracking-[-0.02em] text-[rgba(242,240,237,.9)]">
+        <p className="mb-3.5 text-[clamp(18px,2.4vw,22px)] leading-[1.35] tracking-[-0.02em] text-[rgba(8,9,10,.9)]">
           Beacon catches{' '}
           <span
             key={word}
-            className="bl-serif bl-word-in inline-block font-normal italic text-[#dc2f2f]"
+            className="bl-serif bl-word-in inline-block font-normal italic text-[#08090a]"
           >
             {WORDS[word]}
           </span>{' '}
           before commit.
         </p>
 
-        <p className="mb-[34px] max-w-[44ch] text-[16.5px] leading-relaxed text-[rgba(242,240,237,.56)]">
+        <p className="mb-[34px] max-w-[44ch] text-[16.5px] leading-relaxed text-[rgba(8,9,10,.56)]">
           It rides along with Cursor, Claude Code and Copilot, reviewing every line the moment it&apos;s
           written — inside your editor, on your machine.
         </p>
@@ -119,7 +119,7 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
           </a>
         </div>
 
-        <div className="bl-mono flex flex-wrap gap-[22px] text-[11.5px] uppercase tracking-[0.04em] text-[rgba(242,240,237,.4)]">
+        <div className="bl-mono flex flex-wrap gap-[22px] text-[11.5px] uppercase tracking-[0.04em] text-[rgba(8,9,10,.4)]">
           <span>IDE</span>
           <span>MCP</span>
           <span>CLI</span>
@@ -129,12 +129,12 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
       </div>
 
       <div className="bl-float relative">
-        <div className="relative overflow-hidden rounded-[14px] border border-white/[0.09] bg-[#0e1012] shadow-[0_30px_80px_rgba(0,0,0,.6)]">
-          <div className="flex items-center gap-3 border-b border-white/[0.07] px-4 py-[13px]">
-            <span className="bl-mono text-xs text-[rgba(242,240,237,.55)]">routes/payments.ts</span>
+        <div className="relative overflow-hidden rounded-[14px] border border-black/[0.09] bg-[#ffffff]">
+          <div className="flex items-center gap-3 border-b border-black/[0.07] px-4 py-[13px]">
+            <span className="bl-mono text-xs text-[rgba(8,9,10,.55)]">routes/payments.ts</span>
             <div className="ml-auto flex items-center gap-2">
               <BeaconOrb size={16} core={7} color={orb.c} ring={orb.r} duration={1.8} />
-              <span className="bl-mono text-[11px] tracking-[0.03em] text-[rgba(242,240,237,.55)]">
+              <span className="bl-mono text-[11px] tracking-[0.03em] text-[rgba(8,9,10,.55)]">
                 {orb.l}
               </span>
             </div>
@@ -160,7 +160,7 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
               <CodeLine n={2} pad>
                 <span style={{ color: '#8fa7ff' }}>const</span> key ={' '}
                 <span style={{ color: '#e3a978' }}>&quot;{typed}</span>
-                <span className="bl-caret inline-block h-[15px] w-[7px] translate-y-[-2px] bg-[#dc2f2f] align-[-2px]" />
+                <span className="bl-caret inline-block h-[15px] w-[7px] translate-y-[-2px] bg-[#08090a] align-[-2px]" />
               </CodeLine>
             )}
 
@@ -199,14 +199,14 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
                     CRITICAL
                   </span>
                 </div>
-                <p className="mb-[11px] text-[13px] leading-normal text-[rgba(242,240,237,.62)]">
+                <p className="mb-[11px] text-[13px] leading-normal text-[rgba(8,9,10,.62)]">
                   A live key would be committed to the repo. Read it from the environment instead.
                 </p>
                 <div className="flex gap-2">
-                  <span className="bl-on-orange rounded-[7px] bg-[#dc2f2f] px-3 py-[7px] text-[12.5px] font-medium text-[#f8f8f8]">
+                  <span className="bl-on-orange rounded-[7px] bg-[#08090a] px-3 py-[7px] text-[12.5px] font-medium text-[#f8f8f8]">
                     Accept fix
                   </span>
-                  <span className="rounded-[7px] border border-white/[0.13] px-3 py-[7px] text-[12.5px] text-[rgba(242,240,237,.7)]">
+                  <span className="rounded-[7px] border border-black/[0.13] px-3 py-[7px] text-[12.5px] text-[rgba(8,9,10,.7)]">
                     Explain
                   </span>
                 </div>
@@ -226,7 +226,7 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
             <CodeLine n={5}>{'}'}</CodeLine>
           </div>
 
-          <div className="bl-mono flex items-center gap-2.5 border-t border-white/[0.07] px-4 py-3 text-[11px] text-[rgba(242,240,237,.42)]">
+          <div className="bl-mono flex items-center gap-2.5 border-t border-black/[0.07] px-4 py-3 text-[11px] text-[rgba(8,9,10,.42)]">
             <span>{STATUS[phase]}</span>
             <span className="ml-auto">nothing left this machine</span>
           </div>
@@ -241,7 +241,7 @@ function CodeLine({
   children,
   pad,
   className = '',
-  numClass = 'text-[rgba(242,240,237,.25)]',
+  numClass = 'text-[rgba(8,9,10,.25)]',
 }: {
   n: number
   children: ReactNode
@@ -250,7 +250,7 @@ function CodeLine({
   numClass?: string
 }) {
   return (
-    <div className={`grid grid-cols-[44px_1fr] text-[rgba(242,240,237,.82)] ${className}`}>
+    <div className={`grid grid-cols-[44px_1fr] text-[rgba(8,9,10,.82)] ${className}`}>
       <span className={`pr-4 text-right ${numClass}`}>{n}</span>
       <span className={pad ? 'pl-[18px]' : undefined}>{children}</span>
     </div>

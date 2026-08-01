@@ -116,12 +116,12 @@ export function RepoCard({ repo, onRescan }: RepoCardProps) {
         scanning
           ? {
               boxShadow: [
-                '0 0 0 0 rgba(79,97,40, 0)',
-                '0 0 0 3px rgba(79,97,40, 0.35)',
-                '0 0 0 0 rgba(79,97,40, 0)',
+                '0 0 0 0 rgba(17,17,17,0)',
+                '0 0 0 3px rgba(17,17,17,0.2)',
+                '0 0 0 0 rgba(17,17,17,0)',
               ],
             }
-          : { boxShadow: '0 0 0 0 rgba(79,97,40, 0)' }
+          : { boxShadow: '0 0 0 0 rgba(17,17,17,0)' }
       }
       transition={scanning ? { duration: 0.65, repeat: 2, ease: 'easeInOut' } : { duration: 0.2 }}
     >

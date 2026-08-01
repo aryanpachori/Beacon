@@ -38,7 +38,7 @@ export function SiteLogo({
         <span
           className={`text-[19px] font-semibold tracking-[-0.025em] ${wordmarkClass}`}
         >
-          Beacon
+          beacon
         </span>
       )}
     </Link>
