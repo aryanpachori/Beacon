@@ -2,133 +2,33 @@
 
 import { useEffect, useRef, useState } from 'react'
 
+type Tag = 'TEAM' | 'BEACON' | 'FIX'
+
 type Message = {
   id: number
   name: string
-  role: string
-  initials: string
-  avatarBg: string
-  avatarColor: string
+  tag: Tag
   time: string
   text: string
-  chip?: {
-    border: string
-    bg: string
-    color: string
-    text: string
-  }
+  risk: number
+  label: string
 }
 
 const MESSAGES: Message[] = [
-  {
-    id: 1,
-    name: 'Beck Ostrander',
-    role: 'CEO, Loopr',
-    initials: 'BO',
-    avatarBg: 'rgba(8,9,10,.1)',
-    avatarColor: 'rgba(8,9,10,.75)',
-    time: '9:41 AM',
-    text: 'just wire up stripe, we demo in an hour',
-  },
-  {
-    id: 2,
-    name: 'Jenna Cole',
-    role: 'Staff Eng',
-    initials: 'JC',
-    avatarBg: 'rgba(8,9,10,.06)',
-    avatarColor: 'rgba(8,9,10,.6)',
-    time: '9:41 AM',
-    text: 'an hour?? for a full checkout flow??',
-  },
-  {
-    id: 3,
-    name: 'Beck Ostrander',
-    role: 'CEO, Loopr',
-    initials: 'BO',
-    avatarBg: 'rgba(8,9,10,.1)',
-    avatarColor: 'rgba(8,9,10,.75)',
-    time: '9:41 AM',
-    text: 'relax, cursor can knock this out in like 2 minutes',
-  },
-  {
-    id: 4,
-    name: 'cursor-agent',
-    role: 'bot',
-    initials: 'AI',
-    avatarBg: 'rgba(8,9,10,.04)',
-    avatarColor: 'rgba(8,9,10,.5)',
-    time: '9:41 AM',
-    text: 'added checkout.ts to the branch',
-    chip: {
-      border: 'rgba(8,9,10,.13)',
-      bg: 'rgba(8,9,10,.03)',
-      color: 'rgba(8,9,10,.8)',
-      text: '+240 −18 · 4 files changed\nconst key = "sk_live_51H8xJ2…"',
-    },
-  },
-  {
-    id: 5,
-    name: 'Jenna Cole',
-    role: 'Staff Eng',
-    initials: 'JC',
-    avatarBg: 'rgba(8,9,10,.06)',
-    avatarColor: 'rgba(8,9,10,.6)',
-    time: '9:41 AM',
-    text: 'ok that actually worked. wait let me check something',
-  },
-  {
-    id: 6,
-    name: 'Beacon',
-    role: 'bot',
-    initials: '◆',
-    avatarBg: 'rgba(220,47,47,.16)',
-    avatarColor: '#dc2f2f',
-    time: '9:41 AM',
-    text: 'blocked before commit — this needs a look',
-    chip: {
-      border: 'rgba(242,112,92,.4)',
-      bg: 'rgba(242,112,92,.09)',
-      color: '#f2705c',
-      text: 'CRITICAL  hardcoded secret · line 2',
-    },
-  },
-  {
-    id: 7,
-    name: 'Jenna Cole',
-    role: 'Staff Eng',
-    initials: 'JC',
-    avatarBg: 'rgba(8,9,10,.06)',
-    avatarColor: 'rgba(8,9,10,.6)',
-    time: '9:42 AM',
-    text: 'oh no. OH NO. it hardcoded the live stripe key',
-  },
-  {
-    id: 8,
-    name: 'Jenna Cole',
-    role: 'Staff Eng',
-    initials: 'JC',
-    avatarBg: 'rgba(8,9,10,.06)',
-    avatarColor: 'rgba(8,9,10,.6)',
-    time: '9:42 AM',
-    text: 'ok, fixed, pushed. crisis averted. seen this one before.',
-    chip: {
-      border: 'rgba(8,9,10,.16)',
-      bg: 'rgba(8,9,10,.04)',
-      color: 'rgba(8,9,10,.8)',
-      text: 'const key = process.env.STRIPE_KEY',
-    },
-  },
-  {
-    id: 9,
-    name: 'Beck Ostrander',
-    role: 'CEO, Loopr',
-    initials: 'BO',
-    avatarBg: 'rgba(8,9,10,.1)',
-    avatarColor: 'rgba(8,9,10,.75)',
-    time: '9:44 AM',
-    text: 'demo’d clean. calling it our robust security posture on the call',
-  },
+  { id: 1, name: 'Gilfoyle', tag: 'TEAM', time: '2:14 AM', text: 'Beacon flagged clsx. Score of 21. Try to look concerned.', risk: 21, label: 'flagged' },
+  { id: 2, name: 'Dinesh', tag: 'TEAM', time: '2:15 AM', text: 'Some of us sleep, Gilfoyle.', risk: 21, label: 'flagged' },
+  { id: 3, name: 'Beacon', tag: 'BEACON', time: '2:16 AM', text: 'Blocked — clsx maintainer inactive 90+ days, no CVE response window', risk: 74, label: 'blocked' },
+  { id: 4, name: 'Erlich', tag: 'TEAM', time: '7:42 AM', text: 'I found Beacon. You’re welcome, as usual.', risk: 74, label: 'blocked' },
+  { id: 5, name: 'Richard', tag: 'TEAM', time: '7:44 AM', text: 'Are we getting sued. Just — are we.', risk: 70, label: 'contained' },
+  { id: 6, name: 'Dinesh', tag: 'FIX', time: '7:51 AM', text: 'Patched · pinned and suppressed', risk: 22, label: 'patched' },
+  { id: 7, name: 'Erlich', tag: 'TEAM', time: '8:11 AM', text: 'Pro plan approved. By me. You’re all lucky to know me.', risk: 8, label: 'resolved' },
 ]
+
+const TAG_STYLE: Record<Tag, { bg: string; color: string }> = {
+  TEAM: { bg: 'rgba(8,9,10,.08)', color: 'rgba(8,9,10,.65)' },
+  BEACON: { bg: 'rgba(8,9,10,.16)', color: '#08090a' },
+  FIX: { bg: 'rgba(8,9,10,.16)', color: '#08090a' },
+}
 
 export function StoryTimeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
   const [msgCount, setMsgCount] = useState(0)
@@ -179,26 +79,26 @@ export function StoryTimeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
   const messages = MESSAGES.slice(0, msgCount)
   const typingVisible = typingIdx > -1
   const typingName = typingVisible ? MESSAGES[typingIdx].name : ''
+  const current = msgCount === 0 ? { risk: 0, label: 'idle' } : MESSAGES[msgCount - 1]
 
   return (
     <section data-reveal className="pb-[118px]">
-      <div className="grid items-center gap-10 lg:grid-cols-[1fr_620px] lg:gap-14">
-        <div>
-          <p className="bl-kicker">Demo day at Loopr</p>
-          <h2 className="bl-h2 max-w-[16ch]">How it actually plays out.</h2>
-          <p className="bl-lede max-w-[42ch]">
-            A founder who overpromised, an engineer who&apos;s seen this before, and one leaked key
-            that never leaves the laptop — as it happened, in #loopr-eng.
-          </p>
-        </div>
+      <p className="bl-kicker">In the room</p>
+      <h2 className="bl-h2 max-w-[16ch]">
+        Every team has a Gilfoyle.
+      </h2>
+      <p className="bl-lede mb-[60px] max-w-[46ch]">
+        Beacon just makes sure someone catches it before he does.
+      </p>
 
+      <div className="grid gap-6 lg:grid-cols-[1fr_120px]">
         <div className="overflow-hidden rounded-[14px] border border-black/[0.09] bg-[#ffffff]">
           <div className="flex items-center gap-2.5 border-b border-black/[0.07] px-5 py-3.5">
             <span className="bl-mono text-[13.5px] font-medium text-[rgba(8,9,10,.85)]">
-              # loopr-eng
+              #pied-piper-eng
             </span>
             <span className="bl-mono ml-auto text-[11px] text-[rgba(8,9,10,.35)]">
-              3 members · 1 bot
+              4 members · 1 bot
             </span>
           </div>
 
@@ -206,40 +106,36 @@ export function StoryTimeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
             ref={chatRef}
             className="flex h-[380px] flex-col gap-5 overflow-y-auto px-5 py-[22px]"
           >
-            {messages.map((m) => (
-              <div key={m.id} className="bl-msg-in flex gap-3">
-                <div
-                  className="grid h-[30px] w-[30px] shrink-0 place-items-center rounded-lg bl-mono text-[11.5px] font-semibold"
-                  style={{ background: m.avatarBg, color: m.avatarColor }}
-                >
-                  {m.initials}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="mb-1 flex items-baseline gap-2">
-                    <span className="text-sm font-semibold tracking-[-0.01em]">{m.name}</span>
-                    <span className="text-[11px] text-[rgba(8,9,10,.35)]">{m.role}</span>
-                    <span className="bl-mono ml-auto text-[10.5px] text-[rgba(8,9,10,.3)]">
-                      {m.time}
-                    </span>
+            {messages.map((m) => {
+              const tag = TAG_STYLE[m.tag]
+              return (
+                <div key={m.id} className="bl-msg-in flex gap-3">
+                  <div
+                    className="grid h-[30px] w-[30px] shrink-0 place-items-center rounded-lg bl-mono text-[11px] font-semibold"
+                    style={{ background: tag.bg, color: tag.color }}
+                  >
+                    {m.name.slice(0, 2).toUpperCase()}
                   </div>
-                  <p className="m-0 text-[14.5px] leading-[1.5] text-[rgba(8,9,10,.82)]">
-                    {m.text}
-                  </p>
-                  {m.chip && (
-                    <div
-                      className="bl-mono mt-[9px] inline-block whitespace-pre-wrap rounded-lg border px-[14px] py-[10px] text-[12.5px] leading-[1.6]"
-                      style={{
-                        borderColor: m.chip.border,
-                        background: m.chip.bg,
-                        color: m.chip.color,
-                      }}
-                    >
-                      {m.chip.text}
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-1 flex items-baseline gap-2">
+                      <span className="text-sm font-semibold tracking-[-0.01em]">{m.name}</span>
+                      <span
+                        className="bl-mono rounded px-1.5 py-[1px] text-[9.5px] font-semibold tracking-[0.04em]"
+                        style={{ background: tag.bg, color: tag.color }}
+                      >
+                        {m.tag}
+                      </span>
+                      <span className="bl-mono ml-auto text-[10.5px] text-[rgba(8,9,10,.3)]">
+                        {m.time}
+                      </span>
                     </div>
-                  )}
+                    <p className="m-0 text-[14.5px] leading-[1.5] text-[rgba(8,9,10,.82)]">
+                      {m.text}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
 
             {typingVisible && (
               <div className="flex items-center gap-3 opacity-65">
@@ -247,14 +143,32 @@ export function StoryTimeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
                 <div className="flex items-center gap-2">
                   <span className="text-[12.5px] text-[rgba(8,9,10,.45)]">{typingName}</span>
                   <div className="flex gap-[3px]">
-                    <span className="bl-typing-dot" />
-                    <span className="bl-typing-dot" style={{ animationDelay: '.15s' }} />
-                    <span className="bl-typing-dot" style={{ animationDelay: '.3s' }} />
+                    <span className="bl-typing-dot" style={{ animationDelay: '0s' }} />
+                    <span className="bl-typing-dot" style={{ animationDelay: '0.15s' }} />
+                    <span className="bl-typing-dot" style={{ animationDelay: '0.3s' }} />
                   </div>
                 </div>
               </div>
             )}
           </div>
+        </div>
+
+        <div className="flex flex-col items-center justify-center rounded-[14px] border border-black/[0.09] bg-[#ffffff] px-4 py-6">
+          <span className="bl-mono mb-3 text-[10px] uppercase tracking-[0.08em] text-[rgba(8,9,10,.4)]">
+            Risk level
+          </span>
+          <div className="relative flex h-[140px] w-3 items-end overflow-hidden rounded-full bg-black/[0.06]">
+            <div
+              className="w-full rounded-full bg-[#08090a] transition-all duration-700 ease-out"
+              style={{ height: `${current.risk}%` }}
+            />
+          </div>
+          <span className="bl-mono mt-3 text-[22px] font-semibold text-[#08090a]">
+            {current.risk}
+          </span>
+          <span className="bl-mono text-[11px] capitalize text-[rgba(8,9,10,.5)]">
+            {current.label}
+          </span>
         </div>
       </div>
     </section>
