@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from 'react'
 import {
   LayoutDashboard, Package,
   CreditCard, User, LogOut, ChevronLeft, ChevronRight,
-  HelpCircle, ScanLine,
+  HelpCircle,
   Command, Sun, Moon, MessageSquarePlus, Radar,
 } from 'lucide-react'
 import { useTheme } from '@/hooks/useTheme'
