@@ -61,7 +61,7 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
             style={{
               width: 210,
               height: 210,
-              border: '1px solid rgba(255,102,0,.22)',
+              border: '1px solid rgba(220,47,47,.22)',
               animationDuration: '3.4s',
             }}
           />
@@ -70,16 +70,16 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
             style={{
               width: 210,
               height: 210,
-              border: '1px solid rgba(255,102,0,.16)',
+              border: '1px solid rgba(220,47,47,.16)',
               animationDuration: '3.4s',
               animationDelay: '1.7s',
             }}
           />
-          <div className="relative w-[250px] rounded-[18px] border border-[rgba(255,102,0,.42)] bg-[linear-gradient(180deg,rgba(255,102,0,.09),rgba(255,102,0,.02))] px-[18px] pb-4 pt-[18px] backdrop-blur-[2px]">
+          <div className="relative w-[250px] rounded-[18px] border border-[rgba(220,47,47,.42)] bg-[linear-gradient(180deg,rgba(220,47,47,.09),rgba(220,47,47,.02))] px-[18px] pb-4 pt-[18px] backdrop-blur-[2px]">
             <div className="mb-3.5 flex items-center gap-[9px]">
               <BeaconOrb size={16} core={7} duration={1.6} />
               <span className="text-[15px] font-semibold tracking-[-0.015em]">beacon mcp</span>
-              <span className="bl-mono ml-auto text-[9.5px] tracking-[0.06em] text-[rgba(255,102,0,.9)]">
+              <span className="bl-mono ml-auto text-[9.5px] tracking-[0.06em] text-[rgba(220,47,47,.9)]">
                 LOCAL
               </span>
             </div>
@@ -92,19 +92,19 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
                     className="bl-mono flex items-center gap-2 text-[11px] transition-[opacity,color] duration-[350ms] ease-out"
                     style={{
                       opacity: on ? 1 : 0.45,
-                      color: on ? '#ff6600' : 'rgba(242,240,237,.6)',
+                      color: on ? '#dc2f2f' : 'rgba(242,240,237,.6)',
                     }}
                   >
                     <span
                       className="h-[5px] w-[5px] rounded-full"
-                      style={{ background: on ? '#ff6600' : 'rgba(255,102,0,.35)' }}
+                      style={{ background: on ? '#dc2f2f' : 'rgba(220,47,47,.35)' }}
                     />
                     {label}
                   </div>
                 )
               })}
             </div>
-            <div className="bl-mono mt-3.5 flex border-t border-[rgba(255,102,0,.2)] pt-3 text-[10px] text-[rgba(242,240,237,.5)]">
+            <div className="bl-mono mt-3.5 flex border-t border-[rgba(220,47,47,.2)] pt-3 text-[10px] text-[rgba(242,240,237,.5)]">
               <span>{MCP_STATUS[step]}</span>
               <span className="ml-auto">38ms</span>
             </div>

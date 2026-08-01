@@ -70,7 +70,7 @@ export function Features() {
               >
                 <span
                   className="bl-mono pt-[3px] text-[13px] transition-colors duration-300"
-                  style={{ color: on ? '#ff6600' : 'rgba(242,240,237,.35)' }}
+                  style={{ color: on ? '#dc2f2f' : 'rgba(242,240,237,.35)' }}
                 >
                   {f.n}
                 </span>
@@ -98,10 +98,10 @@ export function Features() {
             </span>
             <div className="relative mb-5 flex items-center gap-2">
               <span
-                className="bl-orb-core h-1.5 w-1.5 rounded-full bg-[#ff6600]"
-                style={{ boxShadow: '0 0 10px rgba(255,102,0,.8)', animationDuration: '2s' }}
+                className="bl-orb-core h-1.5 w-1.5 rounded-full bg-[#dc2f2f]"
+                style={{ boxShadow: '0 0 10px rgba(220,47,47,.8)', animationDuration: '2s' }}
               />
-              <span className="bl-mono text-[11px] uppercase tracking-[0.08em] text-[#ff6600]">
+              <span className="bl-mono text-[11px] uppercase tracking-[0.08em] text-[#dc2f2f]">
                 {active.tag}
               </span>
             </div>

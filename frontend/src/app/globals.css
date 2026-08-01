@@ -18,11 +18,12 @@
   --dl-blue-pale:   rgba(220, 47, 47, 0.12);
   --dl-aurora:      #dc2f2f;
 
-  /* Strict grayscale surface system — black bg, one card tone */
-  --dl-bg:      #000000;
-  --dl-surface: #0d0d0d;
-  --dl-border: #262626;
+  /* Softened dark surface system — charcoal bg, elevated card tone */
+  --dl-bg:      #0d0d10;
+  --dl-surface: #17171b;
+  --dl-border: #242429;
   --dl-muted:   #a3a3a3;
+  --dl-card-shadow: 0 1px 3px rgba(0,0,0,0.4);
   --dl-text:    #f8f8f8;
   --dl-navy:    #f8f8f8;
   --dl-chip-bg: rgba(255, 255, 255, 0.06);
@@ -59,10 +60,11 @@
 /* Dark mode — identical to :root since the platform is now dark-first */
 .dark {
   color-scheme: dark;
-  --dl-bg:         #000000;
-  --dl-surface: #0d0d0d;
-  --dl-border: #262626;
+  --dl-bg:         #0d0d10;
+  --dl-surface: #17171b;
+  --dl-border: #242429;
   --dl-muted:      #a3a3a3;
+  --dl-card-shadow: 0 1px 3px rgba(0,0,0,0.4);
   --dl-text:       #f8f8f8;
   --dl-chart-grid: #262626;
   --dl-navy:       #f8f8f8;
@@ -180,12 +182,13 @@ body {
     --dl-cream: transparent;
   }
 
-  /* ── Cards ── */
+  /* ── Cards — elevated surfaces with soft depth, not flat blocks ── */
   .dash-card {
     background: var(--dl-surface);
     border: 1px solid var(--dl-border);
-    border-radius: 12px;
-    padding: 16px;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--dl-card-shadow);
     transition: box-shadow 0.2s ease, border-color 0.2s ease;
   }
   .dash-card:hover {
@@ -193,7 +196,8 @@ body {
   }
 
   .dl-card {
-    @apply rounded-xl border border-dl-border bg-dl-surface p-4;
+    @apply rounded-2xl border border-dl-border bg-dl-surface p-6;
+    box-shadow: var(--dl-card-shadow);
     transition: box-shadow 0.2s ease, border-color 0.2s ease;
   }
   .dl-card:hover {
@@ -204,8 +208,9 @@ body {
   .insight-card {
     background: var(--dl-surface);
     border: 1px solid var(--dl-border);
-    border-radius: 12px;
-    padding: 16px;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--dl-card-shadow);
     transition: box-shadow 0.2s ease, border-color 0.2s ease;
     position: relative;
     overflow: hidden;
@@ -367,11 +372,13 @@ body {
   }
 
   .dash-panel {
-    @apply overflow-hidden rounded-xl border border-dl-border bg-dl-surface shadow-sm;
+    @apply overflow-hidden rounded-2xl border border-dl-border bg-dl-surface;
+    box-shadow: var(--dl-card-shadow);
   }
 
   .dash-stat-card {
-    @apply rounded-xl border border-dl-border bg-dl-surface p-3 transition-colors hover:border-[#333338];
+    @apply rounded-2xl border border-dl-border bg-dl-surface p-5 transition-colors hover:border-[#333338];
+    box-shadow: var(--dl-card-shadow);
   }
 
   .chart-tooltip {

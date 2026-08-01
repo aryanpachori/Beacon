@@ -16,8 +16,8 @@ const WORDS = [
 const KEY = 'sk_live_51H8xJ2eZvKYlo2C…'
 
 const ORB = [
-  { c: '#ff6600', r: 'rgba(255,102,0,.5)', l: 'watching' },
-  { c: '#ff6600', r: 'rgba(255,102,0,.6)', l: 'reviewing' },
+  { c: '#dc2f2f', r: 'rgba(220,47,47,.5)', l: 'watching' },
+  { c: '#dc2f2f', r: 'rgba(220,47,47,.6)', l: 'reviewing' },
   { c: '#f2705c', r: 'rgba(242,112,92,.6)', l: '1 issue' },
   { c: '#6fd39a', r: 'rgba(111,211,154,.55)', l: 'clear' },
 ] as const
@@ -98,7 +98,7 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
           Beacon catches{' '}
           <span
             key={word}
-            className="bl-serif bl-word-in inline-block font-normal italic text-[#ff6600]"
+            className="bl-serif bl-word-in inline-block font-normal italic text-[#dc2f2f]"
           >
             {WORDS[word]}
           </span>{' '}
@@ -146,7 +146,7 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
                 className="bl-scan pointer-events-none absolute inset-x-0 top-0 h-[34px]"
                 style={{
                   background:
-                    'linear-gradient(180deg,transparent,rgba(255,102,0,.13),transparent)',
+                    'linear-gradient(180deg,transparent,rgba(220,47,47,.13),transparent)',
                 }}
               />
             )}
@@ -160,7 +160,7 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
               <CodeLine n={2} pad>
                 <span style={{ color: '#8fa7ff' }}>const</span> key ={' '}
                 <span style={{ color: '#e3a978' }}>&quot;{typed}</span>
-                <span className="bl-caret inline-block h-[15px] w-[7px] translate-y-[-2px] bg-[#ff6600] align-[-2px]" />
+                <span className="bl-caret inline-block h-[15px] w-[7px] translate-y-[-2px] bg-[#dc2f2f] align-[-2px]" />
               </CodeLine>
             )}
 
@@ -203,7 +203,7 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
                   A live key would be committed to the repo. Read it from the environment instead.
                 </p>
                 <div className="flex gap-2">
-                  <span className="bl-on-orange rounded-[7px] bg-[#ff6600] px-3 py-[7px] text-[12.5px] font-medium text-[#0b0a08]">
+                  <span className="bl-on-orange rounded-[7px] bg-[#dc2f2f] px-3 py-[7px] text-[12.5px] font-medium text-[#f8f8f8]">
                     Accept fix
                   </span>
                   <span className="rounded-[7px] border border-white/[0.13] px-3 py-[7px] text-[12.5px] text-[rgba(242,240,237,.7)]">

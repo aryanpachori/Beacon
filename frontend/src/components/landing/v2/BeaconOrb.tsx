@@ -12,8 +12,8 @@ type OrbProps = {
 export function BeaconOrb({
   size = 22,
   core = 9,
-  color = '#ff6600',
-  ring = 'rgba(255,102,0,.55)',
+  color = '#dc2f2f',
+  ring = 'rgba(220,47,47,.55)',
   duration = 2.6,
   className = '',
 }: OrbProps) {

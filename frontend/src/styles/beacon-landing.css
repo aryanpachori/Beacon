@@ -3,12 +3,12 @@
 .beacon-landing {
   --bl-bg: #08090a;
   --bl-text: #f2f0ed;
-  --bl-accent: #ff6600;
-  --bl-accent-hover: #ff8533;
+  --bl-accent: #dc2f2f;
+  --bl-accent-hover: #e55555;
   --bl-danger: #f2705c;
   --bl-success: #6fd39a;
   --bl-panel: #0e1012;
-  --bl-ink: #0b0a08;
+  --bl-ink: #f8f8f8;
   --bl-border: rgba(255, 255, 255, 0.09);
   --bl-muted: rgba(242, 240, 237, 0.55);
   --bl-dim: rgba(242, 240, 237, 0.4);
@@ -35,14 +35,14 @@
   font-weight: 400;
 }
 .beacon-landing .public-nav a.public-nav-link:hover {
-  color: #ff8533;
+  color: #e55555;
 }
 .beacon-landing .public-nav a.public-nav-link-active {
-  color: #ff6600;
+  color: #dc2f2f;
   font-weight: 600;
 }
 .beacon-landing .public-nav a.public-nav-link-active:hover {
-  color: #ff6600;
+  color: #dc2f2f;
 }
 .beacon-landing .public-nav a.public-nav-brand,
 .beacon-landing .public-nav a.public-nav-brand:hover {
@@ -50,7 +50,7 @@
 }
 .beacon-landing .public-nav a.public-nav-cta,
 .beacon-landing .public-nav a.public-nav-cta:hover {
-  color: #0b0a08 !important;
+  color: #f8f8f8 !important;
 }
 
 /* All text on orange fills stays black (including <a> tags) */
@@ -58,16 +58,16 @@
 .beacon-landing a.bl-btn-primary,
 .beacon-landing .bl-on-orange,
 .beacon-landing a.bl-on-orange,
-.beacon-landing a[class*='bg-[#ff6600]'] {
-  color: #0b0a08 !important;
+.beacon-landing a[class*='bg-[#dc2f2f]'] {
+  color: #f8f8f8 !important;
 }
 
 .beacon-landing .bl-btn-primary:hover,
 .beacon-landing a.bl-btn-primary:hover,
 .beacon-landing .bl-on-orange:hover,
 .beacon-landing a.bl-on-orange:hover,
-.beacon-landing a[class*='bg-[#ff6600]']:hover {
-  color: #0b0a08 !important;
+.beacon-landing a[class*='bg-[#dc2f2f]']:hover {
+  color: #f8f8f8 !important;
 }
 
 /* Orange text on black fills (e.g. Enterprise CTA on orange panel) */
@@ -75,17 +75,17 @@
 .beacon-landing a.bl-on-black,
 .beacon-landing .bl-on-black:hover,
 .beacon-landing a.bl-on-black:hover {
-  color: #ff6600 !important;
+  color: #dc2f2f !important;
 }
 
 /* Footer links sit on orange — never turn orange on hover */
 .beacon-landing footer a,
 .beacon-landing footer a:hover {
-  color: #0b0a08 !important;
+  color: #f8f8f8 !important;
 }
 
 .beacon-landing ::selection {
-  background: rgba(255, 102, 0, 0.28);
+  background: rgba(220, 47, 47, 0.28);
 }
 
 .beacon-landing .bl-mono {
@@ -117,13 +117,13 @@
   padding: 13px 22px;
   border-radius: 999px;
   background: var(--bl-accent);
-  color: #0b0a08 !important;
+  color: #f8f8f8 !important;
   transition: background 0.15s ease;
 }
 
 .beacon-landing .bl-btn-primary:hover {
   background: var(--bl-accent-hover);
-  color: #0b0a08 !important;
+  color: #f8f8f8 !important;
 }
 
 .beacon-landing .bl-btn-ghost {
@@ -140,7 +140,7 @@
 }
 
 .beacon-landing .bl-btn-ghost:hover {
-  border-color: rgba(255, 102, 0, 0.5);
+  border-color: rgba(220, 47, 47, 0.5);
   color: var(--bl-accent);
 }
 
