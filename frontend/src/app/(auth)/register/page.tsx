@@ -238,7 +238,7 @@ function RegisterForm() {
             type="submit"
             disabled={loading}
             className={cn(
-              'mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-[#ff6600] py-3 text-[14px] font-semibold text-white transition-all duration-150',
+              'mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-[#ff6600] py-3 text-[14px] font-semibold text-[#0b0a08] transition-all duration-150',
               loading ? 'cursor-not-allowed opacity-70' : 'hover:bg-[#e55c00] hover:shadow-md active:scale-[0.99]'
             )}
             style={{ boxShadow: '0 2px 12px rgba(79,97,40,0.35)' }}

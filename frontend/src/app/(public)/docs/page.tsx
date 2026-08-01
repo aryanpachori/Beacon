@@ -112,7 +112,7 @@ ${RULE_EXAMPLES.map((item) => `    { "name": "${item.name}", "severity": "${item
             </p>
             <a
               href="mailto:hello@beaconapp.dev?subject=Beacon%20Docs%20Support"
-              className="inline-flex items-center rounded-full bg-[#ff6600] px-5 py-2.5 text-[14px] font-semibold text-[#0b0a08] hover:bg-[#ff8533]"
+              className="bl-on-orange inline-flex items-center rounded-full bg-[#ff6600] px-5 py-2.5 text-[14px] font-semibold text-[#0b0a08] hover:bg-[#ff8533]"
             >
               Contact support
             </a>

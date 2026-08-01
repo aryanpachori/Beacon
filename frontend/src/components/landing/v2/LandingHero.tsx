@@ -80,14 +80,6 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
   return (
     <header className="relative grid items-center gap-10 py-12 md:gap-14 md:py-16 lg:grid-cols-2 lg:gap-14 lg:py-16 lg:pb-24">
       <div className="relative">
-        <div className="mb-[30px] inline-flex items-center gap-[9px] rounded-full border border-white/[0.11] py-1.5 pl-2.5 pr-3.5 text-[12.5px] text-[rgba(242,240,237,.7)]">
-          <span
-            className="bl-orb-core h-1.5 w-1.5 rounded-full bg-[#6fd39a]"
-            style={{ boxShadow: '0 0 10px rgba(111,211,154,.9)', animationDuration: '2s' }}
-          />
-          Local-first · zero repo access
-        </div>
-
         <h1 className="mb-[22px] text-[clamp(40px,6.5vw,66px)] font-semibold leading-[1.02] tracking-[-0.035em]">
           Security that ships
           <br />

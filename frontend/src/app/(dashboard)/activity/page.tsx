@@ -98,7 +98,7 @@ export default function ActivityPage() {
             onClick={() => setFilter(f.key)}
             className={`shrink-0 rounded-xl px-3.5 py-1.5 text-[12px] font-semibold transition-all ${
               filter === f.key
-                ? 'bg-dl-navy text-dl-bg shadow-sm dark:bg-dl-blue dark:text-white'
+                ? 'bg-dl-navy text-dl-bg shadow-sm dark:bg-dl-blue dark:text-[#0b0a08]'
                 : 'bg-dl-bg border border-dl-border text-dl-muted hover:border-dl-muted hover:text-dl-text'
             }`}
           >

@@ -57,14 +57,18 @@
 .beacon-landing .bl-btn-primary,
 .beacon-landing a.bl-btn-primary,
 .beacon-landing .bl-on-orange,
-.beacon-landing a.bl-on-orange {
+.beacon-landing a.bl-on-orange,
+.beacon-landing a[class*='bg-[#ff6600]'],
+.beacon-landing [class*='bg-[#ff6600]'] {
   color: #0b0a08 !important;
 }
 
 .beacon-landing .bl-btn-primary:hover,
 .beacon-landing a.bl-btn-primary:hover,
 .beacon-landing .bl-on-orange:hover,
-.beacon-landing a.bl-on-orange:hover {
+.beacon-landing a.bl-on-orange:hover,
+.beacon-landing a[class*='bg-[#ff6600]']:hover,
+.beacon-landing [class*='bg-[#ff6600]']:hover {
   color: #0b0a08 !important;
 }
 
