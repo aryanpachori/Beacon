@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { LandingFooter } from '@/components/landing/v2/LandingFooter'
-import { SiteLogo } from '@/components/layout/SiteLogo'
+import { PublicNav } from '@/components/layout/PublicNav'
 
 const CORE_FEATURES = [
   'Offline review, on-device',
@@ -61,25 +61,11 @@ function Check({ alt = false }: { alt?: boolean }) {
 
 export default function PricingPage() {
   return (
-    <div className="min-h-screen bg-[#08090a] text-[#f2f0ed]">
-      <div className="mx-auto max-w-[1240px] px-6 md:px-10">
-        <nav className="flex items-center gap-9 border-b-2 border-white/[0.09] py-[26px]">
-          <div className="mr-auto">
-            <SiteLogo
-              className="text-[19px] font-bold tracking-[-0.02em] text-[#f2f0ed]"
-              iconClassName="rounded-md"
-            />
-          </div>
-          <Link href="/" className="text-[14.5px] text-[rgba(242,240,237,.62)] hover:text-[#ff8533]">
-            Home
-          </Link>
-          <Link href="/docs" className="text-[14.5px] text-[rgba(242,240,237,.62)] hover:text-[#ff8533]">
-            Docs
-          </Link>
-          <span className="text-[14.5px] font-semibold text-[#ff6600]">Pricing</span>
-        </nav>
+    <>
+      <div className="bl-shell">
+        <PublicNav />
 
-        <main className="animate-[fade-up_.5s_ease-out] py-[90px]">
+        <main className="py-[90px]">
           <section className="mb-20">
             <div className="mb-7 inline-block rounded bg-[#ff6600] px-[14px] py-[6px] text-[12.5px] font-bold uppercase tracking-[.04em] text-[#0b0a08]">
               Pricing
@@ -94,26 +80,26 @@ export default function PricingPage() {
             </p>
           </section>
 
-          <section className="mb-6 grid border-2 border-[#f2f0ed] lg:grid-cols-2">
-            <div className="border-b-2 border-[#f2f0ed] p-8 md:p-12 lg:border-b-0 lg:border-r-2">
-              <p className="mb-8 text-[13px] font-bold uppercase tracking-[.06em] text-[rgba(242,240,237,.5)]">
+          <section className="mb-6 grid border-2 border-[#f2f0ed] lg:grid-cols-2 lg:items-stretch">
+            <div className="flex flex-col border-b-2 border-[#f2f0ed] p-8 md:p-12 lg:border-b-0 lg:border-r-2">
+              <p className="mb-8 min-h-[18px] text-[13px] font-bold uppercase tracking-[.06em] text-[rgba(242,240,237,.5)]">
                 01 · Core
               </p>
-              <div className="mb-2 flex items-baseline gap-3">
-                <span className="text-[72px] font-bold leading-[.85] tracking-[-.04em] md:text-[104px]">$29</span>
+              <div className="mb-2 flex min-h-[88px] items-end md:min-h-[104px]">
+                <span className="text-[72px] font-bold leading-none tracking-[-.04em] md:text-[104px]">$29</span>
               </div>
-              <p className="mb-10 font-mono text-[15px] font-semibold text-[rgba(242,240,237,.4)]">
+              <p className="mb-10 min-h-[23px] text-[15px] font-semibold leading-none text-[rgba(242,240,237,.4)]">
                 per seat / month
               </p>
               <Link
                 href="/register"
-                className="mb-12 block bg-[#ff6600] px-6 py-5 text-center text-[17px] font-bold text-[#0b0a08] hover:bg-[#ff8533]"
+                className="mb-12 flex h-[62px] items-center justify-center bg-[#ff6600] px-6 text-center text-[17px] font-bold leading-none text-[#0b0a08] hover:bg-[#ff8533]"
               >
                 Start with Core →
               </Link>
               <div className="flex flex-col gap-5">
                 {CORE_FEATURES.map((item) => (
-                  <div key={item} className="flex items-center gap-[14px] text-[16px]">
+                  <div key={item} className="flex items-center gap-[14px] text-[16px] font-semibold leading-[1.3]">
                     <Check />
                     <span>{item}</span>
                   </div>
@@ -121,28 +107,30 @@ export default function PricingPage() {
               </div>
             </div>
 
-            <div className="relative bg-[#ff6600] p-8 md:p-12">
-              <div className="absolute right-12 top-7 bg-[#0b0a08] px-[14px] py-[6px] text-[12px] font-bold uppercase tracking-[.04em] text-[#ff6600]">
+            <div className="relative flex flex-col bg-[#ff6600] p-8 md:p-12">
+              <div className="absolute right-8 top-8 bg-[#0b0a08] px-[14px] py-[6px] text-[12px] font-bold uppercase tracking-[.04em] text-[#ff6600] md:right-12 md:top-7">
                 Most requested
               </div>
-              <p className="mb-8 mt-7 text-[13px] font-bold uppercase tracking-[.06em] text-[rgba(11,10,8,.6)]">
+              <p className="mb-8 min-h-[18px] text-[13px] font-bold uppercase tracking-[.06em] text-[rgba(11,10,8,.6)]">
                 02 · Enterprise
               </p>
-              <div className="mb-2 flex items-baseline gap-3">
-                <span className="text-[56px] font-bold leading-[.85] tracking-[-.04em] text-[#0b0a08] md:text-[104px]">
+              <div className="mb-2 flex min-h-[88px] items-end md:min-h-[104px]">
+                <span className="text-[72px] font-bold leading-none tracking-[-.04em] text-[#0b0a08] md:text-[104px]">
                   Custom
                 </span>
               </div>
-              <p className="mb-10 text-[15px] font-semibold text-[rgba(11,10,8,.55)]">volume-based terms</p>
+              <p className="mb-10 min-h-[23px] text-[15px] font-semibold leading-none text-[rgba(11,10,8,.55)]">
+                volume-based terms
+              </p>
               <a
                 href="mailto:hello@beaconapp.dev?subject=Beacon%20Enterprise%20Demo"
-                className="mb-12 block bg-[#0b0a08] px-6 py-5 text-center text-[17px] font-bold text-[#f2f0ed] hover:opacity-90"
+                className="mb-12 flex h-[62px] items-center justify-center bg-[#0b0a08] px-6 text-center text-[17px] font-bold leading-none text-[#f2f0ed] hover:opacity-90"
               >
                 Request a demo →
               </a>
               <div className="flex flex-col gap-5">
                 {ENTERPRISE_FEATURES.map((item) => (
-                  <div key={item} className="flex items-center gap-[14px] text-[16px] font-semibold text-[#0b0a08]">
+                  <div key={item} className="flex items-center gap-[14px] text-[16px] font-semibold leading-[1.3] text-[#0b0a08]">
                     <Check alt />
                     <span>{item}</span>
                   </div>
@@ -203,6 +191,6 @@ export default function PricingPage() {
         </main>
       </div>
       <LandingFooter />
-    </div>
+    </>
   )
 }

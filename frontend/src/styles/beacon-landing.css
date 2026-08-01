@@ -29,6 +29,30 @@
   color: var(--bl-accent);
 }
 
+/* Public nav — fixed colors so global link rules can't diverge by page */
+.beacon-landing .public-nav a.public-nav-link {
+  color: rgba(242, 240, 237, 0.62);
+  font-weight: 400;
+}
+.beacon-landing .public-nav a.public-nav-link:hover {
+  color: #ff8533;
+}
+.beacon-landing .public-nav a.public-nav-link-active {
+  color: #ff6600;
+  font-weight: 600;
+}
+.beacon-landing .public-nav a.public-nav-link-active:hover {
+  color: #ff6600;
+}
+.beacon-landing .public-nav a.public-nav-brand,
+.beacon-landing .public-nav a.public-nav-brand:hover {
+  color: inherit;
+}
+.beacon-landing .public-nav a.public-nav-cta,
+.beacon-landing .public-nav a.public-nav-cta:hover {
+  color: #0b0a08 !important;
+}
+
 /* All text on orange fills stays black (including <a> tags) */
 .beacon-landing .bl-btn-primary,
 .beacon-landing a.bl-btn-primary,
@@ -57,14 +81,14 @@
 }
 
 .beacon-landing .bl-shell {
-  max-width: 1280px;
+  max-width: 1240px;
   margin: 0 auto;
   padding: 0 40px;
 }
 
 @media (max-width: 768px) {
   .beacon-landing .bl-shell {
-    padding: 0 20px;
+    padding: 0 24px;
   }
 }
 

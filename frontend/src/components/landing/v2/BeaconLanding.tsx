@@ -1,8 +1,6 @@
 'use client'
 
 import { useEffect } from 'react'
-import { Instrument_Sans, Instrument_Serif, JetBrains_Mono } from 'next/font/google'
-import '@/styles/beacon-landing.css'
 import { LandingNav } from './LandingNav'
 import { LandingHero } from './LandingHero'
 import { TrustStrip } from './TrustStrip'
@@ -10,29 +8,6 @@ import { Pipeline } from './Pipeline'
 import { Features } from './Features'
 import { LandingCTA } from './LandingCTA'
 import { LandingFooter } from './LandingFooter'
-
-const instrumentSans = Instrument_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  style: ['normal', 'italic'],
-  variable: '--font-instrument-sans',
-  display: 'swap',
-})
-
-const instrumentSerif = Instrument_Serif({
-  subsets: ['latin'],
-  weight: ['400'],
-  style: ['normal', 'italic'],
-  variable: '--font-instrument-serif',
-  display: 'swap',
-})
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500'],
-  variable: '--font-mono',
-  display: 'swap',
-})
 
 function useScrollReveal() {
   useEffect(() => {
@@ -73,9 +48,7 @@ export function BeaconLanding({
   useScrollReveal()
 
   return (
-    <div
-      className={`beacon-landing ${instrumentSans.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable}`}
-    >
+    <>
       <div className="bl-shell">
         <LandingNav />
         <LandingHero demoSpeed={demoSpeed} />
@@ -85,6 +58,6 @@ export function BeaconLanding({
         <LandingCTA />
       </div>
       <LandingFooter />
-    </div>
+    </>
   )
 }

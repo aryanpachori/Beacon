@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { SiteLogo } from '@/components/layout/SiteLogo'
 import { LandingFooter } from '@/components/landing/v2/LandingFooter'
+import { PublicNav } from '@/components/layout/PublicNav'
 
 const QUICKSTART_STEPS = [
   'Install Beacon in Cursor, VS Code, or JetBrains.',
@@ -21,32 +21,9 @@ export const metadata = {
 
 export default function DocsPage() {
   return (
-    <div className="min-h-screen bg-[#08090a] text-[#f2f0ed]">
-      <div className="mx-auto max-w-[1240px] px-6 md:px-10">
-        <nav className="flex items-center gap-9 border-b-2 border-white/[0.09] py-[26px]">
-          <div className="mr-auto">
-            <SiteLogo
-              className="text-[19px] font-bold tracking-[-0.02em] text-[#f2f0ed]"
-              iconClassName="rounded-md"
-            />
-          </div>
-          <Link href="/" className="text-[14.5px] text-[rgba(242,240,237,.62)] hover:text-[#ff8533]">
-            Home
-          </Link>
-          <span className="text-[14.5px] font-semibold text-[#ff6600]">Docs</span>
-          <Link
-            href="/pricing"
-            className="text-[14.5px] text-[rgba(242,240,237,.62)] hover:text-[#ff8533]"
-          >
-            Pricing
-          </Link>
-          <Link
-            href="/register"
-            className="rounded-full bg-[#ff6600] px-4 py-[9px] text-[14px] font-medium text-[#0b0a08] transition-colors hover:bg-[#ff8533]"
-          >
-            Install Beacon
-          </Link>
-        </nav>
+    <>
+      <div className="bl-shell">
+        <PublicNav />
 
         <main className="py-[90px]">
           <section className="mb-20">
@@ -143,6 +120,6 @@ ${RULE_EXAMPLES.map((item) => `    { "name": "${item.name}", "severity": "${item
         </main>
       </div>
       <LandingFooter />
-    </div>
+    </>
   )
 }
