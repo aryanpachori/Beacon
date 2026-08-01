@@ -16,10 +16,10 @@ const WORDS = [
 const KEY = 'sk_live_51H8xJ2eZvKYlo2C…'
 
 const ORB = [
-  { c: '#dc2f2f', r: 'rgba(220,47,47,.5)', l: 'watching' },
-  { c: '#dc2f2f', r: 'rgba(220,47,47,.6)', l: 'reviewing' },
-  { c: '#f2705c', r: 'rgba(242,112,92,.6)', l: '1 issue' },
-  { c: '#6fd39a', r: 'rgba(111,211,154,.55)', l: 'clear' },
+  { c: '#08090a', r: 'rgba(8,9,10,.3)', l: 'watching' },
+  { c: '#08090a', r: 'rgba(8,9,10,.4)', l: 'reviewing' },
+  { c: '#dc2f2f', r: 'rgba(220,47,47,.55)', l: '1 issue' },
+  { c: '#08090a', r: 'rgba(8,9,10,.3)', l: 'clear' },
 ] as const
 
 const STATUS = [
@@ -168,8 +168,8 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
               <CodeLine
                 n={2}
                 pad
-                className="bg-[rgba(242,112,92,.1)] shadow-[inset_2px_0_0_#f2705c]"
-                numClass="text-[rgba(242,112,92,.75)]"
+                className="bg-[rgba(220,47,47,.1)] shadow-[inset_2px_0_0_#dc2f2f]"
+                numClass="text-[rgba(220,47,47,.75)]"
               >
                 <span style={{ color: '#8fa7ff' }}>const</span> key ={' '}
                 <span style={{ color: '#e3a978' }}>&quot;sk_live_51H8xJ2eZvKYlo2C…&quot;</span>
@@ -180,8 +180,8 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
               <CodeLine
                 n={2}
                 pad
-                className="bg-[rgba(111,211,154,.09)] shadow-[inset_2px_0_0_#6fd39a]"
-                numClass="text-[rgba(111,211,154,.8)]"
+                className="bg-[rgba(8,9,10,.05)] shadow-[inset_2px_0_0_#08090a]"
+                numClass="text-[rgba(8,9,10,.7)]"
               >
                 <span style={{ color: '#8fa7ff' }}>const</span> key = process.env.
                 <span style={{ color: '#ffd9a0' }}>STRIPE_SECRET_KEY</span>
@@ -189,13 +189,13 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
             )}
 
             {flagged && (
-              <div className="bl-annot mx-[18px] mb-3 ml-11 mt-2 rounded-[10px] border border-[rgba(242,112,92,.32)] bg-[rgba(242,112,92,.06)] p-[14px_15px] font-[family-name:var(--font-instrument-sans)]">
+              <div className="bl-annot mx-[18px] mb-3 ml-11 mt-2 rounded-[10px] border border-[rgba(220,47,47,.32)] bg-[rgba(220,47,47,.06)] p-[14px_15px] font-[family-name:var(--font-instrument-sans)]">
                 <div className="mb-1.5 flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#f2705c]" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#dc2f2f]" />
                   <span className="text-[12.5px] font-semibold tracking-[-0.01em]">
                     Hardcoded Stripe secret
                   </span>
-                  <span className="bl-mono ml-auto text-[10.5px] tracking-[0.04em] text-[rgba(242,112,92,.85)]">
+                  <span className="bl-mono ml-auto text-[10.5px] tracking-[0.04em] text-[rgba(220,47,47,.85)]">
                     CRITICAL
                   </span>
                 </div>

@@ -26,17 +26,17 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
       <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_118px_250px_118px_minmax(0,1fr)] lg:gap-0">
         {/* Faulty input */}
         <div>
-          <div className="bl-mono mb-3 flex items-center gap-[9px] text-[11px] uppercase tracking-[0.08em] text-[rgba(242,112,92,.9)]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#f2705c]" />
+          <div className="bl-mono mb-3 flex items-center gap-[9px] text-[11px] uppercase tracking-[0.08em] text-[rgba(220,47,47,.9)]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#dc2f2f]" />
             agent output
           </div>
-          <div className="overflow-hidden rounded-[13px] border border-[rgba(242,112,92,.28)] bg-[#ffffff]">
+          <div className="overflow-hidden rounded-[13px] border border-[rgba(220,47,47,.28)] bg-[#ffffff]">
             <div className="bl-mono flex border-b border-black/[0.06] px-3.5 py-[11px] text-[11px] text-[rgba(8,9,10,.45)]">
               <span>checkout.ts</span>
-              <span className="ml-auto text-[rgba(242,112,92,.9)]">2 findings</span>
+              <span className="ml-auto text-[rgba(220,47,47,.9)]">2 findings</span>
             </div>
             <div className="bl-mono py-3.5 text-[12.5px] leading-[2.2]">
-              <div className="bg-[rgba(242,112,92,.12)] px-3.5 text-[rgba(8,9,10,.9)] shadow-[inset_2px_0_0_#f2705c]">
+              <div className="bg-[rgba(220,47,47,.12)] px-3.5 text-[rgba(8,9,10,.9)] shadow-[inset_2px_0_0_#dc2f2f]">
                 const key = &quot;sk_live_51H8xJ2…&quot;
               </div>
               <div className="px-3.5 text-[rgba(8,9,10,.5)]">app.post(&quot;/refund&quot;, handler)</div>
@@ -46,7 +46,7 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
 
         {/* Danger rail */}
         <Rail
-          line="linear-gradient(90deg,rgba(242,112,92,.1),rgba(242,112,92,.55))"
+          line="linear-gradient(90deg,rgba(220,47,47,.1),rgba(220,47,47,.55))"
           chips={[
             { label: 'secret', top: 'calc(50% - 16px)', delay: '0s', tone: 'danger' },
             { label: 'sqli', top: 'calc(50% + 6px)', delay: '0.9s', tone: 'danger' },
@@ -56,25 +56,6 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
 
         {/* MCP center */}
         <div className="relative grid h-[290px] place-items-center">
-          <div
-            className="bl-orb-ring absolute rounded-full"
-            style={{
-              width: 210,
-              height: 210,
-              border: '1px solid rgba(220,47,47,.22)',
-              animationDuration: '3.4s',
-            }}
-          />
-          <div
-            className="bl-orb-ring absolute rounded-full"
-            style={{
-              width: 210,
-              height: 210,
-              border: '1px solid rgba(220,47,47,.16)',
-              animationDuration: '3.4s',
-              animationDelay: '1.7s',
-            }}
-          />
           <div className="relative w-[250px] rounded-[18px] border border-[rgba(220,47,47,.42)] bg-[linear-gradient(180deg,rgba(220,47,47,.09),rgba(220,47,47,.02))] px-[18px] pb-4 pt-[18px] backdrop-blur-[2px]">
             <div className="mb-3.5 flex items-center gap-[9px]">
               <BeaconOrb size={16} core={7} duration={1.6} />
@@ -113,7 +94,7 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
 
         {/* Success rail */}
         <Rail
-          line="linear-gradient(90deg,rgba(111,211,154,.55),rgba(111,211,154,.12))"
+          line="linear-gradient(90deg,rgba(8,9,10,.55),rgba(8,9,10,.12))"
           chips={[
             { label: 'env var', top: 'calc(50% - 30px)', delay: '0.35s', tone: 'success' },
             { label: 'params', top: 'calc(50% - 8px)', delay: '1.2s', tone: 'success' },
@@ -123,17 +104,17 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
 
         {/* Clean output */}
         <div>
-          <div className="bl-mono mb-3 flex items-center gap-[9px] text-[11px] uppercase tracking-[0.08em] text-[rgba(111,211,154,.9)]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#6fd39a]" />
+          <div className="bl-mono mb-3 flex items-center gap-[9px] text-[11px] uppercase tracking-[0.08em] text-[rgba(8,9,10,.9)]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#08090a]" />
             ready to commit
           </div>
-          <div className="overflow-hidden rounded-[13px] border border-[rgba(111,211,154,.28)] bg-[#ffffff]">
+          <div className="overflow-hidden rounded-[13px] border border-[rgba(8,9,10,.28)] bg-[#ffffff]">
             <div className="bl-mono flex border-b border-black/[0.06] px-3.5 py-[11px] text-[11px] text-[rgba(8,9,10,.45)]">
               <span>checkout.ts</span>
-              <span className="ml-auto text-[rgba(111,211,154,.9)]">clean</span>
+              <span className="ml-auto text-[rgba(8,9,10,.9)]">clean</span>
             </div>
             <div className="bl-mono py-3.5 text-[12.5px] leading-[2.2]">
-              <div className="bg-[rgba(111,211,154,.1)] px-3.5 text-[rgba(8,9,10,.9)] shadow-[inset_2px_0_0_#6fd39a]">
+              <div className="bg-[rgba(8,9,10,.1)] px-3.5 text-[rgba(8,9,10,.9)] shadow-[inset_2px_0_0_#08090a]">
                 const key = process.env.STRIPE_KEY
               </div>
               <div className="px-3.5 text-[rgba(8,9,10,.5)]">
@@ -164,11 +145,11 @@ function Rail({
           style={{
             top: chip.top,
             animationDelay: chip.delay,
-            color: chip.tone === 'danger' ? '#f2705c' : '#6fd39a',
+            color: chip.tone === 'danger' ? '#dc2f2f' : '#08090a',
             background:
-              chip.tone === 'danger' ? 'rgba(242,112,92,.16)' : 'rgba(111,211,154,.14)',
+              chip.tone === 'danger' ? 'rgba(220,47,47,.16)' : 'rgba(8,9,10,.14)',
             borderColor:
-              chip.tone === 'danger' ? 'rgba(242,112,92,.4)' : 'rgba(111,211,154,.4)',
+              chip.tone === 'danger' ? 'rgba(220,47,47,.4)' : 'rgba(8,9,10,.4)',
           }}
         >
           {chip.label}

@@ -49,7 +49,7 @@ export function BeaconLanding({
   useScrollReveal()
 
   return (
-    <>
+    <div className="beacon-landing">
       <div className="bl-shell">
         <LandingNav />
         <LandingHero demoSpeed={demoSpeed} />
@@ -60,6 +60,6 @@ export function BeaconLanding({
         <LandingCTA />
       </div>
       <LandingFooter />
-    </>
+    </div>
   )
 }
