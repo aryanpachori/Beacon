@@ -67,14 +67,15 @@ export function NavSidebar({
   return (
     <aside
       className={cn(
-        'fixed top-0 left-0 z-30 flex h-screen flex-col border-r border-dl-border bg-dl-bg transition-[width,transform] duration-300 ease-in-out',
-        open ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
+        'fixed top-3 left-3 bottom-3 z-30 flex flex-col rounded-2xl border border-dl-border bg-dl-surface transition-[width,transform] duration-300 ease-in-out',
+        open ? 'translate-x-0' : '-translate-x-[calc(100%+12px)] md:translate-x-0',
         isCollapsed ? 'w-[216px] md:w-[56px]' : 'w-[216px] md:w-[216px]'
       )}
+      style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.35)' }}
     >
       {/* ── Logo row ── */}
       <div className={cn(
-        'flex h-[48px] shrink-0 items-center justify-between border-b border-dl-border px-3.5',
+        'flex h-[48px] shrink-0 items-center justify-between rounded-t-2xl border-b border-dl-border px-3.5',
         isCollapsed ? 'md:justify-center md:px-3' : ''
       )}>
         <SiteLogo
@@ -126,7 +127,7 @@ export function NavSidebar({
             >
               {/* Active left bar */}
               {active && !isCollapsed && (
-                <span className="absolute left-0 top-1/2 h-3.5 w-[2px] -translate-y-1/2 rounded-r bg-[#ff894c]" />
+                <span className="absolute left-0 top-1/2 h-3.5 w-[2px] -translate-y-1/2 rounded-r bg-dl-blue" />
               )}
 
               {/* Icon */}
@@ -152,7 +153,7 @@ export function NavSidebar({
 
       {/* ── ⌘K hint + theme toggle ── */}
       {!isCollapsed && (
-        <div className="px-4 pb-2 flex items-center gap-2">
+        <div className="border-t border-dl-border px-3 pt-2.5 pb-2 flex items-center gap-2">
           <button
             type="button"
             onClick={() => {
@@ -231,7 +232,7 @@ export function NavSidebar({
 
       {/* ── Profile ── */}
       <div className={cn(
-        'border-t border-dl-border p-2.5',
+        'rounded-b-2xl border-t border-dl-border p-2.5',
         isCollapsed ? 'md:px-2' : ''
       )}>
         <div ref={profileRef} className="relative w-full">

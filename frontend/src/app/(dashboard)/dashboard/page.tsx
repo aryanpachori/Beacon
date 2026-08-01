@@ -1,10 +1,13 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { useAppData } from '@/context/AppDataContext'
+import { fetchOnboardingState } from '@/lib/api'
 import { OverviewIntegrations } from '@/components/dashboard/OverviewIntegrations'
 import { AgentActivityHeatmap } from '@/components/dashboard/AgentActivityHeatmap'
+import { QuickStartChecklist } from '@/components/dashboard/QuickStartChecklist'
 
 function getGreeting() {
   const hour = new Date().getHours()
@@ -20,7 +23,7 @@ function planLabel(plan: string) {
 }
 
 function planColor(plan: string) {
-  if (plan === 'pro') return { bg: 'rgba(255,137,76,0.14)', text: '#ffa06b', dot: '#ff894c' }
+  if (plan === 'pro') return { bg: 'rgba(220,47,47,0.14)', text: '#e55555', dot: '#dc2f2f' }
   if (plan === 'team') return { bg: 'rgba(169,128,90,0.18)', text: '#C9A47C', dot: '#A9805A' }
   return { bg: 'rgba(255,255,255,0.1)', text: 'rgba(255,255,255,0.7)', dot: 'rgba(255,255,255,0.5)' }
 }
@@ -33,6 +36,11 @@ export default function DashboardPage() {
   const firstName = displayName.split(' ')[0]
   const plan = user?.plan ?? 'free'
   const planColors = planColor(plan)
+  const [githubConnected, setGithubConnected] = useState(false)
+
+  useEffect(() => {
+    fetchOnboardingState().then((s) => setGithubConnected(s.connected)).catch(() => {})
+  }, [])
 
   const scanComplete =
     dashboard?.scanStatus === 'complete' ||
@@ -64,7 +72,7 @@ export default function DashboardPage() {
       {/* ── Header row: greeting + plan/account, single compact line ── */}
       <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-[17px] font-semibold tracking-tight text-dl-navy">
+          <h1 className="page-heading">
             {greeting}, {firstName}
           </h1>
           <p className="page-description">
@@ -90,7 +98,10 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_320px]">
         <AgentActivityHeatmap />
-        <OverviewIntegrations />
+        <div className="flex flex-col gap-4">
+          <OverviewIntegrations />
+          <QuickStartChecklist githubConnected={githubConnected} agentConnected={false} />
+        </div>
       </div>
 
       {packages.length > 0 && (
