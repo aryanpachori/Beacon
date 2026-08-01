@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 
-type Tag = 'TEAM' | 'BEACON' | 'FIX'
+type Tag = 'HUMAN' | 'AGENT' | 'BEACON' | 'FIX'
 
 type Message = {
   id: number
@@ -15,19 +15,118 @@ type Message = {
 }
 
 const MESSAGES: Message[] = [
-  { id: 1, name: 'Gilfoyle', tag: 'TEAM', time: '2:14 AM', text: 'Beacon flagged clsx. Score of 21. Try to look concerned.', risk: 21, label: 'flagged' },
-  { id: 2, name: 'Dinesh', tag: 'TEAM', time: '2:15 AM', text: 'Some of us sleep, Gilfoyle.', risk: 21, label: 'flagged' },
-  { id: 3, name: 'Beacon', tag: 'BEACON', time: '2:16 AM', text: 'Blocked — clsx maintainer inactive 90+ days, no CVE response window', risk: 74, label: 'blocked' },
-  { id: 4, name: 'Erlich', tag: 'TEAM', time: '7:42 AM', text: 'I found Beacon. You’re welcome, as usual.', risk: 74, label: 'blocked' },
-  { id: 5, name: 'Richard', tag: 'TEAM', time: '7:44 AM', text: 'Are we getting sued. Just — are we.', risk: 70, label: 'contained' },
-  { id: 6, name: 'Dinesh', tag: 'FIX', time: '7:51 AM', text: 'Patched · pinned and suppressed', risk: 22, label: 'patched' },
-  { id: 7, name: 'Erlich', tag: 'TEAM', time: '8:11 AM', text: 'Pro plan approved. By me. You’re all lucky to know me.', risk: 8, label: 'resolved' },
+  {
+    id: 1,
+    name: 'Richard Hendricks',
+    tag: 'HUMAN',
+    time: '2:11 AM',
+    text: 'we need checkout working before the Hooli demo. just… please don’t hardcode anything',
+    risk: 8,
+    label: 'nominal',
+  },
+  {
+    id: 2,
+    name: 'Erlich Bachman',
+    tag: 'HUMAN',
+    time: '2:12 AM',
+    text: 'Cursor will crush this. I discovered AI coding. You’re welcome.',
+    risk: 12,
+    label: 'forming',
+  },
+  {
+    id: 3,
+    name: 'Gilfoyle',
+    tag: 'HUMAN',
+    time: '2:12 AM',
+    text: 'This is going to be a disaster. I’ll watch.',
+    risk: 18,
+    label: 'forming',
+  },
+  {
+    id: 4,
+    name: 'cursor-agent',
+    tag: 'AGENT',
+    time: '2:14 AM',
+    text: 'wrote checkout.ts · +240 −18, 4 files changed',
+    risk: 42,
+    label: 'building',
+  },
+  {
+    id: 5,
+    name: 'Jared Dunn',
+    tag: 'HUMAN',
+    time: '2:14 AM',
+    text: 'it compiled. I’m choosing to feel proud of us as a family.',
+    risk: 48,
+    label: 'building',
+  },
+  {
+    id: 6,
+    name: 'Beacon',
+    tag: 'BEACON',
+    time: '2:15 AM',
+    text: 'blocked commit — critical: hardcoded Stripe live key, line 2',
+    risk: 94,
+    label: 'critical',
+  },
+  {
+    id: 7,
+    name: 'Jian-Yang',
+    tag: 'HUMAN',
+    time: '2:15 AM',
+    text: 'this is bad. very bad. like my see-food app.',
+    risk: 90,
+    label: 'critical',
+  },
+  {
+    id: 8,
+    name: 'Gilfoyle',
+    tag: 'FIX',
+    time: '2:18 AM',
+    text: 'patched · moved key to process.env.STRIPE_KEY. You’re welcome. Don’t thank me.',
+    risk: 22,
+    label: 'containing',
+  },
+  {
+    id: 9,
+    name: 'Richard Hendricks',
+    tag: 'HUMAN',
+    time: '2:20 AM',
+    text: 'demo’s clean. we don’t talk about the key. ever.',
+    risk: 4,
+    label: 'resolved',
+  },
+  {
+    id: 10,
+    name: 'Jian-Yang',
+    tag: 'HUMAN',
+    time: '2:20 AM',
+    text: 'yes',
+    risk: 3,
+    label: 'resolved',
+  },
 ]
 
 const TAG_STYLE: Record<Tag, { bg: string; color: string }> = {
-  TEAM: { bg: 'rgba(8,9,10,.08)', color: 'rgba(8,9,10,.65)' },
+  HUMAN: { bg: 'rgba(8,9,10,.08)', color: 'rgba(8,9,10,.65)' },
+  AGENT: { bg: 'rgba(8,9,10,.16)', color: 'rgba(8,9,10,.85)' },
   BEACON: { bg: 'rgba(8,9,10,.16)', color: '#08090a' },
   FIX: { bg: 'rgba(8,9,10,.16)', color: '#08090a' },
+}
+
+function riskColor(risk: number) {
+  if (risk >= 65) return '#c4675c'
+  if (risk >= 30) return '#08090a'
+  return '#6f9c82'
+}
+
+function initials(name: string) {
+  if (name === 'cursor-agent') return 'CA'
+  if (name === 'Beacon') return 'BE'
+  if (name === 'Gilfoyle') return 'GI'
+  const parts = name.split(/\s+/).filter(Boolean)
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase()
+  return name.slice(0, 2).toUpperCase()
 }
 
 export function StoryTimeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
@@ -57,11 +156,11 @@ export function StoryTimeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
 
         for (let i = 0; i < MESSAGES.length && !cancelled; i += 1) {
           setTypingIdx(i)
-          await wait(700)
+          await wait(650)
           if (cancelled) break
           setMsgCount(i + 1)
           setTypingIdx(-1)
-          await wait(1150)
+          await wait(1050)
         }
 
         if (cancelled) break
@@ -80,44 +179,45 @@ export function StoryTimeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
   const typingVisible = typingIdx > -1
   const typingName = typingVisible ? MESSAGES[typingIdx].name : ''
   const current = msgCount === 0 ? { risk: 0, label: 'idle' } : MESSAGES[msgCount - 1]
+  const barColor = riskColor(current.risk)
 
   return (
     <section data-reveal className="pb-[118px]">
       <p className="bl-kicker">In the room</p>
-      <h2 className="bl-h2 max-w-[16ch]">
-        Every team has a Gilfoyle.
-      </h2>
-      <p className="bl-lede mb-[60px] max-w-[46ch]">
-        Beacon just makes sure someone catches it before he does.
+      <h2 className="bl-h2 max-w-[18ch]">Every team has a Gilfoyle.</h2>
+      <p className="bl-lede mb-[60px] max-w-[52ch]">
+        Pied Piper almost ships a live Stripe key to demo day. Beacon catches it before Erlich can
+        take credit.
       </p>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_120px]">
         <div className="overflow-hidden rounded-[14px] border border-black/[0.09] bg-[#ffffff]">
           <div className="flex items-center gap-2.5 border-b border-black/[0.07] px-5 py-3.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#08090a]" />
             <span className="bl-mono text-[13.5px] font-medium text-[rgba(8,9,10,.85)]">
               #pied-piper-eng
             </span>
             <span className="bl-mono ml-auto text-[11px] text-[rgba(8,9,10,.35)]">
-              4 members · 1 bot
+              5 humans · 1 agent · 1 bot
             </span>
           </div>
 
           <div
             ref={chatRef}
-            className="flex h-[380px] flex-col gap-5 overflow-y-auto px-5 py-[22px]"
+            className="flex h-[420px] flex-col gap-5 overflow-y-auto px-5 py-[22px]"
           >
             {messages.map((m) => {
               const tag = TAG_STYLE[m.tag]
               return (
                 <div key={m.id} className="bl-msg-in flex gap-3">
                   <div
-                    className="grid h-[30px] w-[30px] shrink-0 place-items-center rounded-lg bl-mono text-[11px] font-semibold"
+                    className="bl-mono grid h-[30px] w-[30px] shrink-0 place-items-center rounded-lg text-[11px] font-semibold"
                     style={{ background: tag.bg, color: tag.color }}
                   >
-                    {m.name.slice(0, 2).toUpperCase()}
+                    {initials(m.name)}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="mb-1 flex items-baseline gap-2">
+                    <div className="mb-1 flex flex-wrap items-baseline gap-2">
                       <span className="text-sm font-semibold tracking-[-0.01em]">{m.name}</span>
                       <span
                         className="bl-mono rounded px-1.5 py-[1px] text-[9.5px] font-semibold tracking-[0.04em]"
@@ -159,11 +259,11 @@ export function StoryTimeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
           </span>
           <div className="relative flex h-[140px] w-3 items-end overflow-hidden rounded-full bg-black/[0.06]">
             <div
-              className="w-full rounded-full bg-[#08090a] transition-all duration-700 ease-out"
-              style={{ height: `${current.risk}%` }}
+              className="w-full rounded-full transition-all duration-700 ease-out"
+              style={{ height: `${current.risk}%`, background: barColor }}
             />
           </div>
-          <span className="bl-mono mt-3 text-[22px] font-semibold text-[#08090a]">
+          <span className="bl-mono mt-3 text-[22px] font-semibold" style={{ color: barColor }}>
             {current.risk}
           </span>
           <span className="bl-mono text-[11px] capitalize text-[rgba(8,9,10,.5)]">
