@@ -6,7 +6,6 @@ import { LandingHero } from './LandingHero'
 import { TrustStrip } from './TrustStrip'
 import { Pipeline } from './Pipeline'
 import { Features } from './Features'
-import { DependencyDashboard } from './DependencyDashboard'
 import { LandingCTA } from './LandingCTA'
 import { LandingFooter } from './LandingFooter'
 
@@ -56,7 +55,6 @@ export function BeaconLanding({
         {showTrustStrip && <TrustStrip />}
         <Pipeline demoSpeed={demoSpeed} />
         <Features />
-        <DependencyDashboard />
         <LandingCTA />
       </div>
       <LandingFooter />

@@ -4,22 +4,14 @@ import { useEffect, useState, type ReactNode } from 'react'
 import Link from 'next/link'
 import { BeaconOrb } from './BeaconOrb'
 
-const WORDS = [
-  'hardcoded secrets',
-  'IDOR & broken auth',
-  'open security groups',
-  'slopsquatted packages',
-  'SSRF in webhooks',
-  'disabled RLS',
-  'runtime drift',
-]
+const WORDS = ['secrets', 'SQL injection', 'broken auth', 'leaked keys', 'unsafe redirects']
 const KEY = 'sk_live_51H8xJ2eZvKYlo2C…'
 
 const ORB = [
-  { c: '#08090a', r: 'rgba(8,9,10,.3)', l: 'watching' },
-  { c: '#08090a', r: 'rgba(8,9,10,.4)', l: 'reviewing' },
-  { c: '#dc2f2f', r: 'rgba(220,47,47,.55)', l: '1 issue' },
-  { c: '#08090a', r: 'rgba(8,9,10,.3)', l: 'clear' },
+  { c: '#08090a', r: 'rgba(8,9,10,.5)', l: 'watching' },
+  { c: '#08090a', r: 'rgba(8,9,10,.6)', l: 'reviewing' },
+  { c: '#c4675c', r: 'rgba(196,103,92,.6)', l: '1 issue' },
+  { c: '#6f9c82', r: 'rgba(111,156,130,.55)', l: 'clear' },
 ] as const
 
 const STATUS = [
@@ -88,6 +80,11 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
   return (
     <header className="relative grid items-center gap-10 py-12 md:gap-14 md:py-16 lg:grid-cols-2 lg:gap-14 lg:py-16 lg:pb-24">
       <div className="relative">
+        <div className="mb-[30px] inline-flex items-center gap-[9px] rounded-full border border-black/[0.11] py-1.5 pl-2.5 pr-3.5 text-[12.5px] text-[rgba(8,9,10,.7)]">
+          <span className="bl-orb-core h-1.5 w-1.5 rounded-full bg-[#08090a]" />
+          Local-first · zero repo access
+        </div>
+
         <h1 className="mb-[22px] text-[clamp(40px,6.5vw,66px)] font-semibold leading-[1.02] tracking-[-0.035em]">
           Security that ships
           <br />
@@ -112,7 +109,7 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
 
         <div className="mb-[30px] flex flex-wrap items-center gap-3">
           <Link href="/register" className="bl-btn-primary">
-            Install Beacon - free
+            Install Beacon — free
           </Link>
           <a href="#how" className="bl-btn-ghost">
             See how it works →
@@ -146,20 +143,20 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
                 className="bl-scan pointer-events-none absolute inset-x-0 top-0 h-[34px]"
                 style={{
                   background:
-                    'linear-gradient(180deg,transparent,rgba(220,47,47,.13),transparent)',
+                    'linear-gradient(180deg,transparent,rgba(8,9,10,.13),transparent)',
                 }}
               />
             )}
 
             <CodeLine n={1}>
-              <span style={{ color: '#8fa7ff' }}>export async function</span>{' '}
-              <span style={{ color: '#ffd9a0' }}>chargeCard</span>(req, res) {'{'}
+              <span style={{ color: 'rgba(8,9,10,.85)' }}>export async function</span>{' '}
+              <span style={{ color: 'rgba(8,9,10,.7)' }}>chargeCard</span>(req, res) {'{'}
             </CodeLine>
 
             {typing && (
               <CodeLine n={2} pad>
-                <span style={{ color: '#8fa7ff' }}>const</span> key ={' '}
-                <span style={{ color: '#e3a978' }}>&quot;{typed}</span>
+                <span style={{ color: 'rgba(8,9,10,.85)' }}>const</span> key ={' '}
+                <span style={{ color: 'rgba(8,9,10,.6)' }}>&quot;{typed}</span>
                 <span className="bl-caret inline-block h-[15px] w-[7px] translate-y-[-2px] bg-[#08090a] align-[-2px]" />
               </CodeLine>
             )}
@@ -168,11 +165,11 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
               <CodeLine
                 n={2}
                 pad
-                className="bg-[rgba(220,47,47,.1)] shadow-[inset_2px_0_0_#dc2f2f]"
-                numClass="text-[rgba(220,47,47,.75)]"
+                className="bg-[rgba(196,103,92,.12)] shadow-[inset_2px_0_0_#c4675c]"
+                numClass="text-[rgba(196,103,92,.8)]"
               >
-                <span style={{ color: '#8fa7ff' }}>const</span> key ={' '}
-                <span style={{ color: '#e3a978' }}>&quot;sk_live_51H8xJ2eZvKYlo2C…&quot;</span>
+                <span style={{ color: 'rgba(8,9,10,.85)' }}>const</span> key ={' '}
+                <span style={{ color: 'rgba(8,9,10,.6)' }}>&quot;sk_live_51H8xJ2eZvKYlo2C…&quot;</span>
               </CodeLine>
             )}
 
@@ -180,22 +177,22 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
               <CodeLine
                 n={2}
                 pad
-                className="bg-[rgba(8,9,10,.05)] shadow-[inset_2px_0_0_#08090a]"
-                numClass="text-[rgba(8,9,10,.7)]"
+                className="bg-[rgba(111,156,130,.11)] shadow-[inset_2px_0_0_#6f9c82]"
+                numClass="text-[rgba(111,156,130,.85)]"
               >
-                <span style={{ color: '#8fa7ff' }}>const</span> key = process.env.
-                <span style={{ color: '#ffd9a0' }}>STRIPE_SECRET_KEY</span>
+                <span style={{ color: 'rgba(8,9,10,.85)' }}>const</span> key = process.env.
+                <span style={{ color: 'rgba(8,9,10,.7)' }}>STRIPE_SECRET_KEY</span>
               </CodeLine>
             )}
 
             {flagged && (
-              <div className="bl-annot mx-[18px] mb-3 ml-11 mt-2 rounded-[10px] border border-[rgba(220,47,47,.32)] bg-[rgba(220,47,47,.06)] p-[14px_15px] font-[family-name:var(--font-instrument-sans)]">
+              <div className="bl-annot mx-[18px] mb-3 ml-11 mt-2 rounded-[10px] border border-[rgba(196,103,92,.35)] bg-[rgba(196,103,92,.07)] p-[14px_15px] font-[family-name:var(--font-instrument-sans)]">
                 <div className="mb-1.5 flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#dc2f2f]" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#c4675c]" />
                   <span className="text-[12.5px] font-semibold tracking-[-0.01em]">
                     Hardcoded Stripe secret
                   </span>
-                  <span className="bl-mono ml-auto text-[10.5px] tracking-[0.04em] text-[rgba(220,47,47,.85)]">
+                  <span className="bl-mono ml-auto text-[10.5px] tracking-[0.04em] text-[rgba(196,103,92,.9)]">
                     CRITICAL
                   </span>
                 </div>
@@ -203,7 +200,7 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
                   A live key would be committed to the repo. Read it from the environment instead.
                 </p>
                 <div className="flex gap-2">
-                  <span className="bl-on-orange rounded-[7px] bg-[#08090a] px-3 py-[7px] text-[12.5px] font-medium text-[#f8f8f8]">
+                  <span className="bl-on-orange rounded-[7px] bg-[#08090a] px-3 py-[7px] text-[12.5px] font-medium text-[#f2f0ed]">
                     Accept fix
                   </span>
                   <span className="rounded-[7px] border border-black/[0.13] px-3 py-[7px] text-[12.5px] text-[rgba(8,9,10,.7)]">
@@ -214,14 +211,14 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
             )}
 
             <CodeLine n={3} pad>
-              <span style={{ color: '#8fa7ff' }}>const</span> client ={' '}
-              <span style={{ color: '#8fa7ff' }}>new</span>{' '}
-              <span style={{ color: '#ffd9a0' }}>Stripe</span>(key)
+              <span style={{ color: 'rgba(8,9,10,.85)' }}>const</span> client ={' '}
+              <span style={{ color: 'rgba(8,9,10,.85)' }}>new</span>{' '}
+              <span style={{ color: 'rgba(8,9,10,.7)' }}>Stripe</span>(key)
             </CodeLine>
             <CodeLine n={4} pad>
-              res.<span style={{ color: '#ffd9a0' }}>json</span>(
-              <span style={{ color: '#8fa7ff' }}>await</span> client.charges.
-              <span style={{ color: '#ffd9a0' }}>create</span>(req.body))
+              res.<span style={{ color: 'rgba(8,9,10,.7)' }}>json</span>(
+              <span style={{ color: 'rgba(8,9,10,.85)' }}>await</span> client.charges.
+              <span style={{ color: 'rgba(8,9,10,.7)' }}>create</span>(req.body))
             </CodeLine>
             <CodeLine n={5}>{'}'}</CodeLine>
           </div>
