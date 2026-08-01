@@ -60,8 +60,8 @@ const MESSAGES: Message[] = [
     time: '9:41 AM',
     text: 'added checkout.ts to the branch',
     chip: {
-      border: 'rgba(255,255,255,.13)',
-      bg: 'rgba(255,255,255,.03)',
+      border: 'rgba(8,9,10,.13)',
+      bg: 'rgba(8,9,10,.03)',
       color: 'rgba(8,9,10,.8)',
       text: '+240 −18 · 4 files changed\nconst key = "sk_live_51H8xJ2…"',
     },
@@ -192,7 +192,7 @@ export function StoryTimeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
           </p>
         </div>
 
-        <div className="overflow-hidden rounded-[14px] border border-black/[0.09] bg-[#ffffff] shadow-[0_20px_50px_rgba(0,0,0,.4)]">
+        <div className="overflow-hidden rounded-[14px] border border-black/[0.09] bg-[#ffffff]">
           <div className="flex items-center gap-2.5 border-b border-black/[0.07] px-5 py-3.5">
             <span className="bl-mono text-[13.5px] font-medium text-[rgba(8,9,10,.85)]">
               # loopr-eng

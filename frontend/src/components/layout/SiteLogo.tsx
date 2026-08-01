@@ -23,14 +23,14 @@ export function SiteLogo({
       className="inline-flex items-center gap-2.5"
     >
       <span
-        className={`flex h-8 w-8 shrink-0 items-center justify-center ${iconClassName}`}
+        className={`flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full ${iconClassName}`}
       >
         <Image
           src="/beacon-mark.png"
           alt=""
           width={32}
           height={32}
-          className="h-7 w-7 shrink-0 object-contain"
+          className="h-7 w-7 shrink-0 scale-[1.16] object-cover"
           priority
         />
       </span>

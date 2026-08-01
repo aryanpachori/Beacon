@@ -81,7 +81,6 @@ export function NavSidebar({
             'text-[14px] font-semibold tracking-tight text-white transition-all duration-200',
             isCollapsed ? 'md:hidden' : ''
           )}
-          iconClassName="rounded-[10px] overflow-hidden"
         />
         {onToggleCollapse && (
           <button

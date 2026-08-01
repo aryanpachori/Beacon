@@ -92,7 +92,7 @@ export function Features() {
         </div>
 
         <div className="sticky top-8">
-          <div className="relative min-h-[300px] overflow-hidden rounded-[14px] border border-black/[0.09] bg-[#ffffff] px-[26px] pb-[26px] pt-7 shadow-[0_20px_50px_rgba(0,0,0,.4)]">
+          <div className="relative min-h-[300px] overflow-hidden rounded-[14px] border border-black/[0.09] bg-[#ffffff] px-[26px] pb-[26px] pt-7">
             <span className="bl-mono pointer-events-none absolute right-4 top-0.5 select-none text-[96px] font-semibold leading-none text-white/[0.035]">
               {active.n}
             </span>

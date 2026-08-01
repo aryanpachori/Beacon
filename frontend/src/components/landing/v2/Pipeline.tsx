@@ -30,7 +30,7 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
             <span className="h-1.5 w-1.5 rounded-full bg-[#f2705c]" />
             agent output
           </div>
-          <div className="overflow-hidden rounded-[13px] border border-[rgba(242,112,92,.28)] bg-[#ffffff] shadow-[0_20px_50px_rgba(0,0,0,.45)]">
+          <div className="overflow-hidden rounded-[13px] border border-[rgba(242,112,92,.28)] bg-[#ffffff]">
             <div className="bl-mono flex border-b border-black/[0.06] px-3.5 py-[11px] text-[11px] text-[rgba(8,9,10,.45)]">
               <span>checkout.ts</span>
               <span className="ml-auto text-[rgba(242,112,92,.9)]">2 findings</span>
@@ -127,7 +127,7 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
             <span className="h-1.5 w-1.5 rounded-full bg-[#6fd39a]" />
             ready to commit
           </div>
-          <div className="overflow-hidden rounded-[13px] border border-[rgba(111,211,154,.28)] bg-[#ffffff] shadow-[0_20px_50px_rgba(0,0,0,.45)]">
+          <div className="overflow-hidden rounded-[13px] border border-[rgba(111,211,154,.28)] bg-[#ffffff]">
             <div className="bl-mono flex border-b border-black/[0.06] px-3.5 py-[11px] text-[11px] text-[rgba(8,9,10,.45)]">
               <span>checkout.ts</span>
               <span className="ml-auto text-[rgba(111,211,154,.9)]">clean</span>
