@@ -5,6 +5,7 @@ import { useAppData } from '@/context/AppDataContext'
 import { HealthOverviewBar } from '@/components/dashboard/HealthOverviewBar'
 import { NotificationBell } from '@/components/dashboard/NotificationBell'
 import { InsightsDashboard } from '@/components/dashboard/InsightsDashboard'
+import { OverviewIntegrations } from '@/components/dashboard/OverviewIntegrations'
 
 function getGreeting() {
   const hour = new Date().getHours()
@@ -131,15 +132,18 @@ export default function DashboardPage() {
       </div>
 
       {packages.length === 0 ? (
-        <div className="dash-card flex flex-col items-center justify-center px-6 py-16 text-center">
-          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-dl-blue-pale">
-            <PackageIcon className="h-7 w-7 text-dl-blue" />
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_320px]">
+          <div className="dash-card flex flex-col items-center justify-center px-6 py-16 text-center">
+            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-dl-blue-pale">
+              <PackageIcon className="h-7 w-7 text-dl-blue" />
+            </div>
+            <p className="text-[15px] font-semibold text-dl-navy">No packages yet</p>
+            <p className="mt-2 max-w-md text-sm text-dl-muted">
+              Complete GitHub onboarding to let Beacon scan your repos. Health scores appear here
+              once signal collection and scoring finish — usually within a few minutes.
+            </p>
           </div>
-          <p className="text-[15px] font-semibold text-dl-navy">No packages yet</p>
-          <p className="mt-2 max-w-md text-sm text-dl-muted">
-            Complete GitHub onboarding to let Beacon scan your repos. Health scores appear here
-            once signal collection and scoring finish — usually within a few minutes.
-          </p>
+          <OverviewIntegrations />
         </div>
       ) : (
         <>
@@ -148,8 +152,11 @@ export default function DashboardPage() {
             <HealthOverviewBar />
           </div>
 
-          {/* ── Full analytics dashboard ── */}
-          <InsightsDashboard />
+          <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-[1fr_320px]">
+            {/* ── Full analytics dashboard ── */}
+            <InsightsDashboard />
+            <OverviewIntegrations />
+          </div>
         </>
       )}
     </div>

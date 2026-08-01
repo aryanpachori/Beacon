@@ -4,9 +4,9 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect, useRef } from 'react'
 import {
-  LayoutDashboard, Package, Bell, GitBranch,
+  LayoutDashboard, Package, Bell,
   CreditCard, User, LogOut, ChevronLeft, ChevronRight,
-  BarChart2, Activity, HelpCircle, Zap, ScanLine, Users,
+  Activity, HelpCircle, ScanLine,
   Command, ChevronDown, Sun, Moon, MessageSquarePlus, Radar,
 } from 'lucide-react'
 import { useTheme } from '@/hooks/useTheme'
@@ -31,33 +31,23 @@ const NAV_SECTIONS = [
     label: 'Overview',
     defaultOpen: true,
     items: [
-      { label: 'Overview',        href: '/dashboard',       icon: LayoutDashboard },
-      { label: 'Analytics',       href: '/analytics',       icon: BarChart2 },
-      { label: 'Agent Activity',  href: '/agent-activity',  icon: Radar },
-      { label: 'Activity',        href: '/activity',        icon: Activity, showActivityBadge: true },
+      { label: 'Overview',            href: '/dashboard',          icon: LayoutDashboard },
+      { label: 'Agent Activity',      href: '/agent-activity',     icon: Radar },
+      { label: 'Activity',            href: '/activity',           icon: Activity, showActivityBadge: true },
     ],
   },
   {
     label: 'Monitoring',
     defaultOpen: true,
     items: [
-      { label: 'Dependencies', href: '/packages',     icon: Package },
-      { label: 'Alerts',       href: '/alerts',       icon: Bell, showBadge: true },
-      { label: 'Repos',        href: '/repos',        icon: GitBranch },
-    ],
-  },
-  {
-    label: 'People',
-    defaultOpen: true,
-    items: [
-      { label: 'Maintainers',  href: '/maintainers',  icon: Users },
+      { label: 'Dependency Tracker',  href: '/dependency-tracker', icon: Package },
+      { label: 'Alerts',              href: '/alerts',             icon: Bell, showBadge: true },
     ],
   },
   {
     label: 'System',
     defaultOpen: false,
     items: [
-      { label: 'Integrations', href: '/integrations', icon: Zap },
       { label: 'Code review',  href: '/security',     icon: ScanLine,  soon: true },
       { label: 'Billing',      href: '/billing',      icon: CreditCard },
     ],
@@ -127,20 +117,20 @@ export function NavSidebar({
       className={cn(
         'fixed top-0 left-0 z-30 flex h-screen flex-col border-r border-dl-border bg-dl-bg transition-[width,transform] duration-300 ease-in-out',
         open ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
-        isCollapsed ? 'w-[240px] md:w-[64px]' : 'w-[240px] md:w-[240px]'
+        isCollapsed ? 'w-[216px] md:w-[56px]' : 'w-[216px] md:w-[216px]'
       )}
     >
       {/* ── Logo row ── */}
       <div className={cn(
-        'flex h-[60px] shrink-0 items-center justify-between border-b border-dl-border px-4',
+        'flex h-[48px] shrink-0 items-center justify-between border-b border-dl-border px-3.5',
         isCollapsed ? 'md:justify-center md:px-3' : ''
       )}>
         <SiteLogo
           className={cn(
-            'text-[16px] font-bold tracking-tight text-dl-navy transition-all duration-200',
+            'text-[13.5px] font-semibold tracking-tight text-dl-navy transition-all duration-200',
             isCollapsed ? 'md:hidden' : ''
           )}
-          iconClassName="rounded-lg bg-[#ff6600]/10"
+          iconClassName="rounded-md bg-[#ff6600]/10"
         />
         {onToggleCollapse && (
           <button
@@ -162,26 +152,26 @@ export function NavSidebar({
 
       {/* ── Nav sections ── */}
       <nav className={cn(
-        'flex flex-1 flex-col overflow-y-auto py-4 transition-all duration-200',
-        isCollapsed ? 'px-2 md:px-2 gap-1' : 'px-3 gap-4'
+        'flex flex-1 flex-col overflow-y-auto py-3 transition-all duration-200',
+        isCollapsed ? 'px-2 md:px-2 gap-1' : 'px-2.5 gap-3'
       )}>
         {NAV_SECTIONS.map(({ label, items }) => {
           const sectionOpen = openSections[label] !== false
 
           return (
-            <div key={label} className="flex flex-col gap-0.5">
+            <div key={label} className="flex flex-col gap-px">
               {/* Section header */}
               {!isCollapsed && (
                 <button
                   type="button"
                   onClick={() => toggleSection(label)}
-                  className="group mb-1 flex w-full items-center justify-between px-2 py-0.5 focus:outline-none"
+                  className="group mb-0.5 flex w-full items-center justify-between px-1.5 py-0.5 focus:outline-none"
                 >
-                  <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-dl-muted group-hover:text-dl-text transition-colors">
+                  <span className="text-[9.5px] font-semibold uppercase tracking-[0.1em] text-dl-muted/80 group-hover:text-dl-text transition-colors">
                     {label}
                   </span>
                   <ChevronDown className={cn(
-                    'h-3 w-3 text-dl-muted transition-transform duration-200 group-hover:text-dl-text',
+                    'h-2.5 w-2.5 text-dl-muted transition-transform duration-200 group-hover:text-dl-text',
                     sectionOpen ? 'rotate-0' : '-rotate-90'
                   )} />
                 </button>
@@ -210,38 +200,32 @@ export function NavSidebar({
                           onClick={!soon ? onClose : undefined}
                           title={isCollapsed ? itemLabel : undefined}
                           className={cn(
-                            'group relative flex items-center gap-2.5 rounded-xl py-2 text-[13px] font-medium transition-all duration-150',
+                            'group relative flex items-center gap-2 rounded-lg py-[7px] text-[12.5px] font-medium transition-all duration-150',
                             active
-                              ? 'bg-dl-blue-pale text-dl-blue'
-                              : 'text-dl-text/80 hover:bg-dl-surface hover:text-dl-navy',
-                            isCollapsed ? 'md:justify-center md:px-0 md:py-2.5' : 'px-2.5',
+                              ? 'bg-dl-blue-pale/70 text-dl-blue'
+                              : 'text-dl-text/75 hover:bg-dl-surface hover:text-dl-navy',
+                            isCollapsed ? 'md:justify-center md:px-0 md:py-2' : 'px-2',
                             soon ? 'cursor-not-allowed' : ''
                           )}
                         >
                           {/* Active left bar */}
                           {active && !isCollapsed && (
-                            <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r bg-[#ff6600]" />
+                            <span className="absolute left-0 top-1/2 h-3.5 w-[2px] -translate-y-1/2 rounded-r bg-[#ff6600]" />
                           )}
 
-                          {/* Icon container */}
-                          <div className={cn(
-                            'relative flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-all duration-150',
-                            active
-                              ? 'bg-dl-blue/12'
-                              : 'bg-transparent group-hover:bg-dl-surface'
-                          )}
-                          >
+                          {/* Icon */}
+                          <div className="relative flex h-4 w-4 shrink-0 items-center justify-center">
                             <Icon className={cn(
-                              'h-3.5 w-3.5 transition-colors',
+                              'h-[13px] w-[13px] transition-colors',
                               active ? 'text-dl-blue' : 'text-dl-muted group-hover:text-dl-text'
                             )}
                             />
                             {/* Collapsed alert dot */}
                             {showBadge && alertCount > 0 && isCollapsed && (
-                              <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-dl-bg" />
+                              <span className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-red-500 ring-2 ring-dl-bg" />
                             )}
                             {showActivityBadge && alertCount > 0 && isCollapsed && (
-                              <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-[#ff6600] ring-2 ring-dl-bg" />
+                              <span className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-[#ff6600] ring-2 ring-dl-bg" />
                             )}
                           </div>
 
@@ -255,14 +239,14 @@ export function NavSidebar({
 
                           {/* Alert count badge */}
                           {showBadge && alertCount > 0 && !isCollapsed && (
-                            <span className="flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold text-white">
+                            <span className="flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[9.5px] font-bold text-white">
                               {alertCount > 99 ? '99+' : alertCount}
                             </span>
                           )}
 
                           {/* Activity dot for new events */}
                           {showActivityBadge && alertCount > 0 && !isCollapsed && (
-                            <span className="h-2 w-2 rounded-full bg-[#ff6600] animate-pulse" />
+                            <span className="h-1.5 w-1.5 rounded-full bg-[#ff6600] animate-pulse" />
                           )}
 
                           {/* Soon badge */}
@@ -324,7 +308,7 @@ export function NavSidebar({
 
       {/* ── Help + Feedback ── */}
       <div className={cn(
-        'border-t border-dl-border px-3 py-2 flex flex-col gap-0.5',
+        'border-t border-dl-border px-2.5 py-1.5 flex flex-col gap-px',
         isCollapsed ? 'md:px-2' : ''
       )}>
         <button
@@ -332,12 +316,12 @@ export function NavSidebar({
           onClick={() => setFeedbackOpen(true)}
           title={isCollapsed ? 'Share Feedback' : undefined}
           className={cn(
-            'flex items-center gap-2.5 rounded-xl py-2 text-[12px] font-medium text-dl-muted hover:bg-dl-surface hover:text-dl-text transition-all duration-150',
-            isCollapsed ? 'md:justify-center md:px-0' : 'px-2.5'
+            'flex items-center gap-2 rounded-lg py-[7px] text-[11.5px] font-medium text-dl-muted hover:bg-dl-surface hover:text-dl-text transition-all duration-150',
+            isCollapsed ? 'md:justify-center md:px-0' : 'px-2'
           )}
         >
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg">
-            <MessageSquarePlus className="h-3.5 w-3.5" />
+          <div className="flex h-4 w-4 shrink-0 items-center justify-center">
+            <MessageSquarePlus className="h-[13px] w-[13px]" />
           </div>
           <span className={cn('transition-all duration-200', isCollapsed ? 'md:hidden' : '')}>
             Share Feedback
@@ -347,12 +331,12 @@ export function NavSidebar({
           href="mailto:aryanpachori03@gmail.com"
           title={isCollapsed ? 'Help & Support' : undefined}
           className={cn(
-            'flex items-center gap-2.5 rounded-xl py-2 text-[12px] font-medium text-dl-muted hover:bg-dl-surface hover:text-dl-text transition-all duration-150',
-            isCollapsed ? 'md:justify-center md:px-0' : 'px-2.5'
+            'flex items-center gap-2 rounded-lg py-[7px] text-[11.5px] font-medium text-dl-muted hover:bg-dl-surface hover:text-dl-text transition-all duration-150',
+            isCollapsed ? 'md:justify-center md:px-0' : 'px-2'
           )}
         >
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg">
-            <HelpCircle className="h-3.5 w-3.5" />
+          <div className="flex h-4 w-4 shrink-0 items-center justify-center">
+            <HelpCircle className="h-[13px] w-[13px]" />
           </div>
           <span className={cn('transition-all duration-200', isCollapsed ? 'md:hidden' : '')}>
             Help &amp; Support
@@ -363,7 +347,7 @@ export function NavSidebar({
 
       {/* ── Profile ── */}
       <div className={cn(
-        'border-t border-dl-border p-3',
+        'border-t border-dl-border p-2.5',
         isCollapsed ? 'md:px-2' : ''
       )}>
         <div ref={profileRef} className="relative w-full">
@@ -434,23 +418,23 @@ export function NavSidebar({
             type="button"
             onClick={() => setProfileOpen(p => !p)}
             className={cn(
-              'flex w-full items-center gap-2.5 rounded-xl p-2 text-left transition-all duration-150 hover:bg-dl-surface focus:outline-none',
+              'flex w-full items-center gap-2 rounded-lg p-1.5 text-left transition-all duration-150 hover:bg-dl-surface focus:outline-none',
               isCollapsed ? 'md:justify-center' : ''
             )}
           >
             <Image
               src={avatarUrl(user?.fullName ?? '', user?.email ?? '')}
               alt="Avatar"
-              width={32}
-              height={32}
-              className="h-8 w-8 shrink-0 rounded-full shadow-sm"
+              width={26}
+              height={26}
+              className="h-[26px] w-[26px] shrink-0 rounded-full shadow-sm"
               unoptimized
             />
             <div className={cn('flex-1 min-w-0', isCollapsed ? 'md:hidden' : '')}>
-              <p className="truncate text-[12px] font-semibold text-dl-navy">
+              <p className="truncate text-[11.5px] font-semibold text-dl-navy">
                 {user?.nickname ?? user?.fullName ?? user?.email ?? '…'}
               </p>
-              <p className="truncate text-[11px] text-dl-muted">{user?.email}</p>
+              <p className="truncate text-[10px] text-dl-muted">{user?.email}</p>
             </div>
             <ChevronRight className={cn(
               'h-3.5 w-3.5 text-dl-muted transition-transform duration-150',

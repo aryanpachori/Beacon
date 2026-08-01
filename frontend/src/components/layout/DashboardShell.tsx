@@ -59,7 +59,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       <main
         className={cn(
           'ml-0 min-h-screen flex-1 transition-[margin] duration-300 ease-in-out',
-          isCollapsed ? 'md:ml-[64px]' : 'md:ml-[240px]'
+          isCollapsed ? 'md:ml-[56px]' : 'md:ml-[216px]'
         )}
       >
         <div className="page-enter">
