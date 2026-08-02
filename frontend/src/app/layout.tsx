@@ -1,5 +1,12 @@
 import type { Metadata } from 'next'
-import { Inter, JetBrains_Mono, Space_Grotesk, Source_Serif_4 } from 'next/font/google'
+import {
+  Inter,
+  Instrument_Sans,
+  Instrument_Serif,
+  JetBrains_Mono,
+  Space_Grotesk,
+  Source_Serif_4,
+} from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Toaster } from 'sonner'
@@ -9,6 +16,22 @@ const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
   weight: ['400', '500', '600', '700', '800'],
+  display: 'swap',
+})
+
+const instrumentSans = Instrument_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
+  variable: '--font-instrument-sans',
+  display: 'swap',
+})
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: ['400'],
+  style: ['normal', 'italic'],
+  variable: '--font-instrument-serif',
   display: 'swap',
 })
 
@@ -64,7 +87,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Beacon defaults to dark — its native, premium surface. Users can opt into light for the dashboard. */}
         <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('dl_theme');if(t!=='light')document.documentElement.classList.add('dark')}catch(e){document.documentElement.classList.add('dark')}` }} />
       </head>
-      <body className={`${inter.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} ${sourceSerif.variable} font-sans antialiased`}>
+      <body
+        className={`${inter.variable} ${instrumentSans.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} ${sourceSerif.variable} font-sans antialiased`}
+      >
         {children}
         <Toaster
           position="bottom-right"

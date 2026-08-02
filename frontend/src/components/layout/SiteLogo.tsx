@@ -83,6 +83,7 @@ export function SiteLogo({
               ? 'whitespace-nowrap text-[18px] font-bold tracking-[-0.01em] text-white'
               : 'text-[22px] font-semibold tracking-[-0.025em] text-[#08090a]')
           }
+          style={{ fontFamily: 'var(--font-instrument-sans), system-ui, sans-serif' }}
         >
           {wordmark}
         </span>

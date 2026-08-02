@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import Script from 'next/script'
 import { useRouter } from 'next/navigation'
 import { ApiError, apiFetch, setAuthTokens } from '@/lib/api'
+import { cn } from '@/lib/utils'
 
 declare global {
   interface Window {
@@ -36,9 +37,10 @@ interface GoogleSignInButtonProps {
   mode: 'login' | 'register'
   redirectTo?: string | null
   onError?: (message: string) => void
+  className?: string
 }
 
-export function GoogleSignInButton({ mode, redirectTo, onError }: GoogleSignInButtonProps) {
+export function GoogleSignInButton({ mode, redirectTo, onError, className }: GoogleSignInButtonProps) {
   const router = useRouter()
   const [scriptReady, setScriptReady] = useState(false)
   const initialized = useRef(false)
@@ -74,20 +76,31 @@ export function GoogleSignInButton({ mode, redirectTo, onError }: GoogleSignInBu
     })
   }, [scriptReady, clientId, redirectTo, router, onError])
 
-  if (!clientId) return null
+  const handleClick = () => {
+    if (!clientId) {
+      onError?.('Google sign-in is not configured. Set NEXT_PUBLIC_GOOGLE_CLIENT_ID.')
+      return
+    }
+    window.google?.accounts.id.prompt()
+  }
 
   return (
     <>
-      <Script
-        src="https://accounts.google.com/gsi/client"
-        strategy="afterInteractive"
-        onReady={() => setScriptReady(true)}
-      />
+      {clientId ? (
+        <Script
+          src="https://accounts.google.com/gsi/client"
+          strategy="afterInteractive"
+          onReady={() => setScriptReady(true)}
+        />
+      ) : null}
       <button
         type="button"
-        onClick={() => window.google?.accounts.id.prompt()}
-        disabled={!scriptReady}
-        className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-dl-border bg-dl-bg py-3 text-[13.5px] font-medium text-dl-navy transition-all duration-150 hover:bg-dl-surface disabled:cursor-not-allowed disabled:opacity-60"
+        onClick={handleClick}
+        disabled={Boolean(clientId) && !scriptReady}
+        className={cn(
+          'flex w-full items-center justify-center gap-2.5 rounded-xl border border-dl-border bg-dl-bg py-3 text-[13.5px] font-medium text-dl-navy transition-all duration-150 hover:bg-dl-surface disabled:cursor-not-allowed disabled:opacity-60',
+          className,
+        )}
       >
         <GoogleLogo />
         {mode === 'register' ? 'Sign up with Google' : 'Sign in with Google'}
