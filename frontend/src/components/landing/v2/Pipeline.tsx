@@ -70,18 +70,6 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
         />
 
         <div className="relative grid h-[290px] place-items-center">
-          <div
-            className="bl-orb-ring absolute h-[210px] w-[210px] rounded-full"
-            style={{ border: '1px solid rgba(8,9,10,.22)', animationDuration: '3.4s' }}
-          />
-          <div
-            className="bl-orb-ring absolute h-[210px] w-[210px] rounded-full"
-            style={{
-              border: '1px solid rgba(8,9,10,.16)',
-              animationDuration: '3.4s',
-              animationDelay: '1.7s',
-            }}
-          />
           <div className="relative w-[250px] rounded-[18px] border border-[rgba(8,9,10,.42)] bg-[linear-gradient(180deg,rgba(8,9,10,.09),rgba(8,9,10,.02))] px-[18px] pb-4 pt-[18px]">
             <div className="mb-3.5 flex items-center gap-[9px]">
               <BeaconOrb size={16} core={7} duration={1.6} />
