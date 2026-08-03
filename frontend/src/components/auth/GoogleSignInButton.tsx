@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Script from 'next/script'
 import { useRouter } from 'next/navigation'
 import { ApiError, apiFetch, setAuthTokens } from '@/lib/api'
@@ -14,8 +14,26 @@ declare global {
           initialize: (config: {
             client_id: string
             callback: (response: { credential: string }) => void
+            auto_select?: boolean
+            cancel_on_tap_outside?: boolean
           }) => void
-          prompt: () => void
+          renderButton: (
+            parent: HTMLElement,
+            options: {
+              type?: string
+              theme?: string
+              size?: string
+              text?: string
+              shape?: string
+              logo_alignment?: string
+              width?: number
+            },
+          ) => void
+          prompt: (listener?: (notification: {
+            isNotDisplayed: () => boolean
+            isSkippedMoment: () => boolean
+            isDismissedMoment: () => boolean
+          }) => void) => void
         }
       }
     }
@@ -42,69 +60,132 @@ interface GoogleSignInButtonProps {
 
 export function GoogleSignInButton({ mode, redirectTo, onError, className }: GoogleSignInButtonProps) {
   const router = useRouter()
+  const hostRef = useRef<HTMLDivElement>(null)
+  const facadeRef = useRef<HTMLDivElement>(null)
+  const onErrorRef = useRef(onError)
+  const redirectToRef = useRef(redirectTo)
   const [scriptReady, setScriptReady] = useState(false)
-  const initialized = useRef(false)
+  const [rendered, setRendered] = useState(false)
 
   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
 
-  useEffect(() => {
-    if (!scriptReady || !clientId || !window.google || initialized.current) return
-    initialized.current = true
+  onErrorRef.current = onError
+  redirectToRef.current = redirectTo
+
+  const handleCredential = useCallback(
+    async (response: { credential: string }) => {
+      try {
+        const data = await apiFetch<{
+          accessToken: string
+          refreshToken: string
+          user: { onboardingStep?: number }
+        }>('/api/auth/google', {
+          method: 'POST',
+          body: JSON.stringify({ idToken: response.credential }),
+        })
+        setAuthTokens(data.accessToken, data.refreshToken)
+
+        const intended = localStorage.getItem('dl_intended_url')
+        localStorage.removeItem('dl_intended_url')
+        router.push(redirectToRef.current || intended || '/dashboard')
+      } catch (err) {
+        if (err instanceof ApiError) onErrorRef.current?.(err.message)
+        else onErrorRef.current?.(err instanceof Error ? err.message : 'Google sign-in failed')
+      }
+    },
+    [router],
+  )
+
+  const mountGoogleButton = useCallback(() => {
+    if (!clientId || !window.google?.accounts?.id || !hostRef.current) return
 
     window.google.accounts.id.initialize({
       client_id: clientId,
-      callback: async (response) => {
-        try {
-          const data = await apiFetch<{
-            accessToken: string
-            refreshToken: string
-            user: { onboardingStep?: number }
-          }>('/api/auth/google', {
-            method: 'POST',
-            body: JSON.stringify({ idToken: response.credential }),
-          })
-          setAuthTokens(data.accessToken, data.refreshToken)
-
-          const intended = localStorage.getItem('dl_intended_url')
-          localStorage.removeItem('dl_intended_url')
-          router.push(redirectTo || intended || '/dashboard')
-        } catch (err) {
-          if (err instanceof ApiError) onError?.(err.message)
-          else onError?.(err instanceof Error ? err.message : 'Google sign-in failed')
-        }
-      },
+      callback: handleCredential,
+      auto_select: false,
+      cancel_on_tap_outside: true,
     })
-  }, [scriptReady, clientId, redirectTo, router, onError])
 
-  const handleClick = () => {
-    if (!clientId) {
-      onError?.('Google sign-in is not configured. Set NEXT_PUBLIC_GOOGLE_CLIENT_ID.')
-      return
+    const width = Math.max(
+      facadeRef.current?.offsetWidth || 0,
+      hostRef.current.offsetWidth || 0,
+      320,
+    )
+
+    hostRef.current.innerHTML = ''
+    window.google.accounts.id.renderButton(hostRef.current, {
+      type: 'standard',
+      theme: 'outline',
+      size: 'large',
+      text: mode === 'register' ? 'signup_with' : 'signin_with',
+      shape: 'rectangular',
+      logo_alignment: 'left',
+      width: Math.round(width),
+    })
+    setRendered(true)
+  }, [clientId, handleCredential, mode])
+
+  useEffect(() => {
+    if (!clientId) return
+    if (window.google?.accounts?.id) {
+      setScriptReady(true)
     }
-    window.google?.accounts.id.prompt()
-  }
+  }, [clientId])
 
-  return (
-    <>
-      {clientId ? (
-        <Script
-          src="https://accounts.google.com/gsi/client"
-          strategy="afterInteractive"
-          onReady={() => setScriptReady(true)}
-        />
-      ) : null}
+  useEffect(() => {
+    if (!scriptReady) return
+    mountGoogleButton()
+
+    const onResize = () => mountGoogleButton()
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [scriptReady, mountGoogleButton])
+
+  if (!clientId) {
+    return (
       <button
         type="button"
-        onClick={handleClick}
-        disabled={Boolean(clientId) && !scriptReady}
+        onClick={() =>
+          onError?.('Google sign-in is not configured. Set NEXT_PUBLIC_GOOGLE_CLIENT_ID.')
+        }
         className={cn(
-          'flex w-full items-center justify-center gap-2.5 rounded-xl border border-dl-border bg-dl-bg py-3 text-[13.5px] font-medium text-dl-navy transition-all duration-150 hover:bg-dl-surface disabled:cursor-not-allowed disabled:opacity-60',
+          'flex w-full items-center justify-center gap-2.5 rounded-xl border border-dl-border bg-dl-bg py-3 text-[13.5px] font-medium text-dl-navy transition-all duration-150 hover:bg-dl-surface',
           className,
         )}
       >
         <GoogleLogo />
         {mode === 'register' ? 'Sign up with Google' : 'Sign in with Google'}
       </button>
+    )
+  }
+
+  return (
+    <>
+      <Script
+        src="https://accounts.google.com/gsi/client"
+        strategy="afterInteractive"
+        onReady={() => setScriptReady(true)}
+      />
+      <div className="relative w-full">
+        {/* Visual button — matches page chrome; clicks hit the Google overlay */}
+        <div
+          ref={facadeRef}
+          aria-hidden
+          className={cn(
+            'pointer-events-none flex w-full items-center justify-center gap-2.5 rounded-xl border border-dl-border bg-dl-bg py-3 text-[13.5px] font-medium text-dl-navy',
+            !rendered && 'opacity-60',
+            className,
+          )}
+        >
+          <GoogleLogo />
+          {mode === 'register' ? 'Sign up with Google' : 'Sign in with Google'}
+        </div>
+        <div
+          ref={hostRef}
+          className="absolute inset-0 z-10 overflow-hidden opacity-0 [&iframe]:!h-full [&iframe]:!min-h-full [&>div]:!flex [&>div]:!h-full [&>div]:!w-full [&>div]:!items-center"
+          aria-label={mode === 'register' ? 'Sign up with Google' : 'Sign in with Google'}
+        />
+      </div>
     </>
   )
 }
