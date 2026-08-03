@@ -204,7 +204,7 @@ export function StoryTimeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
 
           <div
             ref={chatRef}
-            className="flex h-[420px] flex-col gap-5 overflow-y-auto px-5 py-[22px]"
+            className="flex h-[420px] flex-col gap-5 overflow-y-auto px-5 py-[22px] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
           >
             {messages.map((m) => {
               const tag = TAG_STYLE[m.tag]

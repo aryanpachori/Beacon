@@ -128,7 +128,7 @@ export function NavSidebar({
       </div>
 
       {/* Nav */}
-      <nav className="flex flex-1 flex-col gap-1 overflow-y-auto">
+      <nav className="flex flex-1 flex-col gap-1 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         {NAV_ITEMS.map(({ label: itemLabel, href, icon: Icon }) => {
           const active = pathname === href || pathname.startsWith(`${href}/`)
 
