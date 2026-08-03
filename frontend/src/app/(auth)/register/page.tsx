@@ -122,7 +122,8 @@ function RegisterForm() {
         body: JSON.stringify({ email: email.trim(), password }),
       })
       setAuthTokens(data.accessToken, data.refreshToken)
-      router.push(redirectTo || '/dashboard')
+      localStorage.removeItem('dl_intended_url')
+      router.push('/dashboard')
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message)

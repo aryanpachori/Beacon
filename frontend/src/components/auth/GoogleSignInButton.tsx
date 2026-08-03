@@ -84,10 +84,8 @@ export function GoogleSignInButton({ mode, redirectTo, onError, className }: Goo
           body: JSON.stringify({ idToken: response.credential }),
         })
         setAuthTokens(data.accessToken, data.refreshToken)
-
-        const intended = localStorage.getItem('dl_intended_url')
         localStorage.removeItem('dl_intended_url')
-        router.push(redirectToRef.current || intended || '/dashboard')
+        router.push('/dashboard')
       } catch (err) {
         if (err instanceof ApiError) onErrorRef.current?.(err.message)
         else onErrorRef.current?.(err instanceof Error ? err.message : 'Google sign-in failed')

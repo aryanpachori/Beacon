@@ -54,8 +54,9 @@ function LoginForm() {
   const sessionExpired = searchParams.get('reason') === 'expired'
 
   useEffect(() => {
-    if (redirectTo) localStorage.setItem('dl_intended_url', redirectTo)
-  }, [redirectTo])
+    // Clear any deep-link return URL so login always lands on Overview.
+    localStorage.removeItem('dl_intended_url')
+  }, [])
 
   const validateEmail = (val: string) => {
     if (!val) return 'Email is required'
@@ -91,11 +92,8 @@ function LoginForm() {
         body: JSON.stringify({ email: email.trim(), password }),
       })
       setAuthTokens(data.accessToken, data.refreshToken)
-
-      const intended = localStorage.getItem('dl_intended_url')
       localStorage.removeItem('dl_intended_url')
-
-      router.push(redirectTo || intended || '/dashboard')
+      router.push('/dashboard')
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message)

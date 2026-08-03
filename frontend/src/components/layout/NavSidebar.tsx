@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from 'react'
 import {
   LayoutDashboard, Package,
   CreditCard, User, LogOut,
-  Command, MessageSquarePlus, Radar,
+  Search, MessageSquarePlus, Radar,
 } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
@@ -175,7 +175,7 @@ export function NavSidebar({
             isCollapsed ? 'md:justify-center md:px-0' : 'px-[13px]'
           )}
         >
-          <Command className="h-[15px] w-[15px] shrink-0 text-white/50" strokeWidth={2} />
+          <Search className="h-[15px] w-[15px] shrink-0 text-white/50" strokeWidth={2} />
           <span className={cn('flex-1 text-[12.5px] text-white/45', isCollapsed ? 'md:hidden' : '')}>
             Quick search
           </span>
