@@ -4,8 +4,8 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Search, LayoutDashboard, Package, Bell, GitBranch,
-  CreditCard, Zap, X, ArrowRight, Command,
+  Search, LayoutDashboard, Package, Radar,
+  CreditCard, X, ArrowRight, Command,
 } from 'lucide-react'
 
 interface CommandItem {
@@ -61,32 +61,22 @@ export function CommandPalette() {
 
   const ALL_ITEMS: CommandItem[] = [
     {
-      id: 'dashboard', label: 'Dashboard', description: 'Overview & analytics',
+      id: 'overview', label: 'Overview', description: 'Dashboard home',
       icon: LayoutDashboard, action: () => navigate('/dashboard'),
-      group: 'Navigation', keywords: ['home', 'overview', 'analytics'],
+      group: 'Navigation', keywords: ['home', 'dashboard', 'analytics'],
     },
     {
-      id: 'packages', label: 'Packages', description: 'Browse all monitored packages',
-      icon: Package, action: () => navigate('/packages'),
-      group: 'Navigation', keywords: ['deps', 'dependencies', 'npm'],
+      id: 'agent-activity', label: 'Agent Activity', description: 'Live agent scans & findings',
+      icon: Radar, action: () => navigate('/agent-activity'),
+      group: 'Navigation', keywords: ['agent', 'scans', 'mcp', 'activity'],
     },
     {
-      id: 'alerts', label: 'Alerts', description: 'View fired alerts',
-      icon: Bell, action: () => navigate('/alerts'),
-      group: 'Navigation', keywords: ['notifications', 'warnings'],
+      id: 'dependency-tracker', label: 'Dependency Tracker', description: 'Monitored packages & risk',
+      icon: Package, action: () => navigate('/dependency-tracker'),
+      group: 'Navigation', keywords: ['deps', 'dependencies', 'packages', 'npm'],
     },
     {
-      id: 'repos', label: 'Repositories', description: 'Manage connected repos',
-      icon: GitBranch, action: () => navigate('/repos'),
-      group: 'Navigation', keywords: ['github', 'repos', 'connect'],
-    },
-    {
-      id: 'integrations', label: 'Integrations', description: 'Connect Slack, Jira & more',
-      icon: Zap, action: () => navigate('/integrations'),
-      group: 'Navigation', keywords: ['slack', 'webhook', 'jira'],
-    },
-    {
-      id: 'billing', label: 'Billing & Plan', description: 'Manage subscription',
+      id: 'billing', label: 'Billing', description: 'Manage subscription',
       icon: CreditCard, action: () => navigate('/billing'),
       group: 'Navigation', keywords: ['plan', 'pro', 'upgrade', 'payment'],
     },
