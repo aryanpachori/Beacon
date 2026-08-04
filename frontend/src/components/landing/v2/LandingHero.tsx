@@ -137,7 +137,7 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
             </div>
           </div>
 
-          <div className="bl-mono relative px-0 pb-1 pt-[18px] text-[13px] leading-[2.05]">
+          <div className="bl-mono relative overflow-x-auto px-0 pb-1 pt-[18px] text-[12px] leading-[2.05] sm:text-[13px]">
             {scanning && (
               <div
                 className="bl-scan pointer-events-none absolute inset-x-0 top-0 h-[34px]"
@@ -186,13 +186,13 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
             )}
 
             {flagged && (
-              <div className="bl-annot mx-[18px] mb-3 ml-11 mt-2 rounded-[10px] border border-[rgba(196,103,92,.35)] bg-[rgba(196,103,92,.07)] p-[14px_15px] font-[family-name:var(--font-instrument-sans)]">
-                <div className="mb-1.5 flex items-center gap-2">
+              <div className="bl-annot mx-3 mb-3 ml-8 mt-2 rounded-[10px] border border-[rgba(196,103,92,.35)] bg-[rgba(196,103,92,.07)] p-3 font-[family-name:var(--font-instrument-sans)] sm:mx-[18px] sm:ml-11 sm:p-[14px_15px]">
+                <div className="mb-1.5 flex flex-wrap items-center gap-2">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#c4675c]" />
                   <span className="text-[12.5px] font-semibold tracking-[-0.01em]">
                     Hardcoded Stripe secret
                   </span>
-                  <span className="bl-mono ml-auto text-[10.5px] tracking-[0.04em] text-[rgba(196,103,92,.9)]">
+                  <span className="bl-mono text-[10.5px] tracking-[0.04em] text-[rgba(196,103,92,.9)] sm:ml-auto">
                     CRITICAL
                   </span>
                 </div>
@@ -223,9 +223,9 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
             <CodeLine n={5}>{'}'}</CodeLine>
           </div>
 
-          <div className="bl-mono flex items-center gap-2.5 border-t border-black/[0.07] px-4 py-3 text-[11px] text-[rgba(8,9,10,.42)]">
+          <div className="bl-mono flex flex-wrap items-center gap-x-2.5 gap-y-1 border-t border-black/[0.07] px-4 py-3 text-[11px] text-[rgba(8,9,10,.42)]">
             <span>{STATUS[phase]}</span>
-            <span className="ml-auto">nothing left this machine</span>
+            <span className="sm:ml-auto">nothing left this machine</span>
           </div>
         </div>
       </div>
@@ -247,9 +247,9 @@ function CodeLine({
   numClass?: string
 }) {
   return (
-    <div className={`grid grid-cols-[44px_1fr] text-[rgba(8,9,10,.82)] ${className}`}>
-      <span className={`pr-4 text-right ${numClass}`}>{n}</span>
-      <span className={pad ? 'pl-[18px]' : undefined}>{children}</span>
+    <div className={`grid grid-cols-[36px_1fr] text-[rgba(8,9,10,.82)] sm:grid-cols-[44px_1fr] ${className}`}>
+      <span className={`pr-2 text-right sm:pr-4 ${numClass}`}>{n}</span>
+      <span className={`min-w-0 break-all sm:break-normal ${pad ? 'pl-3 sm:pl-[18px]' : ''}`}>{children}</span>
     </div>
   )
 }

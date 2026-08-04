@@ -169,11 +169,26 @@ body {
     margin-right: auto;
     padding: 48px 56px 64px;
   }
+  @media (max-width: 1024px) {
+    .app-page {
+      padding: 40px 28px 48px;
+    }
+  }
+  @media (max-width: 768px) {
+    .app-page {
+      padding: 72px 16px 40px;
+    }
+  }
   .app-page-narrow {
     max-width: 56rem;
     margin-left: auto;
     margin-right: auto;
     padding: 1.5rem;
+  }
+  @media (max-width: 768px) {
+    .app-page-narrow {
+      padding: 72px 16px 40px;
+    }
   }
 
   /* ── Section backgrounds ── */

@@ -47,26 +47,58 @@ const FEATURES = [
   },
 ]
 
+function FeaturePreview({
+  active,
+}: {
+  active: (typeof FEATURES)[number]
+}) {
+  return (
+    <div className="relative min-h-[240px] overflow-hidden rounded-[14px] border border-black/[0.09] bg-white px-5 pb-5 pt-6 sm:min-h-[300px] sm:px-[26px] sm:pb-[26px] sm:pt-7">
+      <span className="bl-feat-ghost bl-mono pointer-events-none absolute right-3 top-0.5 select-none text-[64px] font-semibold leading-none text-[rgba(8,9,10,.035)] sm:right-4 sm:text-[96px]">
+        {active.n}
+      </span>
+      <div className="relative mb-5 flex items-center gap-2">
+        <span className="bl-orb-core h-1.5 w-1.5 rounded-full bg-[#08090a]" />
+        <span className="bl-mono text-[11px] uppercase tracking-[0.08em] text-[#08090a]">
+          {active.tag}
+        </span>
+      </div>
+      <div className="relative mb-[18px] max-w-[20ch] text-[20px] font-semibold leading-[1.25] tracking-[-0.02em] sm:text-[22px]">
+        {active.title}
+      </div>
+      <div className="bl-mono relative overflow-x-auto whitespace-pre-wrap rounded-[9px] border border-black/[0.07] bg-black/[0.03] px-[15px] py-[13px] text-[12px] leading-[1.75] text-[rgba(8,9,10,.75)] sm:text-[12.5px]">
+        {active.snippet}
+      </div>
+    </div>
+  )
+}
+
 export function Features() {
   const [feature, setFeature] = useState(0)
   const active = FEATURES[feature]
 
   return (
-    <section id="features" data-reveal className="pb-[110px]">
+    <section id="features" data-reveal className="pb-16 sm:pb-[110px]">
       <p className="bl-kicker">Features</p>
       <h2 className="bl-h2 mb-2">Everything it takes to trust AI-written code.</h2>
 
-      <div className="mt-10 grid items-start gap-10 lg:grid-cols-[1fr_380px] lg:gap-[70px]">
-        <div>
+      <div className="mt-8 grid items-start gap-8 lg:mt-10 lg:grid-cols-[1fr_380px] lg:gap-[70px]">
+        {/* Preview first on mobile so selection context is visible */}
+        <div className="order-1 lg:order-2 lg:sticky lg:top-8">
+          <FeaturePreview active={active} />
+        </div>
+
+        <div className="order-2 lg:order-1">
           {FEATURES.map((f, i) => {
             const on = i === feature
             return (
-              <div
+              <button
                 key={f.n}
+                type="button"
+                onClick={() => setFeature(i)}
                 onMouseEnter={() => setFeature(i)}
                 onFocus={() => setFeature(i)}
-                tabIndex={0}
-                className="grid cursor-default grid-cols-[44px_1fr] gap-[22px] border-t border-black/[0.09] py-[27px] outline-none"
+                className="grid w-full cursor-pointer grid-cols-[36px_1fr] gap-4 border-t border-black/[0.09] bg-transparent py-5 text-left text-[#08090a] outline-none sm:grid-cols-[44px_1fr] sm:gap-[22px] sm:py-[27px]"
               >
                 <span
                   className="bl-mono pt-[3px] text-[13px] transition-colors duration-300"
@@ -76,39 +108,19 @@ export function Features() {
                 </span>
                 <div>
                   <div
-                    className="mb-1.5 text-[19px] font-semibold tracking-[-0.02em] transition-colors duration-300"
+                    className="mb-1.5 text-[17px] font-semibold tracking-[-0.02em] transition-colors duration-300 sm:text-[19px]"
                     style={{ color: on ? '#08090a' : 'rgba(8,9,10,.7)' }}
                   >
                     {f.title}
                   </div>
-                  <p className="m-0 max-w-[44ch] text-[14.5px] leading-[1.55] text-[rgba(8,9,10,.5)]">
+                  <p className="m-0 max-w-[44ch] text-[14px] leading-[1.55] text-[rgba(8,9,10,.5)] sm:text-[14.5px]">
                     {f.body}
                   </p>
                 </div>
-              </div>
+              </button>
             )
           })}
           <div className="border-t border-black/[0.09]" />
-        </div>
-
-        <div className="sticky top-8">
-          <div className="relative min-h-[300px] overflow-hidden rounded-[14px] border border-black/[0.09] bg-white px-[26px] pb-[26px] pt-7">
-            <span className="bl-feat-ghost bl-mono pointer-events-none absolute right-4 top-0.5 select-none text-[96px] font-semibold leading-none text-[rgba(8,9,10,.035)]">
-              {active.n}
-            </span>
-            <div className="relative mb-5 flex items-center gap-2">
-              <span className="bl-orb-core h-1.5 w-1.5 rounded-full bg-[#08090a]" />
-              <span className="bl-mono text-[11px] uppercase tracking-[0.08em] text-[#08090a]">
-                {active.tag}
-              </span>
-            </div>
-            <div className="relative mb-[18px] max-w-[20ch] text-[22px] font-semibold leading-[1.25] tracking-[-0.02em]">
-              {active.title}
-            </div>
-            <div className="bl-mono relative whitespace-pre-wrap rounded-[9px] border border-black/[0.07] bg-black/[0.03] px-[15px] py-[13px] text-[12.5px] leading-[1.75] text-[rgba(8,9,10,.75)]">
-              {active.snippet}
-            </div>
-          </div>
         </div>
       </div>
     </section>

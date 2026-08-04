@@ -63,7 +63,7 @@ export function FeedbackModal({ open, onClose }: Props) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 8 }}
             transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed bottom-6 left-6 z-50 w-[320px] rounded-2xl border border-dl-border bg-dl-bg shadow-2xl"
+            className="fixed bottom-4 left-4 right-4 z-50 w-auto max-w-[320px] rounded-2xl border border-dl-border bg-dl-bg shadow-2xl sm:bottom-6 sm:left-6 sm:right-auto sm:w-[320px]"
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-dl-border px-5 py-4">

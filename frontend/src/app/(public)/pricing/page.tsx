@@ -65,30 +65,30 @@ export default function PricingPage() {
       <div className="bl-shell">
         <PublicNav />
 
-        <main className="py-[90px]">
-          <section className="mb-20">
+        <main className="py-14 sm:py-[90px]">
+          <section className="mb-14 sm:mb-20">
             <div className="mb-7 inline-block rounded bg-[#08090a] px-[14px] py-[6px] text-[12.5px] font-bold uppercase tracking-[.04em] text-[#f2f0ed]">
               Pricing
             </div>
-            <h1 className="mb-6 max-w-[14ch] text-[56px] font-bold leading-[.95] tracking-[-.05em] md:text-[80px] lg:text-[104px]">
+            <h1 className="mb-6 max-w-[14ch] text-[clamp(40px,11vw,104px)] font-bold leading-[.95] tracking-[-.05em]">
               Pay per seat.
               <br />
               Ship without limits.
             </h1>
-            <p className="max-w-[44ch] text-[18px] leading-[1.5] text-[rgba(8,9,10,.55)] md:text-[20px]">
+            <p className="max-w-[44ch] text-[17px] leading-[1.5] text-[rgba(8,9,10,.55)] md:text-[20px]">
               No metered reviews. No usage caps. Cancel anytime.
             </p>
           </section>
 
           <section className="mb-6 grid border-2 border-[#08090a] lg:grid-cols-2 lg:items-stretch">
-            <div className="flex flex-col border-b-2 border-[#08090a] p-8 md:p-12 lg:border-b-0 lg:border-r-2">
+            <div className="flex flex-col border-b-2 border-[#08090a] p-6 sm:p-8 md:p-12 lg:border-b-0 lg:border-r-2">
               <div className="mb-8 flex h-[30px] items-center">
                 <p className="text-[13px] font-bold uppercase tracking-[.06em] text-[rgba(8,9,10,.5)]">
                   01 · Core
                 </p>
               </div>
-              <div className="mb-2 flex h-[72px] items-end md:h-[104px]">
-                <span className="text-[72px] font-bold leading-none tracking-[-.04em] md:text-[104px]">
+              <div className="mb-2 flex min-h-[56px] items-end sm:min-h-[72px] md:min-h-[104px]">
+                <span className="text-[clamp(48px,14vw,104px)] font-bold leading-none tracking-[-.04em]">
                   $29
                 </span>
               </div>
@@ -103,7 +103,7 @@ export default function PricingPage() {
               </Link>
               <div className="flex flex-col gap-5">
                 {CORE_FEATURES.map((item) => (
-                  <div key={item} className="flex items-center gap-[14px] text-[16px] font-semibold leading-[1.3]">
+                  <div key={item} className="flex items-center gap-[14px] text-[15px] font-semibold leading-[1.3] sm:text-[16px]">
                     <Check />
                     <span>{item}</span>
                   </div>
@@ -111,8 +111,8 @@ export default function PricingPage() {
               </div>
             </div>
 
-            <div className="relative flex flex-col bg-[#08090a] p-8 md:p-12">
-              <div className="mb-8 flex h-[30px] items-center justify-between gap-3">
+            <div className="relative flex flex-col bg-[#08090a] p-6 sm:p-8 md:p-12">
+              <div className="mb-8 flex h-auto min-h-[30px] flex-wrap items-center justify-between gap-3">
                 <p className="text-[13px] font-bold uppercase tracking-[.06em] text-[rgba(242,240,237,.6)]">
                   02 · Enterprise
                 </p>
@@ -120,8 +120,8 @@ export default function PricingPage() {
                   Most requested
                 </span>
               </div>
-              <div className="mb-2 flex h-[72px] items-end md:h-[104px]">
-                <span className="text-[72px] font-bold leading-none tracking-[-.04em] text-[#f2f0ed] md:text-[104px]">
+              <div className="mb-2 flex min-h-[56px] items-end sm:min-h-[72px] md:min-h-[104px]">
+                <span className="text-[clamp(40px,12vw,104px)] font-bold leading-none tracking-[-.04em] text-[#f2f0ed]">
                   Custom
                 </span>
               </div>
@@ -136,7 +136,7 @@ export default function PricingPage() {
               </a>
               <div className="flex flex-col gap-5">
                 {ENTERPRISE_FEATURES.map((item) => (
-                  <div key={item} className="flex items-center gap-[14px] text-[16px] font-semibold leading-[1.3] text-[#f2f0ed]">
+                  <div key={item} className="flex items-center gap-[14px] text-[15px] font-semibold leading-[1.3] text-[#f2f0ed] sm:text-[16px]">
                     <Check alt />
                     <span>{item}</span>
                   </div>
@@ -145,63 +145,67 @@ export default function PricingPage() {
             </div>
           </section>
 
-          <p className="mb-40 text-center text-[12.5px] tracking-[.02em] text-[rgba(8,9,10,.4)]">
+          <p className="mb-20 text-center text-[12.5px] tracking-[.02em] text-[rgba(8,9,10,.4)] sm:mb-40">
             New accounts start with a 14-day Core trial — no card required
           </p>
 
-          <section className="mb-40">
-            <h2 className="mb-14 border-b-2 border-black/[0.09] pb-8 text-[40px] font-bold tracking-[-.03em] md:text-[56px]">
+          <section className="mb-20 sm:mb-40">
+            <h2 className="mb-8 border-b-2 border-black/[0.09] pb-6 text-[clamp(28px,7vw,56px)] font-bold tracking-[-.03em] sm:mb-14 sm:pb-8">
               Core vs. Enterprise
             </h2>
             <div className="flex flex-col">
               {COMPARISON_ROWS.map(([label, core, enterprise], idx) => (
                 <div
                   key={label}
-                  className={`grid gap-6 py-7 md:grid-cols-[1.4fr_1fr_1fr] ${
+                  className={`grid gap-3 py-6 sm:gap-6 sm:py-7 md:grid-cols-[1.4fr_1fr_1fr] ${
                     idx < COMPARISON_ROWS.length - 1 ? 'border-b border-black/[0.09]' : ''
                   }`}
                 >
-                  <div className="text-[16px] font-bold text-[rgba(8,9,10,.9)]">{label}</div>
+                  <div className="text-[15px] font-bold text-[rgba(8,9,10,.9)] sm:text-[16px]">{label}</div>
                   <div
-                    className={`text-[16px] ${
+                    className={`text-[14px] sm:text-[16px] ${
                       core === 'Not included' || core === '–'
                         ? 'text-[rgba(8,9,10,.3)]'
                         : 'text-[rgba(8,9,10,.65)]'
                     }`}
                   >
+                    <span className="mr-2 font-semibold text-[rgba(8,9,10,.4)] md:hidden">Core · </span>
                     {core}
                   </div>
-                  <div className="text-[16px] font-bold text-[#08090a]">{enterprise}</div>
+                  <div className="text-[14px] font-bold text-[#08090a] sm:text-[16px]">
+                    <span className="mr-2 font-semibold text-[rgba(8,9,10,.4)] md:hidden">Enterprise · </span>
+                    {enterprise}
+                  </div>
                 </div>
               ))}
             </div>
           </section>
 
-          <section className="mb-36 max-w-[820px]">
-            <h2 className="mb-14 border-b-2 border-black/[0.09] pb-8 text-[40px] font-bold tracking-[-.03em] md:text-[56px]">
+          <section className="mb-20 max-w-[820px] sm:mb-36">
+            <h2 className="mb-8 border-b-2 border-black/[0.09] pb-6 text-[clamp(28px,7vw,56px)] font-bold tracking-[-.03em] sm:mb-14 sm:pb-8">
               Common questions
             </h2>
             <div className="flex flex-col">
               {FAQS.map((faq, idx) => (
                 <div
                   key={faq.q}
-                  className={`py-7 ${idx < FAQS.length - 1 ? 'border-b border-black/[0.09]' : ''}`}
+                  className={`py-6 sm:py-7 ${idx < FAQS.length - 1 ? 'border-b border-black/[0.09]' : ''}`}
                 >
-                  <h3 className="mb-2.5 text-[19px] font-bold">{faq.q}</h3>
-                  <p className="text-[15px] leading-[1.6] text-[rgba(8,9,10,.55)]">{faq.a}</p>
+                  <h3 className="mb-2.5 text-[17px] font-bold sm:text-[19px]">{faq.q}</h3>
+                  <p className="text-[14px] leading-[1.6] text-[rgba(8,9,10,.55)] sm:text-[15px]">{faq.a}</p>
                 </div>
               ))}
             </div>
           </section>
 
-          <section className="pricing-cta-panel bg-[#08090a] px-8 py-20 text-center text-[#f2f0ed] md:px-16">
-            <h2 className="mb-6 text-[44px] font-bold leading-none tracking-[-.04em] text-[#f2f0ed] md:text-[68px]">
+          <section className="pricing-cta-panel bg-[#08090a] px-5 py-14 text-center text-[#f2f0ed] sm:px-8 sm:py-20 md:px-16">
+            <h2 className="mb-6 text-[clamp(32px,9vw,68px)] font-bold leading-none tracking-[-.04em] text-[#f2f0ed]">
               Ready to ship securely?
             </h2>
-            <p className="mb-10 text-[18px] font-semibold text-[rgba(242,240,237,.72)]">
+            <p className="mb-10 text-[16px] font-semibold text-[rgba(242,240,237,.72)] sm:text-[18px]">
               Start with Core, or talk to us about Enterprise.
             </p>
-            <div className="mb-11 flex flex-wrap justify-center gap-4">
+            <div className="mb-11 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
               <Link
                 href="/register"
                 className="pricing-btn-light px-8 py-[18px] text-[16px] font-bold"

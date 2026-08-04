@@ -11,7 +11,7 @@ export default function TermsPage() {
     <div className="beacon-landing">
       <div className="bl-shell">
         <PublicNav />
-        <main className="py-24">
+        <main className="py-14 sm:py-24">
           <div className="mx-auto max-w-2xl">
             <h1 className="text-[28px] font-bold tracking-tight md:text-[32px]">Terms of Service</h1>
             <p className="mt-2 text-sm text-[rgba(8,9,10,.55)]">Last updated: June 20, 2026</p>

@@ -25,25 +25,25 @@ export default function DocsPage() {
       <div className="bl-shell">
         <PublicNav />
 
-        <main className="py-[90px]">
-          <section className="mb-20">
+        <main className="py-14 sm:py-[90px]">
+          <section className="mb-14 sm:mb-20">
             <div className="mb-7 inline-block rounded bg-[#08090a] px-[14px] py-[6px] text-[12.5px] font-bold uppercase tracking-[.04em] text-[#f2f0ed]">
               Docs
             </div>
-            <h1 className="mb-6 max-w-[16ch] text-[52px] font-bold leading-[.95] tracking-[-.05em] md:text-[80px] lg:text-[96px]">
+            <h1 className="mb-6 max-w-[16ch] text-[clamp(40px,11vw,96px)] font-bold leading-[.95] tracking-[-.05em]">
               Build faster.
               <br />
               Ship safer.
             </h1>
-            <p className="max-w-[52ch] text-[18px] leading-[1.6] text-[rgba(8,9,10,.55)] md:text-[20px]">
+            <p className="max-w-[52ch] text-[17px] leading-[1.6] text-[rgba(8,9,10,.55)] md:text-[20px]">
               Beacon runs in your editor, reviews generated code locally, and blocks risky changes
               before they land in your branch.
             </p>
           </section>
 
-          <section className="mb-24 grid gap-8 lg:grid-cols-2">
-            <div className="rounded-xl border border-black/[0.09] bg-[#ffffff] p-8">
-              <h2 className="mb-5 text-[28px] font-semibold tracking-[-0.02em]">Quickstart</h2>
+          <section className="mb-16 grid gap-6 sm:mb-24 sm:gap-8 lg:grid-cols-2">
+            <div className="rounded-xl border border-black/[0.09] bg-[#ffffff] p-6 sm:p-8">
+              <h2 className="mb-5 text-[24px] font-semibold tracking-[-0.02em] sm:text-[28px]">Quickstart</h2>
               <ol className="space-y-4">
                 {QUICKSTART_STEPS.map((step, idx) => (
                   <li key={step} className="flex gap-3">

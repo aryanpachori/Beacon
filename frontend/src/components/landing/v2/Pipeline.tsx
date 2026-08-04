@@ -18,15 +18,15 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
   }, [demoSpeed])
 
   return (
-    <section id="how" data-reveal className="pb-[118px] pt-5">
+    <section id="how" data-reveal className="pb-16 pt-5 sm:pb-[118px]">
       <p className="bl-kicker">The pipeline</p>
       <h2 className="bl-h2">Faulty code in. Reviewed code out.</h2>
-      <p className="bl-lede mb-[60px] max-w-[56ch]">
+      <p className="bl-lede mb-10 max-w-[56ch] sm:mb-[60px]">
         Your agent&apos;s diff streams through the Beacon MCP server on your machine. Findings come
         back as fixes, not tickets.
       </p>
 
-      <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_118px_250px_118px_minmax(0,1fr)] lg:gap-0">
+      <div className="grid items-center gap-4 sm:gap-6 lg:grid-cols-[minmax(0,1fr)_118px_250px_118px_minmax(0,1fr)] lg:gap-0">
         <div>
           <div
             className="bl-mono mb-3 flex items-center gap-[9px] text-[11px] uppercase tracking-[0.08em]"
@@ -45,9 +45,9 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
                 2 findings
               </span>
             </div>
-            <div className="bl-mono py-3.5 text-[12.5px] leading-[2.2]">
+            <div className="bl-mono overflow-x-auto py-3.5 text-[12px] leading-[2.2] sm:text-[12.5px]">
               <div
-                className="px-3.5 text-[rgba(8,9,10,.9)]"
+                className="whitespace-nowrap px-3.5 text-[rgba(8,9,10,.9)] sm:whitespace-normal"
                 style={{
                   background: 'rgba(196,103,92,.13)',
                   boxShadow: `inset 2px 0 0 ${DANGER}`,
@@ -55,8 +55,13 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
               >
                 const key = &quot;sk_live_51H8xJ2…&quot;
               </div>
-              <div className="px-3.5 text-[rgba(8,9,10,.5)]">app.post(&quot;/refund&quot;, handler)</div>
+              <div className="whitespace-nowrap px-3.5 text-[rgba(8,9,10,.5)] sm:whitespace-normal">
+                app.post(&quot;/refund&quot;, handler)
+              </div>
             </div>
+          </div>
+          <div className="mt-3 flex justify-center lg:hidden" aria-hidden>
+            <span className="bl-mono text-[11px] text-[rgba(8,9,10,.35)]">↓ reviewed</span>
           </div>
         </div>
 
@@ -69,8 +74,8 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
           ]}
         />
 
-        <div className="relative grid h-[290px] place-items-center">
-          <div className="relative w-[250px] rounded-[18px] border border-[rgba(8,9,10,.42)] bg-[linear-gradient(180deg,rgba(8,9,10,.09),rgba(8,9,10,.02))] px-[18px] pb-4 pt-[18px]">
+        <div className="relative grid place-items-center lg:h-[290px]">
+          <div className="relative w-full max-w-[250px] rounded-[18px] border border-[rgba(8,9,10,.42)] bg-[linear-gradient(180deg,rgba(8,9,10,.09),rgba(8,9,10,.02))] px-[18px] pb-4 pt-[18px]">
             <div className="mb-3.5 flex items-center gap-[9px]">
               <BeaconOrb size={16} core={7} duration={1.6} />
               <span className="text-[15px] font-semibold tracking-[-0.015em]">beacon mcp</span>
@@ -104,6 +109,9 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
               <span className="ml-auto">38ms</span>
             </div>
           </div>
+          <div className="mt-3 flex justify-center lg:hidden" aria-hidden>
+            <span className="bl-mono text-[11px] text-[rgba(8,9,10,.35)]">↓ fixed</span>
+          </div>
         </div>
 
         <Rail
@@ -130,9 +138,9 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
                 clean
               </span>
             </div>
-            <div className="bl-mono py-3.5 text-[12.5px] leading-[2.2]">
+            <div className="bl-mono overflow-x-auto py-3.5 text-[12px] leading-[2.2] sm:text-[12.5px]">
               <div
-                className="px-3.5 text-[rgba(8,9,10,.9)]"
+                className="whitespace-nowrap px-3.5 text-[rgba(8,9,10,.9)] sm:whitespace-normal"
                 style={{
                   background: 'rgba(111,156,130,.12)',
                   boxShadow: `inset 2px 0 0 ${SUCCESS}`,
@@ -140,7 +148,7 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
               >
                 const key = process.env.STRIPE_KEY
               </div>
-              <div className="px-3.5 text-[rgba(8,9,10,.5)]">
+              <div className="whitespace-nowrap px-3.5 text-[rgba(8,9,10,.5)] sm:whitespace-normal">
                 app.post(&quot;/refund&quot;, requireOwner, handler)
               </div>
             </div>

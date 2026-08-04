@@ -182,29 +182,29 @@ export function StoryTimeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
   const barColor = riskColor(current.risk)
 
   return (
-    <section data-reveal className="pb-[118px]">
+    <section data-reveal className="pb-16 sm:pb-[118px]">
       <p className="bl-kicker">In the room</p>
       <h2 className="bl-h2 max-w-[18ch]">Every team has a Gilfoyle.</h2>
-      <p className="bl-lede mb-[60px] max-w-[52ch]">
+      <p className="bl-lede mb-10 max-w-[52ch] sm:mb-[60px]">
         Pied Piper almost ships a live Stripe key to demo day. Beacon catches it before Erlich can
         take credit.
       </p>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_120px]">
         <div className="overflow-hidden rounded-[14px] border border-black/[0.09] bg-[#ffffff]">
-          <div className="flex items-center gap-2.5 border-b border-black/[0.07] px-5 py-3.5">
+          <div className="flex flex-wrap items-center gap-2 border-b border-black/[0.07] px-4 py-3 sm:gap-2.5 sm:px-5 sm:py-3.5">
             <span className="h-1.5 w-1.5 rounded-full bg-[#08090a]" />
-            <span className="bl-mono text-[13.5px] font-medium text-[rgba(8,9,10,.85)]">
+            <span className="bl-mono min-w-0 truncate text-[13px] font-medium text-[rgba(8,9,10,.85)] sm:text-[13.5px]">
               #pied-piper-eng
             </span>
-            <span className="bl-mono ml-auto text-[11px] text-[rgba(8,9,10,.35)]">
+            <span className="bl-mono w-full text-[11px] text-[rgba(8,9,10,.35)] sm:ml-auto sm:w-auto">
               5 humans · 1 agent · 1 bot
             </span>
           </div>
 
           <div
             ref={chatRef}
-            className="flex h-[420px] flex-col gap-5 overflow-y-auto px-5 py-[22px] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+            className="flex h-[360px] flex-col gap-5 overflow-y-auto px-4 py-5 sm:h-[420px] sm:px-5 sm:py-[22px] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
           >
             {messages.map((m) => {
               const tag = TAG_STYLE[m.tag]

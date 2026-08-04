@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { SiteLogo } from '@/components/layout/SiteLogo'
+import { MobilePublicNav } from '@/components/layout/MobilePublicNav'
 
 const LINKS = [
   { href: '/', label: 'Home', match: (path: string) => path === '/' },
@@ -14,11 +15,11 @@ export function PublicNav() {
   const pathname = usePathname()
 
   return (
-    <nav className="public-nav relative z-[5] flex w-full items-center gap-5 border-b border-black/[0.09] py-[26px] md:gap-9">
+    <nav className="public-nav relative z-[5] flex w-full items-center gap-3 border-b border-black/[0.09] py-5 sm:gap-5 sm:py-[26px] md:gap-9">
       <SiteLogo
         className="public-nav-brand mr-auto"
-        size={40}
-        wordmarkClassName="text-[22px] font-semibold tracking-[-0.02em] text-[#08090a]"
+        size={36}
+        wordmarkClassName="text-[20px] font-semibold tracking-[-0.02em] text-[#08090a] sm:text-[22px]"
       />
 
       <div className="hidden items-center gap-9 md:flex">
@@ -40,10 +41,18 @@ export function PublicNav() {
 
       <Link
         href="/register"
-        className="public-nav-cta rounded-full bg-[#08090a] px-4 py-[9px] text-[14px] font-medium text-[#f2f0ed] transition-opacity hover:opacity-80"
+        className="public-nav-cta bl-btn-primary !rounded-full !px-3.5 !py-2 text-[13px] sm:!px-4 sm:!py-[9px] sm:text-[14px]"
       >
         Install Beacon
       </Link>
+
+      <MobilePublicNav
+        links={LINKS.map(({ href, label, match }) => ({
+          href,
+          label,
+          active: match(pathname),
+        }))}
+      />
     </nav>
   )
 }

@@ -80,13 +80,13 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <span className="flex items-center gap-2 rounded-full border border-dl-border px-3.5 py-2 text-[13px] text-dl-muted">
-            <span className="h-1.5 w-1.5 rounded-full bg-dl-navy" />
-            {user?.email}
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
+          <span className="flex min-w-0 max-w-full items-center gap-2 rounded-full border border-dl-border px-3.5 py-2 text-[13px] text-dl-muted">
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-dl-navy" />
+            <span className="truncate">{user?.email}</span>
           </span>
           <span
-            className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[12.5px] font-semibold"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-[12.5px] font-semibold"
             style={{ background: planColors.bg, color: planColors.text, fontFamily: 'var(--font-heading)' }}
           >
             {planLabel(plan)}
@@ -105,9 +105,9 @@ export default function DashboardPage() {
       {packages.length > 0 && (
         <Link
           href="/dependency-tracker"
-          className="dl-card mt-4 flex items-center justify-between transition-colors hover:border-dl-muted"
+          className="dl-card mt-4 flex flex-col gap-3 transition-colors hover:border-dl-muted sm:flex-row sm:items-center sm:justify-between"
         >
-          <div className="flex items-center gap-4 text-[12.5px] text-dl-text">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[12.5px] text-dl-text">
             <span className="font-semibold text-dl-navy">{dashboard?.totalPackages ?? packages.length} packages</span>
             <span className="text-dl-muted">·</span>
             <span>{dashboard?.healthCounts?.critical ?? 0} critical</span>
