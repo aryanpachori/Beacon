@@ -76,7 +76,7 @@ export const metadata: Metadata = {
     images: [{ url: '/logo.png', width: 1024, height: 1024, alt: 'Beacon' }],
   },
   twitter: {
-    card: 'summary_large_image',
+    card: 'summary',
     title: 'Beacon — Security that ships at agent speed',
     description: 'Beacon catches secrets, SQL injection, and broken auth before commit — inline, locally.',
     images: ['/logo.png'],
