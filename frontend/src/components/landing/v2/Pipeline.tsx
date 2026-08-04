@@ -21,7 +21,7 @@ export function Pipeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
     <section id="how" data-reveal className="pb-16 pt-5 sm:pb-[118px]">
       <p className="bl-kicker">The pipeline</p>
       <h2 className="bl-h2">Faulty code in. Reviewed code out.</h2>
-      <p className="bl-lede mb-10 max-w-[56ch] sm:mb-[60px]">
+      <p className="bl-lede max-w-[56ch]" style={{ marginBottom: 60 }}>
         Your agent&apos;s diff streams through the Beacon MCP server on your machine. Findings come
         back as fixes, not tickets.
       </p>

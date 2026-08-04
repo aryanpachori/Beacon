@@ -185,7 +185,7 @@ export function StoryTimeline({ demoSpeed = 1 }: { demoSpeed?: number }) {
     <section data-reveal className="pb-16 sm:pb-[118px]">
       <p className="bl-kicker">In the room</p>
       <h2 className="bl-h2 max-w-[18ch]">Every team has a Gilfoyle.</h2>
-      <p className="bl-lede mb-10 max-w-[52ch] sm:mb-[60px]">
+      <p className="bl-lede max-w-[52ch]" style={{ marginBottom: 60 }}>
         Pied Piper almost ships a live Stripe key to demo day. Beacon catches it before Erlich can
         take credit.
       </p>
