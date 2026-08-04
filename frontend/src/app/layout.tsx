@@ -56,6 +56,7 @@ const sourceSerif = Source_Serif_4({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://beacon.forgefastlabs.com'),
   icons: {
     icon: [
       // ?v= busts sticky browser/CDN favicon caches after logo updates
@@ -72,11 +73,13 @@ export const metadata: Metadata = {
     description: 'Beacon catches secrets, SQL injection, and broken auth before commit — inline, locally.',
     type: 'website',
     siteName: 'Beacon',
+    images: [{ url: '/logo.png', width: 1024, height: 1024, alt: 'Beacon' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Beacon — Security that ships at agent speed',
     description: 'Beacon catches secrets, SQL injection, and broken auth before commit — inline, locally.',
+    images: ['/logo.png'],
   },
 }
 
