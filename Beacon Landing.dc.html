@@ -17,6 +17,7 @@
   a{color:#08090a;text-decoration:none}
   a:hover{color:#08090a}
   ::selection{background:rgba(8,9,10,.28)}
+  .bl-chat-scroll::-webkit-scrollbar{display:none}
   @keyframes orbCore{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(.78);opacity:1}}
   @keyframes orbRing{0%{transform:scale(.7);opacity:.55}70%{transform:scale(1.9);opacity:0}100%{transform:scale(1.9);opacity:0}}
   @keyframes wordIn{from{opacity:0;transform:translateY(0.42em) rotate(1.2deg)}to{opacity:1;transform:none}}
@@ -202,8 +203,6 @@
       </div>
 
       <div style="position:relative;display:grid;place-items:center;height:290px">
-        <div style="position:absolute;width:210px;height:210px;border-radius:50%;border:1px solid rgba(8,9,10,.22);animation:orbRing 3.4s ease-out infinite"></div>
-        <div style="position:absolute;width:210px;height:210px;border-radius:50%;border:1px solid rgba(8,9,10,.16);animation:orbRing 3.4s ease-out 1.7s infinite"></div>
         <div style="position:relative;width:250px;border:1px solid rgba(8,9,10,.42);border-radius:18px;background:linear-gradient(180deg,rgba(8,9,10,.09),rgba(8,9,10,.02));backdrop-filter:blur(2px);padding:18px 18px 16px">
           <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px">
             <div style="position:relative;width:16px;height:16px;display:grid;place-items:center">
@@ -253,7 +252,7 @@
   <section data-reveal style="padding:20px 0 118px">
     <p style="margin:0 0 14px;font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:#08090a">In the room</p>
     <h2 style="margin:0 0 12px;font-size:44px;line-height:1.06;letter-spacing:-.03em;font-weight:600;max-width:26ch">Every team has a Gilfoyle.</h2>
-    <p style="margin:0 0 44px;font-size:17px;line-height:1.6;color:rgba(8,9,10,.55);max-width:56ch">Beacon just makes sure someone catches it before he does.</p>
+    <p style="margin:0 0 44px;font-size:17px;line-height:1.6;color:rgba(8,9,10,.55);max-width:56ch">Pied Piper almost ships a live Stripe key to demo day. Beacon catches it before Erlich can take credit.</p>
 
     <div style="display:grid;grid-template-columns:1fr 200px;border:1px solid rgba(8,9,10,.09);border-radius:14px;overflow:hidden;max-width:760px">
       <div style="display:flex;flex-direction:column;height:420px;border-right:1px solid rgba(8,9,10,.09)">
@@ -261,7 +260,7 @@
           <span style="width:6px;height:6px;border-radius:50%;background:#08090a"></span>
           <span style="font-size:14px;font-weight:600">#pied-piper-eng</span>
         </div>
-        <div ref="{{ chatRef }}" style="flex:1;overflow-y:auto;padding:18px 20px;display:flex;flex-direction:column;gap:16px">
+        <div ref="{{ chatRef }}" style="flex:1;overflow-y:auto;padding:18px 20px;display:flex;flex-direction:column;gap:16px;scrollbar-width:none;-ms-overflow-style:none" class="bl-chat-scroll">
           <sc-for list="{{ messages }}" as="m" hint-placeholder-count="7">
             <sc-if value="{{ m.revealed }}" hint-placeholder-val="{{ false }}">
               <div style="background:{{ m.rowBg }};border-radius:9px;padding:8px 10px;margin:-8px -10px;animation:msgIn .35s ease-out;transition:background .4s ease">
@@ -343,7 +342,7 @@
 </div>
 
 <footer style="background:#08090a;color:#f2f0ed;padding:74px 0 0;overflow:hidden">
-  <div style="max-width:1280px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:40px">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1.5fr 1fr 1fr auto;gap:40px">
     <div>
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:26px">
         <div style="position:relative;width:20px;height:20px;display:grid;place-items:center">
@@ -352,20 +351,26 @@
         </div>
         <span style="font-size:20px;font-weight:600;letter-spacing:-.025em">beacon</span>
       </div>
-      <p style="margin:0;font-size:14px;color:rgba(11,10,8,.72)">© 2026 Beacon. All rights reserved.</p>
+      <p style="margin:0;font-size:14px;color:rgba(242,240,237,.55)">© 2026 Beacon. All rights reserved.</p>
     </div>
     <div style="display:flex;flex-direction:column;gap:14px">
-      <span style="font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(11,10,8,.85)">Product</span>
+      <span style="font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(242,240,237,.55)">Product</span>
       <a href="#how" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">How it works</a>
       <a href="#features" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">Features</a>
       <a href="#" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">Pricing</a>
     </div>
     <div style="display:flex;flex-direction:column;gap:14px">
-      <span style="font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(11,10,8,.85)">Install</span>
+      <span style="font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(242,240,237,.55)">Install</span>
       <a href="#" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">VS Code</a>
       <a href="#" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">Cursor</a>
       <a href="#" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">MCP server</a>
       <a href="#" style="font-size:16px;font-weight:500;color:#f2f0ed" style-hover="opacity:.6">CLI</a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;justify-self:end">
+      <span style="font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(242,240,237,.55)">Social</span>
+      <a href="https://x.com/trybeaconai" target="_blank" rel="noopener noreferrer" aria-label="Beacon on X" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;color:rgba(242,240,237,.55)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.727-8.828L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
+      </a>
     </div>
   </div>
   <div style="margin-top:78px;height:clamp(130px,14vw,250px);overflow:hidden;display:flex;justify-content:center">
@@ -380,15 +385,18 @@ const KEY = 'sk_live_51H8xJ2eZvKYlo2C…';
 const CHECKS = ['secret scan', 'injection shapes', 'authz paths', 'unsafe sinks'];
 const MCP_STATUS = ['reading diff', 'matching patterns', 'drafting fixes', 'returning patch'];
 const MESSAGES = [
-  { id: 1, name: 'Gilfoyle', tag: 'TEAM', time: '2:14 AM', text: 'Beacon flagged clsx. Score of 21. Try to look concerned.', risk: 20, label: 'nominal' },
-  { id: 2, name: 'Dinesh', tag: 'TEAM', time: '2:15 AM', text: 'Some of us sleep, Gilfoyle.', risk: 25, label: 'forming' },
-  { id: 3, name: 'Beacon', tag: 'BEACON', time: '2:16 AM', text: 'Blocked — clsx maintainer inactive 90+ days, no CVE response window', risk: 78, label: 'critical' },
-  { id: 4, name: 'Erlich', tag: 'TEAM', time: '7:42 AM', text: 'I found Beacon. You\u2019re welcome, as usual.', risk: 40, label: 'containing' },
-  { id: 5, name: 'Richard', tag: 'TEAM', time: '7:44 AM', text: 'Are we getting sued. Just — are we.', risk: 55, label: 'containing' },
-  { id: 6, name: 'Dinesh', tag: 'FIX', time: '7:51 AM', text: 'Patched · pinned and suppressed', risk: 15, label: 'resolved' },
-  { id: 7, name: 'Erlich', tag: 'TEAM', time: '8:11 AM', text: 'Pro plan approved. By me. You\u2019re all lucky to know me.', risk: 8, label: 'resolved' }
+  { id: 1, name: 'Richard Hendricks', tag: 'HUMAN', time: '2:11 AM', text: 'we need checkout working before the Hooli demo. just\u2026 please don\u2019t hardcode anything', risk: 8, label: 'nominal' },
+  { id: 2, name: 'Erlich Bachman', tag: 'HUMAN', time: '2:12 AM', text: 'Cursor will crush this. I discovered AI coding. You\u2019re welcome.', risk: 12, label: 'forming' },
+  { id: 3, name: 'Gilfoyle', tag: 'HUMAN', time: '2:12 AM', text: 'This is going to be a disaster. I\u2019ll watch.', risk: 18, label: 'forming' },
+  { id: 4, name: 'cursor-agent', tag: 'AGENT', time: '2:14 AM', text: 'wrote checkout.ts · +240 −18, 4 files changed', risk: 42, label: 'building' },
+  { id: 5, name: 'Jared Dunn', tag: 'HUMAN', time: '2:14 AM', text: 'it compiled. I\u2019m choosing to feel proud of us as a family.', risk: 48, label: 'building' },
+  { id: 6, name: 'Beacon', tag: 'BEACON', time: '2:15 AM', text: 'blocked commit — critical: hardcoded Stripe live key, line 2', risk: 94, label: 'critical' },
+  { id: 7, name: 'Jian-Yang', tag: 'HUMAN', time: '2:15 AM', text: 'this is bad. very bad. like my see-food app.', risk: 90, label: 'critical' },
+  { id: 8, name: 'Gilfoyle', tag: 'FIX', time: '2:18 AM', text: 'patched · moved key to process.env.STRIPE_KEY. You\u2019re welcome. Don\u2019t thank me.', risk: 22, label: 'containing' },
+  { id: 9, name: 'Richard Hendricks', tag: 'HUMAN', time: '2:20 AM', text: 'demo\u2019s clean. we don\u2019t talk about the key. ever.', risk: 4, label: 'resolved' },
+  { id: 10, name: 'Jian-Yang', tag: 'HUMAN', time: '2:20 AM', text: 'yes', risk: 3, label: 'resolved' }
 ];
-const TAG_COLORS = { TEAM: ['rgba(8,9,10,.08)', 'rgba(8,9,10,.65)'], BEACON: ['rgba(8,9,10,.16)', '#08090a'], FIX: ['rgba(8,9,10,.16)', '#08090a'] };
+const TAG_COLORS = { HUMAN: ['rgba(8,9,10,.08)', 'rgba(8,9,10,.65)'], AGENT: ['rgba(8,9,10,.16)', 'rgba(8,9,10,.85)'], BEACON: ['rgba(8,9,10,.16)', '#08090a'], FIX: ['rgba(8,9,10,.16)', '#08090a'] };
 
 const FEATURES = [
   { n: '01', tag: 'inline', title: 'Real-time inline review', body: 'Risky lines are annotated the moment an agent writes them — not in CI, not in a report.', snippet: '// annotated the instant it\'s written\nconst key = "sk_live_51H8xJ2…"\n                              ↑ flagged' },
