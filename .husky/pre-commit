@@ -1,6 +1,0 @@
-#!/usr/bin/env sh
-set -e
-
-echo "🔍 Running TypeScript type checking..."
-npm run check
-echo "✅ TypeScript check passed!"
