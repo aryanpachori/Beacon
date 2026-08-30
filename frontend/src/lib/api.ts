@@ -452,6 +452,41 @@ export async function fetchActivity(limit = 100): Promise<ActivityEvent[]> {
   return result
 }
 
+// ── Agent Activity (CLI/MCP/extension findings) ─────────────────────────────────
+
+export type AgentEventItem = {
+  id: string
+  triggeredBy: 'cli' | 'mcp' | 'extension' | 'github_oauth'
+  eventType: 'scan' | 'finding' | 'auto_fix' | 'deploy_blocked' | 'deploy_passed' | 'alert_sent'
+  scanType: string | null
+  severity: 'critical' | 'high' | 'medium' | 'low' | null
+  category: string | null
+  filePath: string | null
+  lineRange: [number, number] | null
+  description: string | null
+  suggestedFix: string | null
+  autoFixable: boolean
+  status: 'open' | 'fixed' | 'ignored' | 'resolved'
+  repoName: string | null
+  detectedAt: string
+  createdAt: string
+}
+
+export async function fetchAgentActivity(limit = 50): Promise<AgentEventItem[]> {
+  const raw = await apiFetch<{ events: AgentEventItem[] }>(`/api/agent-activity?limit=${limit}`)
+  return raw.events
+}
+
+export async function updateAgentEventStatus(
+  id: string,
+  status: AgentEventItem['status']
+): Promise<void> {
+  await apiFetch(`/api/agent-activity/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status }),
+  })
+}
+
 // ── Maintainers ───────────────────────────────────────────────────────────────
 
 export type MaintainerOverview = {
