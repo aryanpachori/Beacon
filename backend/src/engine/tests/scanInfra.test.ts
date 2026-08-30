@@ -2,7 +2,7 @@ import { mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { scanInfra } from '../src/scanInfra'
+import { scanInfra } from '../scanInfra'
 
 function writeTempFile(name: string, content: string): string {
   const dir = mkdtempSync(join(tmpdir(), 'beacon-core-test-'))
