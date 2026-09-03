@@ -15,10 +15,10 @@ const COLUMNS = [
   {
     title: 'Install',
     links: [
-      { label: 'VS Code', href: '/register' },
-      { label: 'Cursor', href: '/register' },
-      { label: 'MCP server', href: '/register' },
-      { label: 'CLI', href: '/register' },
+      { label: 'Get started (local)', href: '/get-started' },
+      { label: 'VS Code / Cursor', href: '/get-started' },
+      { label: 'MCP server', href: '/get-started' },
+      { label: 'CLI', href: '/get-started' },
     ],
   },
 ]

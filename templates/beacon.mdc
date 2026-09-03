@@ -1,0 +1,16 @@
+---
+description: Call Beacon MCP security tools before commit/deploy
+globs:
+alwaysApply: true
+---
+
+# Beacon security tools
+
+When this project has the Beacon MCP server connected, call these tools instead of inventing security reviews:
+
+- `check_security` — app code risks
+- `scan_dependencies` — supply-chain / manifest risks
+- `scan_infra` — infra and network posture
+- `pre_deploy_check` — deploy gate (block on critical/high)
+
+Call `pre_deploy_check` before production deploys or terraform apply. Fix critical/high findings before finishing.

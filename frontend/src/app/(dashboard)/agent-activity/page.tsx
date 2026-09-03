@@ -26,9 +26,24 @@ function relativeTime(iso: string) {
 type AgentKey = 'claude' | 'codex' | 'cursor' | 'other'
 
 const AGENTS: { key: AgentKey; label: string; icon: React.ElementType; command: string }[] = [
-  { key: 'claude', label: 'Claude', icon: Sparkles, command: 'claude mcp add --transport http beacon https://mcp.beacon.forgefastlabs.com/mcp' },
-  { key: 'codex', label: 'Codex', icon: Terminal, command: 'codex mcp add --transport http beacon https://mcp.beacon.forgefastlabs.com/mcp' },
-  { key: 'cursor', label: 'Cursor', icon: Blocks, command: 'cursor mcp add --transport http beacon https://mcp.beacon.forgefastlabs.com/mcp' },
+  {
+    key: 'claude',
+    label: 'Claude',
+    icon: Sparkles,
+    command: 'claude mcp add beacon -- npx -y @forgefastlabs/beacon-mcp',
+  },
+  {
+    key: 'codex',
+    label: 'Codex',
+    icon: Terminal,
+    command: 'npx -y @forgefastlabs/beacon-mcp',
+  },
+  {
+    key: 'cursor',
+    label: 'Cursor',
+    icon: Blocks,
+    command: 'npx -y @forgefastlabs/beacon-mcp',
+  },
   { key: 'other', label: 'Other', icon: HelpCircle, command: 'npx -y @forgefastlabs/beacon-mcp' },
 ]
 

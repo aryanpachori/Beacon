@@ -19,7 +19,7 @@ type MobilePublicNavProps = {
 
 export function MobilePublicNav({
   links,
-  ctaHref = '/register',
+  ctaHref = '/get-started',
   ctaLabel = 'Install Beacon',
 }: MobilePublicNavProps) {
   const [open, setOpen] = useState(false)

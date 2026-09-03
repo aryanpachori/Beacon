@@ -1,4 +1,15 @@
 {
   "name": "beacon",
-  "private": true
+  "private": true,
+  "workspaces": [
+    "packages/engine",
+    "packages/mcp",
+    "packages/cli",
+    "packages/extension"
+  ],
+  "scripts": {
+    "build:packages": "npm run build -w @forgefastlabs/beacon-engine && npm run build -w @forgefastlabs/beacon-mcp && npm run build -w @forgefastlabs/beacon-cli && npm run build -w beacon-security",
+    "publish:packages": "npm run build:packages && npm publish -w @forgefastlabs/beacon-engine --access public && npm publish -w @forgefastlabs/beacon-mcp --access public && npm publish -w @forgefastlabs/beacon-cli --access public",
+    "publish:packages:dry": "npm run build:packages && npm publish -w @forgefastlabs/beacon-engine --access public --dry-run && npm publish -w @forgefastlabs/beacon-mcp --access public --dry-run && npm publish -w @forgefastlabs/beacon-cli --access public --dry-run"
+  }
 }

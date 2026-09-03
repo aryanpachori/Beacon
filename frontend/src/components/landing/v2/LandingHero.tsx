@@ -108,7 +108,7 @@ export function LandingHero({ demoSpeed = 1 }: { demoSpeed?: number }) {
         </p>
 
         <div className="mb-[30px] flex flex-wrap items-center gap-3">
-          <Link href="/register" className="bl-btn-primary">
+          <Link href="/get-started" className="bl-btn-primary">
             Install Beacon — free
           </Link>
           <a href="#how" className="bl-btn-ghost">

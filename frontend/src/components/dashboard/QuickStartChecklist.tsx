@@ -11,15 +11,33 @@ interface QuickStartChecklistProps {
 
 export function QuickStartChecklist({ githubConnected, agentConnected }: QuickStartChecklistProps) {
   const steps = [
-    { label: 'Create your account', done: true, href: null },
-    { label: 'Connect your coding agent', done: agentConnected, href: '/agent-activity' },
-    { label: 'Connect GitHub for dependency tracking', done: githubConnected, href: '/onboarding' },
+    {
+      label: 'Install Beacon locally (CLI / MCP)',
+      done: false,
+      href: '/get-started',
+      // Local install is outside the dashboard — never auto-complete
+      alwaysLink: true,
+    },
+    {
+      label: 'Connect your coding agent',
+      done: agentConnected,
+      href: '/agent-activity',
+      alwaysLink: false,
+    },
+    {
+      label: 'Optional: connect GitHub for dependency tracking',
+      done: githubConnected,
+      href: '/onboarding',
+      alwaysLink: false,
+    },
   ]
 
   return (
     <div className="dl-card">
       <h3 className="card-heading">Quick start</h3>
-      <p className="mt-0.5 text-[11px] text-dl-muted">Get the most out of Beacon</p>
+      <p className="mt-0.5 text-[11px] text-dl-muted">
+        Local-first — account and GitHub are optional
+      </p>
 
       <div className="mt-3 flex flex-col gap-2">
         {steps.map((step) => {
@@ -30,16 +48,19 @@ export function QuickStartChecklist({ githubConnected, agentConnected }: QuickSt
               ) : (
                 <Circle className="h-4 w-4 shrink-0 text-dl-border" />
               )}
-              <span className={cn(
-                'text-[12.5px]',
-                step.done ? 'text-dl-muted line-through' : 'text-dl-text'
-              )}>
+              <span
+                className={cn(
+                  'text-[12.5px]',
+                  step.done ? 'text-dl-muted line-through' : 'text-dl-text'
+                )}
+              >
                 {step.label}
               </span>
             </div>
           )
-          return step.href && !step.done ? (
-            <Link key={step.label} href={step.href} className="hover:opacity-80 transition-opacity">
+          const linkable = step.href && (step.alwaysLink || !step.done)
+          return linkable ? (
+            <Link key={step.label} href={step.href!} className="transition-opacity hover:opacity-80">
               {content}
             </Link>
           ) : (

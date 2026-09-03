@@ -3,10 +3,10 @@ import { LandingFooter } from '@/components/landing/v2/LandingFooter'
 import { PublicNav } from '@/components/layout/PublicNav'
 
 const QUICKSTART_STEPS = [
-  'Install Beacon in Cursor, VS Code, or JetBrains.',
-  'Open any repository and start coding normally.',
-  'Beacon reviews each AI-generated change before commit.',
-  'Fix flagged issues and ship with confidence.',
+  'Run npx @forgefastlabs/beacon-cli init (no account required).',
+  'Connect the Beacon MCP server in Cursor or your coding agent.',
+  'Beacon reviews AI-generated changes locally before commit.',
+  'Optionally create an account to sync findings to the dashboard.',
 ]
 
 const RULE_EXAMPLES = [
@@ -60,28 +60,28 @@ export default function DocsPage() {
               <h2 className="mb-5 text-[28px] font-semibold tracking-[-0.02em]">Install</h2>
               <div className="space-y-3">
                 <Link
-                  href="/register"
+                  href="/get-started"
                   className="block rounded-lg border border-black/[0.1] bg-black/[0.015] px-4 py-3 text-[15px] text-[rgba(8,9,10,.9)] hover:border-black/30"
                 >
-                  Cursor Extension
+                  Cursor / VS Code (local-first)
+                </Link>
+                <Link
+                  href="/get-started#mcp"
+                  className="block rounded-lg border border-black/[0.1] bg-black/[0.015] px-4 py-3 text-[15px] text-[rgba(8,9,10,.9)] hover:border-black/30"
+                >
+                  MCP Server
+                </Link>
+                <Link
+                  href="/get-started"
+                  className="block rounded-lg border border-black/[0.1] bg-black/[0.015] px-4 py-3 text-[15px] text-[rgba(8,9,10,.9)] hover:border-black/30"
+                >
+                  CLI (`beacon scan` / `beacon init`)
                 </Link>
                 <Link
                   href="/register"
                   className="block rounded-lg border border-black/[0.1] bg-black/[0.015] px-4 py-3 text-[15px] text-[rgba(8,9,10,.9)] hover:border-black/30"
                 >
-                  VS Code Extension
-                </Link>
-                <Link
-                  href="/register"
-                  className="block rounded-lg border border-black/[0.1] bg-black/[0.015] px-4 py-3 text-[15px] text-[rgba(8,9,10,.9)] hover:border-black/30"
-                >
-                  JetBrains Plugin
-                </Link>
-                <Link
-                  href="/register"
-                  className="block rounded-lg border border-black/[0.1] bg-black/[0.015] px-4 py-3 text-[15px] text-[rgba(8,9,10,.9)] hover:border-black/30"
-                >
-                  MCP Server + CLI
+                  Optional cloud dashboard account
                 </Link>
               </div>
             </div>

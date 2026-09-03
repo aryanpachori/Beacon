@@ -354,6 +354,14 @@ export function OnboardingFlow() {
                   </button>
                 )}
 
+                <button
+                  type="button"
+                  onClick={() => router.push('/get-started')}
+                  className="text-xs text-dl-m-muted underline underline-offset-2 hover:text-dl-text"
+                >
+                  Skip GitHub — use local CLI / MCP instead
+                </button>
+
                 {githubConnected && configureUrl && (
                   <a
                     href={configureUrl}

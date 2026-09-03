@@ -1,0 +1,67 @@
+{
+  "name": "beacon-security",
+  "displayName": "Beacon Security",
+  "description": "Local-first Beacon scanners — gutter diagnostics, package health hovers, and Fix with Beacon.",
+  "version": "0.1.0",
+  "publisher": "forgefastlabs",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Linters", "Other"],
+  "keywords": ["security", "beacon", "supply-chain", "mcp"],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "beacon.scanWorkspace",
+        "title": "Beacon: Scan Workspace"
+      },
+      {
+        "command": "beacon.scanFile",
+        "title": "Beacon: Scan Current File"
+      },
+      {
+        "command": "beacon.clearDiagnostics",
+        "title": "Beacon: Clear Diagnostics"
+      }
+    ],
+    "configuration": {
+      "title": "Beacon",
+      "properties": {
+        "beacon.scanOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Re-scan the active file when it is saved."
+        },
+        "beacon.scanOnOpen": {
+          "type": "boolean",
+          "default": true,
+          "description": "Scan a file when it is opened."
+        },
+        "beacon.syncFindings": {
+          "type": "boolean",
+          "default": false,
+          "description": "POST finding metadata to Beacon Agent Activity when BEACON_API_URL and BEACON_API_TOKEN are set."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "watch": "tsc -p tsconfig.json -w",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "package": "npm run build && npx @vscode/vsce package --no-dependencies"
+  },
+  "dependencies": {
+    "@forgefastlabs/beacon-engine": "0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.7.0"
+  },
+  "license": "MIT"
+}

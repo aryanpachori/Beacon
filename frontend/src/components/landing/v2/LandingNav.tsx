@@ -45,7 +45,7 @@ export function LandingNav() {
         Docs
       </Link>
       <Link
-        href="/register"
+        href="/get-started"
         className="bl-btn-primary !rounded-full !px-3.5 !py-2 text-[13px] sm:!px-4 sm:!py-[9px] sm:text-[14px]"
       >
         Install Beacon

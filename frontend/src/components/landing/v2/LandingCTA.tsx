@@ -13,7 +13,7 @@ export function LandingCTA() {
         Free to install. No repo access. Live in your editor before your next prompt finishes.
       </p>
       <div className="relative flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-        <Link href="/register" className="bl-btn-primary !px-6 !py-3.5">
+        <Link href="/get-started" className="bl-btn-primary !px-6 !py-3.5">
           Install Beacon — free
         </Link>
         <a href="mailto:founders@beacon.forgefastlabs.com" className="bl-btn-ghost !px-[22px] !py-3.5">
