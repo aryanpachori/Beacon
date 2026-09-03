@@ -25,3 +25,5 @@ npm-debug.log*
 .cache
 *.tsbuildinfo
 .gstack
+# local sync credentials (may contain tokens)
+.beacon/

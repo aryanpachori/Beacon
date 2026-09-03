@@ -1,7 +1,0 @@
-{
-  "version": 1,
-  "sync": {
-    "apiUrlEnv": "BEACON_API_URL",
-    "tokenEnv": "BEACON_API_TOKEN"
-  }
-}

@@ -53,12 +53,16 @@ export function resolveSyncCredentials(opts?: {
   token?: string
 }): { apiUrl: string; token: string; autoSync: boolean } | null {
   const file = loadBeaconConfig()
-  const apiUrl = (
+  let apiUrl = (
     opts?.apiUrl ||
     process.env.BEACON_API_URL ||
     file.sync?.apiUrl ||
     ''
-  ).replace(/\/$/, '')
+  ).trim()
+  if (apiUrl && !/^https?:\/\//i.test(apiUrl)) {
+    apiUrl = `https://${apiUrl}`
+  }
+  apiUrl = apiUrl.replace(/\/$/, '')
   const token =
     opts?.token ||
     process.env.BEACON_API_TOKEN ||
@@ -78,10 +82,14 @@ export function resolveSyncCredentials(opts?: {
 
 /** Write sync credentials to project `.beacon/config.json` and `~/.beacon/config.json`. */
 export function writeSyncCredentials(apiUrl: string, token: string): { project: string; home: string } {
+  let normalized = apiUrl.trim().replace(/\/$/, '')
+  if (normalized && !/^https?:\/\//i.test(normalized)) {
+    normalized = `https://${normalized}`
+  }
   const payload: BeaconConfigFile = {
     version: 1,
     sync: {
-      apiUrl: apiUrl.replace(/\/$/, ''),
+      apiUrl: normalized,
       token,
       autoSync: true,
     },
