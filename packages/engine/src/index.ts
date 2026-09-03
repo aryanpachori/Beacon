@@ -23,3 +23,10 @@ export {
 export type { CollectOptions } from './collectFiles'
 export { syncFindings } from './sync'
 export type { SyncOptions, SyncTrigger } from './sync'
+export {
+  loadBeaconConfig,
+  resolveSyncCredentials,
+  writeSyncCredentials,
+  findConfigPath,
+} from './config'
+export type { BeaconConfigFile, BeaconSyncConfig } from './config'

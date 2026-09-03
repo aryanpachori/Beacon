@@ -2,12 +2,40 @@ import { Router } from 'express'
 import { prisma } from '../db/client'
 import { authMiddleware, AuthRequest } from '../middleware/auth.middleware'
 import { AppError } from '../middleware/error.middleware'
+import { signAgentSyncToken } from '../lib/jwt'
 import type { Finding } from '../engine'
 import type { Prisma } from '@prisma/client'
 
 export const agentActivityRouter = Router()
 
 const VALID_TRIGGERS = new Set(['cli', 'mcp', 'extension', 'github_oauth'])
+
+/**
+ * Mint a long-lived sync token + copyable CLI connect command so local
+ * scans can post finding metadata to this user's Agent Activity feed.
+ */
+agentActivityRouter.post('/sync-token', authMiddleware, async (req: AuthRequest, res, next) => {
+  try {
+    const userId = req.user!.userId
+    const email = req.user!.email
+    const token = signAgentSyncToken({ userId, email })
+
+    const apiUrl = (process.env.API_PUBLIC_URL || `${req.protocol}://${req.get('host')}`).replace(
+      /\/$/,
+      ''
+    )
+    const connectCommand = `npx -y @forgefastlabs/beacon-cli connect --url ${apiUrl} --token ${token}`
+
+    res.json({
+      apiUrl,
+      token,
+      expiresIn: process.env.JWT_AGENT_SYNC_EXPIRES_IN || '30d',
+      connectCommand,
+    })
+  } catch (err) {
+    next(err)
+  }
+})
 
 /**
  * Sync contract for local scans (CLI/MCP/extension). Only finding metadata is

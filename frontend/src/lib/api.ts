@@ -477,6 +477,21 @@ export async function fetchAgentActivity(limit = 50): Promise<AgentEventItem[]> 
   return raw.events
 }
 
+export type AgentSyncTokenResponse = {
+  apiUrl: string
+  token: string
+  expiresIn: string
+  connectCommand: string
+}
+
+/** Mint a long-lived CLI/MCP sync token + connect command for Agent Activity. */
+export async function createAgentSyncToken(): Promise<AgentSyncTokenResponse> {
+  return apiFetch<AgentSyncTokenResponse>('/api/agent-activity/sync-token', {
+    method: 'POST',
+    body: JSON.stringify({}),
+  })
+}
+
 export async function updateAgentEventStatus(
   id: string,
   status: AgentEventItem['status']

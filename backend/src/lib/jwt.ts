@@ -20,6 +20,14 @@ export function signAccessToken(payload: JwtPayload): string {
   return jwt.sign(payload, process.env.JWT_SECRET!, options)
 }
 
+/** Long-lived token for CLI/MCP → Agent Activity sync (findings metadata only). */
+export function signAgentSyncToken(payload: JwtPayload): string {
+  const options: SignOptions = {
+    expiresIn: (process.env.JWT_AGENT_SYNC_EXPIRES_IN || '30d') as SignOptions['expiresIn'],
+  }
+  return jwt.sign({ ...payload, scope: 'agent_sync' }, process.env.JWT_SECRET!, options)
+}
+
 export function signRefreshToken(payload: JwtPayload): string {
   const options: SignOptions = {
     expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || '30d') as SignOptions['expiresIn'],

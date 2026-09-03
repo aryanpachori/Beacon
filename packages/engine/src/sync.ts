@@ -1,4 +1,5 @@
 import type { Finding } from './finding'
+import { resolveSyncCredentials } from './config'
 
 export type SyncTrigger = 'cli' | 'mcp' | 'extension'
 
@@ -9,25 +10,25 @@ export type SyncOptions = {
   scanType: string
   triggeredBy: SyncTrigger
   repoId?: string
+  /** When true, sync even if autoSync is disabled in config. */
+  force?: boolean
 }
 
 /**
- * Optionally POST finding metadata to Beacon Agent Activity.
- * No-ops when BEACON_API_URL / BEACON_API_TOKEN (or explicit opts) are unset.
+ * POST finding metadata to Beacon Agent Activity.
+ * Uses BEACON_API_* env or `.beacon/config.json` from `beacon connect`.
  * Never sends source code — findings only.
  */
 export async function syncFindings(opts: SyncOptions): Promise<{ synced: boolean; received?: number }> {
-  const apiUrl = (opts.apiUrl ?? process.env.BEACON_API_URL ?? '').replace(/\/$/, '')
-  const token = opts.token ?? process.env.BEACON_API_TOKEN ?? process.env.BEACON_ACCESS_TOKEN
-  if (!apiUrl || !token) {
-    return { synced: false }
-  }
+  const creds = resolveSyncCredentials({ apiUrl: opts.apiUrl, token: opts.token })
+  if (!creds) return { synced: false }
+  if (!opts.force && !creds.autoSync) return { synced: false }
 
-  const res = await fetch(`${apiUrl}/api/agent-activity/scans`, {
+  const res = await fetch(`${creds.apiUrl}/api/agent-activity/scans`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${creds.token}`,
     },
     body: JSON.stringify({
       findings: opts.findings,

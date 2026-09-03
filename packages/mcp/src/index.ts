@@ -46,9 +46,9 @@ async function maybeSync(findings: Finding[], scanType: string): Promise<string>
       triggeredBy: 'mcp',
     })
     if (result.synced) {
-      return `\n\nSynced ${result.received ?? findings.length} finding(s) to Beacon dashboard.`
+      return `\n\nSynced ${result.received ?? findings.length} finding(s) to Beacon Agent Activity.`
     }
-    return ''
+    return '\n\n(Not synced to dashboard — run `beacon connect` from Agent Activity → Connect this machine.)'
   } catch (err) {
     return `\n\nSync warning: ${err instanceof Error ? err.message : String(err)}`
   }
