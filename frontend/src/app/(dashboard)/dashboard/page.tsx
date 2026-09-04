@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { useAppData } from '@/context/AppDataContext'
-import { fetchOnboardingState } from '@/lib/api'
+import { fetchAgentActivity, fetchOnboardingState } from '@/lib/api'
 import { OverviewIntegrations } from '@/components/dashboard/OverviewIntegrations'
 import { AgentActivityHeatmap } from '@/components/dashboard/AgentActivityHeatmap'
 import { QuickStartChecklist } from '@/components/dashboard/QuickStartChecklist'
@@ -35,9 +35,16 @@ export default function DashboardPage() {
   const plan = user?.plan ?? 'free'
   const planColors = planColor()
   const [githubConnected, setGithubConnected] = useState(false)
+  const [agentConnected, setAgentConnected] = useState(false)
 
   useEffect(() => {
     fetchOnboardingState().then((s) => setGithubConnected(s.connected)).catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    fetchAgentActivity(1)
+      .then((events) => setAgentConnected(events.length > 0))
+      .catch(() => setAgentConnected(false))
   }, [])
 
   const scanComplete =
@@ -98,7 +105,7 @@ export default function DashboardPage() {
         <AgentActivityHeatmap />
         <div className="flex flex-col gap-4">
           <OverviewIntegrations />
-          <QuickStartChecklist githubConnected={githubConnected} agentConnected={false} />
+          <QuickStartChecklist githubConnected={githubConnected} agentConnected={agentConnected} />
         </div>
       </div>
 

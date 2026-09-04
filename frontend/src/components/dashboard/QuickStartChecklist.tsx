@@ -13,10 +13,9 @@ export function QuickStartChecklist({ githubConnected, agentConnected }: QuickSt
   const steps = [
     {
       label: 'Install Beacon locally (CLI / MCP)',
-      done: false,
+      done: agentConnected,
       href: '/get-started',
-      // Local install is outside the dashboard — never auto-complete
-      alwaysLink: true,
+      alwaysLink: !agentConnected,
     },
     {
       label: 'Connect your coding agent',
